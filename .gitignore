@@ -1,0 +1,8 @@
+﻿backend/.env
+backend/venv/
+backend/__pycache__/
+backend/**/__pycache__/
+*.pyc
+embedding-service/venv312/
+frontend_flutter/.dart_tool/
+frontend_flutter/build/
