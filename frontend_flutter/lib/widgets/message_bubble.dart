@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
 import '../models/chat_response.dart';
+import 'trace_panel.dart';
 
 class MessageBubble extends StatelessWidget {
   final String question;
   final ChatResponse? response;
   final bool isLoading;
+  final String? partialText;
 
   const MessageBubble({
     super.key,
     required this.question,
     this.response,
     this.isLoading = false,
+    this.partialText,
   });
 
   Color _guardrailColor(String? status) {
@@ -42,7 +45,21 @@ class MessageBubble extends StatelessWidget {
             child: Text(question),
           ),
         ),
-        if (isLoading)
+        if (response == null && partialText != null && partialText!.isNotEmpty)
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              margin: const EdgeInsets.symmetric(vertical: 4),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey.shade200,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              constraints: const BoxConstraints(maxWidth: 400),
+              child: Text(partialText!),
+            ),
+          )
+        else if (isLoading)
           const Padding(
             padding: EdgeInsets.all(12),
             child: Row(
@@ -96,6 +113,10 @@ class MessageBubble extends StatelessWidget {
                       ),
                     ],
                   ),
+                  if (response!.trace != null) ...[
+                    const SizedBox(height: 4),
+                    TracePanel(trace: response!.trace!),
+                  ],
                 ],
               ),
             ),
