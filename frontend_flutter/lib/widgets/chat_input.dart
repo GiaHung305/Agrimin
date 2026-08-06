@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../theme/app_theme.dart';
+
 class ChatInput extends StatefulWidget {
-  final Function(String) onSend;
+  final ValueChanged<String> onSend;
   final bool isLoading;
 
   const ChatInput({super.key, required this.onSend, required this.isLoading});
@@ -12,37 +14,68 @@ class ChatInput extends StatefulWidget {
 
 class _ChatInputState extends State<ChatInput> {
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   void _handleSend() {
     final text = _controller.text.trim();
-    if (text.isEmpty) return;
+    if (text.isEmpty || widget.isLoading) return;
     widget.onSend(text);
     _controller.clear();
+    _focusNode.requestFocus();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              decoration: const InputDecoration(
-                hintText: "Hỏi về cây trồng, thời tiết, sâu bệnh...",
-                border: OutlineInputBorder(),
+    return SafeArea(
+      top: false,
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+        decoration: const BoxDecoration(
+          color: AppColors.background,
+          border: Border(top: BorderSide(color: AppColors.line)),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _controller,
+                focusNode: _focusNode,
+                minLines: 1,
+                maxLines: 4,
+                textCapitalization: TextCapitalization.sentences,
+                onSubmitted: (_) => _handleSend(),
+                enabled: !widget.isLoading,
+                decoration: const InputDecoration(
+                  hintText: 'Hỏi về cây trồng, thời tiết hoặc việc cần làm…',
+                  prefixIcon: Icon(Icons.eco_outlined, color: AppColors.forest),
+                ),
               ),
-              onSubmitted: (_) => _handleSend(),
-              enabled: !widget.isLoading,
             ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(Icons.send),
-            onPressed: widget.isLoading ? null : _handleSend,
-          ),
-        ],
+            const SizedBox(width: 10),
+            Material(
+              color: widget.isLoading ? AppColors.line : AppColors.forest,
+              borderRadius: BorderRadius.circular(18),
+              child: InkWell(
+                onTap: widget.isLoading ? null : _handleSend,
+                borderRadius: BorderRadius.circular(18),
+                child: SizedBox(
+                  width: 54,
+                  height: 54,
+                  child: Icon(widget.isLoading ? Icons.more_horiz : Icons.arrow_upward_rounded,
+                      color: widget.isLoading ? AppColors.muted : Colors.white),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -1,54 +1,64 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
-import '../models/chat_response.dart';
 import '../models/document.dart';
+import '../models/farm_profile.dart';
+import '../models/farm_task.dart';
+import '../models/app_notification.dart';
 import 'auth_service.dart';
 
 class ApiService {
-  static const String baseUrl = "http://localhost:8000/api/v1";
-
-  static Future<ChatResponse> sendMessage(String question, String? conversationId) async {
-    final token = await AuthService.getToken();
-
-    final response = await http.post(
-      Uri.parse("$baseUrl/chat"),
-      headers: {
-        "Content-Type": "application/json; charset=utf-8",
-        "Authorization": "Bearer $token",
-      },
-      body: jsonEncode({
-        "question": question,
-        "conversation_id": conversationId,
-      }),
-    );
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(utf8.decode(response.bodyBytes));
-      return ChatResponse.fromJson(data);
-    } else if (response.statusCode == 401) {
-      throw Exception("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
-    } else {
-      throw Exception("Lỗi server: ${response.statusCode}");
+  static String get baseUrl {
+    const configuredUrl = String.fromEnvironment("API_BASE_URL");
+    if (configuredUrl.isNotEmpty) return configuredUrl;
+    // Android emulators access the development host through 10.0.2.2;
+    // localhost would point back to the emulator itself.
+    if (!kIsWeb && defaultTargetPlatform == TargetPlatform.android) {
+      return "http://10.0.2.2:8000/api/v1";
     }
+    return "http://localhost:8000/api/v1";
   }
 
-  static Stream<Map<String, dynamic>> sendMessageStream(String question, String? conversationId) async* {
+  static Stream<Map<String, dynamic>> sendMessageStream(
+    String question,
+    String? conversationId,
+  ) async* {
     final token = await AuthService.getToken();
     final request = http.Request("POST", Uri.parse("$baseUrl/chat/stream"));
     request.headers["Authorization"] = "Bearer $token";
     request.headers["Content-Type"] = "application/json";
-    request.body = jsonEncode({"question": question, "conversation_id": conversationId});
+    request.body = jsonEncode({
+      "question": question,
+      "conversation_id": conversationId,
+    });
 
     final streamedResponse = await request.send();
-    final stream = streamedResponse.stream.transform(utf8.decoder);
+    if (streamedResponse.statusCode != 200) {
+      final body = await utf8.decoder.bind(streamedResponse.stream).join();
+      if (streamedResponse.statusCode == 401) {
+        throw Exception("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+      }
+      throw Exception("Lỗi server: ${streamedResponse.statusCode} $body");
+    }
 
-    await for (final chunk in stream) {
-      for (final line in chunk.split("\n")) {
-        if (line.startsWith("data: ")) {
-          final jsonStr = line.substring(6);
-          if (jsonStr.isNotEmpty) {
-            yield jsonDecode(jsonStr);
-          }
+    // A network chunk is not necessarily one SSE event. Buffer until the SSE
+    // frame delimiter so partial JSON never reaches jsonDecode.
+    String buffer = "";
+    await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
+      buffer += chunk;
+      while (true) {
+        final separatorIndex = buffer.indexOf("\n\n");
+        if (separatorIndex < 0) break;
+
+        final frame = buffer.substring(0, separatorIndex);
+        buffer = buffer.substring(separatorIndex + 2);
+        final data = frame
+            .split("\n")
+            .where((line) => line.startsWith("data: "))
+            .map((line) => line.substring(6))
+            .join("\n");
+        if (data.isNotEmpty) {
+          yield jsonDecode(data) as Map<String, dynamic>;
         }
       }
     }
@@ -66,6 +76,142 @@ class ApiService {
       return data.map((item) => DocumentItem.fromJson(item)).toList();
     } else {
       throw Exception("Lỗi tải danh sách documents: ${response.statusCode}");
+    }
+  }
+
+  static Future<void> resolveAssistantAction(
+    String actionId,
+    bool confirmed,
+  ) async {
+    final token = await AuthService.getToken();
+    final verb = confirmed ? "confirm" : "cancel";
+    final response = await http.post(
+      Uri.parse("$baseUrl/assistant/actions/$actionId/$verb"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Không thể cập nhật đề xuất của trợ lý");
+    }
+  }
+
+  static Future<void> registerDeviceToken(String token) async {
+    final accessToken = await AuthService.getToken();
+    final response = await http.post(
+      Uri.parse("$baseUrl/assistant/device-tokens"),
+      headers: {
+        "Authorization": "Bearer $accessToken",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({"token": token, "platform": "android"}),
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Không thể đăng ký thiết bị nhận thông báo");
+    }
+  }
+
+  static Future<FarmProfile?> getFarmProfile() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/farm-profile"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể tải hồ sơ nông trại');
+    }
+    final dynamic data = jsonDecode(utf8.decode(response.bodyBytes));
+    if (data == null) return null;
+    return FarmProfile.fromJson(data as Map<String, dynamic>);
+  }
+
+  static Future<FarmProfile> saveFarmProfile({
+    required String name,
+    String? province,
+    String? crop,
+    double? areaHa,
+    String? farmingStyle,
+  }) async {
+    final token = await AuthService.getToken();
+    final response = await http.put(
+      Uri.parse("$baseUrl/assistant/farm-profile"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'name': name,
+        'province': province,
+        'crop': crop,
+        'area_ha': areaHa,
+        'farming_style': farmingStyle,
+      }),
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể lưu hồ sơ nông trại');
+    }
+    return FarmProfile.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<List<AppNotification>> getNotifications() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/notifications"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể tải thông báo');
+    }
+    final data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+    return data
+        .map((item) => AppNotification.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+
+  static Future<List<FarmTask>> getTasks() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/tasks"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Không thể tải danh sách công việc");
+    }
+    final data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+    return data
+        .map((item) => FarmTask.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+
+  static Future<FarmTask> updateTask(
+    String taskId,
+    Map<String, dynamic> changes,
+  ) async {
+    final token = await AuthService.getToken();
+    final response = await http.patch(
+      Uri.parse("$baseUrl/assistant/tasks/$taskId"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(changes),
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Không thể cập nhật công việc");
+    }
+    return FarmTask.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<void> deleteTask(String taskId) async {
+    final token = await AuthService.getToken();
+    final response = await http.delete(
+      Uri.parse("$baseUrl/assistant/tasks/$taskId"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Không thể xóa công việc");
     }
   }
 

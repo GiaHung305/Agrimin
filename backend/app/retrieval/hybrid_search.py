@@ -1,3 +1,5 @@
+import asyncio
+
 from app.retrieval.dense_search import dense_search
 from app.retrieval.bm25_search import bm25_search
 from app.retrieval.fusion import reciprocal_rank_fusion
@@ -5,8 +7,10 @@ from app.services.reranker_client import rerank
 
 
 async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
-    dense_results = await dense_search(query, top_k=10)
-    bm25_results = await bm25_search(query, top_k=10)
+    dense_results, bm25_results = await asyncio.gather(
+        dense_search(query, top_k=10),
+        bm25_search(query, top_k=10),
+    )
 
     fused = reciprocal_rank_fusion(dense_results, bm25_results)
     if not fused:

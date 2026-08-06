@@ -1,18 +1,21 @@
 import hashlib
 import json
+import logging
 
 from app.core.redis_client import redis_client
 from app.services.embedding_client import embed_text
 
-CACHE_TTL_SECONDS = 3600  # 1 giờ — câu trả lời nông nghiệp không đổi nhanh như thời tiết
-SIMILARITY_THRESHOLD = 0.95  # ngưỡng cosine similarity để coi là "cùng câu hỏi"
+CACHE_TTL_SECONDS = 3600
+SIMILARITY_THRESHOLD = 0.95
+logger = logging.getLogger(__name__)
 
 
-def _context_key(province: str | None, crop: str | None) -> str:
-    """Cache theo cả context, không chỉ theo câu hỏi — tránh trả lời sai ngữ cảnh."""
+def _context_key(user_id: str, province: str | None, crop: str | None) -> str:
+    """Scope cache entries to the user because answers can use private memory."""
+    user_hash = hashlib.sha256(user_id.encode("utf-8")).hexdigest()[:16]
     province = (province or "unknown").lower().strip()
     crop = (crop or "unknown").lower().strip()
-    return f"{province}:{crop}"
+    return f"{user_hash}:{province}:{crop}"
 
 
 def _cosine_similarity(a: list[float], b: list[float]) -> float:
@@ -22,61 +25,58 @@ def _cosine_similarity(a: list[float], b: list[float]) -> float:
     return dot / (norm_a * norm_b) if norm_a and norm_b else 0.0
 
 
-async def get_cached_answer(question: str, province: str | None, crop: str | None) -> dict | None:
-    """
-    Graceful degradation: nếu Redis chết, trả về None (coi như cache miss)
-    thay vì để lỗi lan ra làm sập cả /chat — đúng bài học từ sự cố Redis hôm nay.
-    """
+async def get_cached_answer(
+    user_id: str,
+    question: str,
+    province: str | None,
+    crop: str | None,
+) -> dict | None:
+    """Return a matching answer, treating cache/embedding failures as a miss."""
     try:
-        context_key = _context_key(province, crop)
-        index_key = f"semcache_index:{context_key}"
-
+        index_key = f"semcache_index:{_context_key(user_id, province, crop)}"
         cached_index_raw = await redis_client.get(index_key)
         if not cached_index_raw:
             return None
 
         query_vector = await embed_text(question)
-        cached_index = json.loads(cached_index_raw)
-
-        for entry in cached_index:
+        for entry in json.loads(cached_index_raw):
             similarity = _cosine_similarity(query_vector, entry["vector"])
             if similarity >= SIMILARITY_THRESHOLD:
-                answer_raw = await redis_client.get(f"semcache_answer:{entry['hash']}")
+                answer_raw = await redis_client.get(entry["answer_key"])
                 if answer_raw:
                     result = json.loads(answer_raw)
                     result["from_cache"] = True
                     return result
-
         return None
-    except Exception as e:
-        print(f"[WARNING] Semantic Cache lookup thất bại (Redis có thể đang down): {e}")
+    except Exception:
+        logger.warning("Semantic cache lookup failed; treating it as a cache miss", exc_info=True)
         return None
 
 
-async def store_answer(question: str, province: str | None, crop: str | None, answer_data: dict):
-    """
-    Graceful degradation: nếu Redis chết lúc lưu cache, chỉ log cảnh báo,
-    KHÔNG raise lỗi — vì thất bại lưu cache không nên làm hỏng response đã có cho user.
-    """
+async def store_answer(
+    user_id: str,
+    question: str,
+    province: str | None,
+    crop: str | None,
+    answer_data: dict,
+):
+    """Store an answer opportunistically without failing the chat response."""
     try:
-        context_key = _context_key(province, crop)
+        context_key = _context_key(user_id, province, crop)
         index_key = f"semcache_index:{context_key}"
-
         query_vector = await embed_text(question)
-        question_hash = hashlib.sha256(question.encode()).hexdigest()[:16]
+        question_hash = hashlib.sha256(question.encode("utf-8")).hexdigest()[:16]
 
+        answer_key = f"semcache_answer:{context_key}:{question_hash}"
         await redis_client.set(
-            f"semcache_answer:{question_hash}",
+            answer_key,
             json.dumps(answer_data, ensure_ascii=False),
             ex=CACHE_TTL_SECONDS,
         )
 
         cached_index_raw = await redis_client.get(index_key)
         cached_index = json.loads(cached_index_raw) if cached_index_raw else []
-        cached_index.append({"hash": question_hash, "vector": query_vector})
-
-        cached_index = cached_index[-50:]
-
-        await redis_client.set(index_key, json.dumps(cached_index), ex=CACHE_TTL_SECONDS)
-    except Exception as e:
-        print(f"[WARNING] Semantic Cache lưu thất bại (Redis có thể đang down): {e}")
+        cached_index.append({"answer_key": answer_key, "vector": query_vector})
+        await redis_client.set(index_key, json.dumps(cached_index[-50:]), ex=CACHE_TTL_SECONDS)
+    except Exception:
+        logger.warning("Semantic cache write failed; continuing without caching", exc_info=True)

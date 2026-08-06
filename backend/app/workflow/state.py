@@ -6,6 +6,7 @@ class AgentState(TypedDict):
     conversation_id: str
     question: str
     context: dict
+    pending_action: Optional[dict]
     plan: Optional[dict]
     risk_level: Literal["low", "medium", "high"]
     retrieved_docs: list

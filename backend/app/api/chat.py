@@ -1,7 +1,8 @@
 import json
 import uuid
+from dataclasses import dataclass
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, Field
 from sqlalchemy import select
@@ -13,13 +14,10 @@ from slowapi.util import get_remote_address
 from app.core.db import get_db
 from app.core.auth import get_current_user
 from app.workflow.graph import build_graph
-from app.repository.models import MemoryFact, User, Conversation, Message
+from app.repository.models import MemoryFact, Message, User, Conversation
 from app.services.semantic_cache import get_cached_answer, store_answer
 from app.core.langfuse_client import get_langfuse_handler
-from app.workflow.nodes.planner import planner_node
-from app.workflow.nodes.pre_guardrail import pre_guardrail_node
-from app.workflow.nodes.retrieve import retrieve_node
-from app.workflow.nodes.generate import client as gemini_client, MODEL_STRONG
+from app.core.security_checks import contains_prompt_injection
 
 router = APIRouter(tags=["chat"])
 limiter = Limiter(key_func=get_remote_address)
@@ -28,6 +26,18 @@ limiter = Limiter(key_func=get_remote_address)
 class ChatRequest(BaseModel):
     question: str = Field(..., max_length=1000, min_length=1)
     conversation_id: str | None = None
+
+
+@dataclass
+class PreparedChat:
+    user_id: str
+    conversation_id: str
+    known_facts: list[dict]
+    known_province: str | None
+    known_crop: str | None
+    conversation_history: list[dict]
+    initial_state: dict
+    cached_response: dict | None
 
 
 async def ensure_user_and_conversation(db: AsyncSession, user_id: str, email: str, conversation_id: str | None) -> str:
@@ -46,10 +56,13 @@ async def ensure_user_and_conversation(db: AsyncSession, user_id: str, email: st
         result = await db.execute(select(Conversation).where(Conversation.id == conversation_id))
         conv = result.scalar_one_or_none()
         if conv:
-            await db.commit()
-            return conversation_id
+            if str(conv.user_id) == str(user_id):
+                await db.commit()
+                return conversation_id
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found")
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Conversation not found")
 
-    new_conv_id = conversation_id or str(uuid.uuid4())
+    new_conv_id = str(uuid.uuid4())
     conv = Conversation(id=new_conv_id, user_id=user_id, title="Cuộc trò chuyện mới")
     db.add(conv)
     await db.commit()
@@ -79,22 +92,19 @@ async def _load_known_facts(db: AsyncSession, user_id: str):
     return known_facts_display, known_province, known_crop
 
 
-async def _run_chat_pipeline(req: ChatRequest, db: AsyncSession, current_user: dict) -> dict:
-    user_id = current_user["id"]
-    conversation_id = await ensure_user_and_conversation(db, user_id, current_user["email"], req.conversation_id)
-
-    known_facts_display, known_province, known_crop = await _load_known_facts(db, user_id)
-
-    cached = await get_cached_answer(req.question, known_province, known_crop)
-    if cached:
-        cached["conversation_id"] = conversation_id
-        return cached
-
-    initial_state = {
+def _new_agent_state(
+    user_id: str,
+    conversation_id: str,
+    question: str,
+    known_facts: list[dict],
+    known_province: str | None,
+    conversation_history: list[dict],
+) -> dict:
+    return {
         "user_id": user_id,
         "conversation_id": conversation_id,
-        "question": req.question,
-        "context": {"known_facts": known_facts_display, "province": known_province},
+        "question": question,
+        "context": {"known_facts": known_facts, "province": known_province, "conversation_history": conversation_history},
         "plan": None,
         "risk_level": "low",
         "retrieved_docs": [],
@@ -106,37 +116,68 @@ async def _run_chat_pipeline(req: ChatRequest, db: AsyncSession, current_user: d
         "retry_count": 0,
         "guardrail_status": None,
         "final_answer": None,
+        "pending_action": None,
     }
 
-    graph = build_graph(db)
 
-    with propagate_attributes(
-        trace_name="agrimind-chat",
-        session_id=conversation_id,
+async def _load_conversation_history(db: AsyncSession, conversation_id: str) -> list[dict]:
+    result = await db.execute(
+        select(Message.role, Message.content)
+        .where(Message.conversation_id == conversation_id)
+        .order_by(Message.created_at.desc())
+        .limit(8)
+    )
+    return [{"role": row.role, "content": row.content} for row in reversed(result.all())]
+
+
+async def _prepare_chat(req: ChatRequest, db: AsyncSession, current_user: dict) -> PreparedChat:
+    """Create the session, memory, cache and initial state for the chat flow."""
+    user_id = current_user["id"]
+    conversation_id = await ensure_user_and_conversation(
+        db, user_id, current_user["email"], req.conversation_id
+    )
+    known_facts, known_province, known_crop = await _load_known_facts(db, user_id)
+    conversation_history = await _load_conversation_history(db, conversation_id)
+    db.add(Message(conversation_id=conversation_id, role="user", content=req.question))
+    await db.commit()
+    # A cached answer is valid only for a new turn. Follow-up questions depend
+    # on previous conversation context and must run through the graph.
+    cached_response = None if conversation_history else await get_cached_answer(user_id, req.question, known_province, known_crop)
+    if cached_response:
+        cached_response["conversation_id"] = conversation_id
+
+    return PreparedChat(
         user_id=user_id,
-    ):
-        langfuse_handler = get_langfuse_handler()
-        result = await graph.ainvoke(
-            initial_state,
-            config={"callbacks": [langfuse_handler]},
-        )
+        conversation_id=conversation_id,
+        known_facts=known_facts,
+        known_province=known_province,
+        known_crop=known_crop,
+        conversation_history=conversation_history,
+        initial_state=_new_agent_state(
+            user_id, conversation_id, req.question, known_facts, known_province, conversation_history
+        ),
+        cached_response=cached_response,
+    )
 
-    answer = result.get("final_answer") or result.get("draft_answer")
 
-    trace = {
+def _build_trace(result: dict) -> dict:
+    context = result.get("context", {})
+    plan = result.get("plan") or {}
+    retrieved_docs = result.get("retrieved_docs", [])
+    return {
         "planner": {
-            "risk_level": result["risk_level"],
-            "need_rag": result["plan"].get("need_rag") if result.get("plan") else None,
-            "need_weather": result["plan"].get("need_weather") if result.get("plan") else None,
+            "risk_level": result.get("risk_level"),
+            "need_rag": plan.get("need_rag"),
+            "need_weather": plan.get("need_weather"),
         },
         "retriever": {
-            "docs_found": len(result.get("retrieved_docs", [])),
-            "top_source": result["retrieved_docs"][0]["source"] if result.get("retrieved_docs") else None,
-            "max_relevance_score": result["context"].get("max_relevance_score"),
+            "docs_found": len(retrieved_docs),
+            "top_source": retrieved_docs[0]["source"] if retrieved_docs else None,
+            "max_relevance_score": context.get("max_relevance_score"),
         },
         "weather": {
             "used": "weather" in result.get("tool_results", {}),
-            "province": result["context"].get("province"),
+            "province": context.get("province"),
         },
         "reflection": {
             "notes": result.get("reflection_notes"),
@@ -148,32 +189,69 @@ async def _run_chat_pipeline(req: ChatRequest, db: AsyncSession, current_user: d
         },
     }
 
-    response_data = {
-        "answer": answer,
-        "citations": result["citations"],
-        "confidence": result["confidence"],
-        "risk_level": result["risk_level"],
+
+def _response_from_result(result: dict, conversation_id: str) -> dict:
+    return {
+        "answer": result.get("final_answer") or result.get("draft_answer"),
+        "citations": result.get("citations", []),
+        "confidence": result.get("confidence", 0.0),
+        "risk_level": result.get("risk_level", "low"),
         "guardrail_status": result.get("guardrail_status"),
-        "plan": result["plan"],
-        "trace": trace,
+        "plan": result.get("plan"),
+        "trace": _build_trace(result),
+        "conversation_id": conversation_id,
+        "pending_action": result.get("pending_action"),
+    }
+
+
+async def _cache_response_if_safe(req: ChatRequest, prepared: PreparedChat, response_data: dict):
+    if response_data["risk_level"] != "high" and response_data.get("guardrail_status") == "pass" and not response_data.get("pending_action"):
+        await store_answer(
+            prepared.user_id,
+            req.question,
+            prepared.known_province,
+            prepared.known_crop,
+            response_data,
+        )
+
+
+async def _record_cached_answer(db: AsyncSession, conversation_id: str, response_data: dict) -> None:
+    """Keep database history complete when a semantic-cache hit skips the graph."""
+    db.add(Message(
+        conversation_id=conversation_id,
+        role="assistant",
+        content=response_data["answer"],
+        risk_level=response_data.get("risk_level"),
+        confidence_score=response_data.get("confidence"),
+        guardrail_status=response_data.get("guardrail_status"),
+    ))
+    await db.commit()
+
+
+def _sse_event(event_type: str, payload: dict | str | None = None, **extra) -> str:
+    event = {"type": event_type, **extra}
+    if payload is not None:
+        event["payload"] = payload
+    return f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
+
+
+def _blocked_response(conversation_id: str | None) -> dict:
+    return {
+        "answer": "Câu hỏi của bạn chứa nội dung không hợp lệ, vui lòng đặt câu hỏi khác về nông nghiệp.",
+        "citations": [],
+        "confidence": 0.0,
+        "risk_level": "low",
+        "guardrail_status": "block",
+        "plan": None,
         "conversation_id": conversation_id,
     }
 
-    if result["risk_level"] != "high" and result.get("guardrail_status") == "pass":
-        await store_answer(req.question, known_province, known_crop, response_data)
 
-    return response_data
-
-
-@router.post("/chat")
-@limiter.limit("10/minute")
-async def chat(
-    request: Request,
-    req: ChatRequest,
-    db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(get_current_user),
-):
-    return await _run_chat_pipeline(req, db, current_user)
+async def _buffered_response_events(response_data: dict):
+    metadata = {key: value for key, value in response_data.items() if key != "answer"}
+    yield _sse_event("meta", metadata, buffered=True)
+    yield _sse_event("chunk", response_data["answer"])
+    yield _sse_event("done")
 
 
 @router.post("/chat/stream")
@@ -184,114 +262,65 @@ async def chat_stream(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
-    """
-    Streaming THẬT từ Gemini — nhưng chỉ cho risk_level != "high".
-    Guardrail chỉ có khả năng BLOCK khi risk_level == "high" (câu hỏi
-    liều lượng/hóa chất). Với risk thấp/trung bình, Guardrail không bao
-    giờ chặn (chỉ thêm disclaimer), nên an toàn để hiển thị token ngay
-    khi Gemini sinh ra. Với risk cao, vẫn dùng pipeline đầy đủ (không
-    stream) — an toàn quan trọng hơn UX mượt trong trường hợp này.
-    """
-    user_id = current_user["id"]
-    conversation_id = await ensure_user_and_conversation(db, user_id, current_user["email"], req.conversation_id)
-    known_facts_display, known_province, known_crop = await _load_known_facts(db, user_id)
+    """Serve the Flutter UI's SSE contract through the canonical graph flow."""
+
+    if contains_prompt_injection(req.question):
+        return StreamingResponse(
+            _buffered_response_events(_blocked_response(req.conversation_id)),
+            media_type="text/event-stream",
+        )
+
+    prepared = await _prepare_chat(req, db, current_user)
+    if prepared.cached_response:
+        await _record_cached_answer(db, prepared.conversation_id, prepared.cached_response)
+        return StreamingResponse(
+            _buffered_response_events(prepared.cached_response),
+            media_type="text/event-stream",
+        )
 
     async def event_generator():
-        state = {
-            "user_id": user_id,
-            "conversation_id": conversation_id,
-            "question": req.question,
-            "context": {"known_facts": known_facts_display, "province": known_province},
-            "plan": None,
-            "risk_level": "low",
-            "retrieved_docs": [],
-            "tool_results": {},
-            "draft_answer": None,
-            "citations": [],
-            "confidence": 0.0,
-            "reflection_notes": None,
-            "retry_count": 0,
-            "guardrail_status": None,
-            "final_answer": None,
+        graph = build_graph(db)
+        graph_config = {
+            "callbacks": [get_langfuse_handler()],
+            "configurable": {"thread_id": prepared.conversation_id},
         }
+        final_state = None
+        streamed_answer = ""
 
-        state = await planner_node(state)
-        state = await pre_guardrail_node(state)
-        state = await retrieve_node(state)
-
-        if state["risk_level"] == "high":
-            result_data = await _run_chat_pipeline(req, db, current_user)
-            meta = {k: v for k, v in result_data.items() if k != "answer"}
-            yield f"data: {json.dumps({'type': 'meta', 'payload': meta, 'buffered': True}, ensure_ascii=False)}\n\n"
-            yield f"data: {json.dumps({'type': 'chunk', 'payload': result_data['answer']}, ensure_ascii=False)}\n\n"
-            yield f"data: {json.dumps({'type': 'done'}, ensure_ascii=False)}\n\n"
-            return
-
-        docs_text = "\n".join([d["content"] for d in state["retrieved_docs"]])
-        facts_text = "\n".join(str(f) for f in known_facts_display) if known_facts_display else "Chưa có thông tin."
-        weather_text = "Không có dữ liệu thời tiết."
-        if "weather" in state.get("tool_results", {}):
-            weather_text = str(state["tool_results"]["weather"].get("forecast", ""))
-
-        prompt = f"""Bạn là chuyên gia nông nghiệp Việt Nam. Trả lời câu hỏi dựa trên tài liệu sau:
-
-Tài liệu:
-{docs_text}
-
-Thông tin đã biết về người dùng:
-{facts_text}
-
-Dữ liệu thời tiết 3 ngày tới:
-{weather_text}
-
-Câu hỏi: {req.question}
-
-Trả lời ngắn gọn, chính xác, có xét đến thông tin về người dùng và thời tiết nếu liên quan."""
-
-        citations = [d["source"] for d in state["retrieved_docs"]]
-        meta = {
-            "citations": citations,
-            "risk_level": state["risk_level"],
-            "conversation_id": conversation_id,
-            "plan": state["plan"],
-        }
-        yield f"data: {json.dumps({'type': 'meta', 'payload': meta, 'buffered': False}, ensure_ascii=False)}\n\n"
-
-        accumulated_text = ""
-        async for chunk in await gemini_client.aio.models.generate_content_stream(
-            model=MODEL_STRONG, contents=prompt
+        with propagate_attributes(
+            trace_name="agrimind-chat",
+            session_id=prepared.conversation_id,
+            user_id=prepared.user_id,
         ):
-            if chunk.text:
-                accumulated_text += chunk.text
-                yield f"data: {json.dumps({'type': 'chunk', 'payload': chunk.text}, ensure_ascii=False)}\n\n"
+            async for mode, payload in graph.astream(
+                prepared.initial_state,
+                config=graph_config,
+                stream_mode=["custom", "values"],
+            ):
+                if mode == "custom" and payload.get("type") == "token":
+                    text = payload["text"]
+                    streamed_answer += text
+                    yield _sse_event("chunk", text)
+                elif mode == "values":
+                    final_state = payload
 
-        confidence = 0.8
-        if confidence < 0.70:
-            disclaimer = "\n\n(Lưu ý: tôi chưa hoàn toàn chắc chắn, bạn nên hỏi thêm cán bộ khuyến nông.)"
-            accumulated_text += disclaimer
-            yield f"data: {json.dumps({'type': 'chunk', 'payload': disclaimer}, ensure_ascii=False)}\n\n"
+        if final_state is None:
+            raise RuntimeError("Chat graph completed without a final state")
 
-        response_data = {
-            "answer": accumulated_text,
-            "citations": citations,
-            "confidence": confidence,
-            "risk_level": state["risk_level"],
-            "guardrail_status": "pass",
-            "plan": state["plan"],
-            "conversation_id": conversation_id,
-        }
-        message = Message(
-            conversation_id=conversation_id,
-            role="assistant",
-            content=accumulated_text,
-            risk_level=state["risk_level"],
-            confidence_score=confidence,
-            guardrail_status="pass",
-        )
-        db.add(message)
-        await db.commit()
-        await store_answer(req.question, known_province, known_crop, response_data)
+        response_data = _response_from_result(final_state, prepared.conversation_id)
+        final_answer = response_data["answer"] or ""
+        if final_answer.startswith(streamed_answer):
+            remaining_text = final_answer[len(streamed_answer):]
+            if remaining_text:
+                yield _sse_event("chunk", remaining_text)
+        elif not streamed_answer:
+            yield _sse_event("chunk", final_answer)
+        else:
+            raise RuntimeError("Final answer diverged from streamed content")
 
-        yield f"data: {json.dumps({'type': 'done'}, ensure_ascii=False)}\n\n"
+        await _cache_response_if_safe(req, prepared, response_data)
+        metadata = {key: value for key, value in response_data.items() if key != "answer"}
+        yield _sse_event("meta", metadata, buffered=False)
+        yield _sse_event("done")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

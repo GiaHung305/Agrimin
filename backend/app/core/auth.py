@@ -1,12 +1,11 @@
 import httpx
 from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from jose import jwt
 
 from app.core.config import settings
 
 security = HTTPBearer()
-
 _jwks_cache = None
 
 
@@ -21,16 +20,11 @@ async def get_jwks():
 
 
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> dict:
-    """
-    Xác thực JWT thật từ Supabase Auth, trả về cả user_id và email
-    để backend có thể tự động provision user mới trong Postgres.
-    """
-    token = credentials.credentials
+    """Validate a Supabase JWT and return the user identity used by the API."""
     try:
-        jwks = await get_jwks()
         payload = jwt.decode(
-            token,
-            jwks,
+            credentials.credentials,
+            await get_jwks(),
             algorithms=["RS256", "ES256"],
             audience="authenticated",
         )
@@ -38,5 +32,27 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token không hợp lệ hoặc đã hết hạn",
+            detail="Invalid or expired access token",
         )
+
+
+def _configured_admins() -> tuple[set[str], set[str]]:
+    user_ids = {user_id.strip() for user_id in settings.admin_user_ids.split(",") if user_id.strip()}
+    emails = {email.strip().casefold() for email in settings.admin_emails.split(",") if email.strip()}
+    return user_ids, emails
+
+
+async def require_admin(current_user: dict = Depends(get_current_user)) -> dict:
+    """Allow document management only to explicitly configured administrators."""
+    admin_ids, admin_emails = _configured_admins()
+    is_configured_admin = (
+        current_user["id"] in admin_ids
+        or current_user.get("email", "").casefold() in admin_emails
+    )
+    if is_configured_admin or (settings.environment == "development" and not admin_ids and not admin_emails):
+        return current_user
+
+    raise HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Document management requires an administrator account",
+    )

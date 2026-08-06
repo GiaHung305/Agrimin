@@ -1,5 +1,3 @@
-version: "3.9"
-
 services:
   postgres:
     image: postgres:16-alpine
@@ -49,12 +47,17 @@ services:
       dockerfile: Dockerfile
     container_name: agrimind_backend
     restart: unless-stopped
+    env_file:
+      - ./backend/.env
     ports:
       - "8000:8000"
     environment:
       DATABASE_URL: postgresql+asyncpg://agrimind:agrimind_dev_password@postgres:5432/agrimind
       REDIS_URL: redis://redis:6379/0
       QDRANT_URL: http://qdrant:6333
+      # Inside Docker, localhost resolves to this backend container. Use the
+      # Compose service name for the separate GPU embedding service instead.
+      EMBEDDING_SERVICE_URL: http://embedding-service:8001
     depends_on:
       postgres:
         condition: service_healthy
@@ -64,7 +67,30 @@ services:
         condition: service_started
     volumes:
       - ./backend:/app
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    # Hot reload consumes a large watcher allocation in Docker Desktop and has
+    # caused the API process to terminate.  Run reload from the host instead.
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000
+
+  assistant-worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agrimind:agrimind_dev_password@postgres:5432/agrimind
+      REDIS_URL: redis://redis:6379/0
+      MCP_WEATHER_URL: http://mcp-weather-server:8002/mcp
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - ./backend/secrets:/firebase:ro
+    command: python -m app.worker
 
   embedding-service:
     build:
@@ -74,13 +100,6 @@ services:
     restart: unless-stopped
     ports:
       - "8001:8001"
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: 1
-              capabilities: [gpu]
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
@@ -96,8 +115,9 @@ services:
     restart: unless-stopped
     ports:
       - "8002:8002"
+    env_file:
+      - ./backend/.env
     environment:
-      OPENWEATHER_API_KEY: ${OPENWEATHER_API_KEY}
       REDIS_URL: redis://redis:6379/0
     depends_on:
       redis:

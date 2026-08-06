@@ -32,6 +32,7 @@ class ChatResponse {
   final String? guardrailStatus;
   final TraceInfo? trace;
   final String? conversationId;
+  final Map<String, dynamic>? pendingAction;
 
   ChatResponse({
     required this.answer,
@@ -41,6 +42,7 @@ class ChatResponse {
     this.guardrailStatus,
     this.trace,
     this.conversationId,
+    this.pendingAction,
   });
 
   factory ChatResponse.fromJson(Map<String, dynamic> json) {
@@ -52,6 +54,7 @@ class ChatResponse {
       guardrailStatus: json['guardrail_status'],
       trace: json['trace'] != null ? TraceInfo.fromJson(json['trace']) : null,
       conversationId: json['conversation_id'],
+      pendingAction: json['pending_action'] is Map ? Map<String, dynamic>.from(json['pending_action']) : null,
     );
   }
 }

@@ -1,8 +1,11 @@
+import logging
+
 import httpx
 
 from app.core.config import settings
 
 STORAGE_BASE_URL = f"{settings.supabase_url}/storage/v1/object"
+logger = logging.getLogger(__name__)
 
 
 async def upload_file(file_bytes: bytes, key: str, content_type: str) -> str:
@@ -20,7 +23,7 @@ async def upload_file(file_bytes: bytes, key: str, content_type: str) -> str:
     async with httpx.AsyncClient(timeout=30.0) as client:
         response = await client.post(url, headers=headers, content=file_bytes)
         if response.status_code >= 400:
-            print(f"[DEBUG] Supabase Storage error: {response.status_code} - {response.text}")
+            logger.warning("Supabase Storage upload failed with status %s", response.status_code)
         response.raise_for_status()
     return key
 

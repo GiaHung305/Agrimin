@@ -6,3 +6,6 @@ backend/**/__pycache__/
 embedding-service/venv312/
 frontend_flutter/.dart_tool/
 frontend_flutter/build/
+frontend_flutter/android/.gradle/
+frontend_flutter/android/build/
+backend/secrets/

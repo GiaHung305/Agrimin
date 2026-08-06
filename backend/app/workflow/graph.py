@@ -13,6 +13,8 @@ from app.workflow.nodes.post_guardrail import post_guardrail_node
 from app.workflow.nodes.fallback import fallback_node
 from app.workflow.nodes.memory_write import memory_write_node
 from app.workflow.nodes.memory_extract import memory_extract_node
+from app.workflow.nodes.action_proposal import action_proposal_node
+from app.core.checkpointer import get_checkpointer
 
 
 def build_graph(db: AsyncSession):
@@ -27,6 +29,7 @@ def build_graph(db: AsyncSession):
     workflow.add_node("fallback", fallback_node)
     workflow.add_node("memory_write", partial(memory_write_node, db=db))
     workflow.add_node("memory_extract", partial(memory_extract_node, db=db))
+    workflow.add_node("action_proposal", partial(action_proposal_node, db=db))
 
     workflow.add_edge(START, "planner")
     workflow.add_edge("planner", "pre_guardrail")
@@ -46,8 +49,9 @@ def build_graph(db: AsyncSession):
         {"pass": "memory_write", "block": "fallback"},
     )
 
-    workflow.add_edge("memory_write", "memory_extract")
+    workflow.add_edge("memory_write", "action_proposal")
+    workflow.add_edge("action_proposal", "memory_extract")
     workflow.add_edge("memory_extract", END)
     workflow.add_edge("fallback", END)
 
-    return workflow.compile()
+    return workflow.compile(checkpointer=get_checkpointer())

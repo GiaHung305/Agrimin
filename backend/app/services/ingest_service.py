@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.qdrant_client import qdrant_client
 from app.retrieval.qdrant_setup import COLLECTION_NAME
+from app.retrieval.bm25_search import invalidate_bm25_index
 from app.retrieval.chunking import chunk_text
 from app.services.embedding_client import embed_batch
 from app.repository.models import Document, DocumentChunk
@@ -29,6 +30,7 @@ async def deactivate_old_versions(db: AsyncSession, title: str):
         )
 
     await db.commit()
+    invalidate_bm25_index()
 
 
 async def ingest_document(
@@ -86,5 +88,6 @@ async def ingest_document(
 
     await qdrant_client.upsert(collection_name=COLLECTION_NAME, points=points)
     await db.commit()
+    invalidate_bm25_index()
 
     return document

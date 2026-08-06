@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'screens/chat_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'screens/app_gate.dart';
+import 'services/push_notification_service.dart';
+import 'theme/app_theme.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+  await PushNotificationService.initialize();
   runApp(const AgriMindApp());
 }
 
@@ -12,8 +20,9 @@ class AgriMindApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AgriMind AI',
-      theme: ThemeData(primarySwatch: Colors.green),
-      home: const ChatScreen(),
+      debugShowCheckedModeBanner: false,
+      theme: buildAppTheme(),
+      home: const AppGate(),
     );
   }
 }

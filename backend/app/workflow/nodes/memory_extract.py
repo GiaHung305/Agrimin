@@ -51,7 +51,10 @@ Câu hỏi: {state['question']}"""
         fact = MemoryFact(
             user_id=state["user_id"],
             fact_text=json.dumps(data, ensure_ascii=False),
-            confidence=0.85,
+            # A memory fact is derived from the same request/answer flow, so
+            # its stored confidence must reflect the evaluated graph result
+            # rather than an unconditional constant.
+            confidence=state["confidence"],
         )
         db.add(fact)
         await db.commit()

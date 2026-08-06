@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -25,12 +25,19 @@ class Settings(BaseSettings):
     supabase_publishable_key: str = ""
     supabase_jwks_url: str = ""
     mcp_weather_url: str = "http://localhost:8002/mcp"
+    firebase_credentials_path: str = ""
+    # Rebuilding BM25 requires loading and tokenising every active chunk. Keep
+    # the in-process index briefly, and invalidate it immediately on writes.
+    bm25_index_ttl_seconds: int = 300
+    cors_origins: str = ""
+    admin_user_ids: str = ""
+    admin_emails: str = ""
+    max_upload_bytes: int = 20 * 1024 * 1024
     # Model routing - điền API key thật qua .env, không commit vào git
     llm_provider_strong: str = "gpt-5"      # dùng cho generate/reflection
     llm_provider_fast: str = "gemini-flash"  # dùng cho planner/guardrail
 
-    class Config:
-        env_file = ".env"
+    model_config = SettingsConfigDict(env_file=".env")
 
 
 settings = Settings()
