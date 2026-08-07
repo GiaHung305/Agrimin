@@ -1,0 +1,31 @@
+{
+  "version": "retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "items": [
+    {
+      "query": "Cách tưới nước cho cà chua như thế nào?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_irrigation"
+    },
+    {
+      "query": "Độ pH đất phù hợp cho cà chua là bao nhiêu?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_soil"
+    },
+    {
+      "query": "Sầu riêng phù hợp với loại đất nào?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_soil"
+    },
+    {
+      "query": "Làm sao phòng bệnh nứt thân xì mủ cho sầu riêng?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_disease"
+    },
+    {
+      "query": "Khi nào thu hoạch sầu riêng?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_harvest"
+    }
+  ]
+}

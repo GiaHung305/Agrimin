@@ -4,17 +4,15 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class AuthService {
   static const String supabaseUrl = "https://mofxbgklmfmmkuefavxx.supabase.co";
-  static const String publishableKey = "sb_publishable_22CDWk-HscssH5ApQ3QThw_URF6fyGq";
+  static const String publishableKey =
+      "sb_publishable_22CDWk-HscssH5ApQ3QThw_URF6fyGq";
 
   static final _storage = const FlutterSecureStorage();
 
   static Future<String?> login(String email, String password) async {
     final response = await http.post(
       Uri.parse("$supabaseUrl/auth/v1/token?grant_type=password"),
-      headers: {
-        "apikey": publishableKey,
-        "Content-Type": "application/json",
-      },
+      headers: {"apikey": publishableKey, "Content-Type": "application/json"},
       body: jsonEncode({"email": email, "password": password}),
     );
 
@@ -30,10 +28,7 @@ class AuthService {
   static Future<String?> register(String email, String password) async {
     final response = await http.post(
       Uri.parse("$supabaseUrl/auth/v1/signup"),
-      headers: {
-        "apikey": publishableKey,
-        "Content-Type": "application/json",
-      },
+      headers: {"apikey": publishableKey, "Content-Type": "application/json"},
       body: jsonEncode({"email": email, "password": password}),
     );
 

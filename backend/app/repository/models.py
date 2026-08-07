@@ -128,6 +128,7 @@ class Document(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     title: Mapped[str] = mapped_column(String(500))
     source: Mapped[str] = mapped_column(String(255), nullable=True)
+    source_type: Mapped[str] = mapped_column(String(50), default="unknown", index=True)
     author: Mapped[str] = mapped_column(String(255), nullable=True)
     version: Mapped[str] = mapped_column(String(50), nullable=True)
     published_date: Mapped[datetime] = mapped_column(DateTime, nullable=True)
@@ -162,6 +163,7 @@ class GoldenDataset(Base):
     expected_citation: Mapped[str] = mapped_column(String(255), nullable=True)
     category: Mapped[str] = mapped_column(String(100), nullable=True)
     created_by: Mapped[str] = mapped_column(String(255), nullable=True)
+    dataset_version: Mapped[str] = mapped_column(String(50), default="v1", index=True)
 
 
 class EvalRun(Base):
@@ -174,3 +176,4 @@ class EvalRun(Base):
     citation_score: Mapped[float] = mapped_column(Float, nullable=True)
     hallucination_rate: Mapped[float] = mapped_column(Float, nullable=True)
     passed: Mapped[bool] = mapped_column(default=False)
+    dataset_version: Mapped[str] = mapped_column(String(50), default="v1", index=True)

@@ -16,6 +16,7 @@ from app.retrieval.bm25_search import invalidate_bm25_index
 from app.services.ingest_service import ingest_document
 from app.services.pdf_extractor import extract_text_from_pdf
 from app.services.storage_service import upload_file
+from app.retrieval.source_authority import SourceType, authority_score
 
 router = APIRouter(tags=["documents"])
 
@@ -24,8 +25,13 @@ class IngestRequest(BaseModel):
     title: str = Field(min_length=1, max_length=500)
     content: str = Field(min_length=1, max_length=1_000_000)
     source: str | None = Field(default=None, max_length=255)
+    source_type: SourceType = SourceType.UNKNOWN
     author: str | None = Field(default=None, max_length=255)
     version: str | None = Field(default=None, max_length=50)
+
+
+class SourceTypeUpdate(BaseModel):
+    source_type: SourceType
 
 
 @router.post("/documents/ingest")
@@ -42,6 +48,7 @@ async def ingest(
         title=req.title,
         content=req.content,
         source=req.source,
+        source_type=req.source_type,
         author=req.author,
         version=req.version,
         file_key=file_key,
@@ -54,6 +61,7 @@ async def upload_document(
     file: UploadFile = File(...),
     title: str = Form(..., min_length=1, max_length=500),
     source: str | None = Form(None, max_length=255),
+    source_type: SourceType = Form(SourceType.UNKNOWN),
     author: str | None = Form(None, max_length=255),
     version: str | None = Form(None, max_length=50),
     db: AsyncSession = Depends(get_db),
@@ -86,6 +94,7 @@ async def upload_document(
         title=title,
         content=content,
         source=source,
+        source_type=source_type,
         author=author,
         version=version,
         file_key=file_key,
@@ -110,6 +119,8 @@ async def list_documents(
             "id": str(document.id),
             "title": document.title,
             "source": document.source,
+            "source_type": document.source_type,
+            "authority_score": authority_score(document.source_type),
             "version": document.version,
             "is_active": document.is_active,
             "ingested_at": document.ingested_at.isoformat(),
@@ -141,3 +152,39 @@ async def deactivate_document(
     )
     invalidate_bm25_index()
     return {"status": "deactivated", "document_id": document_id}
+
+
+@router.patch("/documents/{document_id}/source-type")
+async def update_document_source_type(
+    document_id: str,
+    req: SourceTypeUpdate,
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_admin),
+):
+    result = await db.execute(select(Document).where(Document.id == document_id))
+    document = result.scalar_one_or_none()
+    if not document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
+        )
+
+    document.source_type = req.source_type.value
+    await db.commit()
+    score = authority_score(req.source_type)
+    await qdrant_client.set_payload(
+        collection_name=COLLECTION_NAME,
+        payload={"source_type": req.source_type.value, "authority_score": score},
+        points=Filter(
+            must=[
+                FieldCondition(
+                    key="document_id", match=MatchValue(value=document_id)
+                )
+            ]
+        ),
+    )
+    invalidate_bm25_index()
+    return {
+        "document_id": document_id,
+        "source_type": req.source_type.value,
+        "authority_score": score,
+    }

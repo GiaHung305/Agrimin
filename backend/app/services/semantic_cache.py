@@ -1,21 +1,39 @@
 import hashlib
 import json
 import logging
+import re
+from datetime import datetime, timezone
 
 from app.core.redis_client import redis_client
+from app.core.model_registry import runtime_fingerprint
 from app.services.embedding_client import embed_text
 
 CACHE_TTL_SECONDS = 3600
 SIMILARITY_THRESHOLD = 0.95
 logger = logging.getLogger(__name__)
+_REALTIME_PATTERN = re.compile(
+    r"\b(hôm nay|hiện tại|bây giờ|thời tiết|mưa|nắng|nhiệt độ|độ ẩm|bão|gió)\b",
+    re.IGNORECASE,
+)
 
 
-def _context_key(user_id: str, province: str | None, crop: str | None) -> str:
+def is_realtime_sensitive_question(question: str) -> bool:
+    return bool(_REALTIME_PATTERN.search(question))
+
+
+def _context_key(
+    user_id: str,
+    province: str | None,
+    crop: str | None,
+    *,
+    time_window: str | None = None,
+) -> str:
     """Scope cache entries to the user because answers can use private memory."""
     user_hash = hashlib.sha256(user_id.encode("utf-8")).hexdigest()[:16]
     province = (province or "unknown").lower().strip()
     crop = (crop or "unknown").lower().strip()
-    return f"{user_hash}:{province}:{crop}"
+    time_window = time_window or datetime.now(timezone.utc).strftime("%Y%m%d%H")
+    return f"{runtime_fingerprint()}:{time_window}:{user_hash}:{province}:{crop}"
 
 
 def _cosine_similarity(a: list[float], b: list[float]) -> float:

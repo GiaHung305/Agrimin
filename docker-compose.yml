@@ -58,6 +58,7 @@ services:
       # Inside Docker, localhost resolves to this backend container. Use the
       # Compose service name for the separate GPU embedding service instead.
       EMBEDDING_SERVICE_URL: http://embedding-service:8001
+      MCP_WEATHER_URL: http://mcp-weather-server:8002/mcp
     depends_on:
       postgres:
         condition: service_healthy

@@ -1,0 +1,81 @@
+{
+  "version": "retrieval-v2",
+  "knowledge_base_version": "kb-v1",
+  "items": [
+    {
+      "query": "Cách tưới nước cho cà chua như thế nào?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_irrigation"
+    },
+    {
+      "query": "Cà chua nên tưới vào buổi nào?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_irrigation"
+    },
+    {
+      "query": "ca chua nen tuoi vao luc nao",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_irrigation_ascii"
+    },
+    {
+      "query": "Tưới cà chua quá nhiều vào buổi tối có sao không?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_fungal_risk"
+    },
+    {
+      "query": "Độ pH đất phù hợp cho cà chua là bao nhiêu?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_soil"
+    },
+    {
+      "query": "Đất trồng cà chua cần thoát nước như thế nào?",
+      "relevant_sources": ["Tai lieu mau"],
+      "category": "tomato_soil"
+    },
+    {
+      "query": "Sầu riêng phù hợp với loại đất nào?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_soil"
+    },
+    {
+      "query": "pH đất bao nhiêu thì hợp với sầu riêng?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_soil_ph"
+    },
+    {
+      "query": "sau rieng co trong duoc o dat hay ngap khong",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_soil_ascii"
+    },
+    {
+      "query": "Làm sao phòng bệnh nứt thân xì mủ cho sầu riêng?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_disease"
+    },
+    {
+      "query": "Nấm Phytophthora gây hại sầu riêng cần phòng thế nào?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_disease"
+    },
+    {
+      "query": "Khi nào thu hoạch sầu riêng?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_harvest"
+    },
+    {
+      "query": "Sầu riêng sau khi đậu quả bao nhiêu ngày thì thu hoạch?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_harvest"
+    },
+    {
+      "query": "Nên bón phân gì cho sầu riêng giai đoạn ra hoa?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_fertilizer"
+    },
+    {
+      "query": "Giai đoạn ra hoa sầu riêng cần tăng kali hay lân?",
+      "relevant_sources": ["tai lieu pdf mau"],
+      "category": "durian_fertilizer"
+    }
+  ]
+}

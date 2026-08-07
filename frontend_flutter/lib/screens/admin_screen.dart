@@ -65,6 +65,7 @@ class _AdminScreenState extends State<AdminScreen> {
         fileName: file.name,
         title: metadata.title,
         source: metadata.source.isEmpty ? null : metadata.source,
+        sourceType: metadata.sourceType,
         version: metadata.version.isEmpty ? null : metadata.version,
       );
       if (!mounted) return;
@@ -91,6 +92,7 @@ class _AdminScreenState extends State<AdminScreen> {
     );
     final source = TextEditingController();
     final version = TextEditingController(text: 'v1');
+    var sourceType = 'user_upload';
     return showDialog<_DocumentMetadata>(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -103,6 +105,20 @@ class _AdminScreenState extends State<AdminScreen> {
                 controller: title,
                 autofocus: true,
                 decoration: const InputDecoration(labelText: 'Tiêu đề *'),
+              ),
+              const SizedBox(height: 12),
+              DropdownButtonFormField<String>(
+                initialValue: sourceType,
+                decoration: const InputDecoration(labelText: 'Loại nguồn *'),
+                items: _sourceTypeLabels.entries
+                    .map(
+                      (entry) => DropdownMenuItem(
+                        value: entry.key,
+                        child: Text(entry.value),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) => sourceType = value ?? 'user_upload',
               ),
               const SizedBox(height: 12),
               TextField(
@@ -130,6 +146,7 @@ class _AdminScreenState extends State<AdminScreen> {
               _DocumentMetadata(
                 title.text.trim(),
                 source.text.trim(),
+                sourceType,
                 version.text.trim(),
               ),
             ),
@@ -180,6 +197,52 @@ class _AdminScreenState extends State<AdminScreen> {
           SnackBar(content: Text('Không thể cập nhật tài liệu: $error')),
         );
       }
+    }
+  }
+
+  Future<void> _handleSourceType(DocumentItem document) async {
+    var selected = document.sourceType;
+    final sourceType = await showDialog<String>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Phân loại nguồn'),
+        content: DropdownButtonFormField<String>(
+          initialValue: selected,
+          decoration: const InputDecoration(labelText: 'Loại nguồn'),
+          items: _sourceTypeLabels.entries
+              .map(
+                (entry) => DropdownMenuItem(
+                  value: entry.key,
+                  child: Text(entry.value),
+                ),
+              )
+              .toList(),
+          onChanged: (value) => selected = value ?? selected,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Hủy'),
+          ),
+          FilledButton(
+            onPressed: () => Navigator.pop(dialogContext, selected),
+            child: const Text('Lưu'),
+          ),
+        ],
+      ),
+    );
+    if (!mounted || sourceType == null || sourceType == document.sourceType) {
+      return;
+    }
+    try {
+      await ApiService.updateDocumentSourceType(document.id, sourceType);
+      if (!mounted) return;
+      await _loadDocuments();
+    } catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Không thể phân loại nguồn: $error')),
+      );
     }
   }
 
@@ -247,6 +310,7 @@ class _AdminScreenState extends State<AdminScreen> {
                         padding: const EdgeInsets.only(bottom: 10),
                         child: _DocumentCard(
                           document: document,
+                          onClassify: () => _handleSourceType(document),
                           onDeactivate: () => _handleDeactivate(document),
                         ),
                       ),
@@ -259,11 +323,27 @@ class _AdminScreenState extends State<AdminScreen> {
 }
 
 class _DocumentMetadata {
-  const _DocumentMetadata(this.title, this.source, this.version);
+  const _DocumentMetadata(
+    this.title,
+    this.source,
+    this.sourceType,
+    this.version,
+  );
   final String title;
   final String source;
+  final String sourceType;
   final String version;
 }
+
+const Map<String, String> _sourceTypeLabels = {
+  'government': 'Cơ quan nhà nước',
+  'extension': 'Khuyến nông',
+  'international_organization': 'Tổ chức quốc tế',
+  'manufacturer_label': 'Nhãn sản phẩm chính thức',
+  'research': 'Nghiên cứu khoa học',
+  'user_upload': 'Tài liệu người dùng tải lên',
+  'unknown': 'Chưa phân loại',
+};
 
 class _KnowledgeHero extends StatelessWidget {
   const _KnowledgeHero({required this.total, required this.active});
@@ -328,8 +408,13 @@ class _KnowledgeHero extends StatelessWidget {
 }
 
 class _DocumentCard extends StatelessWidget {
-  const _DocumentCard({required this.document, required this.onDeactivate});
+  const _DocumentCard({
+    required this.document,
+    required this.onClassify,
+    required this.onDeactivate,
+  });
   final DocumentItem document;
+  final VoidCallback onClassify;
   final VoidCallback onDeactivate;
 
   @override
@@ -379,6 +464,14 @@ class _DocumentCard extends StatelessWidget {
                       fontSize: 12,
                     ),
                   ),
+                  const SizedBox(height: 4),
+                  Text(
+                    '${_sourceTypeLabels[document.sourceType] ?? 'Chưa phân loại'} • thẩm quyền ${(document.authorityScore * 100).toStringAsFixed(0)}%',
+                    style: const TextStyle(
+                      color: AppColors.muted,
+                      fontSize: 11,
+                    ),
+                  ),
                   const SizedBox(height: 7),
                   Row(
                     children: [
@@ -405,8 +498,18 @@ class _DocumentCard extends StatelessWidget {
             if (document.isActive)
               PopupMenuButton<String>(
                 tooltip: 'Tùy chọn',
-                onSelected: (_) => onDeactivate(),
+                onSelected: (value) {
+                  if (value == 'classify') {
+                    onClassify();
+                  } else if (value == 'deactivate') {
+                    onDeactivate();
+                  }
+                },
                 itemBuilder: (_) => const [
+                  PopupMenuItem(
+                    value: 'classify',
+                    child: Text('Phân loại nguồn'),
+                  ),
                   PopupMenuItem(value: 'deactivate', child: Text('Ngừng dùng')),
                 ],
                 icon: const Icon(

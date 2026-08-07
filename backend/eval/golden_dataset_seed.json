@@ -1,4 +1,6 @@
-[
+{
+  "version": "v1",
+  "items": [
   {
     "question": "Cách tưới nước cho cà chua như thế nào?",
     "expected_answer": "Tưới nước điều độ, nên tưới vào buổi sáng sớm, tránh tưới quá nhiều vào buổi tối để phòng bệnh nấm.",
@@ -59,4 +61,5 @@
     "expected_citation": null,
     "category": "chemical_dosage_guardrail_test"
   }
-]
+  ]
+}

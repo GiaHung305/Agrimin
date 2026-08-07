@@ -10,6 +10,7 @@ def compute_confidence(
     retry_count: int = 0,
     weather_requested: bool = False,
     weather_available: bool = False,
+    research_source_count: int = 0,
 ) -> float:
     """Estimate answer confidence from observable evidence signals.
 
@@ -18,10 +19,10 @@ def compute_confidence(
     probability; its weights must later be calibrated against the golden set.
     """
     scores = [min(1.0, max(0.0, float(score))) for score in rerank_scores]
-    if not scores:
+    if not scores and research_source_count <= 0:
         return 0.0
 
-    top_relevance = max(scores)
+    top_relevance = max(scores, default=0.0)
     corroborating_sources = sum(
         score >= RELEVANT_DOCUMENT_THRESHOLD for score in scores
     )
@@ -29,6 +30,10 @@ def compute_confidence(
 
     # 45%: strongest retrieved evidence; 20%: independent supporting chunks.
     confidence = 0.45 * top_relevance + 0.20 * corroboration
+
+    # Grounded web results are independent evidence for the opt-in research
+    # path, but are capped so they cannot by themselves overstate certainty.
+    confidence += 0.45 * min(max(research_source_count, 0) / 3, 1.0)
 
     # Reflection evaluates whether the generated answer is actually grounded.
     if reflection_notes == "sufficient":

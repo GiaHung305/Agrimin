@@ -37,10 +37,16 @@ async def run_reminders_once():
             await _notify(session, task.user_id, "task_due", "Việc cần làm", task.title, f"task:{task.id}:due")
         profiles = (await session.execute(select(FarmProfile).where(FarmProfile.province.is_not(None)))).scalars().all()
         for profile in profiles:
-            coords = await geocode_province_via_mcp(profile.province)
-            if not coords:
+            try:
+                coords = await geocode_province_via_mcp(profile.province)
+                if not coords:
+                    continue
+                forecast = (await get_weather_via_mcp(*coords)).get("forecast", [])
+            except Exception:
+                # Weather is optional. Continue the cycle so due-task records
+                # are committed and other farms are not starved by one outage.
+                logger.warning("Weather reminder lookup failed", exc_info=True)
                 continue
-            forecast = (await get_weather_via_mcp(*coords)).get("forecast", [])
             rainy = next((day for day in forecast if day.get("rain_probability", 0) >= 0.7), None)
             if rainy:
                 await _notify(session, profile.user_id, "weather_alert", "Cảnh báo thời tiết", f"Khả năng mưa cao tại {profile.province} ngày {rainy['date']}. Hãy kiểm tra kế hoạch cho {profile.crop or 'cây trồng'}.", f"weather:{profile.id}:{rainy['date']}")

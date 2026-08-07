@@ -9,6 +9,11 @@ async def memory_write_node(state: AgentState, db: AsyncSession) -> AgentState:
     Chỉ ghi vào Postgres khi Guardrail đã pass — không lưu câu trả lời bị chặn,
     tránh hệ thống coi các câu bị từ chối là "đã trả lời được".
     """
+    # Defense in depth: even a future graph routing regression must never
+    # persist an answer that did not pass the post-generation guardrail.
+    if state.get("guardrail_status") != "pass":
+        return state
+
     message = Message(
         conversation_id=state["conversation_id"],
         role="assistant",

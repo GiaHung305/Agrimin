@@ -38,3 +38,34 @@ async def test_hybrid_search_runs_dense_and_bm25_concurrently(monkeypatch):
     assert set(started) == {"dense", "bm25"}
     release.set()
     await task
+
+
+@pytest.mark.asyncio
+async def test_low_confidence_reranker_does_not_override_fusion(monkeypatch):
+    monkeypatch.setattr(
+        hybrid_module,
+        "dense_search",
+        lambda *args, **kwargs: asyncio.sleep(
+            0,
+            result=[
+                {"document_id": "right", "chunk_id": "1", "content": "right"},
+                {"document_id": "wrong", "chunk_id": "2", "content": "wrong"},
+            ],
+        ),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search",
+        lambda *args, **kwargs: asyncio.sleep(
+            0,
+            result=[{"document_id": "right", "chunk_id": "1", "content": "right"}],
+        ),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "rerank",
+        lambda *args: asyncio.sleep(0, result=[0.05, 0.075]),
+    )
+    result = await hybrid_module.hybrid_search("query")
+    assert result[0]["document_id"] == "right"
+    assert result[0]["ranking_strategy"] == "fusion_low_rerank_confidence"

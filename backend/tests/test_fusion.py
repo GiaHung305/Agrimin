@@ -34,3 +34,38 @@ def test_fusion_single_source_only():
     dense_results = [{"content": "Chỉ có trong dense"}]
     result = reciprocal_rank_fusion(dense_results, [])
     assert len(result) == 1
+
+
+def test_fusion_preserves_scores_and_uses_chunk_identity():
+    dense = [{
+        "document_id": "doc-1",
+        "chunk_id": "chunk-1",
+        "content": "same",
+        "dense_score": 0.9,
+    }]
+    bm25 = [{
+        "document_id": "doc-1",
+        "chunk_id": "chunk-1",
+        "content": "same",
+        "bm25_score": 4.2,
+    }]
+    result = reciprocal_rank_fusion(dense, bm25)
+    assert len(result) == 1
+    assert result[0]["dense_score"] == 0.9
+    assert result[0]["bm25_score"] == 4.2
+    assert result[0]["fusion_score"] > 0
+
+
+def test_weighted_fusion_can_prefer_exact_sparse_match():
+    dense = [
+        {"document_id": "semantic", "chunk_id": "1", "content": "semantic"},
+        {"document_id": "exact", "chunk_id": "2", "content": "exact"},
+    ]
+    sparse = [
+        {"document_id": "exact", "chunk_id": "2", "content": "exact"},
+        {"document_id": "semantic", "chunk_id": "1", "content": "semantic"},
+    ]
+    result = reciprocal_rank_fusion(
+        dense, sparse, dense_weight=1.0, bm25_weight=1.15
+    )
+    assert result[0]["document_id"] == "exact"

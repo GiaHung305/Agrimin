@@ -39,3 +39,18 @@ async def test_bm25_reuses_index_until_invalidated(monkeypatch):
     bm25_module.invalidate_bm25_index()
     await bm25_module.bm25_search("tuoi nuoc")
     assert fake_qdrant.calls == 2
+
+
+@pytest.mark.asyncio
+async def test_bm25_excludes_configured_placeholder_sources(monkeypatch):
+    class QdrantWithPlaceholder:
+        async def scroll(self, **kwargs):
+            return [
+                SimpleNamespace(payload={"content": "sau rieng", "source": "Test"}),
+                SimpleNamespace(payload={"content": "sau rieng", "source": "Khuyen nong"}),
+            ], None
+
+    monkeypatch.setattr(bm25_module, "qdrant_client", QdrantWithPlaceholder())
+    bm25_module.invalidate_bm25_index()
+    result = await bm25_module.bm25_search("sầu riêng")
+    assert [item["source"] for item in result] == ["Khuyen nong"]

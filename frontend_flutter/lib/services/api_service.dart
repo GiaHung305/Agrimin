@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import '../models/document.dart';
+import '../models/chat_image.dart';
 import '../models/farm_profile.dart';
 import '../models/farm_task.dart';
 import '../models/app_notification.dart';
@@ -22,6 +23,8 @@ class ApiService {
   static Stream<Map<String, dynamic>> sendMessageStream(
     String question,
     String? conversationId,
+    bool deepResearch,
+    List<ChatImageAttachment> images,
   ) async* {
     final token = await AuthService.getToken();
     final request = http.Request("POST", Uri.parse("$baseUrl/chat/stream"));
@@ -30,6 +33,8 @@ class ApiService {
     request.body = jsonEncode({
       "question": question,
       "conversation_id": conversationId,
+      "deep_research": deepResearch,
+      "images": images.map((image) => image.toJson()).toList(),
     });
 
     final streamedResponse = await request.send();
@@ -38,7 +43,14 @@ class ApiService {
       if (streamedResponse.statusCode == 401) {
         throw Exception("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
       }
-      throw Exception("Lỗi server: ${streamedResponse.statusCode} $body");
+      try {
+        final payload = jsonDecode(body) as Map<String, dynamic>;
+        final detail = payload['detail']?.toString();
+        if (detail != null && detail.isNotEmpty) throw Exception(detail);
+      } on FormatException {
+        // Fall through to the status-based error when the body is not JSON.
+      }
+      throw Exception("Lỗi server: ${streamedResponse.statusCode}");
     }
 
     // A network chunk is not necessarily one SSE event. Buffer until the SSE
@@ -226,11 +238,30 @@ class ApiService {
     }
   }
 
+  static Future<void> updateDocumentSourceType(
+    String documentId,
+    String sourceType,
+  ) async {
+    final token = await AuthService.getToken();
+    final response = await http.patch(
+      Uri.parse("$baseUrl/documents/$documentId/source-type"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({"source_type": sourceType}),
+    );
+    if (response.statusCode != 200) {
+      throw Exception("Lỗi phân loại nguồn: ${response.statusCode}");
+    }
+  }
+
   static Future<Map<String, dynamic>> uploadDocument({
     required List<int> fileBytes,
     required String fileName,
     required String title,
     String? source,
+    String sourceType = 'user_upload',
     String? version,
   }) async {
     final token = await AuthService.getToken();
@@ -240,6 +271,7 @@ class ApiService {
     request.headers["Authorization"] = "Bearer $token";
     request.fields["title"] = title;
     if (source != null) request.fields["source"] = source;
+    request.fields["source_type"] = sourceType;
     if (version != null) request.fields["version"] = version;
 
     request.files.add(

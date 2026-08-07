@@ -11,6 +11,11 @@ from app.retrieval.bm25_search import invalidate_bm25_index
 from app.retrieval.chunking import chunk_text
 from app.services.embedding_client import embed_batch
 from app.repository.models import Document, DocumentChunk
+from app.retrieval.source_authority import (
+    SourceType,
+    authority_score,
+    normalize_source_type,
+)
 
 
 async def deactivate_old_versions(db: AsyncSession, title: str):
@@ -38,15 +43,18 @@ async def ingest_document(
     title: str,
     content: str,
     source: str = None,
+    source_type: str | SourceType = SourceType.UNKNOWN,
     author: str = None,
     version: str = None,
     file_key: str = None,
 ):
     await deactivate_old_versions(db, title)
 
+    normalized_source_type = normalize_source_type(source_type)
     document = Document(
         title=title,
         source=source,
+        source_type=normalized_source_type.value,
         author=author,
         version=version,
         published_date=datetime.utcnow(),
@@ -68,12 +76,16 @@ async def ingest_document(
                 vector=embedding,
                 payload={
                     "document_id": str(document.id),
+                    "chunk_id": point_id,
                     "chunk_index": i,
                     "content": chunk_content,
                     "title": title,
                     "source": source,
+                    "source_type": normalized_source_type.value,
+                    "authority_score": authority_score(normalized_source_type),
                     "version": version,
                     "is_active": True,
+                    "locator": source,
                 },
             )
         )

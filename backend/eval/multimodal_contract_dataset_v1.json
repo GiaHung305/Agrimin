@@ -1,0 +1,117 @@
+{
+  "version": "multimodal-contract-v1",
+  "description": "Contract cases for typed visual observations; this is not a vision-accuracy benchmark.",
+  "cases": [
+    {
+      "id": "healthy_tomato",
+      "expected_valid": true,
+      "base_question": "Lá cây này có vấn đề gì?",
+      "expected_query_terms": ["cà chua", "lá"],
+      "observation": {
+        "image_id": "0123456789abcdef",
+        "relevance": "agriculture_plant",
+        "crop_candidate": "cà chua",
+        "plant_part": "leaf",
+        "visible_symptoms": [],
+        "limitations": ["single_view"],
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "yellow_brown_spots",
+      "expected_valid": true,
+      "base_question": "Ảnh này cho thấy điều gì?",
+      "expected_query_terms": ["đổi màu", "đốm", "vùng vàng giữa gân lá", "đốm nâu tròn"],
+      "observation": {
+        "image_id": "1111111111111111",
+        "relevance": "agriculture_plant",
+        "crop_candidate": null,
+        "plant_part": "leaf",
+        "visible_symptoms": [
+          {
+            "symptom_type": "discoloration",
+            "description": "vùng vàng giữa gân lá",
+            "colors": ["yellow", "green"],
+            "distribution": "interveinal",
+            "region": null,
+            "confidence": 0.82
+          },
+          {
+            "symptom_type": "spot",
+            "description": "đốm nâu tròn",
+            "colors": ["brown"],
+            "distribution": "scattered",
+            "region": {"x_min": 0.2, "y_min": 0.1, "x_max": 0.8, "y_max": 0.9},
+            "confidence": 0.77
+          }
+        ],
+        "limitations": ["single_view"],
+        "confidence": 0.84
+      }
+    },
+    {
+      "id": "poor_light_uncertain",
+      "expected_valid": true,
+      "base_question": "Cây bị gì?",
+      "expected_query_terms": [],
+      "observation": {
+        "image_id": "2222222222222222",
+        "relevance": "uncertain",
+        "crop_candidate": null,
+        "plant_part": "unknown",
+        "visible_symptoms": [],
+        "limitations": ["low_light", "unknown_crop"],
+        "confidence": 0.35
+      }
+    },
+    {
+      "id": "out_of_domain",
+      "expected_valid": true,
+      "base_question": "Kiểm tra ảnh này",
+      "expected_query_terms": [],
+      "observation": {
+        "image_id": "3333333333333333",
+        "relevance": "out_of_domain",
+        "crop_candidate": null,
+        "plant_part": "unknown",
+        "visible_symptoms": [],
+        "limitations": [],
+        "confidence": 0.96
+      }
+    },
+    {
+      "id": "diagnostic_language_rejected",
+      "expected_valid": false,
+      "observation": {
+        "image_id": "4444444444444444",
+        "relevance": "agriculture_plant",
+        "crop_candidate": "ớt",
+        "plant_part": "leaf",
+        "visible_symptoms": [{
+          "symptom_type": "lesion",
+          "description": "bệnh phytophthora",
+          "colors": ["brown"],
+          "distribution": "localized",
+          "region": null,
+          "confidence": 0.91
+        }],
+        "limitations": [],
+        "confidence": 0.9
+      }
+    },
+    {
+      "id": "diagnosis_field_rejected",
+      "expected_valid": false,
+      "observation": {
+        "image_id": "5555555555555555",
+        "relevance": "agriculture_plant",
+        "crop_candidate": "lúa",
+        "plant_part": "leaf",
+        "visible_symptoms": [],
+        "limitations": [],
+        "confidence": 0.88,
+        "diagnosis": "đạo ôn"
+      }
+    }
+  ]
+}

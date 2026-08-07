@@ -38,8 +38,12 @@ async def test_conversation_cannot_be_opened_by_another_user():
 
 
 def test_semantic_cache_key_is_isolated_per_user():
-    first_user_key = _context_key("user-a", "Dak Lak", "coffee")
-    second_user_key = _context_key("user-b", "Dak Lak", "coffee")
+    first_user_key = _context_key(
+        "user-a", "Dak Lak", "coffee", time_window="2026080710"
+    )
+    second_user_key = _context_key(
+        "user-b", "Dak Lak", "coffee", time_window="2026080710"
+    )
 
     assert first_user_key != second_user_key
 

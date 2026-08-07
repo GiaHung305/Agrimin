@@ -1,0 +1,17 @@
+{
+  "dataset_version": "retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "accepted_reference": {
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 5909.884
+  },
+  "promotion_thresholds": {
+    "minimum_recall_at_k": 0.9,
+    "minimum_mrr": 0.8,
+    "minimum_ndcg_at_k": 0.8,
+    "maximum_mean_latency_ms": 30000.0
+  },
+  "environment_note": "Docker Desktop; BGE-M3 embedding on GPU overlay when enabled; reranker on CPU. Latency is observational, not a hardware-independent guarantee."
+}

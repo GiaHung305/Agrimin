@@ -1,62 +1,63 @@
-import json
+"""Structured extraction of user-owned farm facts after guardrail PASS."""
 
-from google import genai
+import json
+import logging
+
 from google.genai import types
+from pydantic import BaseModel, ConfigDict, ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.config import settings
-from app.core.retry_utils import gemini_retry
-from app.workflow.state import AgentState
+from app.core.model_registry import ModelRole
 from app.repository.models import MemoryFact
+from app.services.model_gateway import generate_content
+from app.workflow.state import AgentState
 
-client = genai.Client(api_key=settings.google_api_key)
-MODEL_FAST = "gemini-3.1-flash-lite"
-
-EXTRACT_SCHEMA = {
-    "type": "object",
-    "properties": {
-        "has_personal_info": {"type": "boolean"},
-        "province": {"type": "string", "nullable": True},
-        "crop": {"type": "string", "nullable": True},
-        "area_ha": {"type": "number", "nullable": True},
-        "farming_style": {"type": "string", "nullable": True},
-    },
-    "required": ["has_personal_info"],
-}
+logger = logging.getLogger(__name__)
 
 
-@gemini_retry
-def _call_gemini(prompt: str):
-    return client.models.generate_content(
-        model=MODEL_FAST,
-        contents=prompt,
+class MemoryExtraction(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    has_personal_info: bool
+    province: str | None = None
+    crop: str | None = None
+    area_ha: float | None = None
+    farming_style: str | None = None
+
+
+async def _call_gemini(prompt: str) -> MemoryExtraction:
+    response = await generate_content(
+        ModelRole.MEMORY,
+        prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
-            response_schema=EXTRACT_SCHEMA,
+            response_schema=MemoryExtraction,
         ),
     )
+    return MemoryExtraction.model_validate_json(response.text or "")
 
 
 async def memory_extract_node(state: AgentState, db: AsyncSession) -> AgentState:
+    if state.get("guardrail_status") != "pass":
+        return state
+
     prompt = f"""Đọc câu hỏi sau, trích xuất thông tin cá nhân về người dùng nếu có
 (vùng miền/tỉnh, loại cây trồng, diện tích tính bằng ha, phương pháp canh tác).
 Nếu không có trường nào, để null.
 
 Câu hỏi: {state['question']}"""
+    try:
+        extraction = await _call_gemini(prompt)
+    except ValidationError:
+        logger.warning("Memory extractor returned invalid structured output; skipping write")
+        return state
 
-    response = _call_gemini(prompt)
-    data = json.loads(response.text)
-
-    if data.get("has_personal_info"):
+    if extraction.has_personal_info:
         fact = MemoryFact(
             user_id=state["user_id"],
-            fact_text=json.dumps(data, ensure_ascii=False),
-            # A memory fact is derived from the same request/answer flow, so
-            # its stored confidence must reflect the evaluated graph result
-            # rather than an unconditional constant.
+            fact_text=json.dumps(extraction.model_dump(), ensure_ascii=False),
             confidence=state["confidence"],
         )
         db.add(fact)
         await db.commit()
-
     return state

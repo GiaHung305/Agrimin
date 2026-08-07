@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../models/chat_response.dart';
+import '../models/chat_image.dart';
 import '../services/api_service.dart';
 import '../services/auth_service.dart';
 import '../services/push_notification_service.dart';
@@ -71,12 +72,17 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
-  Future<void> _handleSend(String question) async {
+  Future<void> _handleSend(
+    String question,
+    bool deepResearch,
+    List<ChatImageAttachment> images,
+  ) async {
     setState(() {
       _messages.add({
         'question': question,
         'response': null,
         'partialText': '',
+        'imageCount': images.length,
       });
       _isLoading = true;
     });
@@ -87,6 +93,8 @@ class _ChatScreenState extends State<ChatScreen> {
       await for (final event in ApiService.sendMessageStream(
         question,
         conversationId,
+        deepResearch,
+        images,
       )) {
         if (event['type'] == 'meta') {
           meta = event['payload'];
@@ -125,9 +133,12 @@ class _ChatScreenState extends State<ChatScreen> {
       }
       if (mounted) {
         setState(() {
+          final isImageError =
+              message.contains('Ảnh') || message.contains('ảnh');
           _messages.last['response'] = ChatResponse(
-            answer:
-                'Mình chưa thể kết nối lúc này. Bạn thử lại sau ít phút nhé.',
+            answer: isImageError
+                ? message.replaceFirst('Exception: ', '')
+                : 'Mình chưa thể kết nối lúc này. Bạn thử lại sau ít phút nhé.',
             citations: const [],
             confidence: 0,
             riskLevel: 'low',
@@ -265,7 +276,9 @@ class _ChatScreenState extends State<ChatScreen> {
         children: [
           Expanded(
             child: _messages.isEmpty
-                ? _WelcomePanel(onPrompt: _handleSend)
+                ? _WelcomePanel(
+                    onPrompt: (prompt) => _handleSend(prompt, false, const []),
+                  )
                 : ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 18),
@@ -274,6 +287,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       final message = _messages[index];
                       return MessageBubble(
                         question: message['question'],
+                        imageCount: message['imageCount'] ?? 0,
                         response: message['response'],
                         isLoading:
                             index == _messages.length - 1 &&
