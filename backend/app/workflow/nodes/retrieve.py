@@ -46,7 +46,25 @@ def _research_queries(state: AgentState) -> list[str]:
     if not candidates:
         candidates = plan.get("research_questions") or [state["question"]]
 
+    retry_count = state.get("retry_count", 0)
+    retry_bases: dict[str, str] = {}
+    if retry_count > 0:
+        suffix = (
+            "nhãn và hướng dẫn chính thức Việt Nam"
+            if state.get("risk_level") == "high"
+            else "tài liệu kỹ thuật khuyến nông Việt Nam"
+        )
+        expanded = []
+        for candidate in candidates:
+            base = " ".join(str(candidate).split()).strip()
+            rewritten = f"{base} {suffix}" if base else ""
+            if rewritten:
+                retry_bases[rewritten] = base
+                expanded.append(rewritten)
+        candidates = expanded
+
     context = state.setdefault("context", {})
+    context["research_retry_bases"] = retry_bases
     context.pop("vision_retrieval_query", None)
     context.pop("vision_retrieval_base_query", None)
     if state.get("retry_count", 0) == 0 and state.get("visual_observations"):
@@ -132,6 +150,9 @@ async def retrieve_node(state: AgentState) -> AgentState:
     attempts = list(context.get("research_queries_attempted", []))
     for query, results in zip(queries, query_results):
         evidence_questions = [query]
+        retry_base = context.get("research_retry_bases", {}).get(query)
+        if retry_base:
+            evidence_questions.insert(0, retry_base)
         if query == context.get("vision_retrieval_query"):
             evidence_questions.insert(0, context["vision_retrieval_base_query"])
         normalized_results = []

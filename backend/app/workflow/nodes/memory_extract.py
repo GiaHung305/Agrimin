@@ -2,6 +2,8 @@
 
 import json
 import logging
+import re
+import unicodedata
 
 from google.genai import types
 from pydantic import BaseModel, ConfigDict, ValidationError
@@ -13,6 +15,7 @@ from app.services.model_gateway import generate_content
 from app.workflow.state import AgentState
 
 logger = logging.getLogger(__name__)
+_PERSONAL_CONTEXT_PATTERN = re.compile(r"\b(toi|minh|chung toi)\b")
 
 
 class MemoryExtraction(BaseModel):
@@ -31,14 +34,25 @@ async def _call_gemini(prompt: str) -> MemoryExtraction:
         prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
-            response_schema=MemoryExtraction,
+            response_json_schema=MemoryExtraction.model_json_schema(),
         ),
     )
     return MemoryExtraction.model_validate_json(response.text or "")
 
 
+def _may_contain_user_owned_fact(question: str) -> bool:
+    normalized = "".join(
+        char
+        for char in unicodedata.normalize("NFD", question.casefold())
+        if unicodedata.category(char) != "Mn"
+    ).replace("đ", "d")
+    return bool(_PERSONAL_CONTEXT_PATTERN.search(normalized))
+
+
 async def memory_extract_node(state: AgentState, db: AsyncSession) -> AgentState:
     if state.get("guardrail_status") != "pass":
+        return state
+    if not _may_contain_user_owned_fact(state.get("question", "")):
         return state
 
     prompt = f"""Đọc câu hỏi sau, trích xuất thông tin cá nhân về người dùng nếu có

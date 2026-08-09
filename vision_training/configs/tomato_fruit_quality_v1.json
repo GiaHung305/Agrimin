@@ -1,0 +1,23 @@
+{
+  "model_version": "tomato-fruit-quality-v1",
+  "crop": "cà chua",
+  "task": "fruit_quality_observation",
+  "backbone": "mobilenet_v3_small",
+  "input_size": 224,
+  "batch_size": 16,
+  "num_epochs": 12,
+  "learning_rate": 0.001,
+  "backbone_learning_rate": 0.0001,
+  "head_only_epochs": 2,
+  "unfreeze_feature_blocks": 2,
+  "weight_decay": 0.0001,
+  "label_smoothing": 0.05,
+  "early_stopping_patience": 4,
+  "seed": 42,
+  "review_min_confidence": 0.7,
+  "promotion_min_test_accuracy": 0.9,
+  "promotion_min_macro_f1": 0.88,
+  "promotion_max_low_confidence_rate": 0.25,
+  "min_prototype_images_per_label": 200,
+  "labels": ["damaged", "old", "ripe", "unripe"]
+}

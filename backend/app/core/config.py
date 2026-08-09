@@ -23,7 +23,9 @@ class Settings(BaseSettings):
     model_reflection: str = "gemini-3.1-flash-lite"
     model_generation: str = "gemini-3.5-flash"
     model_memory: str = "gemini-3.1-flash-lite"
+    model_vision: str = "gemini-3.5-flash"
     model_request_timeout_seconds: float = 45.0
+    ai_service_request_timeout_seconds: float = 60.0
     ai_policy_version: str = "safety-v2"
     prompt_bundle_version: str = "prompts-v2"
     evidence_schema_version: str = "evidence-v2"
@@ -64,6 +66,7 @@ class Settings(BaseSettings):
     max_chat_image_pixels: int = 16_000_000
     min_chat_image_dimension: int = 256
     vision_analysis_enabled: bool = False
+    vision_test_user_emails: str = ""
     vision_request_timeout_seconds: float = 30.0
     vision_observation_schema_version: str = "visual-observation-v1"
     model_config = SettingsConfigDict(env_file=".env")

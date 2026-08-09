@@ -56,12 +56,16 @@ async def get_supabase_token(client: httpx.AsyncClient) -> str:
 
 
 async def invoke_production_chat(
-    client: httpx.AsyncClient, token: str, question: str
+    client: httpx.AsyncClient,
+    token: str,
+    question: str,
+    *,
+    images: list[dict[str, str]] | None = None,
 ) -> dict[str, Any]:
     response = await client.post(
         settings.eval_api_url,
         headers={"Authorization": f"Bearer {token}", "Accept": "text/event-stream"},
-        json={"question": question},
+        json={"question": question, "images": images or []},
     )
     response.raise_for_status()
     return parse_sse_response(response.text)

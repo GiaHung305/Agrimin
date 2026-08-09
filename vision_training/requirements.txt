@@ -1,0 +1,9 @@
+torch==2.13.0
+torchvision==0.28.0
+onnx==1.22.0
+onnxscript==0.7.1
+onnxruntime==1.28.0
+scikit-learn==1.9.0
+Pillow==12.3.0
+kaggle==2.2.4
+huggingface-hub==1.27.0

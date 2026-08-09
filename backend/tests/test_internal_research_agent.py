@@ -15,6 +15,7 @@ from app.workflow.nodes.research_analysis import (
     MAX_RESEARCH_RETRIES,
     assess_coverage,
     detect_numeric_conflicts,
+    research_retry_limit,
     research_analysis_node,
 )
 
@@ -79,9 +80,29 @@ async def test_planner_keeps_bounded_unique_research_questions(monkeypatch):
     assert result["research_questions"] == [
         "Nhu cầu đất?",
         "Nhu cầu tưới?",
-        "Bệnh thường gặp?",
     ]
     assert result["plan"]["research_questions"] == result["research_questions"]
+
+
+@pytest.mark.asyncio
+async def test_high_risk_planner_retains_four_research_questions(monkeypatch):
+    async def decide(prompt):
+        return planner.PlannerDecision(
+            need_rag=True,
+            need_weather=False,
+            need_deep_research=False,
+            risk_level="high",
+            research_questions=["Nguồn?", "Nhãn?", "Liều?", "An toàn?"],
+        )
+
+    monkeypatch.setattr(planner, "_call_gemini", decide)
+    result = await planner.planner_node({
+        "question": "Liều thuốc an toàn?",
+        "context": {},
+    })
+
+    assert result["risk_level"] == "high"
+    assert len(result["research_questions"]) == 4
 
 
 @pytest.mark.asyncio
@@ -198,8 +219,17 @@ def test_coverage_rejects_single_channel_low_confidence_candidate():
 
 
 @pytest.mark.asyncio
-async def test_missing_evidence_retries_exactly_twice_then_stops():
-    state = _research_state()
+async def test_low_risk_missing_evidence_stops_without_redundant_retry():
+    state = await research_analysis_node(_research_state())
+
+    assert state["retry_count"] == 0
+    assert state["research_stop_reason"] == "retry_limit_missing_evidence"
+    assert route_after_research_analysis(state) == "generate"
+
+
+@pytest.mark.asyncio
+async def test_high_risk_missing_evidence_keeps_two_retry_budget():
+    state = _research_state(risk_level="high")
 
     for expected_retry in range(1, MAX_RESEARCH_RETRIES + 1):
         state = await research_analysis_node(state)
@@ -211,6 +241,16 @@ async def test_missing_evidence_retries_exactly_twice_then_stops():
     assert state["retry_count"] == MAX_RESEARCH_RETRIES
     assert state["research_stop_reason"] == "retry_limit_missing_evidence"
     assert route_after_research_analysis(state) == "generate"
+
+
+def test_vision_gets_one_retry_and_explicit_research_gets_two():
+    vision = _research_state()
+    vision["visual_observations"] = [{"crop_candidate": "tomato"}]
+    deep = _research_state()
+    deep["plan"]["need_deep_research"] = True
+
+    assert research_retry_limit(vision) == 1
+    assert research_retry_limit(deep) == MAX_RESEARCH_RETRIES
 
 
 def test_numeric_conflict_is_reported_across_independent_documents():
@@ -242,7 +282,7 @@ def test_reflection_never_starts_a_second_streamed_generation():
 
 
 @pytest.mark.asyncio
-async def test_graph_exhausts_two_retrieval_retries_before_single_generation(
+async def test_low_risk_graph_uses_one_retrieval_before_single_generation(
     monkeypatch,
 ):
     async def fake_planner(state):
@@ -325,6 +365,6 @@ async def test_graph_exhausts_two_retrieval_retries_before_single_generation(
         "research_sources": [],
     })
 
-    assert result["retry_count"] == MAX_RESEARCH_RETRIES
-    assert result["context"]["retrieve_calls"] == 3
+    assert result["retry_count"] == 0
+    assert result["context"]["retrieve_calls"] == 1
     assert result["context"]["generation_calls"] == 1

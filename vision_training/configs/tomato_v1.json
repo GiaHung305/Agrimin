@@ -1,0 +1,19 @@
+{
+  "model_version": "tomato-v1",
+  "crop": "cà chua",
+  "backbone": "mobilenet_v3_small",
+  "input_size": 224,
+  "batch_size": 16,
+  "num_epochs": 12,
+  "learning_rate": 0.001,
+  "seed": 42,
+  "review_min_confidence": 0.7,
+  "min_prototype_images_per_label": 200,
+  "labels": [
+    "chewing_damage",
+    "healthy",
+    "leaf_spot",
+    "uncertain_or_not_crop",
+    "yellowing"
+  ]
+}

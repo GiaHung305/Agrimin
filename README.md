@@ -57,6 +57,8 @@ embedding-service/
 
 frontend_flutter/
 
+vision_training/       # pipeline fine-tune offline; không nằm trong runtime production
+
 docker-compose.yml
 ```
 
@@ -92,7 +94,7 @@ flutter run
 
 ## API chính
 
-- POST /api/v1/chat: gửi câu hỏi và nhận câu trả lời
+- POST /api/v1/chat/stream: gửi câu hỏi và nhận kết quả SSE
 - POST /api/v1/documents/upload: upload PDF và ingest tài liệu
 - POST /api/v1/documents/ingest: ingest nội dung văn bản
 - GET /api/v1/documents: liệt kê tài liệu
@@ -113,3 +115,17 @@ Dự án hiện đang ở mức MVP với các thành phần cốt lõi đã ho�
 ## Ghi chú
 
 Một số cấu hình nhạy cảm như API key nên được đặt trong file .env và không commit vào Git.
+
+## Fine-tune thị giác (tomato v1)
+
+`vision_training/` là workspace độc lập để thu thập ảnh, kiểm tra manifest,
+fine-tune MobileNetV3-Small và export ONNX. Nó không bật vision runtime và không
+đưa PyTorch vào backend production. Xem hướng dẫn tại
+[`vision_training/README.md`](vision_training/README.md).
+
+Backend có adapter Gemini Flash đa cây phía sau `VISION_ANALYSIS_ENABLED=false`.
+Adapter chỉ tạo quan sát thị giác typed để mở rộng truy vấn RAG; nó không tự chẩn
+đoán hoặc đưa liều lượng. Đặt model bằng `MODEL_VISION`, nhưng chỉ bật feature flag
+sau khi model vượt bộ đánh giá ảnh thực địa và OOD có phiên bản.
+Trong giai đoạn manual QA, điền email test vào `VISION_TEST_USER_EMAILS` để thử
+qua Flutter trong khi global flag vẫn tắt.

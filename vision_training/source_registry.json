@@ -1,0 +1,58 @@
+{
+  "schema_version": "vision-source-registry-v1",
+  "sources": [
+    {
+      "id": "plantvillage_official",
+      "display_name": "PlantVillage official repository",
+      "huggingface_dataset": "mohanty/PlantVillage",
+      "huggingface_config": "color",
+      "huggingface_revision": "9e97599868962bd0079b8db4b7f1efa9185fa1e7",
+      "download_url": "https://github.com/spMohanty/PlantVillage-Dataset/archive/refs/heads/master.zip",
+      "reference_url": "https://github.com/spMohanty/PlantVillage-Dataset",
+      "intended_use": "baseline_train",
+      "license_status": "CC-BY-SA-3.0",
+      "production_eligible": false,
+      "notes": "Use the tomato subset for baseline only; controlled imagery must not be the sole evaluation source."
+    },
+    {
+      "id": "enalis_tomatoes",
+      "display_name": "Enalis Tomatoes Dataset",
+      "kaggle_dataset": "enalis/tomatoes-dataset",
+      "download_url": "https://www.kaggle.com/api/v1/datasets/download/enalis/tomatoes-dataset",
+      "reference_url": "https://www.kaggle.com/datasets/enalis/tomatoes-dataset",
+      "intended_use": "fruit_quality_train",
+      "license_status": "CC0-1.0",
+      "production_eligible": true,
+      "notes": "Fruit quality only: ripe, unripe, old, damaged."
+    },
+    {
+      "id": "plantwild_v2",
+      "display_name": "PlantWild v2",
+      "reference_url": "https://tqwei05.github.io/PlantWild/",
+      "intended_use": "internal_field_evaluation",
+      "license_status": "CC-BY-NC-4.0",
+      "production_eligible": false,
+      "notes": "Do not download into a production training artifact without license review; use only for internal non-commercial benchmark."
+    },
+    {
+      "id": "plantdoc_field_eval",
+      "display_name": "PlantDoc Cropped Classification Dataset",
+      "download_url": "https://github.com/pratikkayal/PlantDoc-Dataset/archive/5467f6012d78d1c446145d5f582da6096f852ae8.zip",
+      "reference_url": "https://github.com/pratikkayal/PlantDoc-Dataset",
+      "revision": "5467f6012d78d1c446145d5f582da6096f852ae8",
+      "intended_use": "independent_field_evaluation",
+      "license_status": "CC-BY-4.0",
+      "production_eligible": false,
+      "notes": "Internet-scraped field images with author labels. Evaluation only; never merge into the frozen PlantVillage test set."
+    },
+    {
+      "id": "tomato_leaves_kaggle",
+      "display_name": "Tomato Leaves Dataset",
+      "reference_url": "https://www.kaggle.com/datasets/ashishmotwani/tomato",
+      "intended_use": "research_review",
+      "license_status": "data_files_original_authors",
+      "production_eligible": false,
+      "notes": "Do not use until upstream author/license provenance is confirmed."
+    }
+  ]
+}

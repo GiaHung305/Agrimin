@@ -1,25 +1,38 @@
+import asyncio
+import logging
+import os
+
+import torch
 from fastapi import FastAPI
 from pydantic import BaseModel
-import os
-import torch
-from sentence_transformers import SentenceTransformer
-from sentence_transformers import CrossEncoder
+from sentence_transformers import CrossEncoder, SentenceTransformer
 
 app = FastAPI(title="AgriMind Embedding Service")
+logger = logging.getLogger(__name__)
+
 
 def _resolve_device(variable: str, fallback: str) -> str:
     requested = os.getenv(variable, fallback).lower()
     if requested == "cuda" and not torch.cuda.is_available():
-        print(f"{variable}=cuda requested but CUDA is unavailable; using CPU instead.")
+        logger.warning("%s=cuda requested but CUDA is unavailable; using CPU", variable)
         return "cpu"
     return requested
 
 
-embedding_device = _resolve_device("EMBEDDING_DEVICE", "cuda" if torch.cuda.is_available() else "cpu")
+embedding_device = _resolve_device(
+    "EMBEDDING_DEVICE",
+    "cuda" if torch.cuda.is_available() else "cpu",
+)
 reranker_device = _resolve_device("RERANKER_DEVICE", embedding_device)
 device = embedding_device
+embedding_semaphore = asyncio.Semaphore(
+    max(1, int(os.getenv("EMBEDDING_MAX_CONCURRENCY", "1")))
+)
+reranker_semaphore = asyncio.Semaphore(
+    max(1, int(os.getenv("RERANKER_MAX_CONCURRENCY", "1")))
+)
 model = SentenceTransformer("BAAI/bge-m3", device=device)
-print(f"Embedding model đã tải lên: {device}")
+logger.info("Embedding model loaded on %s", device)
 
 
 class EmbedRequest(BaseModel):
@@ -33,8 +46,13 @@ class EmbedResponse(BaseModel):
 
 @app.post("/embed", response_model=EmbedResponse)
 async def embed(req: EmbedRequest):
-    vectors = model.encode(req.texts, normalize_embeddings=True).tolist()
-    return {"embeddings": vectors, "device": device}
+    async with embedding_semaphore:
+        vectors = await asyncio.to_thread(
+            model.encode,
+            req.texts,
+            normalize_embeddings=True,
+        )
+    return {"embeddings": vectors.tolist(), "device": device}
 
 
 @app.get("/health")
@@ -60,5 +78,10 @@ async def rerank(req: RerankRequest):
     # CrossEncoder logits are model-specific and cannot be compared directly
     # with a confidence threshold.  Make this API's contract explicit: every
     # rerank score is a relevance probability in the [0, 1] interval.
-    scores = reranker.predict(pairs, activation_fn=torch.nn.Sigmoid()).tolist()
+    async with reranker_semaphore:
+        scores = await asyncio.to_thread(
+            reranker.predict,
+            pairs,
+            activation_fn=torch.nn.Sigmoid(),
+        )
     return {"scores": scores}

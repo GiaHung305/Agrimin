@@ -11,6 +11,8 @@ services:
       EMBEDDING_DEVICE: cuda
       # RTX 3050 4 GB: avoid loading both large ML models into GPU memory.
       RERANKER_DEVICE: cpu
+      EMBEDDING_MAX_CONCURRENCY: 1
+      RERANKER_MAX_CONCURRENCY: 2
     deploy:
       resources:
         reservations:

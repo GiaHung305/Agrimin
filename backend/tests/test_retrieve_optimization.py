@@ -66,3 +66,19 @@ async def test_retrieve_runs_rag_and_weather_concurrently(monkeypatch):
     result = await task
 
     assert result["tool_results"]["weather"]["forecast"] == "sunny"
+
+
+def test_retry_query_is_expanded_and_keeps_original_evidence_scope():
+    state = {
+        "question": "Câu hỏi gốc",
+        "plan": {"need_rag": True},
+        "missing_evidence": ["Liều lượng an toàn?"],
+        "retry_count": 1,
+        "risk_level": "high",
+        "context": {},
+    }
+
+    queries = retrieve._research_queries(state)
+
+    assert queries == ["Liều lượng an toàn? nhãn và hướng dẫn chính thức Việt Nam"]
+    assert state["context"]["research_retry_bases"][queries[0]] == "Liều lượng an toàn?"

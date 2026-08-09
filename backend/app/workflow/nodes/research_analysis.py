@@ -131,6 +131,21 @@ def _unique_questions(values: list[str]) -> list[str]:
     return list(dict.fromkeys(value for value in values if value))
 
 
+def research_retry_limit(state: AgentState) -> int:
+    """Spend retries only where additional evidence materially affects safety.
+
+    Ordinary low-risk chat degrades with uncertainty after one retrieval pass.
+    Vision gets one expanded pass; high-risk and explicit Deep Research retain
+    the full bounded budget.
+    """
+    plan = state.get("plan") or {}
+    if state.get("risk_level") == "high" or plan.get("need_deep_research", False):
+        return MAX_RESEARCH_RETRIES
+    if state.get("visual_observations"):
+        return 1
+    return 0
+
+
 async def research_analysis_node(state: AgentState) -> AgentState:
     plan = state.get("plan") or {}
     if not plan.get("need_rag", True):
@@ -153,7 +168,7 @@ async def research_analysis_node(state: AgentState) -> AgentState:
     state["evidence_conflicts"] = conflicts
     if not unresolved:
         state["research_stop_reason"] = "sufficient"
-    elif state.get("retry_count", 0) < MAX_RESEARCH_RETRIES:
+    elif state.get("retry_count", 0) < research_retry_limit(state):
         state["retry_count"] = state.get("retry_count", 0) + 1
         state["research_stop_reason"] = (
             "retry_contradiction" if conflicts else "retry_missing_evidence"

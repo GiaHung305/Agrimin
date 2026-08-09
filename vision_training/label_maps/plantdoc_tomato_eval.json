@@ -1,0 +1,11 @@
+{
+  "Tomato Early blight leaf": "early_blight",
+  "Tomato Septoria leaf spot": "septoria_leaf_spot",
+  "Tomato leaf": "healthy",
+  "Tomato leaf bacterial spot": "bacterial_spot",
+  "Tomato leaf late blight": "late_blight",
+  "Tomato leaf mosaic virus": "tomato_mosaic_virus",
+  "Tomato leaf yellow virus": "tomato_yellow_leaf_curl_virus",
+  "Tomato mold leaf": "leaf_mold",
+  "Tomato two spotted spider mites leaf": "spider_mites"
+}
