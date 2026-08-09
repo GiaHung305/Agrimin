@@ -14,11 +14,22 @@ from app.core.model_registry import ModelRole, model_name
 from app.core.retry_utils import gemini_retry
 
 
-client = genai.Client(api_key=settings.google_api_key)
-
-
 class ModelProviderUnavailable(RuntimeError):
     """A provider timeout that callers may translate to a stable fallback."""
+
+
+client: genai.Client | None = None
+
+
+def _get_client() -> genai.Client:
+    """Create the provider client only when a model call is attempted."""
+    global client
+    if client is not None:
+        return client
+    if not settings.google_api_key:
+        raise ModelProviderUnavailable("Google API key is not configured")
+    client = genai.Client(api_key=settings.google_api_key)
+    return client
 
 
 @gemini_retry
@@ -30,7 +41,7 @@ async def generate_content(
 ) -> Any:
     try:
         return await asyncio.wait_for(
-            client.aio.models.generate_content(
+            _get_client().aio.models.generate_content(
                 model=model_name(role),
                 contents=contents,
                 config=config,
@@ -49,7 +60,7 @@ async def generate_content(
 async def _open_stream(role: ModelRole, contents: str) -> Any:
     try:
         return await asyncio.wait_for(
-            client.aio.models.generate_content_stream(
+            _get_client().aio.models.generate_content_stream(
                 model=model_name(role),
                 contents=contents,
             ),

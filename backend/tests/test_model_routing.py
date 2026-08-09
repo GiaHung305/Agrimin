@@ -54,6 +54,17 @@ def test_realtime_questions_bypass_semantic_cache():
     assert not is_realtime_sensitive_question("Cách tỉa cành cà chua")
 
 
+def test_model_gateway_import_does_not_require_api_key(monkeypatch):
+    monkeypatch.setattr(model_gateway, "client", None)
+    monkeypatch.setattr(model_gateway.settings, "google_api_key", "")
+
+    with pytest.raises(
+        model_gateway.ModelProviderUnavailable,
+        match="Google API key is not configured",
+    ):
+        model_gateway._get_client()
+
+
 @pytest.mark.asyncio
 async def test_planner_uses_typed_decision(monkeypatch):
     async def decide(prompt):

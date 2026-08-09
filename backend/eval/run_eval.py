@@ -18,7 +18,18 @@ from app.core.db import AsyncSessionLocal
 from app.repository.models import EvalRun, GoldenDataset
 
 
-judge_client = genai.Client(api_key=settings.google_api_key)
+judge_client: genai.Client | None = None
+
+
+def _get_judge_client() -> genai.Client:
+    """Create the paid judge client only when an evaluation actually runs."""
+    global judge_client
+    if judge_client is not None:
+        return judge_client
+    if not settings.google_api_key:
+        raise RuntimeError("GOOGLE_API_KEY is required to run the LLM judge")
+    judge_client = genai.Client(api_key=settings.google_api_key)
+    return judge_client
 
 
 def parse_sse_response(raw: str) -> dict[str, Any]:
@@ -76,7 +87,7 @@ async def llm_judge(expected: str, actual: str) -> float:
 Actual answer: {actual}
 
 Score whether the actual answer contains the expected core facts. Return only a number from 0 to 1."""
-    response = await judge_client.aio.models.generate_content(
+    response = await _get_judge_client().aio.models.generate_content(
         model=settings.eval_judge_model,
         contents=prompt,
     )
