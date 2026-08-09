@@ -1,5 +1,7 @@
 import httpx
 
+from app.core.config import settings
+
 _client: httpx.AsyncClient | None = None
 
 
@@ -8,7 +10,10 @@ def get_ai_service_client() -> httpx.AsyncClient:
     global _client
     if _client is None or _client.is_closed:
         _client = httpx.AsyncClient(
-            timeout=httpx.Timeout(30.0, connect=5.0),
+            timeout=httpx.Timeout(
+                settings.ai_service_request_timeout_seconds,
+                connect=5.0,
+            ),
             limits=httpx.Limits(max_connections=50, max_keepalive_connections=20),
         )
     return _client

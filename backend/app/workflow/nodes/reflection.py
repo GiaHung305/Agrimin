@@ -27,7 +27,7 @@ async def _call_gemini(prompt: str) -> ReflectionDecision:
         prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
-            response_schema=ReflectionDecision,
+            response_json_schema=ReflectionDecision.model_json_schema(),
         ),
     )
     return ReflectionDecision.model_validate_json(response.text or "")

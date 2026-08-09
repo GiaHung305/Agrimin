@@ -47,7 +47,10 @@ def _safe_fallback_decision(question: str) -> PlannerDecision:
 
 
 def _normalize_research_questions(
-    question: str, candidates: list[str], need_rag: bool
+    question: str,
+    candidates: list[str],
+    need_rag: bool,
+    max_questions: int = 4,
 ) -> list[str]:
     if not need_rag:
         return []
@@ -61,7 +64,7 @@ def _normalize_research_questions(
             continue
         seen.add(key)
         normalized.append(value[:500])
-        if len(normalized) == 4:
+        if len(normalized) == max_questions:
             break
     return normalized or [question]
 
@@ -72,7 +75,7 @@ async def _call_gemini(prompt: str) -> PlannerDecision:
         prompt,
         config=types.GenerateContentConfig(
             response_mime_type="application/json",
-            response_schema=PlannerDecision,
+            response_json_schema=PlannerDecision.model_json_schema(),
         ),
     )
     return PlannerDecision.model_validate_json(response.text or "")
@@ -105,17 +108,21 @@ Câu hỏi: {state['question']}"""
     # Deterministic safety classification is an override, never a downgrade.
     fallback = _safe_fallback_decision(state["question"])
     risk_level = "high" if fallback.risk_level == "high" else decision.risk_level
+    need_deep_research = settings.deep_research_enabled and (
+        state.get("context", {}).get("request_deep_research", False)
+        or decision.need_deep_research
+    )
+    max_questions = 4 if risk_level == "high" or need_deep_research else 2
     research_questions = _normalize_research_questions(
-        state["question"], decision.research_questions, decision.need_rag
+        state["question"],
+        decision.research_questions,
+        decision.need_rag,
+        max_questions=max_questions,
     )
     state["plan"] = {
         "need_rag": decision.need_rag,
         "need_weather": decision.need_weather or fallback.need_weather,
-        "need_deep_research": settings.deep_research_enabled
-        and (
-            state.get("context", {}).get("request_deep_research", False)
-            or decision.need_deep_research
-        ),
+        "need_deep_research": need_deep_research,
         "research_questions": research_questions,
         "need_vision": bool(state.get("image_observations")),
         "vision_available": bool(state.get("visual_observations")),

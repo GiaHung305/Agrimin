@@ -1,0 +1,2 @@
+image_path,split,label,capture_group,source,consent_status,notes
+raw/tomato/example.jpg,train,healthy,farm-a-2026-08-08,example,verified,Replace this illustrative row with a real image record.

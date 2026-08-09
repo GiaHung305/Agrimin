@@ -16,6 +16,7 @@ class ModelRole(StrEnum):
     MEMORY = "memory"
     RESEARCH = "research"
     JUDGE = "judge"
+    VISION = "vision"
 
 
 _ROLE_SETTING = {
@@ -25,6 +26,7 @@ _ROLE_SETTING = {
     ModelRole.MEMORY: "model_memory",
     ModelRole.RESEARCH: "deep_research_model",
     ModelRole.JUDGE: "eval_judge_model",
+    ModelRole.VISION: "model_vision",
 }
 
 

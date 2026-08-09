@@ -8,10 +8,18 @@ AgriMind chuyển từ hệ thống hỏi đáp sang trợ lý nông nghiệp c�
 
 Flutter giao tiếp FastAPI qua SSE `POST /api/v1/chat/stream`. FastAPI chạy LangGraph gồm planner, guardrail, multi-query retrieval, phân tích coverage/mâu thuẫn, generation, reflection, memory write, action proposal và memory extraction. PostgreSQL lưu lịch sử, hồ sơ nông trại, task, log, action chờ xác nhận, device token và notification. Redis phục vụ cache; Qdrant phục vụ RAG; worker định kỳ tạo in-app notification và gửi FCM khi có credentials.
 
+Embedding service giữ Hugging Face model cache trong named volume để container
+recreate không tải lại model. BGE-M3 dùng GPU; reranker dùng CPU với concurrency
+giới hạn. Retrieval retry thích ứng: chat low-risk dừng sau lượt đầu nếu thiếu
+bằng chứng, Vision có tối đa một lượt mở rộng, còn high-risk hoặc Deep Research
+giữ ngân sách tối đa hai lượt. Mọi lượt retry phải dùng query mở rộng mới.
+
 ## Luồng chính
 
 1. API xác thực Supabase JWT, lưu message người dùng và nạp tám lượt gần nhất.
-2. LangGraph tư vấn bằng hồ sơ nông trại, history, RAG và thời tiết; token low/medium-risk được stream qua SSE.
+2. LangGraph tư vấn bằng hồ sơ nông trại, history, RAG và thời tiết. Draft token
+   được giữ trong server đến khi post-guardrail hoàn tất, sau đó câu trả lời đã
+   duyệt mới được phát thành các event SSE.
 3. Yêu cầu “nhắc tôi” hoặc “ghi nhật ký” tạo `PendingAction` hết hạn sau 15 phút, trả về metadata SSE.
 4. Flutter hiển thị thẻ xác nhận. `POST /assistant/actions/{id}/confirm` kiểm tra ownership và chỉ sau đó tạo task/log; cancel chỉ đổi trạng thái action.
 5. Worker quét task đến hạn và mưa xác suất từ 70%, ghi notification theo dedupe key; FCM là lớp gửi thêm, không ảnh hưởng notification trong app.
@@ -35,11 +43,13 @@ thuẫn chỉ được phép tạo tối đa hai retrieval retry; sau đó graph
 reason rõ ràng và generation phải nêu phần chưa chắc chắn.
 
 Mọi retrieval retry diễn ra trước generation. Reflection sau generation chỉ chấm
-độ bám nguồn và confidence, không được sinh lại câu trả lời sau khi token
-low/medium-risk đã gửi qua SSE. Cách này bảo đảm mỗi lượt chat chỉ có một lần
-generation và tránh final answer diverge khỏi nội dung đã stream. Evidence trong
-prompt được gắn `E1`, `E2`, ...; citation trả về API mang cùng `citation_id` để
-truy ngược claim về chunk.
+độ bám nguồn và confidence, không được sinh lại câu trả lời. Custom token từ
+LangGraph là draft chưa duyệt nên API buffer chúng đến khi post-guardrail hoàn
+tất. Nếu guardrail thay draft bằng fallback, chỉ fallback được phát; nếu draft
+được duyệt, các chunk cùng phần disclaimer bổ sung được phát theo đúng thứ tự.
+Cách này bảo đảm client không nhận nội dung bị guardrail loại và final answer
+không diverge khỏi nội dung SSE. Evidence trong prompt được gắn `E1`, `E2`, ...;
+citation trả về API mang cùng `citation_id` để truy ngược claim về chunk.
 
 ## Multimodal foundation
 
@@ -68,9 +78,13 @@ sung. Quan sát đủ tin cậy được dùng để mở rộng truy vấn RAG;
 Mọi câu trả lời dựa trên ảnh đều bắt buộc citation; dosage vẫn chỉ được phép khi
 chunk nguồn chính thức hỗ trợ đúng giá trị.
 
-`VISION_ANALYSIS_ENABLED=false` là mặc định free-tier. Adapter hiện fail-closed
-cho đến khi một vision champion vượt bộ eval ảnh có phiên bản; vì vậy production
-hiện vẫn vận hành ở `validation_only` và không gọi thêm model/GPU. Contract eval
+`VISION_ANALYSIS_ENABLED=false` vẫn là mặc định free-tier. Adapter Google Gemini
+Flash đã được nối qua `MODEL_VISION`, ép trả `visual-observation-v1` và fail-closed
+khi thiếu API key, timeout, hết quota hoặc output sai schema. Production vẫn vận
+hành ở `validation_only` cho đến khi Gemini vision vượt bộ eval ảnh có phiên bản;
+do đó cấu hình mặc định không phát sinh model call hay chi phí.
+`VISION_TEST_USER_EMAILS` chỉ cho phép các email được liệt kê chạy analyzer khi
+manual QA mà không bật global flag cho người dùng khác. Contract eval
 `multimodal-contract-v1` kiểm tra healthy metadata, triệu chứng nhìn thấy, ảnh
 thiếu sáng, ảnh ngoài miền và output chẩn đoán không hợp lệ. Đây chưa phải benchmark
 độ chính xác thị giác; bộ ảnh thật gồm lá khỏe, các bệnh giống nhau, thiếu sáng và

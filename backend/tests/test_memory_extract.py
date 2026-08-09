@@ -54,3 +54,21 @@ async def test_memory_extraction_skips_blocked_answer(monkeypatch):
     await memory_extract.memory_extract_node(state, db)
     assert not db.added
     assert not db.committed
+
+
+@pytest.mark.asyncio
+async def test_memory_extraction_skips_question_without_user_owned_fact(monkeypatch):
+    async def should_not_run(prompt):
+        raise AssertionError("extractor must not run without first-person context")
+
+    monkeypatch.setattr(memory_extract, "_call_gemini", should_not_run)
+    db = FakeSession()
+    state = {
+        "guardrail_status": "pass",
+        "question": "Cách tưới cà chua trong chậu?",
+    }
+
+    await memory_extract.memory_extract_node(state, db)
+
+    assert not db.added
+    assert not db.committed

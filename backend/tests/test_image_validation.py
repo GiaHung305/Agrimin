@@ -198,9 +198,28 @@ async def test_disabled_visual_input_never_calls_analyzer(monkeypatch):
     assert result.visual_observations == []
 
 
+def test_vision_test_allowlist_is_exact_and_case_insensitive(monkeypatch):
+    monkeypatch.setattr(chat.settings, "vision_analysis_enabled", False)
+    monkeypatch.setattr(
+        chat.settings,
+        "vision_test_user_emails",
+        "tester@example.com, second@example.com",
+    )
+
+    assert chat._vision_enabled_for_user({"email": "Tester@Example.com"})
+    assert not chat._vision_enabled_for_user({"email": "other@example.com"})
+
+
+def test_global_vision_flag_overrides_empty_test_allowlist(monkeypatch):
+    monkeypatch.setattr(chat.settings, "vision_analysis_enabled", True)
+    monkeypatch.setattr(chat.settings, "vision_test_user_emails", "")
+
+    assert chat._vision_enabled_for_user({"email": "anyone@example.com"})
+
+
 @pytest.mark.asyncio
 async def test_typed_analyzer_output_contains_no_raw_image(monkeypatch):
-    async def fake_analyzer(images):
+    async def fake_analyzer(images, **kwargs):
         image_id = images[0].observation["image_id"]
         return VisualAnalysisResult.model_validate({
             "schema_version": "visual-observation-v1",
@@ -222,7 +241,7 @@ async def test_typed_analyzer_output_contains_no_raw_image(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_analyzer_unavailable_fails_closed(monkeypatch):
-    async def unavailable(images):
+    async def unavailable(images, **kwargs):
         raise VisionAnalyzerUnavailable("not configured")
 
     monkeypatch.setattr(chat.settings, "vision_analysis_enabled", True)
@@ -236,7 +255,7 @@ async def test_analyzer_unavailable_fails_closed(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_analyzer_prompt_injection_output_is_discarded(monkeypatch):
-    async def unsafe_analyzer(images):
+    async def unsafe_analyzer(images, **kwargs):
         image_id = images[0].observation["image_id"]
         return {
             "schema_version": "visual-observation-v1",

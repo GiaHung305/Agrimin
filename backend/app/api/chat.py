@@ -1,9 +1,11 @@
 import asyncio
 import json
 import logging
+import time
 import uuid
 from dataclasses import dataclass
 
+import httpx
 from fastapi import APIRouter, Depends, HTTPException, Request, status
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel, ConfigDict, Field, ValidationError
@@ -354,6 +356,20 @@ def _sse_event(event_type: str, payload: dict | str | None = None, **extra) -> s
     return f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
 
 
+def _approved_answer_chunks(final_answer: str, generated_chunks: list[str]) -> list[str]:
+    """Return only chunks that reproduce the post-guardrail answer exactly.
+
+    Custom LangGraph token events are unapproved drafts. They must stay inside
+    the server until the graph has completed because a later guardrail can
+    replace the draft with a safe fallback.
+    """
+    generated_answer = "".join(generated_chunks)
+    if generated_answer and final_answer.startswith(generated_answer):
+        remaining = final_answer[len(generated_answer):]
+        return [*generated_chunks, *([remaining] if remaining else [])]
+    return [final_answer] if final_answer else []
+
+
 def _blocked_response(conversation_id: str | None) -> dict:
     return {
         "answer": "Câu hỏi của bạn chứa nội dung không hợp lệ, vui lòng đặt câu hỏi khác về nông nghiệp.",
@@ -387,8 +403,29 @@ async def _buffered_response_events(response_data: dict):
     yield _sse_event("done")
 
 
-async def _prepare_visual_input(images: list[ChatImageInput]) -> PreparedVisualInput:
+def _vision_enabled_for_user(current_user: dict) -> bool:
+    if settings.vision_analysis_enabled:
+        return True
+    allowed = {
+        value.strip().casefold()
+        for value in settings.vision_test_user_emails.split(",")
+        if value.strip()
+    }
+    email = str(current_user.get("email") or "").strip().casefold()
+    return bool(email and email in allowed)
+
+
+async def _prepare_visual_input(
+    images: list[ChatImageInput],
+    *,
+    vision_enabled: bool | None = None,
+) -> PreparedVisualInput:
     """Validate raw images and discard their bytes before graph state is built."""
+    analysis_enabled = (
+        settings.vision_analysis_enabled
+        if vision_enabled is None
+        else vision_enabled
+    )
     validated_images = await asyncio.gather(*(
         asyncio.to_thread(
             validate_chat_image_payload, image.data_base64, image.mime_type
@@ -403,13 +440,13 @@ async def _prepare_visual_input(images: list[ChatImageInput]) -> PreparedVisualI
     if not usable_images:
         validated_images.clear()
         return PreparedVisualInput(image_observations, [], None)
-    if not settings.vision_analysis_enabled:
+    if not analysis_enabled:
         validated_images.clear()
         return PreparedVisualInput(image_observations, [], "disabled")
 
     try:
         raw_result = await asyncio.wait_for(
-            analyze_validated_images(usable_images),
+            analyze_validated_images(usable_images, enabled=analysis_enabled),
             timeout=settings.vision_request_timeout_seconds,
         )
         result = VisualAnalysisResult.model_validate(raw_result)
@@ -463,7 +500,10 @@ async def chat_stream(
         )
 
     try:
-        visual_input = await _prepare_visual_input(req.images)
+        visual_input = await _prepare_visual_input(
+            req.images,
+            vision_enabled=_vision_enabled_for_user(current_user),
+        )
     except ImageValidationError as exc:
         raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
@@ -492,7 +532,10 @@ async def chat_stream(
             "configurable": {"thread_id": prepared.conversation_id},
         }
         final_state = None
-        streamed_answer = ""
+        generated_chunks: list[str] = []
+        workflow_started_at = time.perf_counter()
+        previous_node_at = workflow_started_at
+        node_timings_ms: dict[str, float] = {}
 
         try:
             with propagate_attributes(
@@ -503,23 +546,28 @@ async def chat_stream(
                 async for mode, payload in graph.astream(
                     prepared.initial_state,
                     config=graph_config,
-                    stream_mode=["custom", "values"],
+                    stream_mode=["custom", "updates", "values"],
                 ):
                     if mode == "custom" and payload.get("type") == "token":
                         text = payload["text"]
-                        streamed_answer += text
-                        yield _sse_event("chunk", text)
+                        generated_chunks.append(text)
                     elif mode == "values":
                         final_state = payload
-        except (ServerError, ModelProviderUnavailable):
-            logger.warning("Model provider temporarily unavailable during chat")
+                    elif mode == "updates":
+                        completed_at = time.perf_counter()
+                        duration_ms = (completed_at - previous_node_at) * 1000
+                        for node_name in payload:
+                            node_timings_ms[str(node_name)] = round(duration_ms, 1)
+                        previous_node_at = completed_at
+        except (ServerError, ModelProviderUnavailable, httpx.RequestError):
+            logger.warning("AI dependency temporarily unavailable during chat")
             response_data = _provider_unavailable_response(prepared.conversation_id)
-            fallback_text = response_data["answer"]
-            if streamed_answer:
-                fallback_text = "\n\n" + fallback_text
-            yield _sse_event("chunk", fallback_text)
+            response_data["trace"]["vision"] = _build_trace(
+                prepared.initial_state
+            )["vision"]
+            yield _sse_event("chunk", response_data["answer"])
             metadata = {key: value for key, value in response_data.items() if key != "answer"}
-            yield _sse_event("meta", metadata, buffered=bool(streamed_answer))
+            yield _sse_event("meta", metadata, buffered=True)
             yield _sse_event("done")
             return
 
@@ -527,19 +575,17 @@ async def chat_stream(
             raise RuntimeError("Chat graph completed without a final state")
 
         response_data = _response_from_result(final_state, prepared.conversation_id)
+        response_data["trace"]["latency"] = {
+            "nodes_ms": node_timings_ms,
+            "total_ms": round((time.perf_counter() - workflow_started_at) * 1000, 1),
+        }
         final_answer = response_data["answer"] or ""
-        if final_answer.startswith(streamed_answer):
-            remaining_text = final_answer[len(streamed_answer):]
-            if remaining_text:
-                yield _sse_event("chunk", remaining_text)
-        elif not streamed_answer:
-            yield _sse_event("chunk", final_answer)
-        else:
-            raise RuntimeError("Final answer diverged from streamed content")
+        for text in _approved_answer_chunks(final_answer, generated_chunks):
+            yield _sse_event("chunk", text)
 
         await _cache_response_if_safe(req, prepared, response_data)
         metadata = {key: value for key, value in response_data.items() if key != "answer"}
-        yield _sse_event("meta", metadata, buffered=False)
+        yield _sse_event("meta", metadata, buffered=True)
         yield _sse_event("done")
 
     return StreamingResponse(event_generator(), media_type="text/event-stream")

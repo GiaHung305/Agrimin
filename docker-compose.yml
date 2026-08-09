@@ -101,12 +101,17 @@ services:
     restart: unless-stopped
     ports:
       - "8001:8001"
+    volumes:
+      - embedding_model_cache:/root/.cache/huggingface
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:8001/health"]
       interval: 10s
       timeout: 5s
       retries: 5
-      start_period: 60s
+      # First download/load of BGE-M3 plus the CPU reranker can take several
+      # minutes on the target laptop. Do not mark the service unhealthy while
+      # it is still inside the measured cold-start window.
+      start_period: 600s
   
   mcp-weather-server:
     build:
@@ -128,3 +133,4 @@ volumes:
   postgres_data:
   redis_data:
   qdrant_data:
+  embedding_model_cache:

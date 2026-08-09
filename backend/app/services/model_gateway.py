@@ -7,29 +7,41 @@ from collections.abc import AsyncIterator
 from typing import Any
 
 from google import genai
+from google.genai.errors import ClientError
 
 from app.core.config import settings
 from app.core.model_registry import ModelRole, model_name
 from app.core.retry_utils import gemini_retry
 
 
-client = genai.Client(api_key=settings.google_api_key)
-
-
 class ModelProviderUnavailable(RuntimeError):
     """A provider timeout that callers may translate to a stable fallback."""
+
+
+client: genai.Client | None = None
+
+
+def _get_client() -> genai.Client:
+    """Create the provider client only when a model call is attempted."""
+    global client
+    if client is not None:
+        return client
+    if not settings.google_api_key:
+        raise ModelProviderUnavailable("Google API key is not configured")
+    client = genai.Client(api_key=settings.google_api_key)
+    return client
 
 
 @gemini_retry
 async def generate_content(
     role: ModelRole,
-    contents: str,
+    contents: Any,
     *,
     config: Any | None = None,
 ) -> Any:
     try:
         return await asyncio.wait_for(
-            client.aio.models.generate_content(
+            _get_client().aio.models.generate_content(
                 model=model_name(role),
                 contents=contents,
                 config=config,
@@ -38,17 +50,26 @@ async def generate_content(
         )
     except TimeoutError as exc:
         raise ModelProviderUnavailable(f"{role.value} model request timed out") from exc
+    except ClientError as exc:
+        raise ModelProviderUnavailable(
+            f"{role.value} model request was rejected by provider"
+        ) from exc
 
 
 @gemini_retry
 async def _open_stream(role: ModelRole, contents: str) -> Any:
-    return await asyncio.wait_for(
-        client.aio.models.generate_content_stream(
-            model=model_name(role),
-            contents=contents,
-        ),
-        timeout=settings.model_request_timeout_seconds,
-    )
+    try:
+        return await asyncio.wait_for(
+            _get_client().aio.models.generate_content_stream(
+                model=model_name(role),
+                contents=contents,
+            ),
+            timeout=settings.model_request_timeout_seconds,
+        )
+    except ClientError as exc:
+        raise ModelProviderUnavailable(
+            f"{role.value} model stream was rejected by provider"
+        ) from exc
 
 
 async def stream_content(role: ModelRole, contents: str) -> AsyncIterator[Any]:
@@ -65,3 +86,7 @@ async def stream_content(role: ModelRole, contents: str) -> AsyncIterator[Any]:
                 break
     except TimeoutError as exc:
         raise ModelProviderUnavailable(f"{role.value} model stream timed out") from exc
+    except ClientError as exc:
+        raise ModelProviderUnavailable(
+            f"{role.value} model stream was rejected by provider"
+        ) from exc
