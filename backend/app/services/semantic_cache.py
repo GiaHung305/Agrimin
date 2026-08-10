@@ -10,6 +10,7 @@ from app.services.embedding_client import embed_text
 
 CACHE_TTL_SECONDS = 3600
 SIMILARITY_THRESHOLD = 0.95
+CORPUS_VERSION_KEY = "semantic_cache:corpus_version"
 logger = logging.getLogger(__name__)
 _REALTIME_PATTERN = re.compile(
     r"\b(hôm nay|hiện tại|bây giờ|thời tiết|mưa|nắng|nhiệt độ|độ ẩm|bão|gió)\b",
@@ -36,6 +37,27 @@ def _context_key(
     return f"{runtime_fingerprint()}:{time_window}:{user_hash}:{province}:{crop}"
 
 
+async def _versioned_context_key(
+    user_id: str,
+    province: str | None,
+    crop: str | None,
+) -> str:
+    """Include the mutable evidence version so new documents invalidate answers."""
+    corpus_version = await redis_client.get(CORPUS_VERSION_KEY) or "0"
+    return f"{_context_key(user_id, province, crop)}:corpus-{corpus_version}"
+
+
+async def bump_semantic_cache_corpus_version() -> None:
+    """Invalidate semantic-cache namespaces after evidence metadata changes."""
+    try:
+        await redis_client.incr(CORPUS_VERSION_KEY)
+    except Exception:
+        logger.warning(
+            "Unable to bump semantic-cache corpus version; cached answers retain their TTL",
+            exc_info=True,
+        )
+
+
 def _cosine_similarity(a: list[float], b: list[float]) -> float:
     dot = sum(x * y for x, y in zip(a, b))
     norm_a = sum(x * x for x in a) ** 0.5
@@ -51,7 +73,7 @@ async def get_cached_answer(
 ) -> dict | None:
     """Return a matching answer, treating cache/embedding failures as a miss."""
     try:
-        index_key = f"semcache_index:{_context_key(user_id, province, crop)}"
+        index_key = f"semcache_index:{await _versioned_context_key(user_id, province, crop)}"
         cached_index_raw = await redis_client.get(index_key)
         if not cached_index_raw:
             return None
@@ -80,7 +102,7 @@ async def store_answer(
 ):
     """Store an answer opportunistically without failing the chat response."""
     try:
-        context_key = _context_key(user_id, province, crop)
+        context_key = await _versioned_context_key(user_id, province, crop)
         index_key = f"semcache_index:{context_key}"
         query_vector = await embed_text(question)
         question_hash = hashlib.sha256(question.encode("utf-8")).hexdigest()[:16]

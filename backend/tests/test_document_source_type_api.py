@@ -29,6 +29,13 @@ def test_ingest_request_rejects_unknown_taxonomy_value():
         )
 
 
+def test_storage_key_does_not_include_unicode_title_or_filename(monkeypatch):
+    monkeypatch.setattr(documents.uuid, "uuid4", lambda: "document-id")
+
+    assert documents._new_storage_key(".txt") == "documents/document-id.txt"
+    assert documents._new_storage_key(".pdf") == "documents/document-id.pdf"
+
+
 @pytest.mark.asyncio
 async def test_admin_can_reclassify_document_and_qdrant_payload(monkeypatch):
     document = SimpleNamespace(source_type="unknown")
@@ -51,3 +58,34 @@ async def test_admin_can_reclassify_document_and_qdrant_payload(monkeypatch):
     db.commit.assert_awaited_once()
     qdrant.set_payload.assert_awaited_once()
     assert response["authority_score"] == 0.9
+
+
+@pytest.mark.asyncio
+async def test_admin_can_purge_document_from_all_backends(monkeypatch):
+    document = SimpleNamespace(id="document-1", file_key="documents/source.pdf")
+    db = SimpleNamespace(
+        execute=AsyncMock(
+            side_effect=[ScalarResult(document), SimpleNamespace(), SimpleNamespace()]
+        ),
+        commit=AsyncMock(),
+    )
+    qdrant = SimpleNamespace(delete=AsyncMock())
+    delete_file = AsyncMock()
+    bump_cache = AsyncMock()
+    monkeypatch.setattr(documents, "qdrant_client", qdrant)
+    monkeypatch.setattr(documents, "delete_file", delete_file)
+    monkeypatch.setattr(
+        documents, "bump_semantic_cache_corpus_version", bump_cache
+    )
+    monkeypatch.setattr(documents, "invalidate_bm25_index", lambda: None)
+
+    response = await documents.purge_document(
+        "document-1", db=db, current_user={"id": "admin"}
+    )
+
+    assert response == {"status": "purged", "document_id": "document-1"}
+    qdrant.delete.assert_awaited_once()
+    delete_file.assert_awaited_once_with("documents/source.pdf")
+    assert db.execute.await_count == 3
+    db.commit.assert_awaited_once()
+    bump_cache.assert_awaited_once()

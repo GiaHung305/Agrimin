@@ -69,3 +69,64 @@ async def test_low_confidence_reranker_does_not_override_fusion(monkeypatch):
     result = await hybrid_module.hybrid_search("query")
     assert result[0]["document_id"] == "right"
     assert result[0]["ranking_strategy"] == "fusion_low_rerank_confidence"
+
+
+@pytest.mark.asyncio
+async def test_hybrid_search_bounds_cpu_reranker_candidates(monkeypatch):
+    dense = [
+        {
+            "document_id": "dense",
+            "chunk_id": str(index),
+            "content": f"dense-{index}-" + ("x" * 1000),
+        }
+        for index in range(10)
+    ]
+    sparse = [
+        {
+            "document_id": "sparse",
+            "chunk_id": str(index),
+            "content": f"sparse-{index}-" + ("x" * 1000),
+        }
+        for index in range(10)
+    ]
+    captured = {}
+
+    monkeypatch.setattr(
+        hybrid_module,
+        "dense_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=dense),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=sparse),
+    )
+
+    async def rerank(query, documents):
+        captured["count"] = len(documents)
+        captured["max_characters"] = max(map(len, documents))
+        return [0.9] * len(documents)
+
+    monkeypatch.setattr(hybrid_module, "rerank", rerank)
+
+    await hybrid_module.hybrid_search("query")
+
+    assert captured["count"] == hybrid_module.MAX_RERANK_CANDIDATES
+    assert captured["max_characters"] == hybrid_module.MAX_RERANK_CHARACTERS
+
+
+def test_rerank_candidates_include_dense_and_sparse_leaders():
+    fused = [
+        {"document_id": "fusion", "chunk_id": "1", "content": "fusion"},
+        {"document_id": "other", "chunk_id": "2", "content": "other"},
+    ]
+    dense = [
+        {"document_id": "dense", "chunk_id": "3", "content": "dense"},
+    ]
+    sparse = [
+        {"document_id": "sparse", "chunk_id": "4", "content": "sparse"},
+    ]
+
+    selected = hybrid_module._select_rerank_candidates(fused, dense, sparse)
+
+    assert [item["document_id"] for item in selected] == ["fusion", "dense", "sparse"]

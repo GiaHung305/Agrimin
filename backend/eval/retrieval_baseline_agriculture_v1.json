@@ -1,0 +1,19 @@
+{
+  "dataset_version": "crop-production-v1",
+  "knowledge_base_version": "kb-v1",
+  "accepted_reference": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 10424.773125
+  },
+  "promotion_thresholds": {
+    "minimum_recall_at_1": 0.90,
+    "minimum_recall_at_k": 1.0,
+    "minimum_mrr": 0.90,
+    "minimum_ndcg_at_k": 0.90,
+    "maximum_mean_latency_ms": 30000.0
+  },
+  "environment_note": "Crop-production-only benchmark on Docker Desktop; BGE-M3 embedding service with CPU cross-encoder reranking. Run with top_k=3 against agriculture_benchmark_v2.json."
+}

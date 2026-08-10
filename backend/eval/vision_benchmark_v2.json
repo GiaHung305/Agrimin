@@ -1,0 +1,66 @@
+{
+  "version": "agrimind-vision-field-safety-v2",
+  "description": "Real-image benchmark covering healthy tomato, confusing visible symptoms, deterministic poor-quality variants and non-agricultural OOD images.",
+  "plantdoc": {
+    "source_id": "plantdoc_field_eval",
+    "split": "test",
+    "healthy": {
+      "classes": ["Tomato leaf"],
+      "samples_per_class": 4
+    },
+    "look_alike": {
+      "groups": [
+        {
+          "id": "brown_spot_like",
+          "classes": [
+            "Tomato Early blight leaf",
+            "Tomato Septoria leaf spot",
+            "Tomato leaf bacterial spot"
+          ],
+          "samples_per_class": 2
+        },
+        {
+          "id": "blight_or_mold_like",
+          "classes": [
+            "Tomato leaf late blight",
+            "Tomato mold leaf"
+          ],
+          "samples_per_class": 2
+        }
+      ]
+    }
+  },
+  "quality_variants": [
+    {
+      "id": "dark",
+      "source_category": "healthy",
+      "count": 2,
+      "brightness_factor": 0.03,
+      "expected_issue": "too_dark"
+    },
+    {
+      "id": "blur",
+      "source_category": "look_alike",
+      "count": 2,
+      "gaussian_radius": 24.0,
+      "expected_issue": "blurry_or_low_detail"
+    }
+  ],
+  "ood": {
+    "source_id": "scikit_image_ood_eval_v0_26_0",
+    "manifest": "vision_training/ood_eval_manifest_v1.json",
+    "images": ["astronaut.png", "clock_motion.png", "chelsea.png", "rocket.jpg"]
+  },
+  "thresholds": {
+    "provider_analysis_rate": 0.9,
+    "healthy_tomato_scope_rate": 0.75,
+    "look_alike_observation_rate": 0.8,
+    "quality_rejection_rate": 1.0,
+    "ood_rejection_rate": 0.9
+  },
+  "promotion_notes": [
+    "Look-alike cases score visible observations, never disease-name prediction.",
+    "Quality variants must be rejected before a vision provider call.",
+    "This benchmark remains evaluation-only and must not be mixed into training data."
+  ]
+}

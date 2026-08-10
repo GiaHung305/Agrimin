@@ -11,6 +11,7 @@ from pydantic import ValidationError
 
 from app.core.model_registry import ModelRole, model_name, runtime_fingerprint
 from app.services import model_gateway
+from app.services import semantic_cache
 from app.services.semantic_cache import _context_key, is_realtime_sensitive_question
 from app.workflow.nodes import planner, reflection
 
@@ -47,6 +48,22 @@ def test_cache_key_contains_runtime_and_time_versions():
     next_hour = _context_key("u1", "Dak Lak", "coffee", time_window="2026080711")
     assert first != next_hour
     assert runtime_fingerprint() in first
+
+
+@pytest.mark.asyncio
+async def test_cache_namespace_changes_with_corpus_version(monkeypatch):
+    versions = iter(["4", "5"])
+
+    async def get_version(key):
+        assert key == semantic_cache.CORPUS_VERSION_KEY
+        return next(versions)
+
+    monkeypatch.setattr(semantic_cache.redis_client, "get", get_version)
+    first = await semantic_cache._versioned_context_key("u1", None, None)
+    second = await semantic_cache._versioned_context_key("u1", None, None)
+
+    assert first.endswith(":corpus-4")
+    assert second.endswith(":corpus-5")
 
 
 def test_realtime_questions_bypass_semantic_cache():

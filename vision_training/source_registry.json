@@ -46,6 +46,17 @@
       "notes": "Internet-scraped field images with author labels. Evaluation only; never merge into the frozen PlantVillage test set."
     },
     {
+      "id": "scikit_image_ood_eval_v0_26_0",
+      "display_name": "scikit-image v0.26.0 general-purpose sample images",
+      "download_url": "https://github.com/scikit-image/scikit-image/archive/refs/tags/v0.26.0.zip",
+      "reference_url": "https://scikit-image.org/docs/0.26.x/api/skimage.data.html",
+      "revision": "v0.26.0",
+      "intended_use": "independent_out_of_domain_evaluation",
+      "license_status": "per-image-public-domain-or-CC0",
+      "production_eligible": false,
+      "notes": "Evaluation-only OOD pack. Extract only astronaut, wall clock, Chelsea the cat and rocket; upstream documents each selected image as public domain or CC0."
+    },
+    {
       "id": "tomato_leaves_kaggle",
       "display_name": "Tomato Leaves Dataset",
       "reference_url": "https://www.kaggle.com/datasets/ashishmotwani/tomato",

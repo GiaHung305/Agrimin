@@ -1,0 +1,5 @@
+services:
+  backend:
+    volumes:
+      - ./vision_training/data/raw:/vision_training/data/raw:ro
+      - ./vision_training/artifacts:/vision_training/artifacts

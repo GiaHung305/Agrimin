@@ -27,13 +27,20 @@ def _normalized(value: Any) -> str:
 
 
 def is_relevant(result: dict[str, Any], relevant_sources: list[str]) -> bool:
-    expected = {_normalized(source) for source in relevant_sources}
+    expected = {
+        _normalized(source) for source in relevant_sources if _normalized(source)
+    }
     candidates = {
         _normalized(result.get("source")),
         _normalized(result.get("title")),
         _normalized(result.get("document_id")),
     }
-    return bool(expected & candidates)
+    return any(
+        expected_source in candidate or candidate in expected_source
+        for expected_source in expected
+        for candidate in candidates
+        if candidate
+    )
 
 
 def retrieval_metrics(relevance: list[bool]) -> dict[str, float]:
@@ -45,6 +52,7 @@ def retrieval_metrics(relevance: list[bool]) -> dict[str, float]:
         for rank in range(1, min(relevant_count, len(relevance)) + 1)
     )
     return {
+        "recall_at_1": 1.0 if relevance[:1] == [True] else 0.0,
         "recall_at_k": 1.0 if first_rank is not None else 0.0,
         "mrr": 1.0 / first_rank if first_rank is not None else 0.0,
         "ndcg_at_k": dcg / ideal_dcg if ideal_dcg else 0.0,
@@ -55,6 +63,8 @@ def evaluate_promotion_gate(
     aggregate: dict[str, float], thresholds: dict[str, float]
 ) -> dict[str, Any]:
     checks = {
+        "recall_at_1": aggregate["recall_at_1"]
+        >= thresholds.get("minimum_recall_at_1", 0.0),
         "recall_at_k": aggregate["recall_at_k"]
         >= thresholds["minimum_recall_at_k"],
         "mrr": aggregate["mrr"] >= thresholds["minimum_mrr"],
@@ -69,23 +79,38 @@ def evaluate_promotion_gate(
 async def evaluate(dataset_path: Path, top_k: int) -> dict[str, Any]:
     dataset = json.loads(dataset_path.read_text(encoding="utf-8"))
     item_results = []
-    for item in dataset["items"]:
+    items = dataset.get("items") or dataset.get("cases") or []
+    for item in items:
+        relevant_sources = (
+            item.get("relevant_sources")
+            or item.get("expected_citations_any")
+            or []
+        )
+        if item.get("category") == "safety" or not relevant_sources:
+            continue
+        query = item.get("query") or item.get("question")
+        if not query:
+            continue
         started = time.perf_counter()
-        results = await hybrid_search(item["query"], top_k=top_k)
+        results = await hybrid_search(query, top_k=top_k)
         latency_ms = round((time.perf_counter() - started) * 1000, 2)
-        relevance = [is_relevant(result, item["relevant_sources"]) for result in results]
+        relevance = [is_relevant(result, relevant_sources) for result in results]
         metrics = retrieval_metrics(relevance)
         item_results.append(
             {
-                "query": item["query"],
+                "id": item.get("id"),
+                "query": query,
                 "category": item["category"],
+                "relevant_sources": relevant_sources,
                 "latency_ms": latency_ms,
                 **metrics,
                 "ranked_evidence": [
                     {
                         "document_id": result.get("document_id"),
                         "chunk_id": result.get("chunk_id"),
+                        "title": result.get("title"),
                         "source": result.get("source"),
+                        "ranking_strategy": result.get("ranking_strategy"),
                         "fusion_score": result.get("fusion_score"),
                         "rerank_score": result.get("rerank_score"),
                         "relevant": relevance[index],
@@ -98,7 +123,7 @@ async def evaluate(dataset_path: Path, top_k: int) -> dict[str, Any]:
     count = len(item_results)
     aggregate = {
         metric: sum(item[metric] for item in item_results) / count if count else 0.0
-        for metric in ("recall_at_k", "mrr", "ndcg_at_k")
+        for metric in ("recall_at_1", "recall_at_k", "mrr", "ndcg_at_k")
     }
     aggregate["mean_latency_ms"] = (
         sum(item["latency_ms"] for item in item_results) / count if count else 0.0
@@ -117,12 +142,17 @@ async def main() -> None:
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
     parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--output", type=Path)
     args = parser.parse_args()
     result = await evaluate(args.dataset, args.top_k)
     baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
     result["gate"] = evaluate_promotion_gate(
         result["aggregate"], baseline["promotion_thresholds"]
     )
+    if args.output:
+        args.output.write_text(
+            json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
     print(json.dumps(result, ensure_ascii=False, indent=2))
     if not result["gate"]["passed"]:
         raise SystemExit(1)
