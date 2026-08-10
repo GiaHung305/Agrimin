@@ -1,0 +1,41 @@
+{
+  "version": "agrimind-ood-eval-v1",
+  "source_id": "scikit_image_ood_eval_v0_26_0",
+  "source_revision": "v0.26.0",
+  "archive_sha256": "dcbaafd62d0fd85ef504c4d1bf9729a1200fcfc22ca5bb3d4e89035c2853f785",
+  "intended_use": "vision_out_of_domain_evaluation_only",
+  "images": [
+    {
+      "id": "astronaut",
+      "archive_member": "scikit-image-0.26.0/src/skimage/data/astronaut.png",
+      "output_file": "astronaut.png",
+      "subject": "astronaut portrait",
+      "license": "public-domain",
+      "sha256": "88431cd9653ccd539741b555fb0a46b61558b301d4110412b5bc28b5e3ea6cb5"
+    },
+    {
+      "id": "wall_clock",
+      "archive_member": "scikit-image-0.26.0/src/skimage/data/clock_motion.png",
+      "output_file": "clock_motion.png",
+      "subject": "wall clock",
+      "license": "public-domain",
+      "sha256": "f029226b28b642e80113d86622e9b215ee067a0966feaf5e60604a1e05733955"
+    },
+    {
+      "id": "chelsea_cat",
+      "archive_member": "scikit-image-0.26.0/src/skimage/data/chelsea.png",
+      "output_file": "chelsea.png",
+      "subject": "domestic cat",
+      "license": "CC0",
+      "sha256": "596aa1e7cb875eb79f437e310381d26b338a81c2da23439704a73c4651e8c4bb"
+    },
+    {
+      "id": "rocket",
+      "archive_member": "scikit-image-0.26.0/src/skimage/data/rocket.jpg",
+      "output_file": "rocket.jpg",
+      "subject": "rocket launch",
+      "license": "public-domain",
+      "sha256": "c2dd0de7c538df8d111e479619b129464d0269d0ae5fd18ca91d33a7fdfea95c"
+    }
+  ]
+}

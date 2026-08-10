@@ -35,3 +35,19 @@ async def download_file(key: str) -> bytes:
         response = await client.get(url, headers=headers)
         response.raise_for_status()
     return response.content
+
+
+async def delete_file(key: str) -> None:
+    """Delete an object idempotently; a missing object is already purged."""
+    url = f"{STORAGE_BASE_URL}/{settings.supabase_bucket_name}/{key}"
+    headers = {"apikey": settings.supabase_secret_key}
+    async with httpx.AsyncClient(timeout=30.0) as client:
+        response = await client.delete(url, headers=headers)
+        if response.status_code == 404:
+            return
+        if response.status_code >= 400:
+            logger.warning(
+                "Supabase Storage delete failed with status %s",
+                response.status_code,
+            )
+        response.raise_for_status()

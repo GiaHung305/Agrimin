@@ -2,23 +2,29 @@ import uuid
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
 from pydantic import BaseModel, Field
-from qdrant_client.models import FieldCondition, Filter, MatchValue
-from sqlalchemy import select
+from qdrant_client.models import FieldCondition, Filter, FilterSelector, MatchValue
+from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import require_admin
 from app.core.config import settings
 from app.core.db import get_db
 from app.core.qdrant_client import qdrant_client
-from app.repository.models import Document
+from app.repository.models import Document, DocumentChunk
 from app.retrieval.qdrant_setup import COLLECTION_NAME
 from app.retrieval.bm25_search import invalidate_bm25_index
 from app.services.ingest_service import ingest_document
 from app.services.pdf_extractor import extract_text_from_pdf
-from app.services.storage_service import upload_file
+from app.services.storage_service import delete_file, upload_file
+from app.services.semantic_cache import bump_semantic_cache_corpus_version
 from app.retrieval.source_authority import SourceType, authority_score
 
 router = APIRouter(tags=["documents"])
+
+
+def _new_storage_key(suffix: str) -> str:
+    """Create an object key independent of untrusted display metadata."""
+    return f"documents/{uuid.uuid4()}{suffix}"
 
 
 class IngestRequest(BaseModel):
@@ -40,7 +46,7 @@ async def ingest(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(require_admin),
 ):
-    file_key = f"documents/{uuid.uuid4()}_{req.title}.txt"
+    file_key = _new_storage_key(".txt")
     await upload_file(req.content.encode("utf-8"), file_key, content_type="text/plain")
 
     document = await ingest_document(
@@ -86,7 +92,7 @@ async def upload_document(
     if len(content) > 1_000_000:
         raise HTTPException(status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE, detail="Extracted document text is too large")
 
-    file_key = f"documents/{uuid.uuid4()}_{file.filename}"
+    file_key = _new_storage_key(".pdf")
     await upload_file(file_bytes, file_key, content_type="application/pdf")
 
     document = await ingest_document(
@@ -151,7 +157,47 @@ async def deactivate_document(
         ),
     )
     invalidate_bm25_index()
+    await bump_semantic_cache_corpus_version()
     return {"status": "deactivated", "document_id": document_id}
+
+
+@router.delete("/documents/{document_id}")
+async def purge_document(
+    document_id: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(require_admin),
+):
+    """Permanently purge one document from storage, retrieval, and Postgres."""
+    result = await db.execute(select(Document).where(Document.id == document_id))
+    document = result.scalar_one_or_none()
+    if not document:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
+        )
+
+    await qdrant_client.delete(
+        collection_name=COLLECTION_NAME,
+        points_selector=FilterSelector(
+            filter=Filter(
+                must=[
+                    FieldCondition(
+                        key="document_id", match=MatchValue(value=document_id)
+                    )
+                ]
+            )
+        ),
+        wait=True,
+    )
+    if document.file_key:
+        await delete_file(document.file_key)
+    await db.execute(
+        delete(DocumentChunk).where(DocumentChunk.document_id == document.id)
+    )
+    await db.execute(delete(Document).where(Document.id == document.id))
+    await db.commit()
+    invalidate_bm25_index()
+    await bump_semantic_cache_corpus_version()
+    return {"status": "purged", "document_id": document_id}
 
 
 @router.patch("/documents/{document_id}/source-type")
@@ -183,6 +229,7 @@ async def update_document_source_type(
         ),
     )
     invalidate_bm25_index()
+    await bump_semantic_cache_corpus_version()
     return {
         "document_id": document_id,
         "source_type": req.source_type.value,
