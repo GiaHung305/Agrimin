@@ -79,10 +79,20 @@ Overlay `docker-compose.eval.yml` chỉ gắn read-only thư mục ảnh thô v�
 benchmark và cho phép ghi report vào `vision_training/artifacts`; nó không đưa dữ
 liệu đánh giá vào Docker image hoặc luồng production thông thường.
 
-Runner có 22 request: 4 cây khỏe, 10 ca dễ nhầm, 4 ảnh chất lượng kém và 4 OOD.
-Chỉ 18 request cần vision provider; bốn ảnh tối/mờ phải dừng trước provider. Có thể
+Runner chấm 22 ảnh: 4 cây khỏe, 10 ca dễ nhầm, 4 ảnh chất lượng kém và 4 OOD.
+Mặc định runner ghép tối đa hai ảnh cây cùng nhóm bằng `--batch-size 2`, nhưng gửi
+từng ảnh OOD riêng để tránh timeout vision quan sát được khi ghép hai ảnh OOD. Toàn
+bộ benchmark tạo 13 request SSE production. Bốn ảnh tối/mờ phải dừng trước provider;
+cách batching này giữ tổng lượt `gemini-3.5-flash` dự kiến trong giới hạn 20 lượt/ngày
+của môi trường thử nghiệm. Có thể
 dùng `--case-limit` để smoke test, nhưng báo cáo giới hạn luôn có blocker
 `benchmark_sample_incomplete` và không được dùng để mở feature flag toàn cục.
+
+Nếu provider timeout hoặc quota hết giữa chừng, dùng `--resume-from` để giữ kết quả
+đã có và chỉ chạy lại case thiếu/fail. Có thể truyền `--case-id` nhiều lần để rerun
+đúng các lỗi hạ tầng; không dùng cơ chế này để lặp lại lỗi accuracy cho đến khi pass.
+Runner tự loại ảnh PlantDoc không qua deterministic quality gate khỏi nhóm accuracy
+và chọn mẫu held-out hợp lệ kế tiếp trong cùng lớp.
 
 ## Diễn giải metric
 

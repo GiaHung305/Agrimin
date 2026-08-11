@@ -12,7 +12,7 @@ import zipfile
 from collections import defaultdict
 from io import BytesIO
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import httpx
 from PIL import Image, ImageEnhance, ImageFilter, ImageOps
@@ -21,6 +21,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
 from app.core.config import settings
 from app.core.model_registry import ModelRole, model_name, runtime_fingerprint
+from app.multimodal.image_validation import validate_chat_image_payload
 from eval.run_eval import get_supabase_token, invoke_production_chat
 
 
@@ -79,7 +80,12 @@ def plantdoc_test_cases(
 
 
 def _stable_members(
-    names: list[str], *, split: str, source_class: str, count: int
+    names: list[str],
+    *,
+    split: str,
+    source_class: str,
+    count: int,
+    member_is_eligible: Callable[[str], bool] | None = None,
 ) -> list[str]:
     matching = [
         member
@@ -88,6 +94,7 @@ def _stable_members(
         and len(member.split("/")) == 4
         and member.split("/")[1] == split
         and member.split("/")[2] == source_class
+        and (member_is_eligible is None or member_is_eligible(member))
     ]
     ordered = sorted(
         matching, key=lambda member: hashlib.sha256(member.encode()).hexdigest()
@@ -100,7 +107,9 @@ def _stable_members(
 
 
 def plantdoc_benchmark_cases(
-    names: list[str], manifest: dict[str, Any]
+    names: list[str],
+    manifest: dict[str, Any],
+    member_is_eligible: Callable[[str], bool] | None = None,
 ) -> list[dict[str, Any]]:
     """Select a deterministic held-out healthy and look-alike PlantDoc set."""
     config = manifest["plantdoc"]
@@ -112,6 +121,7 @@ def plantdoc_benchmark_cases(
             split=split,
             source_class=source_class,
             count=int(config["healthy"]["samples_per_class"]),
+            member_is_eligible=member_is_eligible,
         ):
             cases.append({
                 "case_id": f"healthy-{hashlib.sha256(member.encode()).hexdigest()[:12]}",
@@ -127,6 +137,7 @@ def plantdoc_benchmark_cases(
                 split=split,
                 source_class=source_class,
                 count=int(group["samples_per_class"]),
+                member_is_eligible=member_is_eligible,
             ):
                 cases.append({
                     "case_id": f"lookalike-{hashlib.sha256(member.encode()).hexdigest()[:12]}",
@@ -174,11 +185,27 @@ def build_benchmark_payloads(
 ) -> list[dict[str, Any]]:
     """Build real and transformed cases while keeping raw bytes transient."""
     with zipfile.ZipFile(archive_path) as archive:
-        plant_cases = plantdoc_benchmark_cases(archive.namelist(), manifest)
+        raw_cache: dict[str, bytes] = {}
+
+        def member_is_eligible(member: str) -> bool:
+            raw_bytes = raw_cache.setdefault(member, archive.read(member))
+            try:
+                validated = validate_chat_image_payload(
+                    base64.b64encode(raw_bytes).decode("ascii"),
+                    _mime_type(member),
+                )
+            except ValueError:
+                return False
+            return bool(validated.observation["usable_for_vision"])
+
+        plant_cases = plantdoc_benchmark_cases(
+            archive.namelist(), manifest, member_is_eligible
+        )
         for case in plant_cases:
             member = case.pop("member")
-            case["raw_bytes"] = archive.read(member)
+            case["raw_bytes"] = raw_cache.setdefault(member, archive.read(member))
             case["mime_type"] = _mime_type(member)
+            case["image_id"] = hashlib.sha256(case["raw_bytes"]).hexdigest()[:16]
 
     quality_cases: list[dict[str, Any]] = []
     for variant in manifest["quality_variants"]:
@@ -192,6 +219,7 @@ def build_benchmark_payloads(
                 f"quality variant {variant['id']} needs {count} source images"
             )
         for source in candidates[:count]:
+            raw_bytes = make_quality_variant(source["raw_bytes"], variant)
             quality_cases.append({
                 "case_id": f"quality-{variant['id']}-{source['case_id']}",
                 "category": "quality",
@@ -199,7 +227,8 @@ def build_benchmark_payloads(
                 "expected_issue": variant["expected_issue"],
                 "source_case_id": source["case_id"],
                 "mime_type": "image/jpeg",
-                "raw_bytes": make_quality_variant(source["raw_bytes"], variant),
+                "raw_bytes": raw_bytes,
+                "image_id": hashlib.sha256(raw_bytes).hexdigest()[:16],
             })
 
     ood_cases: list[dict[str, Any]] = []
@@ -209,14 +238,40 @@ def build_benchmark_payloads(
             raise ValueError(
                 f"OOD image missing: {path}; run vision_training/scripts/prepare_ood_eval.py"
             )
+        raw_bytes = path.read_bytes()
         ood_cases.append({
             "case_id": f"ood-{Path(filename).stem}",
             "category": "ood",
             "source_file": filename,
             "mime_type": _mime_type(filename),
-            "raw_bytes": path.read_bytes(),
+            "raw_bytes": raw_bytes,
+            "image_id": hashlib.sha256(raw_bytes).hexdigest()[:16],
         })
     return [*plant_cases, *quality_cases, *ood_cases]
+
+
+def benchmark_batches(
+    payloads: list[dict[str, Any]], batch_size: int
+) -> list[list[dict[str, Any]]]:
+    """Batch at most two same-category images without changing case order."""
+    if batch_size not in {1, 2}:
+        raise ValueError("batch_size must be 1 or 2")
+    batches: list[list[dict[str, Any]]] = []
+    current: list[dict[str, Any]] = []
+    for case in payloads:
+        current_limit = (
+            1 if current and current[0]["category"] == "ood" else batch_size
+        )
+        if current and (
+            len(current) >= current_limit
+            or current[0]["category"] != case["category"]
+        ):
+            batches.append(current)
+            current = []
+        current.append(case)
+    if current:
+        batches.append(current)
+    return batches
 
 
 def _is_tomato(candidate: Any) -> bool:
@@ -252,9 +307,30 @@ def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]
     trace = response.get("trace") or {}
     vision = trace.get("vision") or {}
     observations = vision.get("visual_observations") or []
-    observation = observations[0] if observations else {}
+    case_image_id = case.get("image_id")
+    observation = (
+        next(
+            (
+                item for item in observations
+                if item.get("image_id") == case_image_id
+            ),
+            {},
+        )
+        if case_image_id
+        else (observations[0] if observations else {})
+    )
     image_observations = vision.get("observations") or []
-    image_observation = image_observations[0] if image_observations else {}
+    image_observation = (
+        next(
+            (
+                item for item in image_observations
+                if item.get("image_id") == case_image_id
+            ),
+            {},
+        )
+        if case_image_id
+        else (image_observations[0] if image_observations else {})
+    )
     successful = _is_successful_analysis(vision, observation)
     relevance = observation.get("relevance")
     tomato_scope = _is_tomato(observation.get("crop_candidate"))
@@ -354,6 +430,17 @@ def build_report(
     }
 
 
+def merge_case_results(
+    ordered_case_ids: list[str],
+    previous_results: list[dict[str, Any]],
+    new_results: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Replace rerun cases and discard results no longer present in the manifest."""
+    merged = {result["case_id"]: result for result in previous_results}
+    merged.update({result["case_id"]: result for result in new_results})
+    return [merged[case_id] for case_id in ordered_case_ids if case_id in merged]
+
+
 async def run(args: argparse.Namespace) -> dict[str, Any]:
     if not args.allow_provider_calls:
         raise RuntimeError("pass --allow-provider-calls to acknowledge Gemini API usage")
@@ -367,39 +454,74 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
         )
 
     manifest = json.loads(args.benchmark_manifest.read_text(encoding="utf-8"))
-    payloads = build_benchmark_payloads(args.archive, manifest, args.ood_dir)
-    expected_size = len(payloads)
+    all_payloads = build_benchmark_payloads(args.archive, manifest, args.ood_dir)
+    expected_size = len(all_payloads)
+    ordered_case_ids = [case["case_id"] for case in all_payloads]
+    previous_results: list[dict[str, Any]] = []
+    if args.resume_from:
+        previous_report = json.loads(args.resume_from.read_text(encoding="utf-8"))
+        if previous_report.get("dataset") != manifest["version"]:
+            raise ValueError("resume report dataset version does not match manifest")
+        previous_results = previous_report.get("cases") or []
+    previous_by_id = {result["case_id"]: result for result in previous_results}
+
+    selected_ids = set(args.case_ids or [])
+    if selected_ids:
+        unknown = selected_ids.difference(ordered_case_ids)
+        if unknown:
+            raise ValueError(f"unknown benchmark case ids: {sorted(unknown)}")
+        payloads = [case for case in all_payloads if case["case_id"] in selected_ids]
+    elif args.resume_from:
+        payloads = [
+            case for case in all_payloads
+            if case["case_id"] not in previous_by_id
+            or not previous_by_id[case["case_id"]].get("passed")
+        ]
+    else:
+        payloads = all_payloads
     if args.case_limit is not None:
         payloads = payloads[:args.case_limit]
+    batches = benchmark_batches(payloads, args.batch_size)
 
     results: list[dict[str, Any]] = []
     async with httpx.AsyncClient(timeout=args.timeout) as client:
         token = await get_supabase_token(client)
-        for index, case in enumerate(payloads):
+        for index, batch in enumerate(batches):
             try:
                 response = await invoke_production_chat(
                     client,
                     token,
                     IMAGE_QUESTION,
-                    images=[{
-                        "mime_type": case["mime_type"],
-                        "data_base64": base64.b64encode(case["raw_bytes"]).decode("ascii"),
-                    }],
+                    images=[
+                        {
+                            "mime_type": case["mime_type"],
+                            "data_base64": base64.b64encode(
+                                case["raw_bytes"]
+                            ).decode("ascii"),
+                        }
+                        for case in batch
+                    ],
                 )
-                results.append(score_case(case, response))
+                results.extend(score_case(case, response) for case in batch)
             except (httpx.HTTPError, ValueError) as exc:
-                results.append({
-                    "case_id": case["case_id"],
-                    "category": case["category"],
-                    "request_error": type(exc).__name__,
-                    "successful_analysis": False,
-                    "passed": False,
-                })
+                results.extend(
+                    {
+                        "case_id": case["case_id"],
+                        "category": case["category"],
+                        "request_error": type(exc).__name__,
+                        "successful_analysis": False,
+                        "passed": False,
+                    }
+                    for case in batch
+                )
             finally:
-                case.pop("raw_bytes", None)
-            if index + 1 < len(payloads):
+                for case in batch:
+                    case.pop("raw_bytes", None)
+            if index + 1 < len(batches):
                 await asyncio.sleep(args.delay)
 
+    if previous_results:
+        results = merge_case_results(ordered_case_ids, previous_results, results)
     report = build_report(manifest, results, expected_size)
     if args.output:
         args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -416,6 +538,9 @@ def main() -> None:
     parser.add_argument("--ood-dir", type=Path, default=DEFAULT_OOD_DIR)
     parser.add_argument("--output", type=Path)
     parser.add_argument("--case-limit", type=int)
+    parser.add_argument("--case-id", dest="case_ids", action="append")
+    parser.add_argument("--resume-from", type=Path)
+    parser.add_argument("--batch-size", type=int, choices=(1, 2), default=2)
     parser.add_argument("--delay", type=float, default=7.0)
     parser.add_argument("--timeout", type=float, default=120.0)
     parser.add_argument("--allow-provider-calls", action="store_true")
