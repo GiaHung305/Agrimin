@@ -72,6 +72,16 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                       if (index == 0) return const _NotificationIntro();
                       return _NotificationCard(
                         notification: _notifications[index - 1],
+                        onResolved: (confirmed) async {
+                          final recommendation =
+                              _notifications[index - 1].recommendation;
+                          if (recommendation == null) return;
+                          await ApiService.resolveAssistantAction(
+                            recommendation.pendingActionId,
+                            confirmed,
+                          );
+                          await _load();
+                        },
                       );
                     },
                   ),
@@ -126,13 +136,45 @@ class _NotificationIntro extends StatelessWidget {
   );
 }
 
-class _NotificationCard extends StatelessWidget {
-  const _NotificationCard({required this.notification});
+class _NotificationCard extends StatefulWidget {
+  const _NotificationCard({
+    required this.notification,
+    required this.onResolved,
+  });
+
   final AppNotification notification;
+  final Future<void> Function(bool confirmed) onResolved;
+
+  @override
+  State<_NotificationCard> createState() => _NotificationCardState();
+}
+
+class _NotificationCardState extends State<_NotificationCard> {
+  bool _busy = false;
+
+  Future<void> _resolve(bool confirmed) async {
+    if (_busy) return;
+    setState(() => _busy = true);
+    try {
+      await widget.onResolved(confirmed);
+    } catch (_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Không thể cập nhật đề xuất. Hãy thử lại.'),
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final notification = widget.notification;
     final isWeather = notification.kind == 'weather_alert';
+    final recommendation = notification.recommendation;
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(15),
@@ -182,6 +224,36 @@ class _NotificationCard extends StatelessWidget {
                       fontSize: 11,
                     ),
                   ),
+                  if (recommendation != null) ...[
+                    const SizedBox(height: 12),
+                    if (recommendation.isPending && !recommendation.isExpired)
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton(
+                              onPressed: _busy ? null : () => _resolve(false),
+                              child: const Text('Bỏ qua'),
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: FilledButton(
+                              onPressed: _busy ? null : () => _resolve(true),
+                              child: const Text('Tạo việc'),
+                            ),
+                          ),
+                        ],
+                      )
+                    else
+                      Text(
+                        _recommendationStatus(recommendation),
+                        style: const TextStyle(
+                          color: AppColors.forest,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                  ],
                 ],
               ),
             ),
@@ -204,6 +276,17 @@ class _NotificationCard extends StatelessWidget {
     if (dayDifference == 0) return 'Hôm nay • $time';
     if (dayDifference == 1) return 'Hôm qua • $time';
     return '${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}';
+  }
+
+  String _recommendationStatus(NotificationRecommendation recommendation) {
+    if (recommendation.isExpired || recommendation.status == 'expired') {
+      return 'Đề xuất đã hết hạn';
+    }
+    return switch (recommendation.status) {
+      'accepted' => 'Đã tạo công việc',
+      'dismissed' => 'Đã bỏ qua đề xuất',
+      _ => 'Đề xuất đã được xử lý',
+    };
   }
 }
 

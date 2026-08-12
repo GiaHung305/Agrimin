@@ -1,10 +1,13 @@
 import httpx
 import json
+import logging
 
 from app.core.redis_client import redis_client
 from app.core.config import settings
+from app.services.vietnam_regions import province_geocode_fallback
 
 CACHE_TTL_SECONDS = 86400  # 24h, tọa độ tỉnh không đổi
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 async def geocode_province(province: str, country_code: str = "VN") -> tuple[float, float] | None:
@@ -18,17 +21,26 @@ async def geocode_province(province: str, country_code: str = "VN") -> tuple[flo
         lat, lon = json.loads(cached)
         return lat, lon
 
+    queries = [province.strip()]
+    fallback = province_geocode_fallback(province)
+    if fallback and fallback.casefold() != province.strip().casefold():
+        queries.append(fallback)
+
+    results = []
     async with httpx.AsyncClient(timeout=10.0) as client:
-        response = await client.get(
-            "https://api.openweathermap.org/geo/1.0/direct",
-            params={
-                "q": f"{province},{country_code}",
-                "limit": 1,
-                "appid": settings.openweather_api_key,
-            },
-        )
-        response.raise_for_status()
-        results = response.json()
+        for query in queries:
+            response = await client.get(
+                "https://api.openweathermap.org/geo/1.0/direct",
+                params={
+                    "q": f"{query},{country_code}",
+                    "limit": 1,
+                    "appid": settings.openweather_api_key,
+                },
+            )
+            response.raise_for_status()
+            results = response.json()
+            if results:
+                break
 
     if not results:
         return None

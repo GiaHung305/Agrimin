@@ -6,7 +6,7 @@ AgriMind chuyển từ hệ thống hỏi đáp sang trợ lý nông nghiệp c�
 
 ## Kiến trúc
 
-Flutter giao tiếp FastAPI qua SSE `POST /api/v1/chat/stream`. FastAPI chạy LangGraph gồm planner, guardrail, multi-query retrieval, phân tích coverage/mâu thuẫn, generation, reflection, memory write, action proposal và memory extraction. PostgreSQL lưu lịch sử, hồ sơ nông trại, task, log, action chờ xác nhận, device token và notification. Redis phục vụ cache; Qdrant phục vụ RAG; worker định kỳ tạo in-app notification và gửi FCM khi có credentials.
+Flutter giao tiếp FastAPI qua SSE `POST /api/v1/chat/stream`. FastAPI chạy LangGraph gồm planner, guardrail, multi-query retrieval, phân tích coverage/mâu thuẫn, generation, reflection, memory write, action proposal và memory extraction. PostgreSQL lưu lịch sử, hồ sơ nông trại, task, log, action chờ xác nhận, lịch theo dõi, observation, prediction, recommendation, device token và notification. Redis phục vụ cache; Qdrant phục vụ RAG; worker định kỳ tạo in-app notification và gửi FCM khi có credentials.
 
 Embedding service giữ Hugging Face model cache trong named volume để container
 recreate không tải lại model. BGE-M3 dùng GPU; reranker dùng CPU với concurrency
@@ -22,7 +22,63 @@ giữ ngân sách tối đa hai lượt. Mọi lượt retry phải dùng query 
    duyệt mới được phát thành các event SSE.
 3. Yêu cầu “nhắc tôi” hoặc “ghi nhật ký” tạo `PendingAction` hết hạn sau 15 phút, trả về metadata SSE.
 4. Flutter hiển thị thẻ xác nhận. `POST /assistant/actions/{id}/confirm` kiểm tra ownership và chỉ sau đó tạo task/log; cancel chỉ đổi trạng thái action.
-5. Worker quét task đến hạn và mưa xác suất từ 70%, ghi notification theo dedupe key; FCM là lớp gửi thêm, không ảnh hưởng notification trong app.
+5. Worker quét task đến hạn và lịch theo dõi đã được người dùng đồng ý. Mỗi lần chạy lưu observation thời tiết, prediction theo policy có phiên bản và recommendation trước khi ghi notification theo dedupe key; FCM chỉ chạy nếu người dùng chọn kênh push.
+
+## Farm monitoring Phase 4
+
+Phạm vi theo dõi phủ mọi tỉnh Việt Nam và mọi cây trồng có tên trong mùa vụ. Các
+cây phổ biến (cà chua, lúa, cà phê, hồ tiêu, sầu riêng, ớt, ngô, sắn, chuối,
+xoài, thanh long và cây có múi) có policy riêng theo nhóm rủi ro mưa/ẩm/nóng;
+cây chưa có policy riêng dùng `generic-weather-watch-v1`. Policy dự phòng chỉ
+cảnh báo điều kiện thời tiết và yêu cầu kiểm tra ruộng, không suy diễn bệnh hoặc
+đề xuất hóa chất. Trạng thái canh tác được tách thành farm profile, nhiều thửa
+đất và lịch sử mùa vụ; mỗi thửa chỉ có tối đa một mùa vụ active. Lịch theo dõi
+bắt buộc trỏ đến một mùa active thuộc đúng user và farm. Kết thúc hoặc đổi cây
+trong mùa tự pause lịch để người dùng xác nhận lại policy trước khi tiếp tục.
+Registry vùng dùng 34 đơn vị cấp tỉnh theo Quyết định 19/2025/QĐ-TTg và vẫn ánh
+xạ tên tỉnh cũ trước sáp nhập để hồ sơ hiện có không mất khả năng theo dõi.
+
+Registry rau có 80 policy được nhận diện riêng bằng alias tiếng Việt không dấu,
+có dấu và tiếng Anh. Phạm vi gồm rau ăn lá (các loại cải, xà lách, rau muống,
+mồng tơi, rau dền, rau ngót...), họ cải, rau ăn thân/hoa, cà–ớt, dưa–bí, rau họ
+đậu, rau củ, củ lấy tinh bột, hành–tỏi, rau gia vị và thân rễ. Mỗi loại có
+`policy_key`, version, nhãn hiển thị và nhóm riêng; các loại cùng nhóm chia sẻ
+ranh giới weather-watch bảo thủ. Nguồn nền về nhu cầu nước/nhóm cây lấy từ bảng
+crop factor của FAO; hành–tỏi có thêm nguồn FAO riêng về quan hệ nước của hành.
+Không có policy nào tự suy ra bệnh, kê thuốc hoặc tự tạo công việc.
+
+Người dùng phải chủ động bật lịch, chọn chu kỳ 6, 12 hoặc 24 giờ và phạm vi thông
+báo trong app hoặc kèm push. API cho phép xem, tạm dừng, tiếp tục và soft-delete
+lịch; audit cũ không bị xóa theo lịch. Thửa có mùa active hoặc schedule chưa xóa
+không thể archive, và mùa có schedule chưa xóa không thể bị xóa để tránh orphan.
+
+Registry policy là deterministic và có version. Ngưỡng vận hành chung tạo cảnh
+báo cao khi tổng mưa ngày từ 50 mm hoặc xác suất mưa cực đại từ 85%; nhóm cây
+nhạy ẩm còn cảnh báo cao khi xác suất mưa từ 50% đồng thời độ ẩm cực đại từ 85%,
+nhóm nóng/thời tiết cảnh báo cao từ 38°C. Đây là ranh giới vận hành bảo thủ để
+ưu tiên kiểm tra thực địa, không phải ngưỡng chẩn đoán sinh học. OpenWeather 5
+day/3 hour được tổng hợp từ mọi mốc trong ngày thành nhiệt độ min/max, độ ẩm max,
+xác suất mưa max và tổng `rain.3h`, thay vì chỉ lấy mốc đầu tiên.
+
+Confidence được tính động từ độ đầy đủ của bốn chỉ dấu và khoảng cách tới ngưỡng;
+đây là độ tin cậy của phép đánh giá policy, không phải xác suất cây đã mắc bệnh.
+Prediction lưu `policy_key`, crop, province, reasons và URL nguồn để truy vết.
+Nguồn nền gồm tài liệu OpenWeather về forecast 3 giờ, FAO về úng/thoát nước và
+nắng nóng, cùng IRRI về quản lý nước lúa. Notification luôn yêu cầu kiểm tra tại
+ruộng và nêu rõ không phải chẩn đoán hoặc chỉ định hóa chất. `run_key` của
+observation và dedupe key theo schedule/ngày/policy ngăn retry tạo bản ghi trùng.
+
+Push delivery dùng transactional outbox `notification_deliveries`. Worker ghi
+notification và từng delivery theo device vào PostgreSQL trong cùng transaction;
+không gọi FCM trước commit. Chu kỳ delivery riêng khóa row với `SKIP LOCKED`, chỉ
+gửi cho token active thuộc cùng user, retry exponential tối đa năm lần và lưu
+attempt count, lỗi cuối cùng cùng thời điểm delivered. In-app notification không
+phụ thuộc FCM và vẫn tồn tại nếu push thất bại.
+
+Recommendation nguy cơ tạo một `PendingAction` có cùng thời hạn. Người dùng có
+thể chọn Tạo việc hoặc Bỏ qua trong màn Thông báo; `FarmTask` chỉ được ghi sau
+xác nhận đúng owner. Worker tự chuyển recommendation và pending action quá hạn
+sang `expired`, kể cả khi người dùng không mở ứng dụng.
 
 ## Internal Research Agent
 
@@ -150,14 +206,18 @@ government, extension, international, or official manufacturer-label source.
 ## API
 
 - `GET|PUT /api/v1/assistant/farm-profile`
+- `GET|POST /api/v1/assistant/plots`, `PATCH|DELETE /api/v1/assistant/plots/{id}`
+- `POST /api/v1/assistant/plots/{id}/seasons`, `PATCH|DELETE /api/v1/assistant/seasons/{id}`
 - `GET /api/v1/assistant/tasks`, `GET /api/v1/assistant/notifications`
+- `GET|POST /api/v1/assistant/monitoring-schedules`
+- `PATCH|DELETE /api/v1/assistant/monitoring-schedules/{id}`
 - `POST|DELETE /api/v1/assistant/device-tokens`
 - `POST /api/v1/assistant/actions/{id}/confirm|cancel`
 
 ## Bảo mật và vận hành
 
-Tất cả dữ liệu assistant gắn `user_id`; action ID được kiểm tra ownership, pending status và thời hạn. Prompt injection bị chặn trước DB/model. Firebase credentials chỉ đọc từ biến môi trường/volume, không commit. Backend và worker gọi MCP thời tiết qua `mcp-weather-server:8002`, có timeout và adapter tương thích cả `structuredContent` lẫn SDK cũ. Weather là nguồn phụ: lỗi của một lần tra cứu không làm hỏng chat hoặc rollback toàn bộ chu kỳ reminder. Worker chạy tách backend qua Docker Compose và retry ở chu kỳ sau khi external weather/FCM lỗi.
+Tất cả dữ liệu assistant gắn `user_id`; action, plot, season, monitoring schedule và push delivery đều kiểm tra ownership. Action còn phải đúng pending status và thời hạn. Prompt injection bị chặn trước DB/model. Firebase credentials chỉ đọc từ biến môi trường/volume, không commit. Backend và worker gọi MCP thời tiết qua `mcp-weather-server:8002`, có timeout và adapter tương thích cả `structuredContent` lẫn SDK cũ. Logger `httpx` của weather/geocoding bị giới hạn ở WARNING để query string chứa `appid` không vào log. Weather là nguồn phụ: lỗi của một lần tra cứu không làm hỏng chat hoặc rollback toàn bộ chu kỳ reminder. Worker chạy tách backend qua Docker Compose và retry lịch lỗi sau 15 phút.
 
 ## Rollout và kiểm thử
 
-Chạy migration Alembic trước deploy, cấu hình Firebase nếu cần push, rồi triển khai backend và worker. Theo dõi cache hit, action confirmation rate, notification delivery và tỷ lệ cảnh báo trùng. Kiểm thử history đa lượt, ownership, action hết hạn, task due, weather dedupe và UI confirm/cancel.
+Chạy migration Alembic trước deploy, cấu hình Firebase nếu cần push, rồi triển khai backend, MCP weather và worker. Theo dõi cache hit, action confirmation rate, monitoring failure, notification delivery và tỷ lệ cảnh báo trùng. Kiểm thử history đa lượt, ownership, action hết hạn, task due, schedule consent/pause/delete, worker idempotency, prediction expiry và UI confirm/cancel.

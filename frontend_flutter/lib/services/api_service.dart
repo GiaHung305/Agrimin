@@ -6,6 +6,8 @@ import '../models/chat_image.dart';
 import '../models/farm_profile.dart';
 import '../models/farm_task.dart';
 import '../models/app_notification.dart';
+import '../models/farm_monitoring_schedule.dart';
+import '../models/farm_plot.dart';
 import 'auth_service.dart';
 
 class ApiService {
@@ -225,6 +227,207 @@ class ApiService {
     if (response.statusCode != 200) {
       throw Exception("Không thể xóa công việc");
     }
+  }
+
+  static Future<List<FarmMonitoringSchedule>> getMonitoringSchedules() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/monitoring-schedules"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể tải lịch theo dõi cây trồng');
+    }
+    final data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+    return data
+        .map(
+          (item) =>
+              FarmMonitoringSchedule.fromJson(item as Map<String, dynamic>),
+        )
+        .toList();
+  }
+
+  static Future<FarmMonitoringSchedule> createMonitoringSchedule({
+    required String cropSeasonId,
+    required int frequencyHours,
+    required String notificationScope,
+  }) async {
+    final token = await AuthService.getToken();
+    final response = await http.post(
+      Uri.parse("$baseUrl/assistant/monitoring-schedules"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'consent': true,
+        'crop_season_id': cropSeasonId,
+        'frequency_hours': frequencyHours,
+        'notification_scope': notificationScope,
+      }),
+    );
+    if (response.statusCode != 201) {
+      throw Exception(_apiDetail(response, 'Không thể bật lịch theo dõi'));
+    }
+    return FarmMonitoringSchedule.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<FarmMonitoringSchedule> updateMonitoringSchedule(
+    String scheduleId,
+    Map<String, dynamic> changes,
+  ) async {
+    final token = await AuthService.getToken();
+    final response = await http.patch(
+      Uri.parse("$baseUrl/assistant/monitoring-schedules/$scheduleId"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(changes),
+    );
+    if (response.statusCode != 200) {
+      throw Exception(_apiDetail(response, 'Không thể cập nhật lịch theo dõi'));
+    }
+    return FarmMonitoringSchedule.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<void> deleteMonitoringSchedule(String scheduleId) async {
+    final token = await AuthService.getToken();
+    final response = await http.delete(
+      Uri.parse("$baseUrl/assistant/monitoring-schedules/$scheduleId"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception(_apiDetail(response, 'Không thể xóa lịch theo dõi'));
+    }
+  }
+
+  static Future<List<FarmPlot>> getFarmPlots() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/plots"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception(_apiDetail(response, 'Không thể tải danh sách thửa đất'));
+    }
+    final data = jsonDecode(utf8.decode(response.bodyBytes)) as List<dynamic>;
+    return data
+        .map((item) => FarmPlot.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+
+  static Future<FarmPlot> createFarmPlot({
+    required String name,
+    double? areaHa,
+    String? locationNote,
+  }) async {
+    final token = await AuthService.getToken();
+    final response = await http.post(
+      Uri.parse("$baseUrl/assistant/plots"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'name': name,
+        'area_ha': areaHa,
+        'location_note': locationNote,
+      }),
+    );
+    if (response.statusCode != 201) {
+      throw Exception(_apiDetail(response, 'Không thể tạo thửa đất'));
+    }
+    return FarmPlot.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<void> archiveFarmPlot(String plotId) async {
+    final token = await AuthService.getToken();
+    final response = await http.delete(
+      Uri.parse("$baseUrl/assistant/plots/$plotId"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception(_apiDetail(response, 'Không thể lưu trữ thửa đất'));
+    }
+  }
+
+  static Future<CropSeason> createCropSeason({
+    required String plotId,
+    required String crop,
+    String? variety,
+    String? growthStage,
+    DateTime? plantedOn,
+    DateTime? expectedHarvestOn,
+  }) async {
+    final token = await AuthService.getToken();
+    final response = await http.post(
+      Uri.parse("$baseUrl/assistant/plots/$plotId/seasons"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode({
+        'crop': crop,
+        'variety': variety,
+        'growth_stage': growthStage,
+        'planted_on': _dateOnly(plantedOn),
+        'expected_harvest_on': _dateOnly(expectedHarvestOn),
+        'status': 'active',
+      }),
+    );
+    if (response.statusCode != 201) {
+      throw Exception(_apiDetail(response, 'Không thể tạo mùa vụ'));
+    }
+    return CropSeason.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<CropSeason> updateCropSeason(
+    String seasonId,
+    Map<String, dynamic> changes,
+  ) async {
+    final token = await AuthService.getToken();
+    final response = await http.patch(
+      Uri.parse("$baseUrl/assistant/seasons/$seasonId"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(changes),
+    );
+    if (response.statusCode != 200) {
+      throw Exception(_apiDetail(response, 'Không thể cập nhật mùa vụ'));
+    }
+    return CropSeason.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static String? _dateOnly(DateTime? value) {
+    if (value == null) return null;
+    final month = value.month.toString().padLeft(2, '0');
+    final day = value.day.toString().padLeft(2, '0');
+    return '${value.year}-$month-$day';
+  }
+
+  static String _apiDetail(http.Response response, String fallback) {
+    try {
+      final data = jsonDecode(utf8.decode(response.bodyBytes));
+      if (data is Map && data['detail'] != null) {
+        return data['detail'].toString();
+      }
+    } on FormatException {
+      // Use the stable Vietnamese fallback for non-JSON server errors.
+    }
+    return fallback;
   }
 
   static Future<void> deactivateDocument(String documentId) async {

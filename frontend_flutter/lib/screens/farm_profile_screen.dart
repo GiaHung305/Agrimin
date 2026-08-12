@@ -4,6 +4,8 @@ import '../models/farm_profile.dart';
 import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 import 'home_shell.dart';
+import 'monitoring_schedule_screen.dart';
+import 'farm_plots_screen.dart';
 
 class FarmProfileScreen extends StatefulWidget {
   const FarmProfileScreen({super.key, this.onboarding = false});
@@ -228,6 +230,62 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
                             : 'Lưu thay đổi',
                       ),
                     ),
+                    if (!widget.onboarding) ...[
+                      const SizedBox(height: 18),
+                      Card(
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 8,
+                          ),
+                          leading: const Icon(
+                            Icons.landscape_outlined,
+                            color: AppColors.forest,
+                          ),
+                          title: const Text(
+                            'Thửa đất và mùa vụ',
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          subtitle: const Text(
+                            'Quản lý cây trồng theo từng thửa và từng vụ.',
+                          ),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const FarmPlotsScreen(),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      Card(
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 18,
+                            vertical: 8,
+                          ),
+                          leading: const Icon(
+                            Icons.sensors_rounded,
+                            color: AppColors.forest,
+                          ),
+                          title: const Text(
+                            'Theo dõi cây trồng',
+                            style: TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                          subtitle: const Text(
+                            'Xem, tạm dừng hoặc xóa lịch cảnh báo nguy cơ.',
+                          ),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const MonitoringScheduleScreen(),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                     if (widget.onboarding) ...[
                       const SizedBox(height: 12),
                       const Text(

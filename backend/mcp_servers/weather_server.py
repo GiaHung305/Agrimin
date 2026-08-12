@@ -1,5 +1,6 @@
 import sys
 import os
+import logging
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -7,6 +8,10 @@ from mcp.server.fastmcp import FastMCP
 
 from app.tools.weather_tool import get_weather as _get_weather
 from app.tools.geocoding_tool import geocode_province as _geocode_province
+
+# httpx logs full query strings at INFO, including the OpenWeather ``appid``.
+# Keep dependency logs at WARNING so credentials never enter container logs.
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 mcp = FastMCP("AgriMind Weather Tools", host="0.0.0.0", port=8002)
 

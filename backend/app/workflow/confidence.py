@@ -49,3 +49,22 @@ def compute_confidence(
         confidence -= 0.10
 
     return round(max(0.0, min(1.0, confidence)), 2)
+
+
+def compute_weather_risk_confidence(
+    *, available_signals: int, total_signals: int, threshold_margin: float
+) -> float:
+    """Estimate deterministic weather-risk confidence from input quality.
+
+    This is confidence in the policy evaluation, not the probability that a
+    disease is present. It therefore rewards complete weather inputs and a
+    clear distance from the notification threshold.
+    """
+    if total_signals <= 0 or available_signals <= 0:
+        return 0.0
+    completeness = min(max(available_signals / total_signals, 0.0), 1.0)
+    margin = min(max(float(threshold_margin), 0.0), 1.0)
+    confidence = 0.40 + 0.40 * completeness + 0.20 * margin
+    if available_signals < 2:
+        confidence -= 0.15
+    return round(max(0.0, min(1.0, confidence)), 2)
