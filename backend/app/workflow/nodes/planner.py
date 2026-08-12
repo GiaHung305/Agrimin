@@ -41,9 +41,24 @@ def _safe_fallback_decision(question: str) -> PlannerDecision:
         need_rag=True,
         need_weather=bool(_WEATHER_PATTERN.search(question)),
         need_deep_research=False,
-        risk_level="high" if _HIGH_RISK_PATTERN.search(question) else "low",
+        risk_level=(
+            "high" if _has_deterministic_high_risk_request(question) else "low"
+        ),
         research_questions=[question],
     )
+
+
+def _has_deterministic_high_risk_request(question: str) -> bool:
+    """Ignore explicit safety exclusions while keeping risky requests strict."""
+    without_exclusions = re.sub(
+        r"\bkh[oô]ng\s+(?:đưa|tư vấn|đề xuất|nêu|cung cấp)\s+"
+        r"(?:thuốc|h[oó]a chất|hoá chất|liều(?: lượng)?|pha(?: trộn)?|"
+        r"nồng độ|xử lý|phác đồ)[^.!?;]*",
+        " ",
+        question,
+        flags=re.IGNORECASE,
+    )
+    return bool(_HIGH_RISK_PATTERN.search(without_exclusions))
 
 
 def _normalize_research_questions(
@@ -107,7 +122,11 @@ Câu hỏi: {state['question']}"""
 
     # Deterministic safety classification is an override, never a downgrade.
     fallback = _safe_fallback_decision(state["question"])
-    risk_level = "high" if fallback.risk_level == "high" else decision.risk_level
+    risk_level = (
+        "high"
+        if _has_deterministic_high_risk_request(state["question"])
+        else decision.risk_level
+    )
     need_deep_research = settings.deep_research_enabled and (
         state.get("context", {}).get("request_deep_research", False)
         or decision.need_deep_research

@@ -115,6 +115,53 @@ async def test_planner_invalid_output_falls_back_high_for_dosage(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_planner_does_not_promote_explicit_no_dosage_hypothesis_to_high(
+    monkeypatch,
+):
+    async def decide(prompt):
+        return planner.PlannerDecision(
+            need_rag=True,
+            need_weather=False,
+            need_deep_research=False,
+            risk_level="medium",
+            research_questions=["Giả thuyết phù hợp với triệu chứng nhìn thấy"],
+        )
+
+    monkeypatch.setattr(planner, "_call_gemini", decide)
+    state = {
+        "question": (
+            "Đối chiếu tài liệu và nêu giả thuyết; không đưa liều lượng xử lý."
+        ),
+        "context": {},
+        "image_observations": [{}],
+        "visual_observations": [{"relevance": "agriculture_plant"}],
+    }
+
+    result = await planner.planner_node(state)
+
+    assert result["risk_level"] == "medium"
+
+
+@pytest.mark.asyncio
+async def test_planner_keeps_actual_treatment_request_high(monkeypatch):
+    async def decide(prompt):
+        return planner.PlannerDecision(
+            need_rag=True,
+            need_weather=False,
+            need_deep_research=False,
+            risk_level="medium",
+        )
+
+    monkeypatch.setattr(planner, "_call_gemini", decide)
+    result = await planner.planner_node({
+        "question": "Cây này bệnh gì và phun thuốc liều bao nhiêu ml?",
+        "context": {},
+    })
+
+    assert result["risk_level"] == "high"
+
+
+@pytest.mark.asyncio
 async def test_reflection_invalid_output_requests_more_evidence(monkeypatch):
     async def invalid(prompt):
         try:

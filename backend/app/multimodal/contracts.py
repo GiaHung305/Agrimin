@@ -152,6 +152,24 @@ _PART_QUERY_TERMS = {
     "whole_plant": "toàn cây",
     "multiple": "nhiều bộ phận",
 }
+_CROP_QUERY_ALIASES = {
+    "tomato": "cà chua",
+    "tomato plant": "cà chua",
+    "pepper": "ớt",
+    "bell pepper": "ớt chuông",
+    "chili pepper": "ớt",
+    "potato": "khoai tây",
+    "corn": "ngô",
+    "maize": "ngô",
+    "rice": "lúa",
+    "cucumber": "dưa chuột",
+    "soybean": "đậu tương",
+}
+
+
+def normalize_crop_query_term(value: str) -> str:
+    normalized = " ".join(value.casefold().split())
+    return _CROP_QUERY_ALIASES.get(normalized, " ".join(value.split()))
 
 
 def validate_analysis_image_scope(
@@ -180,7 +198,7 @@ def build_visual_retrieval_query(
         ):
             continue
         if observation.crop_candidate:
-            terms.append(observation.crop_candidate)
+            terms.append(normalize_crop_query_term(observation.crop_candidate))
         part = _PART_QUERY_TERMS.get(observation.plant_part)
         if part:
             terms.append(part)

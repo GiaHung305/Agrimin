@@ -14,6 +14,10 @@ async def fake_stream(*args, **kwargs):
     yield SimpleNamespace(text="chao")
 
 
+async def cited_stream(*args, **kwargs):
+    yield SimpleNamespace(text="Khuyen cao [E1]")
+
+
 @pytest.mark.asyncio
 async def test_generate_node_writes_tokens_for_low_risk_answer(monkeypatch):
     events = []
@@ -58,7 +62,7 @@ async def test_generate_node_buffers_high_risk_answer(monkeypatch):
 @pytest.mark.asyncio
 async def test_generate_node_emits_traceable_citation_metadata(monkeypatch):
     monkeypatch.setattr(generate, "get_stream_writer", lambda: lambda event: None)
-    monkeypatch.setattr(generate, "stream_content", fake_stream)
+    monkeypatch.setattr(generate, "stream_content", cited_stream)
     state = {
         "risk_level": "low",
         "retrieved_docs": [{
@@ -85,3 +89,126 @@ async def test_generate_node_emits_traceable_citation_metadata(monkeypatch):
     assert citation["version"] == "2026-08"
     assert citation["rerank_score"] == 0.91
     assert citation["citation_id"] == "E1"
+
+
+@pytest.mark.asyncio
+async def test_generate_node_returns_only_claim_referenced_citations(monkeypatch):
+    async def second_only(*args, **kwargs):
+        yield SimpleNamespace(text="Quan sat duoc ho tro [E2] [E2]")
+
+    monkeypatch.setattr(generate, "get_stream_writer", lambda: lambda event: None)
+    monkeypatch.setattr(generate, "stream_content", second_only)
+    state = {
+        "risk_level": "low",
+        "retrieved_docs": [
+            {
+                "document_id": f"doc-{index}",
+                "chunk_id": f"chunk-{index}",
+                "is_active": True,
+                "content": "Noi dung",
+                "rerank_score": 0.9,
+            }
+            for index in (1, 2)
+        ],
+        "context": {},
+        "tool_results": {},
+        "question": "Hoi",
+    }
+
+    result = await generate.generate_node(state)
+
+    assert [item["citation_id"] for item in result["citations"]] == ["E2"]
+    assert result["citations"][0]["document_id"] == "doc-2"
+
+
+def test_visual_generation_excludes_evidence_that_failed_coverage():
+    eligible = {
+        "document_id": "doc-tomato",
+        "chunk_id": "chunk-tomato",
+        "is_active": True,
+        "content": "Tài liệu cà chua",
+        "source_type": "extension",
+        "rerank_score": 0.2,
+        "ranking_strategy": "rerank",
+    }
+    irrelevant = {
+        "document_id": "doc-coffee",
+        "chunk_id": "chunk-coffee",
+        "is_active": True,
+        "content": "Tài liệu cà phê",
+        "source_type": "government",
+        "rerank_score": 0.001,
+        "ranking_strategy": "rerank",
+    }
+    state = {
+        "risk_level": "medium",
+        "visual_observations": [{"relevance": "agriculture_plant"}],
+        "retrieved_docs": [irrelevant, eligible],
+    }
+
+    assert generate.answer_evidence_for_state(state) == [eligible]
+
+
+def test_high_risk_visual_generation_keeps_only_authoritative_high_relevance():
+    authoritative = {
+        "document_id": "doc-label",
+        "chunk_id": "chunk-label",
+        "is_active": True,
+        "content": "Nhãn chính thức",
+        "source_type": "government",
+        "rerank_score": 0.8,
+        "ranking_strategy": "rerank",
+    }
+    research = {
+        **authoritative,
+        "document_id": "doc-paper",
+        "chunk_id": "chunk-paper",
+        "source_type": "unknown",
+    }
+    state = {
+        "risk_level": "high",
+        "visual_observations": [{"relevance": "agriculture_plant"}],
+        "retrieved_docs": [research, authoritative],
+    }
+
+    assert generate.answer_evidence_for_state(state) == [authoritative]
+
+
+@pytest.mark.asyncio
+async def test_citation_required_generation_repairs_marker_once_before_sse(
+    monkeypatch,
+):
+    calls = 0
+    events = []
+
+    async def repair_stream(*args, **kwargs):
+        nonlocal calls
+        calls += 1
+        text = "Giả thuyết ban đầu." if calls == 1 else "Giả thuyết [E1]."
+        yield SimpleNamespace(text=text)
+
+    monkeypatch.setattr(generate, "get_stream_writer", lambda: events.append)
+    monkeypatch.setattr(generate, "stream_content", repair_stream)
+    state = {
+        "risk_level": "medium",
+        "retrieved_docs": [{
+            "document_id": "doc-1",
+            "chunk_id": "chunk-1",
+            "is_active": True,
+            "content": "Bằng chứng",
+            "source_type": "extension",
+            "rerank_score": 0.8,
+            "ranking_strategy": "rerank",
+        }],
+        "context": {"require_citation": True},
+        "tool_results": {},
+        "question": "Nêu giả thuyết có nguồn",
+    }
+
+    result = await generate.generate_node(state)
+
+    assert calls == 2
+    assert events == []
+    assert result["draft_answer"] == "Giả thuyết [E1]."
+    assert result["citations"][0]["citation_id"] == "E1"
+    assert result["context"]["citation_repair_attempted"] is True

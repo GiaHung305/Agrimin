@@ -217,6 +217,15 @@ def test_global_vision_flag_overrides_empty_test_allowlist(monkeypatch):
     assert chat._vision_enabled_for_user({"email": "anyone@example.com"})
 
 
+def test_vision_timeout_never_cancels_before_model_timeout(monkeypatch):
+    monkeypatch.setattr(chat.settings, "vision_request_timeout_seconds", 30.0)
+    monkeypatch.setattr(chat.settings, "model_request_timeout_seconds", 45.0)
+    assert chat._vision_timeout_seconds() == 50.0
+
+    monkeypatch.setattr(chat.settings, "vision_request_timeout_seconds", 90.0)
+    assert chat._vision_timeout_seconds() == 90.0
+
+
 @pytest.mark.asyncio
 async def test_typed_analyzer_output_contains_no_raw_image(monkeypatch):
     async def fake_analyzer(images, **kwargs):

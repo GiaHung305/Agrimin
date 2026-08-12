@@ -28,6 +28,7 @@ class AgentState(TypedDict):
     plan: Optional[dict]
     risk_level: Literal["low", "medium", "high"]
     retrieved_docs: list
+    answer_evidence: list
     tool_results: dict
     draft_answer: Optional[str]
     citations: list

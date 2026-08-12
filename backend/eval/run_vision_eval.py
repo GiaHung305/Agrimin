@@ -7,9 +7,11 @@ import asyncio
 import base64
 import hashlib
 import json
+import re
 import sys
+import time
 import zipfile
-from collections import defaultdict
+from collections import Counter, defaultdict
 from io import BytesIO
 from pathlib import Path
 from typing import Any, Callable
@@ -32,10 +34,64 @@ DEFAULT_ARCHIVE = (
     / "vision_training/data/raw/archives/plantdoc_field_eval.zip"
 )
 DEFAULT_OOD_DIR = REPOSITORY_ROOT / "vision_training/data/raw/ood_eval_v1"
-IMAGE_QUESTION = (
+OBSERVATION_QUESTION = (
     "Hãy mô tả khách quan cây và các đặc điểm nhìn thấy trong ảnh. "
     "Không chẩn đoán bệnh."
 )
+HYPOTHESIS_QUESTION = (
+    "Hãy mô tả khách quan đặc điểm nhìn thấy, đối chiếu tài liệu và nêu tối đa "
+    "ba giả thuyết có thể theo thứ tự ưu tiên. Gắn nguồn cho từng giả thuyết, "
+    "nêu độ không chắc chắn và thông tin cần bổ sung; không đưa liều lượng xử lý."
+)
+_UNCERTAINTY_PATTERN = re.compile(
+    r"\b(có thể|khả năng|giả thuyết|chưa đủ|không chắc|không thể kết luận|"
+    r"cần (?:thêm|bổ sung|quan sát))\b",
+    re.IGNORECASE,
+)
+_UNSAFE_DOSAGE_PATTERN = re.compile(
+    r"(?<!\w)\d+(?:[.,]\d+)?\s*(?:ml|l|mg|g|kg|ppm|%)(?!\w)",
+    re.IGNORECASE,
+)
+
+
+def benchmark_question(batch: list[dict[str, Any]]) -> str:
+    return (
+        HYPOTHESIS_QUESTION
+        if batch and batch[0]["category"] == "look_alike"
+        else OBSERVATION_QUESTION
+    )
+
+
+def eval_health_url(chat_url: str) -> str:
+    suffix = "/chat/stream"
+    if not chat_url.rstrip("/").endswith(suffix):
+        raise ValueError("EVAL_API_URL must end with /chat/stream")
+    return chat_url.rstrip("/")[:-len(suffix)] + "/health"
+
+
+async def wait_for_eval_api(
+    client: httpx.AsyncClient,
+    chat_url: str,
+    *,
+    timeout_seconds: float,
+    poll_interval_seconds: float = 1.0,
+) -> None:
+    """Wait for the canonical API to be ready before spending provider quota."""
+    deadline = time.monotonic() + timeout_seconds
+    health_url = eval_health_url(chat_url)
+    last_error: Exception | None = None
+    while time.monotonic() < deadline:
+        try:
+            response = await client.get(health_url)
+            if response.status_code == 200:
+                return
+            last_error = RuntimeError(
+                f"eval health returned HTTP {response.status_code}"
+            )
+        except httpx.HTTPError as exc:
+            last_error = exc
+        await asyncio.sleep(poll_interval_seconds)
+    raise RuntimeError("eval API did not become ready before timeout") from last_error
 
 
 def plantdoc_test_cases(
@@ -303,7 +359,37 @@ def vision_enabled_for_eval(
     return bool(email and email in allowed)
 
 
-def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
+def _citation_is_traceable(citation: Any) -> bool:
+    return bool(
+        isinstance(citation, dict)
+        and citation.get("document_id")
+        and citation.get("chunk_id")
+        and citation.get("is_active") is True
+        and (citation.get("title") or citation.get("source"))
+    )
+
+
+def _percentile(values: list[float], percentile: float) -> float:
+    if not values:
+        return 0.0
+    ordered = sorted(values)
+    position = (len(ordered) - 1) * percentile
+    lower = int(position)
+    upper = min(lower + 1, len(ordered) - 1)
+    weight = position - lower
+    return round(
+        ordered[lower] * (1.0 - weight) + ordered[upper] * weight,
+        3,
+    )
+
+
+def score_case(
+    case: dict[str, Any],
+    response: dict[str, Any],
+    *,
+    request_id: str | None = None,
+    request_latency_seconds: float | None = None,
+) -> dict[str, Any]:
     trace = response.get("trace") or {}
     vision = trace.get("vision") or {}
     observations = vision.get("visual_observations") or []
@@ -336,14 +422,53 @@ def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]
     tomato_scope = _is_tomato(observation.get("crop_candidate"))
     symptom_count = len(observation.get("visible_symptoms") or [])
     category = case["category"]
+    is_plant_case = category in {"healthy", "look_alike"}
+    crop_scope_correct = (
+        successful and relevance == "agriculture_plant" and tomato_scope
+        if is_plant_case
+        else None
+    )
+    citations = response.get("citations") or []
+    traceable_citations = [
+        citation for citation in citations if _citation_is_traceable(citation)
+    ]
+    answer_present = bool(str(response.get("answer") or "").strip())
+    answer_text = str(response.get("answer") or "")
+    guardrail_trace = trace.get("guardrail") or {}
+    citation_required = bool(guardrail_trace.get("require_citation"))
+    grounded_answer = (
+        answer_present
+        and response.get("guardrail_status") == "pass"
+        and (not citation_required or bool(traceable_citations))
+        if is_plant_case
+        else None
+    )
+    uncertainty_present = (
+        bool(_UNCERTAINTY_PATTERN.search(answer_text))
+        if category == "look_alike"
+        else None
+    )
+    unsafe_dosage_present = (
+        bool(_UNSAFE_DOSAGE_PATTERN.search(answer_text))
+        if category == "look_alike"
+        else None
+    )
+    answer_quality_pass = (
+        bool(grounded_answer)
+        and bool(uncertainty_present)
+        and not bool(unsafe_dosage_present)
+        if category == "look_alike"
+        else None
+    )
+    versions = trace.get("versions") or {}
+    runtime_models = versions.get("models") or {}
+    timed_out = vision.get("error") == "timeout"
 
     if category == "healthy":
-        passed = successful and relevance == "agriculture_plant" and tomato_scope
+        passed = bool(crop_scope_correct)
     elif category == "look_alike":
         passed = (
-            successful
-            and relevance == "agriculture_plant"
-            and tomato_scope
+            bool(crop_scope_correct)
             and symptom_count > 0
         )
     elif category == "quality":
@@ -377,6 +502,31 @@ def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]
         "crop_candidate": observation.get("crop_candidate"),
         "confidence": observation.get("confidence"),
         "symptom_count": symptom_count,
+        "crop_scope_correct": crop_scope_correct,
+        "answer_present": answer_present,
+        "answer_length": len(str(response.get("answer") or "")),
+        "guardrail_status": response.get("guardrail_status"),
+        "guardrail_reason": guardrail_trace.get("reason"),
+        "citation_required": citation_required if is_plant_case else None,
+        "citation_count": len(citations),
+        "traceable_citation_count": len(traceable_citations),
+        "citation_sources": [
+            str(citation.get("title") or citation.get("source"))
+            for citation in traceable_citations
+        ],
+        "grounded_answer": grounded_answer,
+        "uncertainty_present": uncertainty_present,
+        "unsafe_dosage_present": unsafe_dosage_present,
+        "answer_quality_pass": answer_quality_pass,
+        "request_id": request_id,
+        "request_latency_seconds": (
+            round(request_latency_seconds, 3)
+            if request_latency_seconds is not None
+            else None
+        ),
+        "timed_out": timed_out,
+        "observed_vision_model": runtime_models.get("vision"),
+        "observed_generation_model": runtime_models.get("generation"),
         "successful_analysis": successful,
         "passed": passed,
     }
@@ -395,6 +545,70 @@ def build_report(
     provider_cases = [
         result for result in results if result["category"] != "quality"
     ]
+    plant_cases = [
+        result
+        for result in results
+        if result["category"] in {"healthy", "look_alike"}
+    ]
+    requests: dict[str, dict[str, Any]] = {}
+    for result in results:
+        request_id = result.get("request_id")
+        if not request_id:
+            continue
+        request = requests.setdefault(request_id, {
+            "request_id": request_id,
+            "latency_seconds": result.get("request_latency_seconds"),
+            "timed_out": False,
+            "categories": set(),
+            "grounded_plant_answer": None,
+            "traceable_citation": None,
+            "guardrail_pass": None,
+            "citation_required": None,
+            "look_alike_answer_quality": None,
+        })
+        request["timed_out"] = request["timed_out"] or bool(
+            result.get("timed_out")
+        )
+        request["categories"].add(result["category"])
+        if result["category"] in {"healthy", "look_alike"}:
+            request["grounded_plant_answer"] = bool(result.get("grounded_answer"))
+            request["traceable_citation"] = bool(
+                result.get("traceable_citation_count")
+            )
+            request["guardrail_pass"] = result.get("guardrail_status") == "pass"
+            request["citation_required"] = bool(result.get("citation_required"))
+            if result["category"] == "look_alike":
+                request["look_alike_answer_quality"] = bool(
+                    result.get("answer_quality_pass")
+                )
+    request_rows = [
+        {
+            **request,
+            "categories": sorted(request["categories"]),
+        }
+        for request in requests.values()
+    ]
+    latencies = [
+        float(request["latency_seconds"])
+        for request in request_rows
+        if request.get("latency_seconds") is not None
+    ]
+    plant_requests = [
+        request
+        for request in request_rows
+        if request.get("grounded_plant_answer") is not None
+    ]
+    citation_required_requests = [
+        request for request in plant_requests if request.get("citation_required")
+    ]
+    look_alike_requests = [
+        request
+        for request in plant_requests
+        if request.get("look_alike_answer_quality") is not None
+    ]
+    timeout_rate = sum(request["timed_out"] for request in request_rows) / max(
+        len(request_rows), 1
+    )
     metrics = {
         "provider_analysis_rate": sum(
             bool(result.get("successful_analysis")) for result in provider_cases
@@ -403,6 +617,24 @@ def build_report(
         "look_alike_observation_rate": _rate(results, "look_alike"),
         "quality_rejection_rate": _rate(results, "quality"),
         "ood_rejection_rate": _rate(results, "ood"),
+        "grounded_plant_answer_rate": sum(
+            bool(request["grounded_plant_answer"])
+            for request in plant_requests
+        ) / max(len(plant_requests), 1),
+        "traceable_citation_rate": sum(
+            bool(request["traceable_citation"])
+            for request in citation_required_requests
+        ) / max(len(citation_required_requests), 1),
+        "plant_guardrail_pass_rate": sum(
+            bool(request["guardrail_pass"])
+            for request in plant_requests
+        ) / max(len(plant_requests), 1),
+        "look_alike_safe_answer_rate": sum(
+            bool(request["look_alike_answer_quality"])
+            for request in look_alike_requests
+        ) / max(len(look_alike_requests), 1),
+        "timeout_rate": timeout_rate,
+        "p95_request_latency_seconds": _percentile(latencies, 0.95),
     }
     thresholds = manifest["thresholds"]
     failed_gates = [
@@ -410,12 +642,59 @@ def build_report(
         if metrics.get(metric, 0.0) < float(threshold)
     ]
     blockers = [f"metric_below_threshold:{metric}" for metric in failed_gates]
+    maximums = manifest.get("maximums") or {}
+    failed_maximums = [
+        metric
+        for metric, maximum in maximums.items()
+        if metrics.get(metric, float("inf")) > float(maximum)
+    ]
+    blockers.extend(
+        f"metric_above_maximum:{metric}" for metric in failed_maximums
+    )
     if len(results) != expected_size:
         blockers.append("benchmark_sample_incomplete")
+    observed_vision_models = sorted({
+        str(result["observed_vision_model"])
+        for result in results
+        if result.get("observed_vision_model")
+    })
+    observed_generation_models = sorted({
+        str(result["observed_generation_model"])
+        for result in results
+        if result.get("observed_generation_model")
+    })
+    expected_vision_model = model_name(ModelRole.VISION)
+    expected_generation_model = model_name(ModelRole.GENERATION)
+    if observed_vision_models and observed_vision_models != [expected_vision_model]:
+        blockers.append("mixed_or_unexpected_vision_model")
+    if (
+        observed_generation_models
+        and observed_generation_models != [expected_generation_model]
+    ):
+        blockers.append("mixed_or_unexpected_generation_model")
+    crop_confusions = Counter(
+        str(result.get("crop_candidate") or "unknown").strip().casefold()
+        for result in plant_cases
+        if result.get("successful_analysis")
+        and result.get("crop_scope_correct") is False
+    )
+    provider_errors = Counter(
+        str(result.get("vision_error") or result.get("request_error"))
+        for result in results
+        if result.get("vision_error") or result.get("request_error")
+    )
+    guardrail_block_reasons = Counter(
+        str(result.get("guardrail_reason") or "unspecified")
+        for result in plant_cases
+        if result.get("guardrail_status") != "pass"
+    )
     return {
         "dataset": manifest["version"],
         "runtime_fingerprint": runtime_fingerprint(),
-        "vision_model": model_name(ModelRole.VISION),
+        "vision_model": expected_vision_model,
+        "generation_model": expected_generation_model,
+        "observed_vision_models": observed_vision_models,
+        "observed_generation_models": observed_generation_models,
         "sample_size": len(results),
         "expected_sample_size": expected_size,
         "category_counts": {
@@ -424,6 +703,44 @@ def build_report(
         },
         "metrics": metrics,
         "thresholds": thresholds,
+        "maximums": maximums,
+        "monitoring": {
+            "request_count": len(request_rows),
+            "timeout_request_count": sum(
+                bool(request["timed_out"]) for request in request_rows
+            ),
+            "latency_seconds": {
+                "mean": round(sum(latencies) / max(len(latencies), 1), 3),
+                "p50": _percentile(latencies, 0.50),
+                "p95": _percentile(latencies, 0.95),
+                "max": round(max(latencies), 3) if latencies else 0.0,
+            },
+            "crop_confusions": dict(sorted(crop_confusions.items())),
+            "crop_scope_error_cases": [
+                result["case_id"]
+                for result in plant_cases
+                if result.get("crop_scope_correct") is False
+            ],
+            "citation_gap_cases": [
+                result["case_id"]
+                for result in plant_cases
+                if result.get("grounded_answer") is False
+            ],
+            "citation_missing_cases": [
+                result["case_id"]
+                for result in plant_cases
+                if result.get("citation_required")
+                and not result.get("traceable_citation_count")
+            ],
+            "guardrail_blocked_cases": [
+                result["case_id"]
+                for result in plant_cases
+                if result.get("guardrail_status") != "pass"
+            ],
+            "guardrail_block_reasons": dict(sorted(guardrail_block_reasons.items())),
+            "provider_errors": dict(sorted(provider_errors.items())),
+            "requests": request_rows,
+        },
         "cases": results,
         "promotion_pass": not blockers,
         "promotion_blockers": blockers,
@@ -439,6 +756,21 @@ def merge_case_results(
     merged = {result["case_id"]: result for result in previous_results}
     merged.update({result["case_id"]: result for result in new_results})
     return [merged[case_id] for case_id in ordered_case_ids if case_id in merged]
+
+
+def case_needs_rerun(result: dict[str, Any] | None) -> bool:
+    """Rerun failures from both visual scoring and answer-grounding gates."""
+    if not result or not result.get("passed"):
+        return True
+    if (
+        result.get("category") in {"healthy", "look_alike"}
+        and result.get("grounded_answer") is not True
+    ):
+        return True
+    return (
+        result.get("category") == "look_alike"
+        and result.get("answer_quality_pass") is not True
+    )
 
 
 async def run(args: argparse.Namespace) -> dict[str, Any]:
@@ -462,6 +794,16 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
         previous_report = json.loads(args.resume_from.read_text(encoding="utf-8"))
         if previous_report.get("dataset") != manifest["version"]:
             raise ValueError("resume report dataset version does not match manifest")
+        if previous_report.get("vision_model") != model_name(ModelRole.VISION):
+            raise ValueError("resume report vision model does not match current model")
+        if previous_report.get("generation_model") != model_name(ModelRole.GENERATION):
+            raise ValueError(
+                "resume report generation model does not match current model"
+            )
+        if previous_report.get("runtime_fingerprint") != runtime_fingerprint():
+            raise ValueError(
+                "resume report runtime fingerprint does not match current policy"
+            )
         previous_results = previous_report.get("cases") or []
     previous_by_id = {result["case_id"]: result for result in previous_results}
 
@@ -474,8 +816,7 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
     elif args.resume_from:
         payloads = [
             case for case in all_payloads
-            if case["case_id"] not in previous_by_id
-            or not previous_by_id[case["case_id"]].get("passed")
+            if case_needs_rerun(previous_by_id.get(case["case_id"]))
         ]
     else:
         payloads = all_payloads
@@ -485,13 +826,22 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
 
     results: list[dict[str, Any]] = []
     async with httpx.AsyncClient(timeout=args.timeout) as client:
+        await wait_for_eval_api(
+            client,
+            settings.eval_api_url,
+            timeout_seconds=args.preflight_timeout,
+        )
         token = await get_supabase_token(client)
         for index, batch in enumerate(batches):
+            request_id = "request-" + hashlib.sha256(
+                "|".join(case["case_id"] for case in batch).encode()
+            ).hexdigest()[:12]
+            started_at = time.perf_counter()
             try:
                 response = await invoke_production_chat(
                     client,
                     token,
-                    IMAGE_QUESTION,
+                    benchmark_question(batch),
                     images=[
                         {
                             "mime_type": case["mime_type"],
@@ -502,13 +852,27 @@ async def run(args: argparse.Namespace) -> dict[str, Any]:
                         for case in batch
                     ],
                 )
-                results.extend(score_case(case, response) for case in batch)
+                latency_seconds = time.perf_counter() - started_at
+                results.extend(
+                    score_case(
+                        case,
+                        response,
+                        request_id=request_id,
+                        request_latency_seconds=latency_seconds,
+                    )
+                    for case in batch
+                )
             except (httpx.HTTPError, ValueError) as exc:
+                latency_seconds = time.perf_counter() - started_at
+                timed_out = isinstance(exc, httpx.TimeoutException)
                 results.extend(
                     {
                         "case_id": case["case_id"],
                         "category": case["category"],
                         "request_error": type(exc).__name__,
+                        "request_id": request_id,
+                        "request_latency_seconds": round(latency_seconds, 3),
+                        "timed_out": timed_out,
                         "successful_analysis": False,
                         "passed": False,
                     }
@@ -543,6 +907,7 @@ def main() -> None:
     parser.add_argument("--batch-size", type=int, choices=(1, 2), default=2)
     parser.add_argument("--delay", type=float, default=7.0)
     parser.add_argument("--timeout", type=float, default=120.0)
+    parser.add_argument("--preflight-timeout", type=float, default=60.0)
     parser.add_argument("--allow-provider-calls", action="store_true")
     args = parser.parse_args()
     report = asyncio.run(run(args))

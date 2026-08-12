@@ -26,8 +26,8 @@ class Settings(BaseSettings):
     model_vision: str = "gemini-3.5-flash"
     model_request_timeout_seconds: float = 45.0
     ai_service_request_timeout_seconds: float = 60.0
-    ai_policy_version: str = "safety-v2"
-    prompt_bundle_version: str = "prompts-v2"
+    ai_policy_version: str = "safety-v3"
+    prompt_bundle_version: str = "prompts-v3"
     evidence_schema_version: str = "evidence-v2"
     knowledge_base_version: str = "kb-v1"
     # Deep Research uses Gemini Google Search grounding. It is opt-in per chat
@@ -67,7 +67,9 @@ class Settings(BaseSettings):
     min_chat_image_dimension: int = 256
     vision_analysis_enabled: bool = False
     vision_test_user_emails: str = ""
-    vision_request_timeout_seconds: float = 30.0
+    # Must exceed the single provider-call timeout so the API boundary does
+    # not cancel a valid vision response before model_gateway can finish.
+    vision_request_timeout_seconds: float = 50.0
     vision_observation_schema_version: str = "visual-observation-v1"
     model_config = SettingsConfigDict(env_file=".env")
 

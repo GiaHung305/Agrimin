@@ -75,20 +75,23 @@ prompt injection trước khi được đưa vào LangGraph.
 ngoài miền hoặc quan sát confidence thấp cũng dừng an toàn và yêu cầu dữ liệu bổ
 sung. Quan sát đủ tin cậy được dùng để mở rộng truy vấn RAG; generation chỉ được
 đưa ra giả thuyết có xếp hạng khi bằng chứng hỗ trợ và phải nêu giới hạn ảnh.
-Mọi câu trả lời dựa trên ảnh đều bắt buộc citation; dosage vẫn chỉ được phép khi
-chunk nguồn chính thức hỗ trợ đúng giá trị.
+Mô tả trực tiếp đặc điểm nhìn thấy không gắn nguồn giả tạo. Khi người dùng yêu cầu
+diễn giải, giả thuyết hoặc xử lý, claim chuyên môn bắt buộc citation truy vết;
+dosage vẫn chỉ được phép khi chunk nguồn chính thức hỗ trợ đúng giá trị.
 
 `VISION_ANALYSIS_ENABLED=false` vẫn là mặc định free-tier. Adapter Google Gemini
 Flash đã được nối qua `MODEL_VISION`, ép trả `visual-observation-v1` và fail-closed
-khi thiếu API key, timeout, hết quota hoặc output sai schema. Production vẫn vận
-hành ở `validation_only` cho đến khi Gemini vision vượt bộ eval ảnh có phiên bản;
-do đó cấu hình mặc định không phát sinh model call hay chi phí.
+khi thiếu API key, timeout, hết quota hoặc output sai schema. Global rollout vẫn
+default-off nên cấu hình mặc định không phát sinh model call hay chi phí. Email
+allowlist có thể chạy typed observation qua đúng production SSE. Challenger
+`gemini-3.1-flash-lite` đã vượt benchmark ảnh thật v3 ngày 2026-08-12; model khác
+phải có report riêng trước khi promotion.
 `VISION_TEST_USER_EMAILS` chỉ cho phép các email được liệt kê chạy analyzer khi
 manual QA mà không bật global flag cho người dùng khác. Contract eval
 `multimodal-contract-v1` kiểm tra healthy metadata, triệu chứng nhìn thấy, ảnh
-thiếu sáng, ảnh ngoài miền và output chẩn đoán không hợp lệ. Đây chưa phải benchmark
-độ chính xác thị giác; bộ ảnh thật gồm lá khỏe, các bệnh giống nhau, thiếu sáng và
-ảnh ngoài miền vẫn là promotion gate bắt buộc trước khi bật model.
+thiếu sáng, ảnh ngoài miền và output chẩn đoán không hợp lệ. Benchmark ảnh thật v3
+bổ sung PlantDoc held-out, OOD, timeout, nhận nhầm cây, citation claim-level,
+uncertainty và cấm liều lượng suy ra từ ảnh; report phải `promotion_pass=true`.
 
 ## Deep Research
 

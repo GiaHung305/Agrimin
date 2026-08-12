@@ -67,8 +67,12 @@ async def test_guardrail_blocks_high_risk_unknown_source():
         rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
     )
     state["retrieved_docs"][0]["source_type"] = "unknown"
+    state["draft_answer"] += " [E1]"
     result = await post_guardrail_node(state)
     assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == (
+        "non_authoritative_claim_citation"
+    )
 
 
 @pytest.mark.asyncio
@@ -88,7 +92,7 @@ async def test_guardrail_blocks_dosage_missing_from_relevant_chunk():
         require_citation=True,
         rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
     )
-    state["draft_answer"] = "Pha 20 ml cho bình 16 l."
+    state["draft_answer"] = "Pha 20 ml cho bình 16 l. [E1]"
     state["retrieved_docs"][0]["content"] = "Luôn đọc nhãn và mang đồ bảo hộ."
     result = await post_guardrail_node(state)
     assert result["guardrail_status"] == "block"
@@ -102,7 +106,7 @@ async def test_guardrail_blocks_dosage_from_research_paper():
         require_citation=True,
         rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
     )
-    state["draft_answer"] = "Theo nghiên cứu, pha 20 ml cho bình 16 l."
+    state["draft_answer"] = "Theo nghiên cứu, pha 20 ml cho bình 16 l. [E1]"
     state["retrieved_docs"][0].update(
         {
             "source_type": "research",
@@ -186,8 +190,90 @@ def test_confidence_uses_grounded_research_sources_when_rag_is_empty():
 
 
 @pytest.mark.asyncio
-async def test_visual_observations_always_require_citations():
+async def test_direct_visual_symptoms_do_not_require_irrelevant_citations():
     state = make_fake_state(risk_level="low", require_citation=False)
-    state["visual_observations"] = [{"relevance": "agriculture_plant"}]
+    state["question"] = "Hãy xem ảnh này."
+    state["visual_observations"] = [{
+        "relevance": "agriculture_plant",
+        "visible_symptoms": [{"symptom_type": "spot"}],
+    }]
     state = await pre_guardrail_node(state)
+    assert state["context"]["require_citation"] is False
+
+
+@pytest.mark.asyncio
+async def test_objective_healthy_visual_description_does_not_require_citation():
+    state = make_fake_state(risk_level="low", require_citation=True)
+    state["question"] = (
+        "Hãy mô tả khách quan cây trong ảnh. Không chẩn đoán bệnh."
+    )
+    state["visual_observations"] = [{
+        "relevance": "agriculture_plant",
+        "visible_symptoms": [],
+    }]
+
+    state = await pre_guardrail_node(state)
+
+    assert state["context"]["require_citation"] is False
+
+
+@pytest.mark.asyncio
+async def test_interpretive_image_question_requires_citation_without_symptoms():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["question"] = "Đối chiếu tài liệu và nêu giả thuyết cho cây này."
+    state["visual_observations"] = [{
+        "relevance": "agriculture_plant",
+        "visible_symptoms": [],
+    }]
+
+    state = await pre_guardrail_node(state)
+
     assert state["context"]["require_citation"] is True
+
+
+@pytest.mark.asyncio
+async def test_low_risk_visual_claim_accepts_relevant_traceable_source():
+    state = make_fake_state(
+        risk_level="low",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["visual_observations"] = [{"relevance": "agriculture_plant"}]
+    state["retrieved_docs"][0]["source_type"] = "unknown"
+    state["draft_answer"] = "Quan sát này cần đối chiếu thêm [E1]."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+
+
+@pytest.mark.asyncio
+async def test_visual_claim_blocks_irrelevant_cited_source():
+    state = make_fake_state(
+        risk_level="low", require_citation=True, rerank_scores=[0.01]
+    )
+    state["visual_observations"] = [{"relevance": "agriculture_plant"}]
+    state["draft_answer"] = "Quan sát này cần đối chiếu thêm [E1]."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == "irrelevant_claim_citation"
+
+
+@pytest.mark.asyncio
+async def test_visual_claim_accepts_dense_sparse_consensus():
+    state = make_fake_state(
+        risk_level="low", require_citation=True, rerank_scores=[0.01]
+    )
+    state["visual_observations"] = [{"relevance": "agriculture_plant"}]
+    state["retrieved_docs"][0].update({
+        "ranking_strategy": "fusion_low_rerank_confidence",
+        "dense_score": 0.7,
+        "bm25_score": 3.2,
+    })
+    state["draft_answer"] = "Quan sát này cần đối chiếu thêm [E1]."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"

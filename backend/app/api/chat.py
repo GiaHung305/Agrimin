@@ -162,6 +162,7 @@ def _new_agent_state(
         "plan": None,
         "risk_level": "low",
         "retrieved_docs": [],
+        "answer_evidence": [],
         "tool_results": {},
         "draft_answer": None,
         "citations": [],
@@ -276,6 +277,11 @@ def _build_trace(result: dict) -> dict:
         "guardrail": {
             "status": result.get("guardrail_status"),
             "confidence": result.get("confidence"),
+            "reason": context.get("guardrail_reason"),
+            "require_citation": context.get("require_citation", False),
+            "citation_repair_attempted": context.get(
+                "citation_repair_attempted", False
+            ),
         },
         "research": {
             "used": context.get("deep_research_used", False),
@@ -415,6 +421,14 @@ def _vision_enabled_for_user(current_user: dict) -> bool:
     return bool(email and email in allowed)
 
 
+def _vision_timeout_seconds() -> float:
+    """Keep the outer image budget larger than one provider call."""
+    return max(
+        settings.vision_request_timeout_seconds,
+        settings.model_request_timeout_seconds + 5.0,
+    )
+
+
 async def _prepare_visual_input(
     images: list[ChatImageInput],
     *,
@@ -447,7 +461,7 @@ async def _prepare_visual_input(
     try:
         raw_result = await asyncio.wait_for(
             analyze_validated_images(usable_images, enabled=analysis_enabled),
-            timeout=settings.vision_request_timeout_seconds,
+            timeout=_vision_timeout_seconds(),
         )
         result = VisualAnalysisResult.model_validate(raw_result)
         if settings.vision_observation_schema_version != SCHEMA_VERSION:

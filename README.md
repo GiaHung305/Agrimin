@@ -125,7 +125,8 @@ fine-tune MobileNetV3-Small và export ONNX. Nó không bật vision runtime và
 
 Backend có adapter Gemini Flash đa cây phía sau `VISION_ANALYSIS_ENABLED=false`.
 Adapter chỉ tạo quan sát thị giác typed để mở rộng truy vấn RAG; nó không tự chẩn
-đoán hoặc đưa liều lượng. Đặt model bằng `MODEL_VISION`, nhưng chỉ bật feature flag
-sau khi model vượt bộ đánh giá ảnh thực địa và OOD có phiên bản.
+đoán hoặc đưa liều lượng. Phase 3 đã vượt benchmark ảnh thật v3 bằng challenger
+`gemini-3.1-flash-lite`; rollout toàn cục vẫn default-off và chỉ model đã được đánh
+giá mới được promotion.
 Trong giai đoạn manual QA, điền email test vào `VISION_TEST_USER_EMAILS` để thử
 qua Flutter trong khi global flag vẫn tắt.

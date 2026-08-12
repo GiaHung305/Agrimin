@@ -167,6 +167,86 @@ async def test_retrieve_fuses_typed_visual_terms_into_first_query(monkeypatch):
     assert base_question in result["retrieved_docs"][0]["research_questions"]
 
 
+@pytest.mark.asyncio
+async def test_retrieve_normalizes_english_crop_candidate_for_vietnamese_rag(
+    monkeypatch,
+):
+    calls = []
+
+    async def search(question, top_k):
+        calls.append(question)
+        return []
+
+    monkeypatch.setattr(retrieve, "hybrid_search", search)
+    state = {
+        "question": "Cây trong ảnh có gì đáng chú ý?",
+        "plan": {"need_rag": True, "need_weather": False},
+        "research_questions": ["Cây trong ảnh có gì đáng chú ý?"],
+        "missing_evidence": [],
+        "retry_count": 0,
+        "retrieved_docs": [],
+        "tool_results": {},
+        "visual_observations": [{
+            "image_id": "0123456789abcdef",
+            "relevance": "agriculture_plant",
+            "crop_candidate": "Tomato",
+            "plant_part": "leaf",
+            "visible_symptoms": [],
+            "limitations": ["single_view"],
+            "confidence": 0.9,
+        }],
+        "context": {},
+    }
+
+    await retrieve.retrieve_node(state)
+
+    assert "cà chua" in calls[0]
+    assert "Tomato" not in calls[0]
+
+
+@pytest.mark.asyncio
+async def test_visual_retrieval_fetches_authorized_location_weather_when_needed(
+    monkeypatch,
+):
+    async def search(question, top_k):
+        return []
+
+    async def geocode(province):
+        assert province == "Lâm Đồng"
+        return 11.94, 108.44
+
+    async def weather(lat, lon):
+        assert (lat, lon) == (11.94, 108.44)
+        return {"forecast": [{"humidity": 88, "rain_mm": 12}]}
+
+    monkeypatch.setattr(retrieve, "hybrid_search", search)
+    monkeypatch.setattr(retrieve, "geocode_province_via_mcp", geocode)
+    monkeypatch.setattr(retrieve, "get_weather_via_mcp", weather)
+    state = {
+        "question": "Độ ẩm có liên quan biểu hiện trên lá không?",
+        "plan": {"need_rag": True, "need_weather": True},
+        "research_questions": ["Biểu hiện trên lá và độ ẩm"],
+        "missing_evidence": [],
+        "retry_count": 0,
+        "retrieved_docs": [],
+        "tool_results": {},
+        "visual_observations": [{
+            "image_id": "0123456789abcdef",
+            "relevance": "agriculture_plant",
+            "crop_candidate": "Tomato",
+            "plant_part": "leaf",
+            "visible_symptoms": [],
+            "limitations": ["single_view"],
+            "confidence": 0.9,
+        }],
+        "context": {"province": "Lâm Đồng"},
+    }
+
+    result = await retrieve.retrieve_node(state)
+
+    assert result["tool_results"]["weather"]["forecast"][0]["rain_mm"] == 12
+
+
 def test_coverage_requires_authority_for_high_risk_research():
     state = _research_state(risk_level="high")
     question = state["research_questions"][0]

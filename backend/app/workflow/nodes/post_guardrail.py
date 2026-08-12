@@ -4,6 +4,7 @@ from app.retrieval.evidence import is_traceable_active_evidence
 from app.retrieval.source_authority import supports_high_risk, supports_numeric_dosage
 from app.workflow.state import AgentState
 from app.workflow.confidence import compute_confidence, RELEVANT_DOCUMENT_THRESHOLD
+from app.workflow.nodes.research_analysis import supports_research_coverage
 
 # Ngưỡng này cần tinh chỉnh sau bằng Golden Dataset (Sprint 6.3).
 RELEVANCE_THRESHOLD = RELEVANT_DOCUMENT_THRESHOLD
@@ -23,13 +24,15 @@ def _dosage_claims(text: str | None) -> set[tuple[str, str]]:
     return claims
 
 
-def _has_supported_dosage(state: AgentState) -> bool:
+def _has_supported_dosage(
+    state: AgentState, cited_documents: list[dict]
+) -> bool:
     answer_claims = _dosage_claims(state.get("draft_answer"))
     if not answer_claims:
         return True
 
     supported_claims: set[tuple[str, str]] = set()
-    for evidence in state.get("retrieved_docs", []):
+    for evidence in cited_documents:
         if not is_traceable_active_evidence(evidence):
             continue
         if not supports_numeric_dosage(evidence.get("source_type")):
@@ -40,56 +43,65 @@ def _has_supported_dosage(state: AgentState) -> bool:
     return answer_claims.issubset(supported_claims)
 
 
-def _claim_citations_are_valid(state: AgentState, require_citation: bool) -> bool:
-    markers = {
+def _claim_citations_are_valid(
+    state: AgentState, require_citation: bool
+) -> tuple[bool, list[dict]]:
+    markers = list(dict.fromkeys(
         int(value)
         for value in _CITATION_MARKER_PATTERN.findall(state.get("draft_answer") or "")
-    }
-    valid_markers = set(range(1, len(state.get("retrieved_docs", [])) + 1))
-    if markers - valid_markers:
+    ))
+    documents = state.get("answer_evidence", state.get("retrieved_docs", []))
+    valid_markers = set(range(1, len(documents) + 1))
+    if set(markers) - valid_markers:
         state["context"]["guardrail_reason"] = "invalid_claim_citation"
-        return False
+        return False, []
     if require_citation and not markers:
         state["context"]["guardrail_reason"] = "missing_claim_citation"
-        return False
-    return True
+        return False, []
+
+    cited_documents = [documents[index - 1] for index in markers]
+    for document in cited_documents:
+        if not is_traceable_active_evidence(document):
+            state["context"]["guardrail_reason"] = "untraceable_claim_citation"
+            return False, []
+        if state.get("risk_level") == "high":
+            if (
+                float(document.get("rerank_score") or 0) < RELEVANCE_THRESHOLD
+                or not supports_high_risk(document.get("source_type"))
+            ):
+                state["context"]["guardrail_reason"] = (
+                    "non_authoritative_claim_citation"
+                )
+                return False, []
+        elif not supports_research_coverage(document):
+            state["context"]["guardrail_reason"] = "irrelevant_claim_citation"
+            return False, []
+    return True, cited_documents
 
 
 async def post_guardrail_node(state: AgentState) -> AgentState:
     require_citation = state["context"].get("require_citation", False)
-    max_relevance = state["context"].get("max_relevance_score", 0)
-    relevant_docs = [
-        doc
-        for doc in state.get("retrieved_docs", [])
-        if is_traceable_active_evidence(doc)
-        and float(doc.get("rerank_score") or 0) >= RELEVANCE_THRESHOLD
-    ]
-    authoritative_docs = [
-        doc for doc in relevant_docs if supports_high_risk(doc.get("source_type"))
-    ]
-    has_relevant_source = max_relevance >= RELEVANCE_THRESHOLD and bool(
-        authoritative_docs if require_citation else relevant_docs
+    citations_valid, cited_documents = _claim_citations_are_valid(
+        state, require_citation
     )
-    has_web_source = False
-
-    if require_citation and not (has_relevant_source or has_web_source):
+    if not citations_valid:
         state["confidence"] = 0.0
         state["guardrail_status"] = "block"
         return state
 
-    if state.get("risk_level") == "high" and not _has_supported_dosage(state):
+    if state.get("risk_level") == "high" and not _has_supported_dosage(
+        state, cited_documents
+    ):
         state["confidence"] = 0.0
         state["guardrail_status"] = "block"
         state["context"]["guardrail_reason"] = "unsupported_numeric_dosage"
         return state
 
-    if not _claim_citations_are_valid(state, require_citation):
-        state["confidence"] = 0.0
-        state["guardrail_status"] = "block"
-        return state
-
     state["confidence"] = compute_confidence(
-        rerank_scores=state["context"].get("rerank_scores", []),
+        rerank_scores=[
+            float(document.get("rerank_score") or 0.0)
+            for document in cited_documents
+        ] or state["context"].get("rerank_scores", []),
         reflection_notes=state.get("reflection_notes"),
         retry_count=state.get("retry_count", 0),
         weather_requested=state.get("plan", {}).get("need_weather", False),

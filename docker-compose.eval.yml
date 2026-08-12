@@ -3,3 +3,30 @@ services:
     volumes:
       - ./vision_training/data/raw:/vision_training/data/raw:ro
       - ./vision_training/artifacts:/vision_training/artifacts
+
+  vision-challenger:
+    profiles: ["vision-challenger"]
+    image: agrimind-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agrimind:agrimind_dev_password@postgres:5432/agrimind
+      REDIS_URL: redis://redis:6379/0
+      QDRANT_URL: http://qdrant:6333
+      EMBEDDING_SERVICE_URL: http://embedding-service:8001
+      MCP_WEATHER_URL: http://mcp-weather-server:8002/mcp
+      MODEL_VISION: ${VISION_CHALLENGER_MODEL:-gemini-3.1-flash-lite}
+      MODEL_GENERATION: ${GENERATION_CHALLENGER_MODEL:-gemini-3.1-flash-lite}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
+    volumes:
+      - ./backend:/app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000

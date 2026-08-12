@@ -47,7 +47,9 @@ def _bounded_missing_evidence(state: AgentState, values: list[str]) -> list[str]
 async def reflection_node(state: AgentState) -> AgentState:
     docs_summary = "\n".join(
         f"[{index}] {document.get('source')}: {document.get('content', '')[:300]}"
-        for index, document in enumerate(state.get("retrieved_docs", []), start=1)
+        for index, document in enumerate(
+            state.get("answer_evidence", state.get("retrieved_docs", [])), start=1
+        )
     )
     research_summary = json.dumps(
         {

@@ -41,11 +41,11 @@ def _relevant_documents(
         for document in documents
         if _matches_question(document, question)
         and is_traceable_active_evidence(document)
-        and _supports_research_coverage(document)
+        and supports_research_coverage(document)
     ]
 
 
-def _supports_research_coverage(document: dict[str, Any]) -> bool:
+def supports_research_coverage(document: dict[str, Any]) -> bool:
     """Accept calibrated reranking or explicit dense+sparse consensus.
 
     The cross-encoder can produce uniformly low probabilities for a query. In
