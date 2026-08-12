@@ -46,12 +46,24 @@ class FarmPlot {
     required this.seasons,
     this.areaHa,
     this.locationNote,
+    this.latitude,
+    this.longitude,
+    this.elevationM,
+    this.locationAccuracyM,
+    this.locationSource,
+    this.coordinatesUpdatedAt,
   });
 
   final String id;
   final String name;
   final double? areaHa;
   final String? locationNote;
+  final double? latitude;
+  final double? longitude;
+  final double? elevationM;
+  final double? locationAccuracyM;
+  final String? locationSource;
+  final DateTime? coordinatesUpdatedAt;
   final String status;
   final List<CropSeason> seasons;
 
@@ -67,6 +79,14 @@ class FarmPlot {
     name: json['name']?.toString() ?? '',
     areaHa: (json['area_ha'] as num?)?.toDouble(),
     locationNote: json['location_note']?.toString(),
+    latitude: (json['latitude'] as num?)?.toDouble(),
+    longitude: (json['longitude'] as num?)?.toDouble(),
+    elevationM: (json['elevation_m'] as num?)?.toDouble(),
+    locationAccuracyM: (json['location_accuracy_m'] as num?)?.toDouble(),
+    locationSource: json['location_source']?.toString(),
+    coordinatesUpdatedAt: DateTime.tryParse(
+      json['coordinates_updated_at']?.toString() ?? '',
+    ),
     status: json['status']?.toString() ?? 'active',
     seasons: (json['seasons'] as List<dynamic>? ?? const [])
         .map((item) => CropSeason.fromJson(item as Map<String, dynamic>))

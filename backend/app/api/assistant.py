@@ -68,12 +68,22 @@ class FarmPlotCreateRequest(BaseModel):
     name: str = Field(min_length=1, max_length=255)
     area_ha: float | None = Field(default=None, gt=0)
     location_note: str | None = Field(default=None, max_length=500)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    elevation_m: float | None = Field(default=None, ge=-500, le=9000)
+    location_accuracy_m: float | None = Field(default=None, ge=0, le=100000)
+    location_source: Literal["device", "manual"] | None = None
 
 
 class FarmPlotUpdateRequest(BaseModel):
     name: str | None = Field(default=None, min_length=1, max_length=255)
     area_ha: float | None = Field(default=None, gt=0)
     location_note: str | None = Field(default=None, max_length=500)
+    latitude: float | None = Field(default=None, ge=-90, le=90)
+    longitude: float | None = Field(default=None, ge=-180, le=180)
+    elevation_m: float | None = Field(default=None, ge=-500, le=9000)
+    location_accuracy_m: float | None = Field(default=None, ge=0, le=100000)
+    location_source: Literal["device", "manual"] | None = None
 
 
 class CropSeasonCreateRequest(BaseModel):
@@ -159,11 +169,40 @@ def _plot_payload(plot: FarmPlot, seasons: list[CropSeason] | None = None) -> di
         "name": plot.name,
         "area_ha": plot.area_ha,
         "location_note": plot.location_note,
+        "latitude": plot.latitude,
+        "longitude": plot.longitude,
+        "elevation_m": plot.elevation_m,
+        "location_accuracy_m": plot.location_accuracy_m,
+        "location_source": plot.location_source,
+        "coordinates_updated_at": plot.coordinates_updated_at,
         "status": plot.status,
         "created_at": plot.created_at,
         "updated_at": plot.updated_at,
         "seasons": [_season_payload(item) for item in seasons or []],
     }
+
+
+def _validate_plot_coordinates(
+    *,
+    latitude: float | None,
+    longitude: float | None,
+    elevation_m: float | None,
+    location_accuracy_m: float | None,
+    location_source: str | None,
+) -> None:
+    if (latitude is None) != (longitude is None):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Plot latitude and longitude must be provided together",
+        )
+    if latitude is None and any(
+        value is not None
+        for value in (elevation_m, location_accuracy_m, location_source)
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
+            detail="Plot location metadata requires coordinates",
+        )
 
 
 def _validate_season_dates(planted_on: date | None, expected_harvest_on: date | None) -> None:
@@ -233,6 +272,13 @@ async def create_farm_plot(
     db: AsyncSession = Depends(get_db),
     current_user: dict = Depends(get_current_user),
 ):
+    _validate_plot_coordinates(
+        latitude=req.latitude,
+        longitude=req.longitude,
+        elevation_m=req.elevation_m,
+        location_accuracy_m=req.location_accuracy_m,
+        location_source=req.location_source,
+    )
     name = req.name.strip()
     if not name:
         raise HTTPException(
@@ -256,6 +302,12 @@ async def create_farm_plot(
         name=name,
         area_ha=req.area_ha,
         location_note=(req.location_note.strip() or None) if req.location_note else None,
+        latitude=req.latitude,
+        longitude=req.longitude,
+        elevation_m=req.elevation_m,
+        location_accuracy_m=req.location_accuracy_m,
+        location_source=req.location_source,
+        coordinates_updated_at=now if req.latitude is not None else None,
         status="active",
         created_at=now,
         updated_at=now,
@@ -285,7 +337,34 @@ async def update_farm_plot(
     if plot is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Plot not found")
     updates = req.model_dump(exclude_unset=True)
-    for field in ("name", "area_ha", "location_note"):
+    location_fields = {
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "location_accuracy_m",
+        "location_source",
+    }
+    location_changed = bool(location_fields.intersection(updates))
+    if location_changed:
+        _validate_plot_coordinates(
+            latitude=updates.get("latitude", plot.latitude),
+            longitude=updates.get("longitude", plot.longitude),
+            elevation_m=updates.get("elevation_m", plot.elevation_m),
+            location_accuracy_m=updates.get(
+                "location_accuracy_m", plot.location_accuracy_m
+            ),
+            location_source=updates.get("location_source", plot.location_source),
+        )
+    for field in (
+        "name",
+        "area_ha",
+        "location_note",
+        "latitude",
+        "longitude",
+        "elevation_m",
+        "location_accuracy_m",
+        "location_source",
+    ):
         if field in updates:
             value = updates[field]
             if isinstance(value, str):
@@ -296,7 +375,10 @@ async def update_farm_plot(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="Plot name is required",
         )
-    plot.updated_at = local_now_naive()
+    now = local_now_naive()
+    if location_changed:
+        plot.coordinates_updated_at = now if plot.latitude is not None else None
+    plot.updated_at = now
     await db.commit()
     await db.refresh(plot)
     return _plot_payload(plot)

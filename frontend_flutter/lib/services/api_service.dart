@@ -325,6 +325,11 @@ class ApiService {
     required String name,
     double? areaHa,
     String? locationNote,
+    double? latitude,
+    double? longitude,
+    double? elevationM,
+    double? locationAccuracyM,
+    String? locationSource,
   }) async {
     final token = await AuthService.getToken();
     final response = await http.post(
@@ -337,10 +342,36 @@ class ApiService {
         'name': name,
         'area_ha': areaHa,
         'location_note': locationNote,
+        'latitude': latitude,
+        'longitude': longitude,
+        'elevation_m': elevationM,
+        'location_accuracy_m': locationAccuracyM,
+        'location_source': locationSource,
       }),
     );
     if (response.statusCode != 201) {
       throw Exception(_apiDetail(response, 'Không thể tạo thửa đất'));
+    }
+    return FarmPlot.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<FarmPlot> updateFarmPlot(
+    String plotId,
+    Map<String, dynamic> changes,
+  ) async {
+    final token = await AuthService.getToken();
+    final response = await http.patch(
+      Uri.parse("$baseUrl/assistant/plots/$plotId"),
+      headers: {
+        "Authorization": "Bearer $token",
+        "Content-Type": "application/json",
+      },
+      body: jsonEncode(changes),
+    );
+    if (response.statusCode != 200) {
+      throw Exception(_apiDetail(response, 'Không thể cập nhật thửa đất'));
     }
     return FarmPlot.fromJson(
       jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,

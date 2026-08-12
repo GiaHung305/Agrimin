@@ -9,6 +9,7 @@ from app.repository.models import (
     CropSeason,
     DeviceToken,
     FarmMonitoringSchedule,
+    FarmPlot,
     FarmRecommendation,
     FarmRiskPrediction,
     FarmTask,
@@ -197,7 +198,27 @@ async def _run_monitoring_schedule(session, schedule, now) -> None:
         schedule.last_error_code = None
         return
 
-    coords = await geocode_province_via_mcp(schedule.province)
+    plot = None
+    if schedule.plot_id is not None:
+        plot = (
+            await session.execute(
+                select(FarmPlot).where(
+                    FarmPlot.id == schedule.plot_id,
+                    FarmPlot.user_id == schedule.user_id,
+                    FarmPlot.status == "active",
+                )
+            )
+        ).scalar_one_or_none()
+    if (
+        plot is not None
+        and plot.latitude is not None
+        and plot.longitude is not None
+    ):
+        coords = (plot.latitude, plot.longitude)
+        coordinate_source = "plot_gps"
+    else:
+        coords = await geocode_province_via_mcp(schedule.province)
+        coordinate_source = "province_geocode"
     if not coords:
         raise RuntimeError("monitoring_geocode_not_found")
     forecast = (await get_weather_via_mcp(*coords)).get("forecast", [])
@@ -216,6 +237,13 @@ async def _run_monitoring_schedule(session, schedule, now) -> None:
             "plot_id": str(schedule.plot_id),
             "crop_season_id": str(schedule.crop_season_id),
             "coordinates": {"latitude": coords[0], "longitude": coords[1]},
+            "coordinate_source": coordinate_source,
+            "location_accuracy_m": (
+                plot.location_accuracy_m if coordinate_source == "plot_gps" else None
+            ),
+            "elevation_m": (
+                plot.elevation_m if coordinate_source == "plot_gps" else None
+            ),
             "forecast": forecast,
         },
         observed_at=now,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 
 import '../models/farm_plot.dart';
 import '../services/api_service.dart';
@@ -46,56 +47,152 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
     final name = TextEditingController();
     final area = TextEditingController();
     final note = TextEditingController();
+    final latitude = TextEditingController();
+    final longitude = TextEditingController();
+    Position? capturedPosition;
+    bool locating = false;
+    String? locationError;
     final accepted = await showDialog<bool>(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Thêm thửa đất'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: name,
-                autofocus: true,
-                decoration: const InputDecoration(labelText: 'Tên thửa *'),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: area,
-                keyboardType: const TextInputType.numberWithOptions(
-                  decimal: true,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: const Text('Thêm thửa đất'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                TextField(
+                  controller: name,
+                  autofocus: true,
+                  decoration: const InputDecoration(labelText: 'Tên thửa *'),
                 ),
-                decoration: const InputDecoration(labelText: 'Diện tích (ha)'),
-              ),
-              const SizedBox(height: 12),
-              TextField(
-                controller: note,
-                decoration: const InputDecoration(
-                  labelText: 'Vị trí / ghi chú',
+                const SizedBox(height: 12),
+                TextField(
+                  controller: area,
+                  keyboardType: const TextInputType.numberWithOptions(
+                    decimal: true,
+                  ),
+                  decoration: const InputDecoration(
+                    labelText: 'Diện tích (ha)',
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                TextField(
+                  controller: note,
+                  decoration: const InputDecoration(
+                    labelText: 'Vị trí / ghi chú',
+                  ),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: latitude,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                          signed: true,
+                        ),
+                        decoration: const InputDecoration(labelText: 'Vĩ độ'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: longitude,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                          signed: true,
+                        ),
+                        decoration: const InputDecoration(labelText: 'Kinh độ'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: locating
+                        ? null
+                        : () async {
+                            setDialogState(() {
+                              locating = true;
+                              locationError = null;
+                            });
+                            try {
+                              final position = await _getCurrentPosition();
+                              if (!dialogContext.mounted) return;
+                              latitude.text = position.latitude.toStringAsFixed(
+                                6,
+                              );
+                              longitude.text = position.longitude
+                                  .toStringAsFixed(6);
+                              setDialogState(() => capturedPosition = position);
+                            } catch (error) {
+                              if (!dialogContext.mounted) return;
+                              setDialogState(
+                                () => locationError = error
+                                    .toString()
+                                    .replaceFirst('Exception: ', ''),
+                              );
+                            } finally {
+                              if (dialogContext.mounted) {
+                                setDialogState(() => locating = false);
+                              }
+                            }
+                          },
+                    icon: locating
+                        ? const SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.my_location),
+                    label: Text(
+                      locating ? 'Đang lấy vị trí…' : 'Lấy GPS hiện tại',
+                    ),
+                  ),
+                ),
+                if (locationError != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    locationError!,
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
           ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Hủy'),
+            ),
+            FilledButton(
+              onPressed: locating ? null : () => Navigator.pop(context, true),
+              child: const Text('Tạo thửa'),
+            ),
+          ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context, false),
-            child: const Text('Hủy'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(context, true),
-            child: const Text('Tạo thửa'),
-          ),
-        ],
       ),
     );
     final plotName = name.text.trim();
     final areaText = area.text.trim().replaceAll(',', '.');
     final areaValue = double.tryParse(areaText);
     final noteValue = note.text.trim();
+    final latitudeText = latitude.text.trim().replaceAll(',', '.');
+    final longitudeText = longitude.text.trim().replaceAll(',', '.');
+    final latitudeValue = double.tryParse(latitudeText);
+    final longitudeValue = double.tryParse(longitudeText);
+    final deviceCoordinatesUnchanged =
+        capturedPosition != null &&
+        latitudeText == capturedPosition!.latitude.toStringAsFixed(6) &&
+        longitudeText == capturedPosition!.longitude.toStringAsFixed(6);
     name.dispose();
     area.dispose();
     note.dispose();
+    latitude.dispose();
+    longitude.dispose();
     if (accepted != true || plotName.isEmpty) return;
     if (areaText.isNotEmpty && areaValue == null) {
       if (mounted) {
@@ -105,12 +202,242 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
       }
       return;
     }
+    if ((latitudeText.isEmpty) != (longitudeText.isEmpty) ||
+        (latitudeText.isNotEmpty &&
+            (latitudeValue == null || longitudeValue == null))) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Vĩ độ và kinh độ phải là hai số hợp lệ.'),
+          ),
+        );
+      }
+      return;
+    }
     await _run(
       () async => ApiService.createFarmPlot(
         name: plotName,
         areaHa: areaValue,
         locationNote: noteValue.isEmpty ? null : noteValue,
+        latitude: latitudeValue,
+        longitude: longitudeValue,
+        elevationM: deviceCoordinatesUnchanged
+            ? capturedPosition!.altitude
+            : null,
+        locationAccuracyM: deviceCoordinatesUnchanged
+            ? capturedPosition!.accuracy
+            : null,
+        locationSource: latitudeValue == null
+            ? null
+            : deviceCoordinatesUnchanged
+            ? 'device'
+            : 'manual',
       ),
+    );
+  }
+
+  Future<Position> _getCurrentPosition() async {
+    if (!await Geolocator.isLocationServiceEnabled()) {
+      throw Exception('Dịch vụ vị trí đang tắt trên thiết bị.');
+    }
+    var permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+    if (permission == LocationPermission.denied) {
+      throw Exception('Bạn chưa cấp quyền vị trí cho AgriMind.');
+    }
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception(
+        'Quyền vị trí đã bị chặn. Hãy mở cài đặt ứng dụng để cấp lại.',
+      );
+    }
+    return Geolocator.getCurrentPosition(
+      locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+        timeLimit: Duration(seconds: 15),
+      ),
+    );
+  }
+
+  Future<void> _editPlotLocation(FarmPlot plot) async {
+    final latitude = TextEditingController(
+      text: plot.latitude?.toStringAsFixed(6) ?? '',
+    );
+    final longitude = TextEditingController(
+      text: plot.longitude?.toStringAsFixed(6) ?? '',
+    );
+    Position? capturedPosition;
+    bool locating = false;
+    String? locationError;
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text('GPS · ${plot.name}'),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: latitude,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                          signed: true,
+                        ),
+                        decoration: const InputDecoration(labelText: 'Vĩ độ'),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: longitude,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                          signed: true,
+                        ),
+                        decoration: const InputDecoration(labelText: 'Kinh độ'),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: OutlinedButton.icon(
+                    onPressed: locating
+                        ? null
+                        : () async {
+                            setDialogState(() {
+                              locating = true;
+                              locationError = null;
+                            });
+                            try {
+                              final position = await _getCurrentPosition();
+                              if (!dialogContext.mounted) return;
+                              latitude.text = position.latitude.toStringAsFixed(
+                                6,
+                              );
+                              longitude.text = position.longitude
+                                  .toStringAsFixed(6);
+                              setDialogState(() => capturedPosition = position);
+                            } catch (error) {
+                              if (!dialogContext.mounted) return;
+                              setDialogState(
+                                () => locationError = error
+                                    .toString()
+                                    .replaceFirst('Exception: ', ''),
+                              );
+                            } finally {
+                              if (dialogContext.mounted) {
+                                setDialogState(() => locating = false);
+                              }
+                            }
+                          },
+                    icon: locating
+                        ? const SizedBox.square(
+                            dimension: 18,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.my_location),
+                    label: Text(
+                      locating
+                          ? 'Đang lấy vị trí…'
+                          : 'Cập nhật từ GPS thiết bị',
+                    ),
+                  ),
+                ),
+                if (locationError != null) ...[
+                  const SizedBox(height: 6),
+                  Text(
+                    locationError!,
+                    style: const TextStyle(color: Colors.red, fontSize: 12),
+                  ),
+                ],
+                const SizedBox(height: 8),
+                const Text(
+                  'Tọa độ chỉ được lấy khi bạn bấm nút và dùng cho dự báo thời tiết của thửa này.',
+                  style: TextStyle(color: AppColors.muted, fontSize: 12),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: locating
+                  ? null
+                  : () {
+                      latitude.clear();
+                      longitude.clear();
+                      capturedPosition = null;
+                      setDialogState(() => locationError = null);
+                    },
+              child: const Text('Xóa GPS'),
+            ),
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Hủy'),
+            ),
+            FilledButton(
+              onPressed: locating ? null : () => Navigator.pop(context, true),
+              child: const Text('Lưu'),
+            ),
+          ],
+        ),
+      ),
+    );
+    final latitudeText = latitude.text.trim().replaceAll(',', '.');
+    final longitudeText = longitude.text.trim().replaceAll(',', '.');
+    final latitudeValue = double.tryParse(latitudeText);
+    final longitudeValue = double.tryParse(longitudeText);
+    final originalUnchanged =
+        capturedPosition == null &&
+        latitudeText == (plot.latitude?.toStringAsFixed(6) ?? '') &&
+        longitudeText == (plot.longitude?.toStringAsFixed(6) ?? '');
+    final capturedUnchanged =
+        capturedPosition != null &&
+        latitudeText == capturedPosition!.latitude.toStringAsFixed(6) &&
+        longitudeText == capturedPosition!.longitude.toStringAsFixed(6);
+    latitude.dispose();
+    longitude.dispose();
+    if (accepted != true) return;
+    if ((latitudeText.isEmpty) != (longitudeText.isEmpty) ||
+        (latitudeText.isNotEmpty &&
+            (latitudeValue == null || longitudeValue == null))) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Vĩ độ và kinh độ phải là hai số hợp lệ.'),
+          ),
+        );
+      }
+      return;
+    }
+    await _run(
+      () => ApiService.updateFarmPlot(plot.id, {
+        'latitude': latitudeValue,
+        'longitude': longitudeValue,
+        'elevation_m': capturedUnchanged
+            ? capturedPosition!.altitude
+            : originalUnchanged
+            ? plot.elevationM
+            : null,
+        'location_accuracy_m': capturedUnchanged
+            ? capturedPosition!.accuracy
+            : originalUnchanged
+            ? plot.locationAccuracyM
+            : null,
+        'location_source': latitudeValue == null
+            ? null
+            : capturedUnchanged
+            ? 'device'
+            : originalUnchanged
+            ? plot.locationSource ?? 'manual'
+            : 'manual',
+      }),
     );
   }
 
@@ -344,12 +671,46 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
                   ),
                 ),
                 IconButton(
+                  tooltip: 'Cập nhật GPS',
+                  onPressed: _busy ? null : () => _editPlotLocation(plot),
+                  icon: const Icon(Icons.edit_location_alt_outlined),
+                ),
+                IconButton(
                   tooltip: 'Lưu trữ thửa',
                   onPressed: _busy ? null : () => _archivePlot(plot),
                   icon: const Icon(Icons.archive_outlined),
                 ),
               ],
             ),
+            if (plot.latitude != null && plot.longitude != null) ...[
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(
+                    Icons.gps_fixed,
+                    size: 16,
+                    color: AppColors.forest,
+                  ),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      '${plot.latitude!.toStringAsFixed(5)}, ${plot.longitude!.toStringAsFixed(5)}'
+                      '${plot.locationAccuracyM == null ? '' : ' · ±${plot.locationAccuracyM!.round()} m'}',
+                      style: const TextStyle(
+                        color: AppColors.muted,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ] else ...[
+              const SizedBox(height: 8),
+              const Text(
+                'Chưa có GPS · đang dùng vị trí đại diện của tỉnh',
+                style: TextStyle(color: AppColors.muted, fontSize: 12),
+              ),
+            ],
             if (plot.areaHa != null || plot.locationNote != null) ...[
               const SizedBox(height: 6),
               Text(

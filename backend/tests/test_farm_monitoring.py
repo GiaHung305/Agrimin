@@ -401,7 +401,14 @@ async def test_plot_and_active_season_are_owned_and_explicit():
 
     await assistant.create_farm_plot(
         assistant.FarmPlotCreateRequest(
-            name="Nhà kính A", area_ha=0.4, location_note="Khu phía đông"
+            name="Nhà kính A",
+            area_ha=0.4,
+            location_note="Khu phía đông",
+            latitude=11.941,
+            longitude=108.438,
+            elevation_m=1500,
+            location_accuracy_m=8,
+            location_source="device",
         ),
         db=db,
         current_user={"id": "user-a"},
@@ -410,6 +417,10 @@ async def test_plot_and_active_season_are_owned_and_explicit():
     assert plot.user_id == "user-a"
     assert plot.farm_profile_id == profile.id
     assert plot.status == "active"
+    assert plot.latitude == 11.941
+    assert plot.longitude == 108.438
+    assert plot.location_accuracy_m == 8
+    assert plot.coordinates_updated_at is not None
 
     plot.id = uuid.uuid4()
     db.execute = AsyncMock(
@@ -443,6 +454,12 @@ async def test_plot_listing_includes_owned_season_history():
         name="Nhà kính A",
         area_ha=0.4,
         location_note=None,
+        latitude=11.941,
+        longitude=108.438,
+        elevation_m=1500,
+        location_accuracy_m=8,
+        location_source="device",
+        coordinates_updated_at=datetime(2026, 8, 1),
         status="active",
         created_at=datetime(2026, 8, 1),
         updated_at=datetime(2026, 8, 1),
@@ -471,9 +488,84 @@ async def test_plot_listing_includes_owned_season_history():
     )
 
     assert response[0]["name"] == "Nhà kính A"
+    assert response[0]["latitude"] == 11.941
+    assert response[0]["location_source"] == "device"
     assert response[0]["seasons"][0]["crop"] == "Cà chua"
     statements = [str(call.args[0]) for call in db.execute.await_args_list]
     assert all("user_id" in statement for statement in statements)
+
+
+@pytest.mark.asyncio
+async def test_plot_coordinates_require_a_valid_pair():
+    db = SimpleNamespace(execute=AsyncMock())
+
+    with pytest.raises(HTTPException, match="provided together") as error:
+        await assistant.create_farm_plot(
+            assistant.FarmPlotCreateRequest(name="Thửa A", latitude=11.9),
+            db=db,
+            current_user={"id": "user-a"},
+        )
+
+    assert error.value.status_code == 422
+    db.execute.assert_not_awaited()
+
+
+@pytest.mark.asyncio
+async def test_owner_can_update_and_clear_plot_coordinates():
+    now = datetime(2026, 8, 12, 8, 0)
+    plot = SimpleNamespace(
+        id=uuid.uuid4(),
+        user_id="user-a",
+        farm_profile_id=uuid.uuid4(),
+        name="Thửa A",
+        area_ha=0.5,
+        location_note=None,
+        latitude=None,
+        longitude=None,
+        elevation_m=None,
+        location_accuracy_m=None,
+        location_source=None,
+        coordinates_updated_at=None,
+        status="active",
+        created_at=now,
+        updated_at=now,
+    )
+    db = SimpleNamespace(
+        execute=AsyncMock(return_value=ScalarResult(plot)),
+        commit=AsyncMock(),
+        refresh=AsyncMock(),
+    )
+
+    response = await assistant.update_farm_plot(
+        str(plot.id),
+        assistant.FarmPlotUpdateRequest(
+            latitude=10.1,
+            longitude=106.2,
+            location_accuracy_m=12,
+            location_source="device",
+        ),
+        db=db,
+        current_user={"id": "user-a"},
+    )
+
+    assert response["latitude"] == 10.1
+    assert plot.coordinates_updated_at is not None
+    assert "farm_plots.user_id" in str(db.execute.await_args.args[0])
+
+    await assistant.update_farm_plot(
+        str(plot.id),
+        assistant.FarmPlotUpdateRequest(
+            latitude=None,
+            longitude=None,
+            elevation_m=None,
+            location_accuracy_m=None,
+            location_source=None,
+        ),
+        db=db,
+        current_user={"id": "user-a"},
+    )
+    assert plot.latitude is None
+    assert plot.coordinates_updated_at is None
 
 
 @pytest.mark.asyncio
@@ -598,8 +690,34 @@ async def test_non_tomato_season_can_resume_with_matching_policy():
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("plot", "expected_source", "expected_coordinates", "should_geocode"),
+    [
+        (
+            SimpleNamespace(
+                latitude=11.941,
+                longitude=108.438,
+                location_accuracy_m=7,
+                elevation_m=1500,
+            ),
+            "plot_gps",
+            {"latitude": 11.941, "longitude": 108.438},
+            False,
+        ),
+        (
+            None,
+            "province_geocode",
+            {"latitude": 11.9, "longitude": 108.4},
+            True,
+        ),
+    ],
+)
 async def test_worker_persists_observation_prediction_recommendation_and_notice(
     monkeypatch,
+    plot,
+    expected_source,
+    expected_coordinates,
+    should_geocode,
 ):
     now = datetime(2026, 8, 12, 8, 0)
     schedule = SimpleNamespace(
@@ -627,7 +745,11 @@ async def test_worker_persists_observation_prediction_recommendation_and_notice(
 
     session = SimpleNamespace(
         execute=AsyncMock(
-            side_effect=[ScalarResult(None), ScalarResult(None)]
+            side_effect=[
+                ScalarResult(None),
+                ScalarResult(plot),
+                ScalarResult(None),
+            ]
         ),
         add=Mock(side_effect=add),
         flush=AsyncMock(side_effect=flush),
@@ -656,6 +778,15 @@ async def test_worker_persists_observation_prediction_recommendation_and_notice(
     await worker._run_monitoring_schedule(session, schedule, now)
 
     assert any(isinstance(item, FarmWeatherObservation) for item in added)
+    observation = next(
+        item for item in added if isinstance(item, FarmWeatherObservation)
+    )
+    assert observation.inputs["coordinate_source"] == expected_source
+    assert observation.inputs["coordinates"] == expected_coordinates
+    if should_geocode:
+        worker.geocode_province_via_mcp.assert_awaited_once_with("Lâm Đồng")
+    else:
+        worker.geocode_province_via_mcp.assert_not_awaited()
     assert any(isinstance(item, FarmRiskPrediction) for item in added)
     recommendation = next(
         item for item in added if isinstance(item, FarmRecommendation)

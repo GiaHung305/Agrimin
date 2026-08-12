@@ -38,6 +38,13 @@ trong mùa tự pause lịch để người dùng xác nhận lại policy trư�
 Registry vùng dùng 34 đơn vị cấp tỉnh theo Quyết định 19/2025/QĐ-TTg và vẫn ánh
 xạ tên tỉnh cũ trước sáp nhập để hồ sơ hiện có không mất khả năng theo dõi.
 
+Mỗi thửa có thể lưu cặp tọa độ GPS tùy chọn cùng độ chính xác, cao độ, nguồn
+`device|manual` và thời điểm cập nhật. Flutter chỉ xin quyền vị trí khi người dùng
+chủ động bấm lấy GPS; hệ thống không theo dõi vị trí nền. Worker ưu tiên tọa độ
+của đúng thửa và đúng `user_id`; thửa cũ chưa có GPS tiếp tục dùng tọa độ đại
+diện của tỉnh. Observation ghi rõ `plot_gps|province_geocode` để việc đánh giá và
+truy vết nguồn tọa độ không bị nhập nhằng.
+
 Registry rau có 80 policy được nhận diện riêng bằng alias tiếng Việt không dấu,
 có dấu và tiếng Anh. Phạm vi gồm rau ăn lá (các loại cải, xà lách, rau muống,
 mồng tơi, rau dền, rau ngót...), họ cải, rau ăn thân/hoa, cà–ớt, dưa–bí, rau họ
