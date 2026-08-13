@@ -18,7 +18,11 @@ from app.workflow import graph as graph_module
 from app.multimodal.image_validation import ImageValidationError, validate_chat_image
 from app.workflow.nodes.image_quality_guard import (
     image_quality_guard_node,
+    is_objective_visual_description,
     route_after_image_quality,
+)
+from app.workflow.nodes.objective_visual_summary import (
+    objective_visual_summary_node,
 )
 
 
@@ -157,6 +161,34 @@ async def test_relevant_typed_observation_allows_graph_to_continue():
     result = await image_quality_guard_node(state)
     assert route_after_image_quality(result) == "continue"
     assert "vision_stop" not in result["context"]
+
+
+def test_objective_visual_description_is_distinct_from_hypothesis_request():
+    assert is_objective_visual_description(
+        "Hãy mô tả khách quan đặc điểm nhìn thấy trong ảnh. Không chẩn đoán bệnh."
+    )
+    assert not is_objective_visual_description(
+        "Hãy mô tả, đối chiếu tài liệu và nêu ba giả thuyết."
+    )
+
+
+@pytest.mark.asyncio
+async def test_objective_visual_description_routes_to_deterministic_summary():
+    state = {
+        "question": "Hãy mô tả khách quan cây và đặc điểm nhìn thấy. Không chẩn đoán bệnh.",
+        "image_observations": [_observation(usable=True)],
+        "visual_observations": [_visual_observation()],
+        "context": {},
+    }
+
+    guarded = await image_quality_guard_node(state)
+    summarized = await objective_visual_summary_node(guarded)
+
+    assert route_after_image_quality(guarded) == "summarize"
+    assert summarized["plan"]["need_rag"] is False
+    assert summarized["research_stop_reason"] == "no_research_required"
+    assert "không chẩn đoán bệnh" in summarized["draft_answer"]
+    assert summarized["citations"] == []
 
 
 @pytest.mark.asyncio

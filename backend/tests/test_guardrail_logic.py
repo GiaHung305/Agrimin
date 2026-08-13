@@ -189,6 +189,30 @@ def test_confidence_uses_grounded_research_sources_when_rag_is_empty():
     assert confidence >= 0.70
 
 
+def test_confidence_uses_visual_signal_without_treating_it_as_diagnosis():
+    confidence = compute_confidence(
+        rerank_scores=[],
+        reflection_notes=None,
+        visual_confidences=[0.9],
+    )
+
+    assert confidence == pytest.approx(0.54)
+
+
+def test_visual_signal_does_not_inflate_rag_grounded_confidence():
+    baseline = compute_confidence(
+        rerank_scores=[0.8],
+        reflection_notes="sufficient",
+    )
+    with_visual = compute_confidence(
+        rerank_scores=[0.8],
+        reflection_notes="sufficient",
+        visual_confidences=[0.99],
+    )
+
+    assert with_visual == baseline
+
+
 @pytest.mark.asyncio
 async def test_direct_visual_symptoms_do_not_require_irrelevant_citations():
     state = make_fake_state(risk_level="low", require_citation=False)

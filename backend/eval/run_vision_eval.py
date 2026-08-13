@@ -500,6 +500,8 @@ def score_case(
         "quality_issues": image_observation.get("quality_issues") or [],
         "relevance": relevance,
         "crop_candidate": observation.get("crop_candidate"),
+        "plant_part": observation.get("plant_part"),
+        "limitations": observation.get("limitations") or [],
         "confidence": observation.get("confidence"),
         "symptom_count": symptom_count,
         "crop_scope_correct": crop_scope_correct,

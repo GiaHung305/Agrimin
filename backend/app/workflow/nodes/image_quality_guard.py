@@ -10,6 +10,13 @@ _IMAGE_DEPENDENT_PATTERN = re.compile(
     r"\b(ảnh|hình|lá này|bị gì|bệnh gì|chẩn đoán)\b",
     re.IGNORECASE,
 )
+_OBJECTIVE_DESCRIPTION_PATTERN = re.compile(
+    r"\b(mô tả|đặc điểm nhìn thấy|quan sát khách quan)\b", re.IGNORECASE
+)
+_INTERPRETATION_PATTERN = re.compile(
+    r"\b(đối chiếu|giả thuyết|bị gì|bệnh gì|xử lý|điều trị|thuốc)\b",
+    re.IGNORECASE,
+)
 
 _QUALITY_GUIDANCE = {
     "low_resolution": "chụp gần hơn và dùng độ phân giải cao hơn",
@@ -20,7 +27,25 @@ _QUALITY_GUIDANCE = {
 
 
 def route_after_image_quality(state: AgentState) -> str:
-    return "stop" if state.get("context", {}).get("vision_stop") else "continue"
+    context = state.get("context", {})
+    if context.get("vision_stop"):
+        return "stop"
+    if context.get("objective_visual_summary"):
+        return "summarize"
+    return "continue"
+
+
+def is_objective_visual_description(question: str) -> bool:
+    """Recognize requests that need observation only, not interpretation/RAG."""
+    normalized = re.sub(
+        r"\bkhông\s+chẩn\s+đoán(?:\s+bệnh)?\b",
+        " ",
+        question,
+        flags=re.IGNORECASE,
+    )
+    return bool(_OBJECTIVE_DESCRIPTION_PATTERN.search(normalized)) and not bool(
+        _INTERPRETATION_PATTERN.search(normalized)
+    )
 
 
 async def image_quality_guard_node(state: AgentState) -> AgentState:
@@ -60,6 +85,8 @@ async def image_quality_guard_node(state: AgentState) -> AgentState:
             and float(item.get("confidence") or 0.0) >= 0.60
         ]
         if relevant:
+            if is_objective_visual_description(state["question"]):
+                context["objective_visual_summary"] = True
             return state
 
         if visual_observations:

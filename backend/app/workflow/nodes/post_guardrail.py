@@ -107,6 +107,10 @@ async def post_guardrail_node(state: AgentState) -> AgentState:
         weather_requested=state.get("plan", {}).get("need_weather", False),
         weather_available="weather" in state.get("tool_results", {}),
         research_source_count=state["context"].get("research_source_count", 0),
+        visual_confidences=[
+            float(item.get("confidence") or 0.0)
+            for item in state.get("visual_observations", [])
+        ],
     )
 
     if state["confidence"] < 0.70:

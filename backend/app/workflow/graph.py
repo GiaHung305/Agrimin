@@ -14,6 +14,7 @@ from app.workflow.nodes.image_quality_guard import (
 )
 from app.workflow.nodes.memory_extract import memory_extract_node
 from app.workflow.nodes.memory_write import memory_write_node
+from app.workflow.nodes.objective_visual_summary import objective_visual_summary_node
 from app.workflow.nodes.planner import planner_node
 from app.workflow.nodes.post_guardrail import post_guardrail_node
 from app.workflow.nodes.pre_guardrail import pre_guardrail_node
@@ -52,6 +53,7 @@ def build_graph(db: AsyncSession):
     workflow.add_node("planner", planner_node)
     workflow.add_node("image_quality_guard", image_quality_guard_node)
     workflow.add_node("pre_guardrail", pre_guardrail_node)
+    workflow.add_node("objective_visual_summary", objective_visual_summary_node)
     workflow.add_node("retrieve", retrieve_node)
     workflow.add_node("research_analysis", research_analysis_node)
     workflow.add_node("deep_research", deep_research_node)
@@ -67,8 +69,13 @@ def build_graph(db: AsyncSession):
     workflow.add_conditional_edges(
         "image_quality_guard",
         route_after_image_quality,
-        {"continue": "planner", "stop": END},
+        {
+            "continue": "planner",
+            "summarize": "objective_visual_summary",
+            "stop": END,
+        },
     )
+    workflow.add_edge("objective_visual_summary", "post_guardrail")
     workflow.add_edge("planner", "pre_guardrail")
     workflow.add_edge("pre_guardrail", "retrieve")
     workflow.add_edge("retrieve", "research_analysis")

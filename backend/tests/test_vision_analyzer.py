@@ -128,3 +128,47 @@ async def test_gemini_vision_supports_explicit_test_gate(monkeypatch):
     )
 
     assert result.observations[0].crop_candidate == "tomato"
+
+
+@pytest.mark.asyncio
+async def test_leaf_only_pepper_is_downgraded_to_unknown_crop(monkeypatch):
+    async def fake_generate(role, contents, *, config):
+        return SimpleNamespace(text='''{
+          "observations": [{
+            "image_id": "0123456789abcdef",
+            "relevance": "agriculture_plant",
+            "crop_candidate": "pepper",
+            "plant_part": "leaf",
+            "visible_symptoms": [],
+            "limitations": ["single_view"],
+            "confidence": 0.9
+          }]
+        }''')
+
+    monkeypatch.setattr(vision_analyzer.settings, "vision_analysis_enabled", True)
+    monkeypatch.setattr(vision_analyzer.settings, "google_api_key", "test-key")
+    monkeypatch.setattr(vision_analyzer, "generate_content", fake_generate)
+
+    result = await vision_analyzer.analyze_validated_images([_validated_image()])
+    observation = result.observations[0]
+
+    assert observation.crop_candidate is None
+    assert observation.confidence == pytest.approx(0.9)
+    assert "unknown_crop" in observation.limitations
+
+
+def test_pepper_with_visible_whole_plant_is_not_downgraded():
+    observation = vision_analyzer.VisualObservation.model_validate({
+        "image_id": "0123456789abcdef",
+        "relevance": "agriculture_plant",
+        "crop_candidate": "pepper",
+        "plant_part": "whole_plant",
+        "visible_symptoms": [],
+        "limitations": ["single_view"],
+        "confidence": 0.9,
+    })
+
+    guarded = vision_analyzer._guard_ambiguous_pepper_crop(observation)
+
+    assert guarded.crop_candidate == "pepper"
+    assert guarded.confidence == pytest.approx(0.9)

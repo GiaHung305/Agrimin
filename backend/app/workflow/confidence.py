@@ -11,6 +11,7 @@ def compute_confidence(
     weather_requested: bool = False,
     weather_available: bool = False,
     research_source_count: int = 0,
+    visual_confidences: Sequence[float] = (),
 ) -> float:
     """Estimate answer confidence from observable evidence signals.
 
@@ -19,7 +20,10 @@ def compute_confidence(
     probability; its weights must later be calibrated against the golden set.
     """
     scores = [min(1.0, max(0.0, float(score))) for score in rerank_scores]
-    if not scores and research_source_count <= 0:
+    visual_scores = [
+        min(1.0, max(0.0, float(score))) for score in visual_confidences
+    ]
+    if not scores and research_source_count <= 0 and not visual_scores:
         return 0.0
 
     top_relevance = max(scores, default=0.0)
@@ -34,6 +38,11 @@ def compute_confidence(
     # Grounded web results are independent evidence for the opt-in research
     # path, but are capped so they cannot by themselves overstate certainty.
     confidence += 0.45 * min(max(research_source_count, 0) / 3, 1.0)
+
+    # Typed vision observations can support an objective description, but not
+    # a diagnosis. Keep their contribution below the standalone certainty bar.
+    if visual_scores and not scores and research_source_count <= 0:
+        confidence += 0.60 * max(visual_scores)
 
     # Reflection evaluates whether the generated answer is actually grounded.
     if reflection_notes == "sufficient":

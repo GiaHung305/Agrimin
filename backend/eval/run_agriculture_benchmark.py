@@ -93,6 +93,20 @@ def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]
     }
 
 
+def select_cases(
+    cases: list[dict[str, Any]], case_ids: list[str] | None
+) -> list[dict[str, Any]]:
+    """Select an explicit diagnostic subset without creating another API path."""
+    requested = list(dict.fromkeys(case_ids or []))
+    if not requested:
+        return cases
+    known = {str(case["id"]): case for case in cases}
+    missing = [case_id for case_id in requested if case_id not in known]
+    if missing:
+        raise ValueError("unknown benchmark case ids: " + ", ".join(missing))
+    return [known[case_id] for case_id in requested]
+
+
 def percentile(values: list[float], quantile: float) -> float:
     if not values:
         return 0.0
@@ -125,6 +139,7 @@ async def run_case(
             "guardrail_status": response.get("guardrail_status"),
             "answer_excerpt": str(response.get("answer") or "")[:800],
             "citation_titles": [item.get("title") for item in response.get("citations") or []],
+            "trace": response.get("trace") or {},
             **score,
         }
     except Exception as exc:
@@ -200,9 +215,10 @@ async def run(
     dataset_path: Path,
     concurrency: int,
     request_interval_seconds: float,
+    case_ids: list[str] | None = None,
 ) -> dict[str, Any]:
     payload = json.loads(dataset_path.read_text(encoding="utf-8"))
-    cases = payload["cases"]
+    cases = select_cases(payload["cases"], case_ids)
     semaphore = asyncio.Semaphore(max(1, concurrency))
     pacer = RequestPacer(request_interval_seconds)
     async with httpx.AsyncClient(timeout=240.0, limits=httpx.Limits(max_connections=max(2, concurrency))) as client:
@@ -218,13 +234,21 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--concurrency", type=int, default=1)
     parser.add_argument("--request-interval", type=float, default=7.0)
+    parser.add_argument("--case-id", action="append", default=[])
     parser.add_argument("--output", type=Path)
     return parser.parse_args()
 
 
 if __name__ == "__main__":
     args = parse_args()
-    report = asyncio.run(run(args.dataset, args.concurrency, args.request_interval))
+    report = asyncio.run(
+        run(
+            args.dataset,
+            args.concurrency,
+            args.request_interval,
+            args.case_id,
+        )
+    )
     if args.output:
         args.output.write_text(json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8")
     print(json.dumps(report["summary"], ensure_ascii=False, indent=2))

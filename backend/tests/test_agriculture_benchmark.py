@@ -3,7 +3,13 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from eval.run_agriculture_benchmark import RequestPacer, expected_term_coverage, normalize_text, score_case
+from eval.run_agriculture_benchmark import (
+    RequestPacer,
+    expected_term_coverage,
+    normalize_text,
+    score_case,
+    select_cases,
+)
 
 
 def test_normalize_text_handles_vietnamese_diacritics():
@@ -60,3 +66,14 @@ def test_score_case_accepts_safe_refusal_after_guardrail_pass():
 
 def test_request_pacer_rejects_negative_interval():
     assert RequestPacer(-1).interval_seconds == 0.0
+
+
+def test_select_cases_preserves_requested_order_and_rejects_unknown_ids():
+    cases = [{"id": "first"}, {"id": "second"}]
+
+    assert select_cases(cases, ["second", "first"]) == [cases[1], cases[0]]
+
+    import pytest
+
+    with pytest.raises(ValueError, match="unknown benchmark case ids: missing"):
+        select_cases(cases, ["missing"])

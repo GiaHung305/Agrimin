@@ -38,9 +38,14 @@ def _citations_for_answer(answer: str | None, documents: list[dict]) -> list[dic
 
 
 def answer_evidence_for_state(state: AgentState) -> list[dict]:
-    """Limit image-grounded generation to evidence that passed coverage checks."""
+    """Limit visual or high-risk generation to safe, covered evidence."""
     documents = state.get("retrieved_docs", [])
-    if not state.get("visual_observations"):
+    requires_filtered_evidence = (
+        bool(state.get("visual_observations"))
+        or state.get("risk_level") == "high"
+        or bool(state.get("context", {}).get("require_citation", False))
+    )
+    if not requires_filtered_evidence:
         return documents
     eligible = [
         document

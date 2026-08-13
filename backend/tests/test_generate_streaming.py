@@ -174,6 +174,57 @@ def test_high_risk_visual_generation_keeps_only_authoritative_high_relevance():
     assert generate.answer_evidence_for_state(state) == [authoritative]
 
 
+def test_high_risk_text_generation_keeps_only_authoritative_high_relevance():
+    authoritative = {
+        "document_id": "doc-government",
+        "chunk_id": "chunk-government",
+        "is_active": True,
+        "content": "Quy trình chính thức",
+        "source_type": "government",
+        "rerank_score": 0.92,
+        "ranking_strategy": "rerank",
+    }
+    unknown = {
+        **authoritative,
+        "document_id": "doc-unknown",
+        "chunk_id": "chunk-unknown",
+        "source_type": "unknown",
+    }
+    state = {
+        "risk_level": "high",
+        "visual_observations": [],
+        "retrieved_docs": [unknown, authoritative],
+    }
+
+    assert generate.answer_evidence_for_state(state) == [authoritative]
+
+
+def test_citation_required_text_generation_excludes_irrelevant_evidence():
+    eligible = {
+        "document_id": "doc-covered",
+        "chunk_id": "chunk-covered",
+        "is_active": True,
+        "content": "Bằng chứng phù hợp",
+        "source_type": "extension",
+        "rerank_score": 0.75,
+        "ranking_strategy": "rerank",
+    }
+    irrelevant = {
+        **eligible,
+        "document_id": "doc-irrelevant",
+        "chunk_id": "chunk-irrelevant",
+        "rerank_score": 0.001,
+    }
+    state = {
+        "risk_level": "medium",
+        "visual_observations": [],
+        "context": {"require_citation": True},
+        "retrieved_docs": [irrelevant, eligible],
+    }
+
+    assert generate.answer_evidence_for_state(state) == [eligible]
+
+
 @pytest.mark.asyncio
 async def test_citation_required_generation_repairs_marker_once_before_sse(
     monkeypatch,
