@@ -45,6 +45,20 @@ của đúng thửa và đúng `user_id`; thửa cũ chưa có GPS tiếp tục 
 diện của tỉnh. Observation ghi rõ `plot_gps|province_geocode` để việc đánh giá và
 truy vết nguồn tọa độ không bị nhập nhằng.
 
+Policy theo giai đoạn chuẩn hóa text Việt/Anh về bốn pha FAO: `initial`,
+`development`, `mid_season` và `late_season`. Các alias theo cây như mới trồng,
+cây con, đẻ nhánh, làm đòng, ra hoa, đậu quả, tạo củ, chín và thu hoạch được ánh
+xạ về pha tương ứng; giá trị không nhận diện được dùng policy thời tiết cũ và
+được đánh dấu `unspecified`, không tự suy đoán từ ngày trồng. Worker đọc giai đoạn
+của mùa vụ active ở mỗi lần chạy, ghi cả giá trị gốc và mã chuẩn hóa vào
+observation/prediction, đồng thời đưa mã giai đoạn vào version/dedupe của policy.
+Đổi riêng giai đoạn không pause lịch đã được đồng ý; đổi cây hoặc kết thúc mùa vụ
+vẫn pause như trước. Giai đoạn chỉ thay đổi nội dung kiểm tra hiện trường (ví dụ
+mực nước lúa quanh làm đòng/ra hoa, vùng rễ/củ, hoa/quả hoặc sẵn sàng thu hoạch),
+không tự chẩn đoán bệnh, kê hóa chất hay hạ ngưỡng thời tiết khi chưa có bằng chứng.
+Nền phân loại dùng [FAO crop growth stages](https://www.fao.org/4/s2022e/s2022e02.htm)
+và hướng dẫn nước cho lúa dùng [IRRI Water Management](https://www.knowledgebank.irri.org/step-by-step-production/growth/water-management).
+
 Registry rau có 80 policy được nhận diện riêng bằng alias tiếng Việt không dấu,
 có dấu và tiếng Anh. Phạm vi gồm rau ăn lá (các loại cải, xà lách, rau muống,
 mồng tơi, rau dền, rau ngót...), họ cải, rau ăn thân/hoa, cà–ớt, dưa–bí, rau họ
@@ -202,6 +216,12 @@ pipeline uses Vietnamese accent normalization, BM25Plus, configurable weighted
 RRF, placeholder-source exclusion, and a low-confidence reranker fallback that
 cannot manufacture a high guardrail score. Any future sparse-vector, ColBERT,
 or embedding change must pass `retrieval_baseline_v2.json` before promotion.
+
+After semantic reranking, two bounded and auditable intent passes handle known
+cross-encoder failure modes. Explicit positive/negated crop names can correct a
+look-alike ranking such as parsley versus coriander, and title topic cues can
+select the right slice for establishment, nutrition, water/pollination, IPM or
+harvest within the same crop. Neither pass changes the raw reranker score.
 
 Documents also carry a controlled `source_type` from PostgreSQL through Qdrant
 and citations. The admin UI can classify new and existing documents as
