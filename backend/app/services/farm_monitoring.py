@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import unicodedata
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 from typing import Any
 from zoneinfo import ZoneInfo
@@ -30,6 +30,7 @@ IRRI_WATER_SOURCE = (
     "water-management"
 )
 FAO_VEGETABLE_WATER_SOURCE = "https://www.fao.org/4/s2022e/s2022e07.htm"
+FAO_GROWTH_STAGE_SOURCE = "https://www.fao.org/4/s2022e/s2022e02.htm"
 FAO_ONION_SOURCE = (
     "https://www.fao.org/land-water/databases-and-software/"
     "crop-information/onion/fr/"
@@ -59,6 +60,17 @@ class MonitoringPolicy:
     alert_title: str
     task_title: str
     sources: tuple[str, ...]
+    growth_stage_key: str = "unspecified"
+    growth_stage_label: str = "Chưa xác định"
+    growth_stage_known: bool = False
+
+
+@dataclass(frozen=True)
+class GrowthStageProfile:
+    key: str
+    label: str
+    aliases: frozenset[str]
+    known: bool = True
 
 
 @dataclass(frozen=True)
@@ -68,6 +80,95 @@ class DiseaseRiskAssessment:
     confidence: float
     inputs: dict[str, Any]
     reasons: tuple[str, ...]
+
+
+GROWTH_STAGE_PROFILES = (
+    GrowthStageProfile(
+        key="initial",
+        label="Khởi đầu / cây con",
+        aliases=frozenset(
+            {
+                "khoi dau",
+                "moi trong",
+                "cay con",
+                "gieo hat",
+                "uom",
+                "nay mam",
+                "sau cay",
+                "hoi xanh",
+                "initial",
+                "establishment",
+                "seedling",
+                "germination",
+            }
+        ),
+    ),
+    GrowthStageProfile(
+        key="development",
+        label="Sinh trưởng",
+        aliases=frozenset(
+            {
+                "sinh truong",
+                "phat trien",
+                "phat trien than la",
+                "than la",
+                "de nhanh",
+                "vegetative",
+                "development",
+                "crop development",
+            }
+        ),
+    ),
+    GrowthStageProfile(
+        key="mid_season",
+        label="Giữa vụ / sinh sản",
+        aliases=frozenset(
+            {
+                "giua vu",
+                "sinh san",
+                "ra hoa",
+                "lam dong",
+                "tro bong",
+                "phan hoa mam hoa",
+                "dau qua",
+                "nuoi qua",
+                "tao cu",
+                "hinh thanh cu",
+                "reproductive",
+                "flowering",
+                "fruit set",
+                "mid season",
+            }
+        ),
+    ),
+    GrowthStageProfile(
+        key="late_season",
+        label="Cuối vụ / chín",
+        aliases=frozenset(
+            {
+                "cuoi vu",
+                "chin",
+                "chin sinh ly",
+                "vao chac",
+                "chac xanh",
+                "chac chin",
+                "nuoi hat",
+                "thu hoach",
+                "ripening",
+                "maturity",
+                "harvest",
+                "grain filling",
+                "late season",
+            }
+        ),
+    ),
+)
+UNSPECIFIED_GROWTH_STAGE = GrowthStageProfile(
+    key="unspecified",
+    label="Chưa xác định",
+    aliases=frozenset(),
+    known=False,
+)
 
 
 _CROP_ALIASES = {
@@ -82,6 +183,7 @@ _CROP_ALIASES = {
     "banana": {"chuoi", "banana"},
     "mango": {"xoai", "mango"},
     "dragon_fruit": {"thanh long", "dragon fruit"},
+    "pineapple": {"dua", "khom", "thom", "pineapple"},
     "citrus": {"cam", "quyt", "buoi", "chanh", "citrus"},
 }
 
@@ -250,6 +352,7 @@ POLICIES = {
     "banana": _policy("banana", "chuối", "weather"),
     "mango": _policy("mango", "xoài", "weather"),
     "dragon_fruit": _policy("dragon_fruit", "thanh long", "weather"),
+    "pineapple": _policy("pineapple", "dứa", "weather"),
     "citrus": _policy("citrus", "cây có múi", "weather"),
 }
 
@@ -257,13 +360,56 @@ for _key, (_label, _mode, _) in VEGETABLE_POLICY_SPECS.items():
     POLICIES[_key] = _policy(_key, _label, _mode)
 
 
-def resolve_monitoring_policy(crop: str | None) -> MonitoringPolicy:
+def resolve_growth_stage(growth_stage: str | None) -> GrowthStageProfile:
+    normalized = " ".join(
+        _normalized(growth_stage or "").replace("-", " ").split()
+    )
+    if not normalized:
+        return UNSPECIFIED_GROWTH_STAGE
+    for profile in GROWTH_STAGE_PROFILES:
+        canonical_label = " ".join(
+            _normalized(profile.label).replace("-", " ").split()
+        )
+        if normalized == canonical_label or normalized in profile.aliases:
+            return profile
+    return UNSPECIFIED_GROWTH_STAGE
+
+
+def resolve_monitoring_policy(
+    crop: str | None,
+    growth_stage: str | None = None,
+) -> MonitoringPolicy:
     normalized = _normalized(crop or "").strip()
+    base_policy = None
     for key, aliases in _CROP_ALIASES.items():
         if normalized in aliases:
-            return POLICIES[key]
-    label = (crop or "cây trồng").strip() or "cây trồng"
-    return _policy("generic", label, "weather")
+            base_policy = POLICIES[key]
+            break
+    if base_policy is None:
+        label = (crop or "cây trồng").strip() or "cây trồng"
+        base_policy = _policy("generic", label, "weather")
+
+    stage = resolve_growth_stage(growth_stage)
+    if not stage.known:
+        return base_policy
+    return replace(
+        base_policy,
+        version=f"{base_policy.key}-stage-{stage.key}-v1",
+        reminder_type=f"{base_policy.key}_{stage.key}_weather_watch",
+        alert_title=(
+            f"Cần kiểm tra {base_policy.crop_label} ở giai đoạn "
+            f"{stage.label.lower()} do điều kiện thời tiết"
+        ),
+        task_title=(
+            f"Kiểm tra {base_policy.crop_label} · {stage.label.lower()}"
+        ),
+        sources=tuple(
+            dict.fromkeys((*base_policy.sources, FAO_GROWTH_STAGE_SOURCE))
+        ),
+        growth_stage_key=stage.key,
+        growth_stage_label=stage.label,
+        growth_stage_known=True,
+    )
 
 
 def is_supported_crop(crop: str | None) -> bool:
@@ -375,6 +521,9 @@ def assess_weather_risk(
             "description": day.get("description"),
             "policy_key": policy.key,
             "policy_category": policy.mode,
+            "growth_stage_key": policy.growth_stage_key,
+            "growth_stage_label": policy.growth_stage_label,
+            "growth_stage_known": policy.growth_stage_known,
             "policy_sources": list(policy.sources),
         },
         reasons=tuple(reasons),
@@ -440,7 +589,72 @@ def build_recommendation_body(
     if temp_max is not None:
         signals.append(f"nhiệt độ cao nhất {round(float(temp_max), 1)}°C")
     signal_text = ", ".join(signals) or "điều kiện thời tiết đáng chú ý"
-    if active_policy.mode == "rice":
+    if active_policy.growth_stage_key == "initial":
+        if active_policy.mode == "rice":
+            action = (
+                "Kiểm tra cây mới gieo/cấy, độ ẩm mặt ruộng và thoát nước; "
+                "tránh để cây non bị ngập sâu"
+            )
+        else:
+            action = (
+                "Kiểm tra tỷ lệ hồi xanh/cây con, độ ẩm vùng rễ và khả năng "
+                "thoát nước"
+            )
+    elif active_policy.growth_stage_key == "development":
+        if active_policy.mode == "rice":
+            action = "Kiểm tra mực nước, đẻ nhánh và khả năng thoát nước của ruộng"
+        else:
+            action = (
+                "Kiểm tra sinh trưởng thân lá, độ ẩm vùng rễ và khả năng "
+                "thoát nước"
+            )
+    elif active_policy.growth_stage_key == "mid_season":
+        if active_policy.mode == "rice":
+            action = (
+                "Kiểm tra và duy trì mực nước ổn định quanh giai đoạn làm đòng, "
+                "trổ và ra hoa"
+            )
+        elif active_policy.mode in {
+            "root_vegetable",
+            "tuber_vegetable",
+            "allium_vegetable",
+            "rhizome_vegetable",
+        }:
+            action = (
+                "Kiểm tra độ ẩm vùng rễ/củ đang hình thành và khả năng thoát nước"
+            )
+        elif active_policy.mode in {
+            "fruiting_vegetable",
+            "cucurbit_vegetable",
+            "legume_vegetable",
+        }:
+            action = (
+                "Kiểm tra hoa/quả, tán hoặc giàn, độ ẩm đất và khả năng thoát nước"
+            )
+        else:
+            action = (
+                "Kiểm tra bộ phận tạo năng suất, độ ẩm vùng rễ và khả năng "
+                "thoát nước"
+            )
+    elif active_policy.growth_stage_key == "late_season":
+        if active_policy.mode in {
+            "leafy_vegetable",
+            "brassica_vegetable",
+            "herb_vegetable",
+        }:
+            action = (
+                "Kiểm tra độ ẩm đất và chất lượng phần thu tươi trước khi thu hoạch"
+            )
+        elif active_policy.mode == "rice":
+            action = (
+                "Kiểm tra độ chín, thoát nước và điều kiện ruộng trước thu hoạch"
+            )
+        else:
+            action = (
+                "Kiểm tra độ chín, chất lượng nông sản, thoát nước và thời điểm "
+                "thu hoạch"
+            )
+    elif active_policy.mode == "rice":
         action = "Kiểm tra mực nước và khả năng thoát nước của ruộng"
     elif active_policy.mode in {"root_vegetable", "tuber_vegetable", "allium_vegetable", "rhizome_vegetable"}:
         action = "Kiểm tra độ ẩm luống, vùng rễ/củ và khả năng thoát nước"
@@ -450,9 +664,14 @@ def build_recommendation_body(
         action = "Kiểm tra tán cây, giàn/quả, độ ẩm đất và khả năng thoát nước"
     else:
         action = "Kiểm tra tình trạng cây và khả năng thoát nước tại ruộng"
+    stage_text = (
+        f"Giai đoạn đã ghi nhận: {active_policy.growth_stage_label}. "
+        if active_policy.growth_stage_known
+        else "Giai đoạn chưa được chuẩn hóa; nên cập nhật mùa vụ để cảnh báo sát hơn. "
+    )
     return (
         f"Dự báo tại {province} ngày {assessment.forecast_date.isoformat()} có "
-        f"{signal_text}. {action}. Đây là cảnh báo điều kiện thời tiết, không "
+        f"{signal_text}. {stage_text}{action}. Đây là cảnh báo điều kiện thời tiết, không "
         "phải chẩn đoán bệnh hay chỉ định sử dụng hóa chất."
     )
 

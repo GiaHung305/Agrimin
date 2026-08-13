@@ -32,6 +32,7 @@ from app.services.farm_monitoring import (
     is_supported_crop,
     is_supported_region,
     recommendation_dedupe_key,
+    resolve_growth_stage,
     resolve_monitoring_policy,
     schedule_run_key,
 )
@@ -157,6 +158,52 @@ def test_policy_registry_handles_specific_and_generic_crops():
     assert "maximum_temperature_at_least_38_c" in heat_watch.reasons
 
 
+@pytest.mark.parametrize(
+    ("raw_stage", "expected_key"),
+    [
+        ("Mới trồng", "initial"),
+        ("đẻ nhánh", "development"),
+        ("Ra hoa", "mid_season"),
+        ("grain filling", "late_season"),
+        ("Giữa vụ / sinh sản", "mid_season"),
+        ("đang theo dõi", "unspecified"),
+        (None, "unspecified"),
+    ],
+)
+def test_growth_stage_aliases_are_normalized_with_safe_fallback(
+    raw_stage, expected_key
+):
+    assert resolve_growth_stage(raw_stage).key == expected_key
+
+
+def test_known_growth_stage_versions_policy_and_field_action():
+    flowering_rice = resolve_monitoring_policy("Lúa", "Ra hoa")
+    unknown_rice = resolve_monitoring_policy("Lúa", "không rõ")
+    assessment = assess_weather_risk(
+        flowering_rice,
+        {
+            "date": "2026-08-13",
+            "rain_probability": 0.9,
+            "humidity": 92,
+            "temp": 24,
+        },
+    )
+    body = build_recommendation_body(
+        province="Lâm Đồng",
+        assessment=assessment,
+        policy=flowering_rice,
+    )
+
+    assert flowering_rice.version == "rice-stage-mid_season-v1"
+    assert flowering_rice.reminder_type == "rice_mid_season_weather_watch"
+    assert flowering_rice.growth_stage_known is True
+    assert assessment.inputs["growth_stage_key"] == "mid_season"
+    assert "mực nước ổn định" in body
+    assert "Giai đoạn đã ghi nhận" in body
+    assert unknown_rice.version == "rice-weather-watch-v1"
+    assert unknown_rice.growth_stage_known is False
+
+
 def test_vegetable_registry_has_broad_bilingual_coverage():
     expected = {
         "cải xanh": ("mustard_greens", "leafy_vegetable"),
@@ -180,6 +227,28 @@ def test_vegetable_registry_has_broad_bilingual_coverage():
         assert policy.mode == category
         assert policy.version == f"{key}-weather-watch-v1"
         assert len(policy.sources) >= 4
+
+
+def test_pineapple_policy_is_available_for_audited_corpus_source():
+    for crop in ("dứa", "khóm", "thơm", "pineapple"):
+        policy = resolve_monitoring_policy(crop)
+        assert policy.key == "pineapple"
+        assert policy.crop_label == "dứa"
+
+
+def test_stage_policy_identifiers_fit_persisted_column_limits():
+    stage_labels = (
+        "Khởi đầu / cây con",
+        "Sinh trưởng",
+        "Giữa vụ / sinh sản",
+        "Cuối vụ / chín",
+    )
+    crop_labels = [label for label, _, _ in VEGETABLE_POLICY_SPECS.values()]
+    for crop in crop_labels:
+        for stage in stage_labels:
+            policy = resolve_monitoring_policy(crop, stage)
+            assert len(policy.version) <= 50
+            assert len(policy.reminder_type) <= 50
 
 
 def test_vegetable_aliases_are_unique_and_english_aliases_resolve():
@@ -280,7 +349,11 @@ async def test_create_schedule_copies_owned_farm_context():
         id=uuid.uuid4(), farm_profile_id=profile.id, status="active"
     )
     season = SimpleNamespace(
-        id=uuid.uuid4(), plot_id=plot.id, crop="Cà chua", status="active"
+        id=uuid.uuid4(),
+        plot_id=plot.id,
+        crop="Cà chua",
+        growth_stage="Mới trồng",
+        status="active",
     )
     db = SimpleNamespace(
         execute=AsyncMock(
@@ -314,6 +387,7 @@ async def test_create_schedule_copies_owned_farm_context():
     assert schedule.plot_id == plot.id
     assert schedule.crop_season_id == season.id
     assert schedule.crop == "Cà chua"
+    assert schedule.reminder_type == "tomato_initial_weather_watch"
     assert schedule.province == "Lâm Đồng"
     assert schedule.frequency_hours == 12
     assert schedule.consent_granted_at is not None
@@ -665,10 +739,57 @@ async def test_changing_active_season_crop_pauses_tomato_monitoring():
 
 
 @pytest.mark.asyncio
+async def test_changing_growth_stage_refreshes_policy_without_pausing_schedule():
+    season = SimpleNamespace(
+        id=uuid.uuid4(),
+        plot_id=uuid.uuid4(),
+        crop="Cà chua",
+        variety=None,
+        growth_stage="Mới trồng",
+        planted_on=None,
+        expected_harvest_on=None,
+        status="active",
+        ended_at=None,
+        created_at=datetime(2026, 8, 1),
+        updated_at=datetime(2026, 8, 1),
+    )
+    schedule = _schedule_record()
+    schedule.crop_season_id = season.id
+    original_next_run = schedule.next_run_at
+    db = SimpleNamespace(
+        execute=AsyncMock(
+            side_effect=[ScalarResult(season), ScalarsResult([schedule])]
+        ),
+        commit=AsyncMock(),
+        refresh=AsyncMock(),
+    )
+
+    response = await assistant.update_crop_season(
+        str(season.id),
+        assistant.CropSeasonUpdateRequest(growth_stage="Ra hoa"),
+        db=db,
+        current_user={"id": "user-a"},
+    )
+
+    assert response["growth_stage"] == "Ra hoa"
+    assert schedule.status == "active"
+    assert schedule.next_run_at == original_next_run
+    assert schedule.reminder_type == "tomato_mid_season_weather_watch"
+    assert "farm_monitoring_schedules.user_id" in str(
+        db.execute.await_args_list[1].args[0]
+    )
+
+
+@pytest.mark.asyncio
 async def test_non_tomato_season_can_resume_with_matching_policy():
     schedule = _schedule_record()
     schedule.status = "paused"
-    season = SimpleNamespace(id=schedule.crop_season_id, crop="Ớt", status="active")
+    season = SimpleNamespace(
+        id=schedule.crop_season_id,
+        crop="Ớt",
+        growth_stage="Ra hoa",
+        status="active",
+    )
     db = SimpleNamespace(
         execute=AsyncMock(
             side_effect=[ScalarResult(schedule), ScalarResult(season)]
@@ -686,7 +807,7 @@ async def test_non_tomato_season_can_resume_with_matching_policy():
 
     assert schedule.status == "active"
     assert schedule.crop == "Ớt"
-    assert schedule.reminder_type == "chili_weather_watch"
+    assert schedule.reminder_type == "chili_mid_season_weather_watch"
 
 
 @pytest.mark.asyncio
@@ -748,6 +869,7 @@ async def test_worker_persists_observation_prediction_recommendation_and_notice(
             side_effect=[
                 ScalarResult(None),
                 ScalarResult(plot),
+                ScalarResult(SimpleNamespace(growth_stage="Ra hoa")),
                 ScalarResult(None),
             ]
         ),
@@ -783,6 +905,8 @@ async def test_worker_persists_observation_prediction_recommendation_and_notice(
     )
     assert observation.inputs["coordinate_source"] == expected_source
     assert observation.inputs["coordinates"] == expected_coordinates
+    assert observation.inputs["growth_stage"] == "Ra hoa"
+    assert observation.inputs["growth_stage_key"] == "mid_season"
     if should_geocode:
         worker.geocode_province_via_mcp.assert_awaited_once_with("Lâm Đồng")
     else:
@@ -797,7 +921,8 @@ async def test_worker_persists_observation_prediction_recommendation_and_notice(
     assert recommendation.pending_action_id == action.id
     assert recommendation.status == "notified"
     prediction = next(item for item in added if isinstance(item, FarmRiskPrediction))
-    assert prediction.policy_version == "rice-weather-watch-v1"
+    assert prediction.policy_version == "rice-stage-mid_season-v1"
+    assert prediction.inputs["growth_stage_key"] == "mid_season"
     assert prediction.inputs["policy_sources"]
     assert recommendation.kind == "crop_weather_risk_check"
     assert "lúa" in recommendation.title

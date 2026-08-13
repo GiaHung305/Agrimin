@@ -221,8 +221,20 @@ async def _run_monitoring_schedule(session, schedule, now) -> None:
         coordinate_source = "province_geocode"
     if not coords:
         raise RuntimeError("monitoring_geocode_not_found")
+    season = None
+    if schedule.crop_season_id is not None:
+        season = (
+            await session.execute(
+                select(CropSeason).where(
+                    CropSeason.id == schedule.crop_season_id,
+                    CropSeason.user_id == schedule.user_id,
+                    CropSeason.status == "active",
+                )
+            )
+        ).scalar_one_or_none()
+    growth_stage = getattr(season, "growth_stage", None)
     forecast = (await get_weather_via_mcp(*coords)).get("forecast", [])
-    policy = resolve_monitoring_policy(schedule.crop)
+    policy = resolve_monitoring_policy(schedule.crop, growth_stage)
     assessment = highest_risk_assessment(forecast, policy)
     expires_at = prediction_expiry(now, schedule.frequency_hours)
 
@@ -236,6 +248,8 @@ async def _run_monitoring_schedule(session, schedule, now) -> None:
             "province": schedule.province,
             "plot_id": str(schedule.plot_id),
             "crop_season_id": str(schedule.crop_season_id),
+            "growth_stage": growth_stage,
+            "growth_stage_key": policy.growth_stage_key,
             "coordinates": {"latitude": coords[0], "longitude": coords[1]},
             "coordinate_source": coordinate_source,
             "location_accuracy_m": (
@@ -264,6 +278,8 @@ async def _run_monitoring_schedule(session, schedule, now) -> None:
             "reasons": list(assessment.reasons),
             "crop": schedule.crop,
             "province": schedule.province,
+            "growth_stage": growth_stage,
+            "growth_stage_key": policy.growth_stage_key,
         },
         expires_at=expires_at,
         created_at=now,

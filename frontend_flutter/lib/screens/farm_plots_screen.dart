@@ -13,6 +13,13 @@ class FarmPlotsScreen extends StatefulWidget {
 }
 
 class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
+  static const _growthStageOptions = <String>[
+    'Khởi đầu / cây con',
+    'Sinh trưởng',
+    'Giữa vụ / sinh sản',
+    'Cuối vụ / chín',
+  ];
+
   late Future<List<FarmPlot>> _plots;
   bool _busy = false;
 
@@ -444,7 +451,7 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
   Future<void> _createSeason(FarmPlot plot) async {
     final crop = TextEditingController();
     final variety = TextEditingController();
-    final stage = TextEditingController();
+    String? stageValue;
     DateTime? plantedOn;
     DateTime? expectedHarvestOn;
     final accepted = await showDialog<bool>(
@@ -470,11 +477,19 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
                   decoration: const InputDecoration(labelText: 'Giống'),
                 ),
                 const SizedBox(height: 12),
-                TextField(
-                  controller: stage,
+                DropdownButtonFormField<String>(
+                  initialValue: stageValue,
                   decoration: const InputDecoration(
                     labelText: 'Giai đoạn hiện tại',
                   ),
+                  items: _growthStageOptions
+                      .map(
+                        (stage) =>
+                            DropdownMenuItem(value: stage, child: Text(stage)),
+                      )
+                      .toList(),
+                  onChanged: (value) =>
+                      setDialogState(() => stageValue = value),
                 ),
                 const SizedBox(height: 12),
                 ListTile(
@@ -538,20 +553,62 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
     );
     final cropValue = crop.text.trim();
     final varietyValue = variety.text.trim();
-    final stageValue = stage.text.trim();
     crop.dispose();
     variety.dispose();
-    stage.dispose();
     if (accepted != true || cropValue.isEmpty) return;
     await _run(
       () async => ApiService.createCropSeason(
         plotId: plot.id,
         crop: cropValue,
         variety: varietyValue.isEmpty ? null : varietyValue,
-        growthStage: stageValue.isEmpty ? null : stageValue,
+        growthStage: stageValue,
         plantedOn: plantedOn,
         expectedHarvestOn: expectedHarvestOn,
       ),
+    );
+  }
+
+  Future<void> _updateGrowthStage(CropSeason season) async {
+    String? selected = _growthStageOptions.contains(season.growthStage)
+        ? season.growthStage
+        : null;
+    final accepted = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => StatefulBuilder(
+        builder: (context, setDialogState) => AlertDialog(
+          title: Text('Giai đoạn · ${season.crop}'),
+          content: DropdownButtonFormField<String?>(
+            initialValue: selected,
+            decoration: const InputDecoration(labelText: 'Giai đoạn hiện tại'),
+            items: [
+              const DropdownMenuItem<String?>(
+                value: null,
+                child: Text('Chưa xác định'),
+              ),
+              ..._growthStageOptions.map(
+                (stage) =>
+                    DropdownMenuItem<String?>(value: stage, child: Text(stage)),
+              ),
+            ],
+            onChanged: (value) => setDialogState(() => selected = value),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Hủy'),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(context, true),
+              child: const Text('Lưu giai đoạn'),
+            ),
+          ],
+        ),
+      ),
+    );
+    if (accepted != true) return;
+    await _run(
+      () async =>
+          ApiService.updateCropSeason(season.id, {'growth_stage': selected}),
     );
   }
 
@@ -738,18 +795,31 @@ class _FarmPlotsScreenState extends State<FarmPlotsScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      active.crop,
-                      style: const TextStyle(fontWeight: FontWeight.w800),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            active.crop,
+                            style: const TextStyle(fontWeight: FontWeight.w800),
+                          ),
+                        ),
+                        IconButton(
+                          tooltip: 'Cập nhật giai đoạn',
+                          visualDensity: VisualDensity.compact,
+                          onPressed: _busy
+                              ? null
+                              : () => _updateGrowthStage(active),
+                          icon: const Icon(Icons.autorenew_rounded, size: 20),
+                        ),
+                      ],
                     ),
-                    if (active.variety != null || active.growthStage != null)
-                      Text(
-                        [
-                          if (active.variety != null) 'Giống ${active.variety}',
-                          if (active.growthStage != null) active.growthStage!,
-                        ].join(' · '),
-                        style: const TextStyle(color: AppColors.muted),
-                      ),
+                    Text(
+                      [
+                        if (active.variety != null) 'Giống ${active.variety}',
+                        active.growthStage ?? 'Chưa xác định giai đoạn',
+                      ].join(' · '),
+                      style: const TextStyle(color: AppColors.muted),
+                    ),
                   ],
                 ),
               ),

@@ -546,13 +546,19 @@ async def update_crop_season(
             setattr(season, field, value)
     now = local_now_naive()
     # A crop change invalidates the schedule's selected policy. Pause it until
-    # the owner explicitly resumes and the policy metadata is refreshed.
+    # the owner explicitly resumes. A stage-only change is safe to apply to the
+    # next run and refreshes metadata without revoking monitoring consent.
     should_pause_monitoring = season.status != "active" or "crop" in updates
+    should_refresh_stage_policy = (
+        season.status == "active"
+        and "growth_stage" in updates
+        and "crop" not in updates
+    )
     if season.status in ("completed", "cancelled"):
         season.ended_at = now
     elif season.status == "active":
         season.ended_at = None
-    if should_pause_monitoring:
+    if should_pause_monitoring or should_refresh_stage_policy:
         schedules = (
             await db.execute(
                 select(FarmMonitoringSchedule).where(
@@ -563,8 +569,14 @@ async def update_crop_season(
             )
         ).scalars().all()
         for schedule in schedules:
-            schedule.status = "paused"
-            schedule.next_run_at = None
+            if should_pause_monitoring:
+                schedule.status = "paused"
+                schedule.next_run_at = None
+            else:
+                policy = resolve_monitoring_policy(
+                    season.crop, getattr(season, "growth_stage", None)
+                )
+                schedule.reminder_type = policy.reminder_type
             schedule.updated_at = now
     season.updated_at = now
     await db.commit()
@@ -738,7 +750,9 @@ async def create_monitoring_schedule(
             status_code=status.HTTP_422_UNPROCESSABLE_CONTENT,
             detail="A named crop is required for weather monitoring",
         )
-    policy = resolve_monitoring_policy(season.crop)
+    policy = resolve_monitoring_policy(
+        season.crop, getattr(season, "growth_stage", None)
+    )
     existing = (
         await db.execute(
             select(FarmMonitoringSchedule).where(
@@ -822,7 +836,9 @@ async def update_monitoring_schedule(
                     status_code=status.HTTP_409_CONFLICT,
                     detail="The crop season needs a named crop",
                 )
-            policy = resolve_monitoring_policy(season.crop)
+            policy = resolve_monitoring_policy(
+                season.crop, getattr(season, "growth_stage", None)
+            )
             schedule.crop = season.crop.strip()
             schedule.reminder_type = policy.reminder_type
         schedule.status = updates["status"]
