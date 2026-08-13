@@ -1,0 +1,98 @@
+{
+  "version": "crop-data-expansion-batch-9-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn"
+  ],
+  "documents": [
+    {
+      "title": "Bí ngòi miền Bắc - nhận diện giống, thời vụ và gieo cây con",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "source_type": "extension",
+      "author": "Bộ môn Rau và Cây gia vị - Viện Nghiên cứu Rau quả; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-12-17T15:59:00+07:00",
+      "format": "html_markers",
+      "start_marker": "Từ kết quả nghiên cứu của dự án:",
+      "end_marker": "4. Phân bón và cách bón",
+      "content_prefix": "Tên cây và từ đồng nghĩa: bí ngòi, zucchini, summer squash, Cucurbita pepo. Lát nguồn áp dụng cho giống bí ngòi Star Ol ở các tỉnh miền Bắc Việt Nam; không đồng nhất bí ngòi với bí đỏ, bí xanh hoặc dưa chuột và không tự động chuyển lịch vụ sang miền Nam.",
+      "crop_keys": ["zucchini"],
+      "required_terms": ["bí ngồi Star Ol", "các tỉnh miền Bắc", "Thời vụ", "Gieo hạt"],
+      "min_chars": 500
+    },
+    {
+      "title": "Bí ngòi miền Bắc - dinh dưỡng và lịch bón theo giai đoạn",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "source_type": "extension",
+      "author": "Bộ môn Rau và Cây gia vị - Viện Nghiên cứu Rau quả; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-12-17T15:59:00+07:00",
+      "format": "html_markers",
+      "start_marker": "4. Phân bón và cách bón",
+      "end_marker": "5. Trồng cây và chăm sóc",
+      "content_prefix": "Tên cây và phạm vi: bí ngòi Star Ol, zucchini, Cucurbita pepo, quy trình cho các tỉnh miền Bắc Việt Nam. Số liệu dinh dưỡng được giữ nguyên theo đơn vị ha và theo giai đoạn của nguồn; khi áp dụng phải quy đổi đúng diện tích, điều kiện đất và không suy rộng sang cây họ bầu bí khác.",
+      "crop_keys": ["zucchini"],
+      "required_terms": ["Phân bón và cách bón", "Phân chuồng hoai mục", "Bón thúc lần 1", "Bón thúc lần 3"],
+      "min_chars": 500
+    },
+    {
+      "title": "Bí ngòi miền Bắc - mật độ, độ ẩm và thụ phấn bổ sung",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "source_type": "extension",
+      "author": "Bộ môn Rau và Cây gia vị - Viện Nghiên cứu Rau quả; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-12-17T15:59:00+07:00",
+      "format": "html_markers",
+      "start_marker": "5. Trồng cây và chăm sóc",
+      "end_marker": "6. Phòng trừ sâu bệnh",
+      "content_prefix": "Tên cây và phạm vi: bí ngòi Star Ol, zucchini, Cucurbita pepo tại miền Bắc Việt Nam. Lát này chỉ giữ mật độ, quản lý ẩm và thụ phấn bổ sung; không áp dụng máy móc cho bí đỏ, bí xanh hay dưa chuột.",
+      "crop_keys": ["zucchini"],
+      "required_terms": ["Trồng cây và chăm sóc", "16.000 cây/ha", "độ ẩm 70 - 75%", "thụ phấn bổ sung"],
+      "min_chars": 500
+    },
+    {
+      "title": "Bí ngòi miền Bắc - sâu bệnh chính và IPM canh tác",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "source_type": "extension",
+      "author": "Bộ môn Rau và Cây gia vị - Viện Nghiên cứu Rau quả; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-12-17T15:59:00+07:00",
+      "format": "html_markers",
+      "start_marker": "6. Phòng trừ sâu bệnh",
+      "end_marker": "+ Biện pháp hóa học:",
+      "exclude_marker_ranges": [
+        {
+          "start_marker": "Ngoài ra, có thể dùng thuốc",
+          "end_marker": "- Một số bệnh hại chính"
+        }
+      ],
+      "content_prefix": "Tên cây và phạm vi: bí ngòi Star Ol, zucchini, Cucurbita pepo tại miền Bắc Việt Nam. Lát IPM chỉ giữ nhận diện nhóm sâu bệnh và biện pháp canh tác như cây khỏe, tưới hợp lý, vệ sinh, luân canh, giống chống bệnh và che phủ; toàn bộ tên thuốc, liều lượng và biện pháp hóa học cũ đã bị loại.",
+      "crop_keys": ["zucchini"],
+      "required_terms": ["Phòng trừ sâu bệnh", "sâu khoang", "bệnh phấn trắng", "Biện pháp canh tác"],
+      "min_chars": 500
+    },
+    {
+      "title": "Bí ngòi miền Bắc - chỉ tiêu và cách thu hái",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "source_type": "extension",
+      "author": "Bộ môn Rau và Cây gia vị - Viện Nghiên cứu Rau quả; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-12-17T15:59:00+07:00",
+      "format": "html_markers",
+      "start_marker": "7. Thu hái",
+      "end_marker": "BBT (gt)",
+      "content_prefix": "Tên cây và phạm vi: bí ngòi Star Ol, zucchini, Cucurbita pepo trồng theo quy trình miền Bắc Việt Nam. Chỉ tiêu kích thước, khối lượng và số ngày sau nở hoa thuộc giống và quy trình này; dùng để nhận biết độ thu hái, không đồng nhất với tiêu chuẩn của bí đỏ, bí xanh hoặc dưa chuột và cần đối chiếu yêu cầu thị trường thực tế.",
+      "crop_keys": ["zucchini"],
+      "required_terms": ["Thu hái", "5 - 7 ngày sau nở hoa", "Dùng dao sắc", "cắt cuống quả"],
+      "min_chars": 500
+    },
+    {
+      "title": "Sả Nam Đàn Nghệ An - thích nghi đất thiếu nước và mốc thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/nghe-an-loi-nhuan-60--80-trieu-dongha-tu-trong-sa-19309.html",
+      "source_type": "extension",
+      "author": "Trần Thị Hoài Phương - Trạm Khuyến nông Nam Đàn; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2019-09-26T17:27:00+07:00",
+      "format": "html_markers",
+      "start_marker": "Hiện nay trên địa bàn xã Nam Xuân",
+      "end_marker": "Trần Thị Hoài Phương",
+      "content_prefix": "Tên cây và từ đồng nghĩa: sả gia vị, lemongrass, Cymbopogon citratus; không đồng nhất với sả Java chuyên lấy tinh dầu. Đây là trường hợp chuyển đổi trên đất cao cưỡng thiếu nước ở xã Nam Xuân, huyện Nam Đàn, Nghệ An; mốc thu hoạch và mức thích nghi chỉ là bằng chứng địa phương, không phải quy trình định lượng áp dụng toàn quốc.",
+      "crop_keys": ["lemongrass"],
+      "required_terms": ["Nam Xuân", "Nam Đàn", "thiếu nước", "3 - 4 tháng"],
+      "min_chars": 500
+    }
+  ]
+}

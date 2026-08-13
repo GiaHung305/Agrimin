@@ -1,0 +1,77 @@
+{
+  "version": "crop-expansion-batch-1-retrieval-v1",
+  "items": [
+    {
+      "id": "bitter-melon-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng khổ qua an toàn trong mùa mưa như thế nào?",
+      "relevant_sources": ["Cẩm nang trồng khổ qua an toàn - phần cây khổ qua"]
+    },
+    {
+      "id": "cucumber-soil-water",
+      "category": "crop_expansion",
+      "query": "Dưa leo cần chuẩn bị đất và tưới nước ra sao?",
+      "relevant_sources": ["Cẩm nang trồng dưa leo an toàn - phần cây dưa leo"]
+    },
+    {
+      "id": "winter-melon-cultivation",
+      "category": "crop_expansion",
+      "query": "Hướng dẫn kỹ thuật trồng và chăm sóc bí đao an toàn",
+      "relevant_sources": ["Cẩm nang trồng bí đao an toàn - phần cây bí đao"]
+    },
+    {
+      "id": "pumpkin-care",
+      "category": "crop_expansion",
+      "query": "Cách chăm sóc bí đỏ để cây phát triển tốt",
+      "relevant_sources": ["Cẩm nang trồng bí đỏ an toàn - phần cây bí đỏ"]
+    },
+    {
+      "id": "bottle-gourd-trellis",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật làm giàn và chăm sóc cây bầu",
+      "relevant_sources": ["Cẩm nang trồng bầu an toàn - phần cây bầu"]
+    },
+    {
+      "id": "chili-care",
+      "category": "crop_expansion",
+      "query": "Quy trình trồng và chăm sóc cây ớt an toàn",
+      "relevant_sources": ["Cẩm nang trồng ớt an toàn - phần cây ớt"]
+    },
+    {
+      "id": "eggplant-disease",
+      "category": "crop_expansion",
+      "query": "Cà tím thường bị sâu bệnh gì và chăm sóc thế nào?",
+      "relevant_sources": ["Cẩm nang trồng cà tím an toàn - phần cây cà tím"]
+    },
+    {
+      "id": "green-bean-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng đậu cô ve an toàn",
+      "relevant_sources": ["Cẩm nang trồng đậu cô ve và đậu đũa an toàn"]
+    },
+    {
+      "id": "yardlong-bean-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng đậu đũa và phòng sâu đục quả",
+      "relevant_sources": ["Cẩm nang trồng đậu cô ve và đậu đũa an toàn"]
+    },
+    {
+      "id": "water-spinach-vietgap",
+      "category": "crop_expansion",
+      "query": "Trồng rau muống nước an toàn theo VietGAP cần làm gì?",
+      "relevant_sources": ["Cẩm nang trồng rau muống nước an toàn"]
+    },
+    {
+      "id": "mustard-greens-organic",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng cải xanh theo hướng hữu cơ",
+      "relevant_sources": ["Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ"]
+    },
+    {
+      "id": "lettuce-organic",
+      "category": "crop_expansion",
+      "query": "Cách gieo trồng xà lách hữu cơ an toàn",
+      "relevant_sources": ["Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ"]
+    }
+  ]
+}

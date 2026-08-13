@@ -1,0 +1,53 @@
+{
+  "version": "crop-expansion-batch-13-retrieval-v1",
+  "items": [
+    {
+      "id": "parsley-not-coriander-greenhouse",
+      "category": "crop_depth_lookalike",
+      "query": "Tài liệu thử nghiệm trồng mùi tây parsley trong nhà kính Florida, không phải ngò rí coriander hay ngò gai culantro, có nhắc những rau gia vị nào?",
+      "relevant_sources": ["UF IFAS Florida - thử nghiệm nhà kính cho sáu loại rau gia vị"]
+    },
+    {
+      "id": "coriander-not-parsley-scientific-name",
+      "category": "crop_depth_lookalike",
+      "query": "Ngò rí coriander cilantro Coriandrum sativum thuộc nhóm mùa nào ở Florida, không hỏi mùi tây parsley hay ngò gai culantro?",
+      "relevant_sources": ["UF IFAS Florida - nhận diện mùa vụ húng quế ngò rí và thì là"]
+    },
+    {
+      "id": "sweet-hot-pepper-table",
+      "category": "crop_depth_lookalike",
+      "query": "Bảng gieo trồng Florida phân biệt ớt ngọt bell pepper và ớt cay hot pepper chili như thế nào; không chuyển lịch này sang Việt Nam?",
+      "relevant_sources": ["UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"]
+    },
+    {
+      "id": "broccoli-cauliflower-table",
+      "category": "crop_depth_lookalike",
+      "query": "Đối chiếu hàng súp lơ xanh broccoli và súp lơ trắng cauliflower trong bảng giống, khoảng cách và thu hoạch rau Florida?",
+      "relevant_sources": ["UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"]
+    },
+    {
+      "id": "chard-spinach-table",
+      "category": "crop_depth_lookalike",
+      "query": "Cải cầu vồng Swiss chard khác rau bina spinach: tìm đúng bảng gieo trồng và thu hoạch Florida của hai cây này?",
+      "relevant_sources": ["UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"]
+    },
+    {
+      "id": "leek-spring-onion-shallot-table",
+      "category": "crop_depth_lookalike",
+      "query": "Tìm nguồn đối chiếu tỏi tây leek, hành lá spring onion và hành tím shallot; đây là ba nhóm Allium dễ bị gọi lẫn nhưng không phải một cây?",
+      "relevant_sources": ["UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"]
+    },
+    {
+      "id": "sweet-potato-not-potato-table",
+      "category": "crop_depth_lookalike",
+      "query": "Khoai lang sweet potato không phải khoai tây potato: nguồn nào có hàng gieo trồng và thu hoạch riêng cho cả hai ở Florida?",
+      "relevant_sources": ["UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"]
+    },
+    {
+      "id": "melon-watermelon-table",
+      "category": "crop_depth_lookalike",
+      "query": "Dưa lưới melon cantaloupe honeydew và dưa hấu watermelon có hàng riêng trong bảng rau Florida nào, và lịch cần hiệu chỉnh trước khi dùng ở Việt Nam?",
+      "relevant_sources": ["UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"]
+    }
+  ]
+}

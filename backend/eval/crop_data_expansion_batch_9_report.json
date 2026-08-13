@@ -1,0 +1,84 @@
+{
+  "version": "crop-data-expansion-batch-9-v1",
+  "documents": 6,
+  "sources": 2,
+  "ready": 0,
+  "already_active": 6,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Bí ngòi miền Bắc - nhận diện giống, thời vụ và gieo cây con",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "crop_keys": [
+        "zucchini"
+      ],
+      "characters": 2722,
+      "content_sha256": "661d5106453e4548c395e23a76e2e44176a35b011e326f9baa7287065e29a6c7",
+      "source_sha256": "2dd03b1c39c3195264e7803c2009d305f1b2cf8faa523a1ac8d4230e06997075",
+      "status": "already_active",
+      "document_id": "7965cb3a-00f3-4014-ab95-01abc8c05f33"
+    },
+    {
+      "title": "Bí ngòi miền Bắc - dinh dưỡng và lịch bón theo giai đoạn",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "crop_keys": [
+        "zucchini"
+      ],
+      "characters": 1609,
+      "content_sha256": "3cd022c1a3439b91a4275ad9c246faaf18037b9265fcc0d2aee46f01d1b768d5",
+      "source_sha256": "2dd03b1c39c3195264e7803c2009d305f1b2cf8faa523a1ac8d4230e06997075",
+      "status": "already_active",
+      "document_id": "28b715a7-40dc-46c8-88df-60c62ca56cb5"
+    },
+    {
+      "title": "Bí ngòi miền Bắc - mật độ, độ ẩm và thụ phấn bổ sung",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "crop_keys": [
+        "zucchini"
+      ],
+      "characters": 923,
+      "content_sha256": "2cf8c9723b65dff11b5d9a24c23133210c24a110f50263a2b8135f52af0c3baf",
+      "source_sha256": "2dd03b1c39c3195264e7803c2009d305f1b2cf8faa523a1ac8d4230e06997075",
+      "status": "already_active",
+      "document_id": "753561a6-8ea7-4e79-92de-61cae66903bf"
+    },
+    {
+      "title": "Bí ngòi miền Bắc - sâu bệnh chính và IPM canh tác",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "crop_keys": [
+        "zucchini"
+      ],
+      "characters": 793,
+      "content_sha256": "cc9b19bcd550c58dbbe6de4ccbc0295a00427d5d77000d9b8f594778d5ef7f4c",
+      "source_sha256": "2dd03b1c39c3195264e7803c2009d305f1b2cf8faa523a1ac8d4230e06997075",
+      "status": "already_active",
+      "document_id": "6fa0fedc-2bb2-4cdd-8d53-a8fe50f9c07c"
+    },
+    {
+      "title": "Bí ngòi miền Bắc - chỉ tiêu và cách thu hái",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "crop_keys": [
+        "zucchini"
+      ],
+      "characters": 672,
+      "content_sha256": "f99a61f1741ee0544fc6eafdd9131909e23cd719c6b3a512403b45dc5b8186eb",
+      "source_sha256": "2dd03b1c39c3195264e7803c2009d305f1b2cf8faa523a1ac8d4230e06997075",
+      "status": "already_active",
+      "document_id": "8716e2df-35b9-4bbc-adaa-3aaf779746f6"
+    },
+    {
+      "title": "Sả Nam Đàn Nghệ An - thích nghi đất thiếu nước và mốc thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/nghe-an-loi-nhuan-60--80-trieu-dongha-tu-trong-sa-19309.html",
+      "crop_keys": [
+        "lemongrass"
+      ],
+      "characters": 2126,
+      "content_sha256": "126e8bbf644b8755908dd03a88653f6bf3f353b5495c773dfc19bdbc95aff886",
+      "source_sha256": "c6d60fa56c940e6cbe0671c5f0978efbfa21fae0126563140246af5ca301fc3d",
+      "status": "already_active",
+      "document_id": "f6719415-6a33-4dd9-8dee-dbd789605a88"
+    }
+  ]
+}

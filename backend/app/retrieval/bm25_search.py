@@ -17,6 +17,13 @@ _index_generation = 0
 _index_lock = asyncio.Lock()
 
 
+def _index_text(payload: dict) -> str:
+    """Give reviewed document titles a small lexical boost for crop identity."""
+    title = str(payload.get("title") or "").strip()
+    content = str(payload.get("content") or "")
+    return f"{title} {title} {content}" if title else content
+
+
 def invalidate_bm25_index() -> None:
     """Discard the local index after a document write or deactivation."""
     global _bm25_index, _indexed_points, _index_expires_at, _index_generation
@@ -60,7 +67,7 @@ async def _get_bm25_index() -> tuple[BM25Plus | None, list]:
 
         _indexed_points = all_points
         _bm25_index = BM25Plus(
-            [tokenize_vietnamese(point.payload["content"]) for point in all_points]
+            [tokenize_vietnamese(_index_text(point.payload)) for point in all_points]
         )
         _index_expires_at = time.monotonic() + settings.bm25_index_ttl_seconds
         return _bm25_index, _indexed_points

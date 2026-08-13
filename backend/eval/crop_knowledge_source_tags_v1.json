@@ -1,0 +1,1079 @@
+{
+  "version": "crop-knowledge-source-tags-v1",
+  "dimensions": {
+    "topics": [
+      "cultivation",
+      "soil_water",
+      "nutrition",
+      "pest_disease_ipm",
+      "climate_resilience",
+      "harvest_postharvest",
+      "food_safety"
+    ],
+    "stages": ["initial", "development", "mid_season", "late_season"],
+    "regions": [
+      "northern_mountains",
+      "red_river_delta",
+      "north_central_coast",
+      "south_central_coast",
+      "central_highlands",
+      "southeast",
+      "mekong_delta"
+    ]
+  },
+  "sources": [
+    {
+      "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/tp-ho-chi-minh-thanh-cong-nho-ap-dung-cach-tuoi-nho-giot-trong-canh-tac-xoai-16660.html",
+      "source_type": "extension",
+      "crop_keys": ["mango"],
+      "crop_groups": [],
+      "topics": ["soil_water"],
+      "stages": ["development", "mid_season"],
+      "regions": ["southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/khac-phuc-benh-vang-la-do-ngo-doc-huu-co-trong-vu-lua-mua-2020-20225.html",
+      "source_type": "extension",
+      "crop_keys": ["rice"],
+      "crop_groups": [],
+      "topics": ["soil_water", "pest_disease_ipm"],
+      "stages": ["development"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ca-rot-an-toan-6115.html",
+      "source_type": "extension",
+      "crop_keys": ["carrot"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "pest_disease_ipm", "food_safety"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-cai-ngot-an-toan-16235.html",
+      "source_type": "extension",
+      "crop_keys": ["choy_sum"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "pest_disease_ipm", "food_safety"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-ca-chua-3430.html",
+      "source_type": "extension",
+      "crop_keys": ["tomato"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-xen-cay-sau-rieng-trong-vuon-ca-phe-voi-17952.html",
+      "source_type": "extension",
+      "crop_keys": ["durian", "coffee"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["development", "mid_season"],
+      "regions": ["central_highlands"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-luu-y-cham-soc-cay-buoi-da-xanh-trong-va-sau-han-man-19855.html",
+      "source_type": "extension",
+      "crop_keys": ["citrus"],
+      "crop_groups": [],
+      "topics": ["soil_water", "climate_resilience"],
+      "stages": ["development", "mid_season", "late_season"],
+      "regions": ["mekong_delta"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-tien-bo-ky-thuat-bao-quan-san-pham-cay-an-qua-co-mui-sau-thu-hoach-18085.html",
+      "source_type": "extension",
+      "crop_keys": ["citrus"],
+      "crop_groups": [],
+      "topics": ["harvest_postharvest", "food_safety"],
+      "stages": ["late_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-rau-bap-cai-an-toan-10543.html",
+      "source_type": "extension",
+      "crop_keys": ["cabbage"],
+      "crop_groups": [],
+      "topics": ["cultivation", "pest_disease_ipm", "food_safety"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "crop_keys": ["tomato", "cucumber", "water_spinach", "malabar_spinach", "cabbage", "radish"],
+      "crop_groups": ["vegetables"],
+      "topics": ["nutrition", "food_safety"],
+      "stages": ["development", "mid_season"],
+      "regions": ["northern_mountains", "red_river_delta"],
+      "count_for_coverage": true,
+      "note": "The source explicitly provides separate northern safe-vegetable nutrition schedules for six named crops. Batch 10 slices each crop at section markers so per-hectare rates cannot be attributed across crops; the general vegetables scope remains baseline evidence for biologically similar vegetables."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+      "source_type": "extension",
+      "crop_keys": [],
+      "crop_groups": [],
+      "topics": [],
+      "stages": [],
+      "regions": [],
+      "count_for_coverage": false,
+      "note": "Active inventory source retained for audit but not counted until page-level crop tags are reviewed."
+    },
+    {
+      "source": "https://ccttbvtv.gialai.gov.vn/wp-content/uploads/2025/03/Tieu-chuan-Viet-Nam-TCVN-13268-1_2021.pdf",
+      "source_type": "government",
+      "crop_keys": ["rice"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["development", "mid_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+      "source_type": "government",
+      "crop_keys": ["coffee"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "climate_resilience", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["central_highlands"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/02/hangweb/5-canh-tac-lua-cafe-18-3-out.pdf",
+      "source_type": "government",
+      "crop_keys": ["rice", "coffee"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "climate_resilience"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/09/hangweb/4-viet-shep-attp-out.pdf",
+      "source_type": "government",
+      "crop_keys": [],
+      "crop_groups": ["all_crops"],
+      "topics": ["food_safety", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/huong-dan-cac-bien-phap-ky-thuat-de-quan-ly-benh-chet-nhanh-benh-chet-cham-hai-ho-tieu-hieu-qua-va-an-toan-20827.html",
+      "source_type": "government",
+      "crop_keys": ["pepper"],
+      "crop_groups": [],
+      "topics": ["soil_water", "pest_disease_ipm"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-xu-ly-ra-hoa-trai-vu-cho-cay-sau-rieng-cho-cac-tinh-nam-bo-29412.html",
+      "source_type": "government",
+      "crop_keys": ["durian"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["mid_season"],
+      "regions": ["southeast", "mekong_delta"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+      "source_type": "government",
+      "crop_keys": ["coffee"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm"],
+      "stages": ["initial", "development"],
+      "regions": ["central_highlands"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_thanh_long_in.pdf",
+      "source_type": "government",
+      "crop_keys": ["dragon_fruit"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["south_central_coast", "southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/so_tay_ray_nau_out.pdf",
+      "source_type": "government",
+      "crop_keys": ["rice"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["development", "mid_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/thien-tai-dich-hai/quang-tri-tap-trung-phong-tru-benh-dao-on-hai-lua-20896.html",
+      "source_type": "government",
+      "crop_keys": ["rice"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["development"],
+      "regions": ["north_central_coast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+      "source_type": "government",
+      "crop_keys": ["citrus"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+      "source_type": "government",
+      "crop_keys": ["pineapple"],
+      "crop_groups": [],
+      "topics": ["soil_water", "pest_disease_ipm"],
+      "stages": ["initial", "development"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://www.ppd.gov.vn/FileUpload/Documents/P.%20Ke%20hoach/TBKT/21.12.25_%20Quy%20tr%C3%ACnh%20QLSB%20sau%20rieng-revised%203.pdf",
+      "source_type": "government",
+      "crop_keys": ["durian"],
+      "crop_groups": [],
+      "topics": ["soil_water", "pest_disease_ipm"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://www.ppd.gov.vn/tin-moi-nhat/tap-huan-nong-dan-nhan-biet-trieu-chung--va-bien-phap-phong-tru-benh-vang-la-di-dong-vang-lui-hai-lua-vu-he-thu-2020.html",
+      "source_type": "government",
+      "crop_keys": ["rice"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["development", "mid_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://www.fao.org/4/t0234e/T0234E02.htm",
+      "source_type": "international_organization",
+      "crop_keys": [],
+      "crop_groups": ["all_crops"],
+      "topics": ["soil_water", "climate_resilience"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://www.fao.org/agroecology/in-action/detail/protocols-for-innovative-agroecological-soil-water-and-integrated-pest-management-practices-management-techniques-trials-establishment-and-monitoring/en",
+      "source_type": "international_organization",
+      "crop_keys": [],
+      "crop_groups": ["all_crops"],
+      "topics": ["soil_water", "pest_disease_ipm", "climate_resilience"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://www.fao.org/farmer-field-schools/themes/integrated-pest-management/",
+      "source_type": "international_organization",
+      "crop_keys": [],
+      "crop_groups": ["all_crops"],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://www.knowledgebank.irri.org/training/fact-sheets/nutrient-management/deficiencies-and-toxicities-fact-sheet/item/nitrogen-deficiency",
+      "source_type": "international_organization",
+      "crop_keys": ["rice"],
+      "crop_groups": [],
+      "topics": ["nutrition"],
+      "stages": ["development"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "source_type": "government",
+      "crop_keys": ["bitter_melon", "cucumber", "winter_melon", "pumpkin", "bottle_gourd", "chili", "eggplant", "green_bean", "yardlong_bean"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest", "food_safety"],
+      "stages": ["all"],
+      "regions": ["southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-nang-trong-rau-muong-nuoc.pdf",
+      "source_type": "government",
+      "crop_keys": ["water_spinach"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest", "food_safety"],
+      "stages": ["all"],
+      "regions": ["southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+      "source_type": "extension",
+      "crop_keys": ["mustard_greens", "choy_sum", "lettuce"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "food_safety"],
+      "stages": ["all"],
+      "regions": ["south_central_coast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-trong-ngo-vu-dong-tren-dat-2-lua-phan-1-12767.html",
+      "source_type": "extension",
+      "crop_keys": ["maize"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "climate_resilience"],
+      "stages": ["initial", "development", "mid_season"],
+      "regions": ["northern_mountains", "red_river_delta", "north_central_coast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+      "source_type": "extension",
+      "crop_keys": ["maize"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["initial", "development", "mid_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "source_type": "extension",
+      "crop_keys": ["potato"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["northern_mountains", "red_river_delta", "north_central_coast"],
+      "count_for_coverage": true,
+      "note": "The original coarse 2015 document with obsolete pesticide lists is soft-deactivated. Batch 11 retains bounded disease-diagnosis, non-chemical cultural-IPM and harvest/storage slices for northern winter potato production."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ot-ngot-capsicum-annum-l-theo-huong-an-toan-9759.html",
+      "source_type": "extension",
+      "crop_keys": ["bell_pepper"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest", "food_safety"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-mong-toi-an-toan-5596.html",
+      "source_type": "extension",
+      "crop_keys": ["malabar_spinach"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest", "food_safety"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+      "source_type": "extension",
+      "crop_keys": ["broccoli", "cauliflower", "kohlrabi", "cabbage", "choy_sum", "mustard_greens"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["development", "mid_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-Nang-Rau-An-La-An-toan.pdf",
+      "source_type": "government",
+      "crop_keys": ["amaranth"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development"],
+      "regions": ["southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/02/Cam-nang-Cay-Mang-Tay.pdf",
+      "source_type": "government",
+      "crop_keys": ["asparagus"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-phong-tru-benh-than-thu-hai-cay-su-su-19227.html",
+      "source_type": "extension",
+      "crop_keys": ["chayote"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm"],
+      "stages": ["development", "mid_season", "late_season"],
+      "regions": ["northern_mountains"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-rau-ngot-18184.html",
+      "source_type": "extension",
+      "crop_keys": ["katuk"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-cai-cu-4939.html",
+      "source_type": "extension",
+      "crop_keys": ["radish"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-dua-luoi-tren-gia-the-trong-nha-mang-19550.html",
+      "source_type": "extension",
+      "crop_keys": ["melon"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["southeast"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-dua-hau-20894.html",
+      "source_type": "extension",
+      "crop_keys": ["watermelon"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-dau-ha-lan-theo-huong-san-xuat-rau-an-toan-819.html",
+      "source_type": "extension",
+      "crop_keys": ["pea"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://snnmt.vinhlong.gov.vn/Portals/1041/TaiLieuKyThuat/4_Tailieu_THKN_Kythuattrongdaubap_duyetFinal.pdf?ver=jhpds4TvJO3Bhiyfspttow%3D%3D",
+      "source_type": "government",
+      "crop_keys": ["okra"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "late_season"],
+      "regions": ["mekong_delta"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-ngo-ngot-867.html",
+      "source_type": "government",
+      "crop_keys": ["sweet_corn"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"],
+      "regions": ["red_river_delta"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-hanh-cu-hanh-hoa-an-toan-1251.html",
+      "source_type": "government",
+      "crop_keys": ["onion", "spring_onion"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest", "food_safety"],
+      "stages": ["all"],
+      "regions": ["red_river_delta"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "source_type": "government",
+      "crop_keys": [
+        "basil",
+        "coriander",
+        "culantro",
+        "dill",
+        "fish_mint",
+        "marjoram",
+        "mint",
+        "perilla",
+        "vietnamese_coriander",
+        "wild_betel"
+      ],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development"],
+      "regions": ["southeast"],
+      "count_for_coverage": true,
+      "note": "Only crop-specific cultivation sections before each pesticide-control heading are ingested. Chemical lists and contact directories are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+      "source_type": "government", "crop_keys": ["peanut"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["national"], "count_for_coverage": true,
+      "note": "Cultivation and harvest pages only; the legacy pesticide-control chapter is excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+      "source_type": "government", "crop_keys": ["soybean"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["national"], "count_for_coverage": true,
+      "note": "Cultivation and harvest pages only; the legacy pesticide-control chapter is excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/12/hangweb/so_thang_8_tong_hop_3_compressed.pdf",
+      "source_type": "extension", "crop_keys": ["sweet_potato"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["all"], "regions": ["mekong_delta"], "count_for_coverage": true,
+      "note": "The vague chemical soil-treatment and livestock-use/harvest sections are excluded by section markers."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+      "source_type": "extension", "crop_keys": ["cassava"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "climate_resilience"],
+      "stages": ["all"], "regions": ["national"], "count_for_coverage": true,
+      "note": "Pesticide, herbicide and livestock-feed sections are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+      "source_type": "extension", "crop_keys": ["turmeric"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["northern_mountains", "red_river_delta", "north_central_coast"], "count_for_coverage": true,
+      "note": "Seed-rhizome fungicide and pesticide-control sections are excluded."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-gung-721.html",
+      "source_type": "government", "crop_keys": ["ginger"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development", "mid_season"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Legacy seed-treatment and pesticide-control sections are excluded."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-rau-ma-xanh-tot-nang-suat-1771.html",
+      "source_type": "government", "crop_keys": ["pennywort"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "The legacy pesticide-control section is excluded."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-toi-951.html",
+      "source_type": "government", "crop_keys": ["garlic"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Medical claims, legacy pesticide-control and short harvest sections are excluded."
+    },
+    {
+      "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+      "source_type": "government", "crop_keys": ["banana"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Crop-specific cultivation article; navigation, contacts and unrelated pages are excluded by audited markers."
+    },
+    {
+      "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-khoai-mon-842.html",
+      "source_type": "government", "crop_keys": ["taro"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Legacy pesticide-control and short post-harvest sections are excluded; taro is not conflated with taro stem."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-gieo-trong-cay-muop-cho-nang-suat-cao-1977.html",
+      "source_type": "government", "crop_keys": ["luffa"], "crop_groups": [],
+      "topics": ["cultivation", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Medical claims, herbicide directions and legacy pesticide-control sections are excluded."
+    },
+    {
+      "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+      "source_type": "government", "crop_keys": ["artichoke"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["central_highlands"], "count_for_coverage": true,
+      "note": "Current provincial process issued in 2024; the pest-management section is excluded and cultivation/harvest are separately bounded."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/nghien-cuu-trien-khai/ky-thuat-trong-he-1036.html",
+      "source_type": "government", "crop_keys": ["chives"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Cultivation, care, harvest and seed-saving section only; the scientific-name alias is normalized in the corpus prefix."
+    },
+    {
+      "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+      "source_type": "extension", "crop_keys": ["spinach"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "climate_resilience", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["northern_mountains", "central_highlands"], "count_for_coverage": true,
+      "note": "Medical claims and the grower phone number are excluded with two non-overlapping audited slices."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/trong-rau-can-tay-don-gian-cho-nang-suat-cao-1956.html",
+      "source_type": "government", "crop_keys": ["celery"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Crop-specific soil, sowing, spacing, irrigation and harvest content only; site contacts are excluded."
+    },
+    {
+      "source": "https://agro.gov.vn/vn/tID11789_ky-thuat-trong-rau-day-theo-huong-san-xuat-sach.html",
+      "source_type": "extension", "crop_keys": ["jute_mallow"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development", "mid_season"], "regions": ["national"], "count_for_coverage": true,
+      "note": "The fertilizer table, legacy pesticide section and short harvest paragraph are excluded by audited markers."
+    },
+    {
+      "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+      "source_type": "government", "crop_keys": ["chinese_cabbage"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "food_safety"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "The official safe-production process is bounded before its pesticide list; only cultural, physical and pheromone IPM is retained."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cach-trong-rau-cai-cuc-trong-thung-xop-952.html",
+      "source_type": "government", "crop_keys": ["chrysanthemum_greens"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "The slice ends before commercial fertilizer and pesticide instructions; the isolated short harvest paragraph is not ingested."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/lao-cai-cu-den-do--cay-trong-moi-cho-nong-nghiep-bat-xat-21478.html",
+      "source_type": "extension", "crop_keys": ["beetroot"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "climate_resilience", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["northern_mountains"], "count_for_coverage": true,
+      "note": "Bát Xát field-model observations are explicitly regional and do not include pesticide directions."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-benh-hai-chinh-tren-cay-dau-rong-psophocarpus-tetragonolobus-27112.html",
+      "source_type": "extension", "crop_keys": ["winged_bean"], "crop_groups": [],
+      "topics": ["cultivation", "pest_disease_ipm", "harvest_postharvest"],
+      "stages": ["initial", "development", "mid_season", "late_season"], "regions": ["mekong_delta"], "count_for_coverage": true,
+      "note": "Only basic growth and physical snail management are ingested; dishwashing-liquid dilution and all pesticide recommendations are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/ninh-thuan-hoi-thao-dau-bo-mo-hinh-canh-tac-cay-hanh-thich-ung-voi-bien-doi-khi-hau-27730.html",
+      "source_type": "extension", "crop_keys": ["shallot"], "crop_groups": [],
+      "topics": ["soil_water", "pest_disease_ipm", "climate_resilience"],
+      "stages": ["development", "mid_season"], "regions": ["south_central_coast"], "count_for_coverage": true,
+      "note": "Ninh Thuận model evidence for drought adaptation and sticky-trap IPM; no chemical product or dose is included."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/bac-giang-trong-cu-dau-cho-thu-nhap-on-dinh-20044.html",
+      "source_type": "extension", "crop_keys": ["jicama"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development", "mid_season"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Soil, bed, pruning and water-management slices only; the sentence recommending routine pesticide spraying and the short season paragraph are excluded."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/swiss-chard-in-the-garden",
+      "source_type": "extension", "crop_keys": ["chard"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "Utah crop-specific establishment and irrigation guidance; fertilizer and pest sections are excluded and local adaptation is explicit."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/kale-in-the-garden",
+      "source_type": "extension", "crop_keys": ["kale"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "Utah crop-specific establishment and irrigation guidance; fertilizer and pest sections are excluded and local adaptation is explicit."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/lemongrass-in-the-garden",
+      "source_type": "extension", "crop_keys": ["lemongrass"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "Division, planting and water-management slice only; fertilizer and pest sections are excluded and Utah climate dates are not generalized to Vietnam."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/rutabagas-and-turnips-in-the-garden",
+      "source_type": "extension", "crop_keys": ["turnip"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "The shared rutabaga-turnip slice is retained with explicit turnip scope; fertilizer and pest sections are excluded."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/watercress-in-the-garden",
+      "source_type": "extension", "crop_keys": ["watercress"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "Propagation, planting and saturated-water management only; fertilizer and pest sections are excluded."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/leeks-in-the-garden",
+      "source_type": "extension", "crop_keys": ["leek"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "True leek guidance only; the policy mapping explicitly excludes Allium fistulosum and the fertilizer and pest sections are excluded."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/summer-and-winter-squash-in-the-garden",
+      "source_type": "extension", "crop_keys": ["zucchini"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "General squash establishment and irrigation principles are mapped to zucchini as summer squash; fertilizer and pest sections are excluded."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/brussel-sprouts-in-the-garden",
+      "source_type": "extension", "crop_keys": ["brussels_sprouts"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "Crop-specific establishment and irrigation guidance; fertilizer and pest sections are excluded and local adaptation is explicit."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+      "source_type": "extension", "crop_keys": ["purslane"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Two bounded slices retain soil, light, moisture and harvest guidance; all numeric nitrogen recommendations and disease text are excluded."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/EP638",
+      "source_type": "extension", "crop_keys": ["galangal", "ginger", "turmeric"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "UF/IFAS ginger-family production guide explicitly includes galangal; only rhizome planting, substrate and irrigation precede the fertilizer boundary."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/CV294?downloadOpen=true",
+      "source_type": "extension", "crop_keys": ["parsley"], "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["initial"], "regions": [], "count_for_coverage": true,
+      "note": "Only the parsley rows in the mixed celery-okra-parsley planting tables apply; the registered-pesticide tables are excluded."
+    },
+    {
+      "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-va-cham-soc-cay-dau-xanh-863.html",
+      "source_type": "government", "crop_keys": ["mung_bean"], "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["initial"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Land preparation, seed choice and sowing only; fertilizer care and pest-control sections are excluded."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-sen-lay-cu-1532.html",
+      "source_type": "government", "crop_keys": ["lotus_root"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Vegetative propagation and pond-soil preparation only; fertilizer, deficiency and pest-management sections are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/vinh-long-tuan-thu-ky-thuat-canh-tac--canh-dong-khoai-mo-ngay-cang-mo-rong-19139.html",
+      "source_type": "extension", "crop_keys": ["yam"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["mekong_delta"], "count_for_coverage": true,
+      "note": "Vinh Long field experience for yam-policy aliases khoai mo/khoai tu; economic outcomes and timing are explicitly regional."
+    },
+    {
+      "source": "https://utgardens.tennessee.edu/thailand-giant-elephant-ear-will-get-all-your-neighbors-talking-and-gawking/",
+      "source_type": "extension", "crop_keys": ["taro_stem"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "Same-species Colocasia/Leucocasia gigantea baseline for soil, light, container and wind exposure; not conflated with C. esculenta and not treated as a Vietnamese food-production protocol."
+    },
+    {
+      "source": "https://extension.oregonstate.edu/catalog/pub/em-9128-growing-vegetables-central-oregon?reference=catalog",
+      "source_type": "extension", "crop_keys": ["bok_choy"], "crop_groups": [],
+      "topics": ["cultivation", "harvest_postharvest"],
+      "stages": ["initial", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "The HTML bok-choy section is bounded between neighboring crops; Central Oregon calendar dates require local adaptation."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+      "source_type": "extension", "crop_keys": ["zucchini"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["northern_mountains", "red_river_delta", "north_central_coast"], "count_for_coverage": true,
+      "note": "Vietnamese northern-region Star Ol zucchini protocol split into bounded establishment, nutrition, care, cultural-IPM and harvest slices. Legacy pesticide names and chemical recommendations are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/nghe-an-loi-nhuan-60--80-trieu-dongha-tu-trong-sa-19309.html",
+      "source_type": "extension", "crop_keys": ["lemongrass"], "crop_groups": [],
+      "topics": ["climate_resilience", "harvest_postharvest"],
+      "stages": ["late_season"], "regions": ["north_central_coast"], "count_for_coverage": true,
+      "note": "Regional Nam Dan, Nghe An field case for culinary lemongrass on water-limited upland rice soil and first-harvest timing; explicitly not generalized as a national production protocol or conflated with Java citronella grass."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+      "source_type": "extension", "crop_keys": ["banana"], "crop_groups": [],
+      "topics": ["soil_water", "nutrition", "pest_disease_ipm"],
+      "stages": ["all"], "regions": ["southeast"], "count_for_coverage": true,
+      "note": "Vietnamese Panama-disease diagnosis and integrated management guidance associated with the Binh Phuoc extension service. The seed-treatment chemical span and the entire chemical-control section are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "source_type": "extension", "crop_keys": ["cassava"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["national"], "count_for_coverage": true,
+      "note": "Current Vietnamese replacement protocol for cassava mosaic disease, split into diagnosis/transmission, non-chemical prevention and age-based removal slices. The chemical-control section is excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/cong-nghe-bao-quan-sau-thu-hoach-rau-cu-qua-7674.html",
+      "source_type": "extension", "crop_keys": ["cucumber", "okra", "bitter_melon"], "crop_groups": [],
+      "topics": ["harvest_postharvest", "food_safety"],
+      "stages": ["late_season"], "regions": ["southeast"], "count_for_coverage": true,
+      "note": "Only the fruit-vegetable HTX handling slice for cucumber, okra and bitter melon is retained. Earlier chlorine, ozone and chemical-treatment content is excluded by markers and forbidden-term checks."
+    },
+    {
+      "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+      "source_type": "government", "crop_keys": ["asparagus"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["south_central_coast"], "count_for_coverage": true,
+      "note": "Hòa Vang, Da Nang local protocol split into establishment/care and harvest slices. The pest-control section and all product names are excluded."
+    },
+    {
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+      "source_type": "government", "crop_keys": ["carrot"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition", "harvest_postharvest"],
+      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Red River Delta carrot establishment, care and harvest slices. The broad pesticide sentence is excluded by section boundary and forbidden-term checks."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/VH021",
+      "source_type": "extension",
+      "crop_keys": [
+        "beetroot", "bell_pepper", "broccoli", "brussels_sprouts",
+        "cauliflower", "celery", "chard", "chayote", "chili",
+        "chinese_cabbage", "eggplant", "green_bean", "kale", "kohlrabi",
+        "leek", "lettuce", "melon", "onion", "pea", "potato", "pumpkin",
+        "shallot", "spinach", "spring_onion", "sweet_corn", "sweet_potato",
+        "turnip", "watermelon"
+      ],
+      "crop_groups": [],
+      "topics": ["cultivation", "harvest_postharvest"],
+      "stages": ["initial", "late_season"],
+      "regions": [],
+      "count_for_coverage": true,
+      "note": "Florida planting and harvest tables provide a second crop-specific extension source. The pesticide-product table is excluded, and dates, spacing and yields require local Vietnamese validation."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/CV272",
+      "source_type": "extension",
+      "crop_keys": ["basil", "chives", "dill", "marjoram", "mint", "parsley"],
+      "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["development"],
+      "regions": [],
+      "count_for_coverage": true,
+      "note": "A bounded Florida greenhouse and hydroponic herb-trial slice is used only as crop-specific production evidence; it is not a Vietnamese field protocol."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/FY1554",
+      "source_type": "extension",
+      "crop_keys": ["basil", "coriander", "dill"],
+      "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["initial", "development"],
+      "regions": [],
+      "count_for_coverage": true,
+      "note": "Scientific names keep cilantro/coriander distinct from parsley and culantro. Florida warm/cool-season labels require local Vietnamese validation."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+      "source_type": "extension", "crop_keys": ["amaranth"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [],
+      "count_for_coverage": true,
+      "note": "Florida vegetable-amaranth propagation, water and harvest slices; fertilizer, pest/disease and medical-use sections are excluded."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+      "source_type": "extension", "crop_keys": ["bok_choy"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [],
+      "count_for_coverage": true,
+      "note": "Bok choy is identified as Brassica rapa subsp. chinensis and split into establishment and harvest slices. Fertilizer rates and the chemical pest-control section are excluded."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1272",
+      "source_type": "extension", "crop_keys": ["bottle_gourd"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [],
+      "count_for_coverage": true,
+      "note": "Bottle-gourd/long-squash direct seeding, seedlings, soil, irrigation and vine training only; the fertilizer span is excluded."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1285",
+      "source_type": "extension", "crop_keys": ["luffa"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [],
+      "count_for_coverage": true,
+      "note": "Luffa climate, soil-water, transplanting, trellis and immature-harvest guidance; fertilizer rates and pest content are excluded."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+      "source_type": "extension", "crop_keys": ["yardlong_bean"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [],
+      "count_for_coverage": true,
+      "note": "Yardlong-bean soil, climate, planting, trellis and immature-pod harvest slices; fertilizer and pest-control content are excluded."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/CV125",
+      "source_type": "extension",
+      "crop_keys": ["soybean", "winged_bean", "yardlong_bean"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial", "development"], "regions": [],
+      "count_for_coverage": true,
+      "note": "The bounded Asian-legume paragraph covers edamame/soybean, winged bean and yardlong bean photoperiod, seed treatment, irrigation and support. All pesticide tables are excluded."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+      "source_type": "extension", "crop_keys": ["artichoke"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Peer-reviewed Utah Extension slices for globe-artichoke soil, plants, water and bud maturity. Fertilizer and pest sections are excluded, and Utah dates require Vietnamese adaptation."
+    },
+    {
+      "source": "https://extension.usu.edu/yardandgarden/research/garlic-in-the-garden",
+      "source_type": "extension", "crop_keys": ["garlic"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Peer-reviewed Utah Extension guidance identifies true garlic, planting material, water, maturity, curing and storage. Fertilizer and pest sections are excluded."
+    },
+    {
+      "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/culantro/",
+      "source_type": "extension", "crop_keys": ["culantro"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "UF/IFAS identifies Eryngium foetidum distinctly from cilantro and covers shade, moist soil, seed germination and selective leaf harvest."
+    },
+    {
+      "source": "https://plants.ces.ncsu.edu/plants/houttuynia-cordata/",
+      "source_type": "extension", "crop_keys": ["fish_mint"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "climate_resilience"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "NC State species-specific baseline for Houttuynia cordata moisture, shade, rhizome spread and containment; it is not presented as a Vietnamese commercial protocol."
+    },
+    {
+      "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/jicama/",
+      "source_type": "extension", "crop_keys": ["jicama"], "crop_groups": [],
+      "topics": ["cultivation", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "UF/IFAS identifies Pachyrhizus erosus, warm-season root development and the food-safety distinction that only roots are edible."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+      "source_type": "extension", "crop_keys": ["dragon_fruit", "mango"], "crop_groups": [],
+      "topics": ["soil_water", "climate_resilience"],
+      "stages": ["all"], "regions": [], "count_for_coverage": true,
+      "note": "Crop-specific UF/IFAS environmental tables for dragonfruit and mango temperature, wind, flooding, salinity and drought; Florida thresholds require local validation."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/MG055",
+      "source_type": "extension", "crop_keys": ["pineapple"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "climate_resilience"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "UF/IFAS pineapple climate-stress and vegetative-propagation slices. Fertilizer and pest-management sections are excluded and Florida values require adaptation."
+    },
+    {
+      "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/microgreens/",
+      "source_type": "extension", "crop_keys": ["perilla", "purslane", "watercress"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Explicitly limited to microgreen production for shiso/perilla, purslane and watercress; it is not evidence for mature-crop management."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/CV301",
+      "source_type": "extension", "crop_keys": ["galangal", "jute_mallow", "taro", "vietnamese_coriander"], "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["initial"], "regions": [], "count_for_coverage": true,
+      "note": "The bounded UF/IFAS Asian-vegetable table is used strictly for crop identity and alias disambiguation, not as a detailed production protocol."
+    },
+    {
+      "source": "https://www.icar.gov.in/en/training-agro-technological-practices-sustainable-black-pepper-production",
+      "source_type": "government", "crop_keys": ["pepper"], "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "ICAR-IISR evidence for black-pepper scientific cultivation, planting material, nursery techniques and varietal diversity; no chemical dose is retained."
+    },
+    {
+      "source": "https://ask.ifas.ufl.edu/publication/HS1276",
+      "source_type": "extension", "crop_keys": ["chrysanthemum_greens"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "UF/IFAS identifies Tong Hao/Glebionis coronaria/Tan O and covers soil, temperature, sowing and one-time versus repeated harvest. Fertilizer text is excluded."
+    },
+    {
+      "source": "https://horticulture.ucdavis.edu/sites/g/files/dgvnsk1816/files/extension_material_files/Bates_Strengthening_Informal_Indigenous_Seed_Systems.pdf",
+      "source_type": "extension", "crop_keys": ["katuk", "wild_betel"], "crop_groups": [],
+      "topics": ["cultivation", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "A bounded UC Davis Horticulture Innovation Lab table identifies edible shoots/leaves and cutting or division propagation for Sauropus androgynus and Piper sarmentosum."
+    },
+    {
+      "source": "https://greenu.miami.edu/_assets/pdf/cg-katuk.pdf",
+      "source_type": "extension", "crop_keys": ["katuk"], "crop_groups": [],
+      "topics": ["cultivation", "harvest_postharvest"],
+      "stages": ["development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "University of Miami crop card for Sauropus androgynus planting/harvest season and rapidly growing tender tips; Miami seasonality is not generalized to Vietnam."
+    },
+    {
+      "source": "https://plants.ces.ncsu.edu/plants/centella-asiatica/",
+      "source_type": "extension", "crop_keys": ["pennywort"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "food_safety"],
+      "stages": ["initial", "development"], "regions": [], "count_for_coverage": true,
+      "note": "NC State identifies Centella asiatica distinctly from other pennyworts and covers propagation, moist soil, edible leaves and heavy-metal uptake risk."
+    },
+    {
+      "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+      "source_type": "extension", "crop_keys": ["lotus_root", "mung_bean", "winter_melon"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Bounded Purdue Extension table rows identify Vigna radiata, Benincasa hispida and Nelumbo nucifera with establishment and maturity/harvest context; US dates require local adaptation."
+    },
+    {
+      "source": "https://hgic.clemson.edu/factsheet/peanut/",
+      "source_type": "extension", "crop_keys": ["peanut"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "development", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Clemson Extension slices cover Arachis hypogaea pegging, establishment, soil, maturity indicators, digging, curing and mold avoidance. Fertilizer and pesticide sections are excluded."
+    },
+    {
+      "source": "https://icar.gov.in/sites/default/files/2025-12/October_2025%20Indian%20Farming.pdf",
+      "source_type": "government", "crop_keys": ["mung_bean"], "crop_groups": [],
+      "topics": ["cultivation", "climate_resilience"],
+      "stages": ["initial", "late_season"], "regions": [], "count_for_coverage": true,
+      "note": "ICAR-IIPR bounded evidence for short-duration, disease-resistant mungbean varieties, regional adaptation and relative maturity. The subsequent field section mentioning insecticides is excluded."
+    },
+    {
+      "source": "https://www.uog.edu/_resources/files/extension/Crop_Chart_6_23_16.pdf",
+      "source_type": "extension", "crop_keys": ["yam"], "crop_groups": [],
+      "topics": ["cultivation"],
+      "stages": ["initial"], "regions": [], "count_for_coverage": true,
+      "note": "University of Guam Extension crop chart distinguishes D. esculenta, D. alata and D. rotundata with local selections and planting windows; Guam dates require local adaptation."
+    },
+    {
+      "source": "https://ir4.cals.ncsu.edu/fooduse/Crop%20Grouping/Type%202%20Vegetable%20Commodity%20Groups%202017.pdf",
+      "source_type": "international_organization", "crop_keys": ["taro_stem"], "crop_groups": [],
+      "topics": ["food_safety"],
+      "stages": ["late_season"], "regions": [], "count_for_coverage": true,
+      "note": "Bounded Codex commodity-classification rows identify taro stems/Colocasia esculenta and zuiki/Colocasia gigantea. It is not used as cultivation or pesticide-dose guidance."
+    }
+  ]
+}

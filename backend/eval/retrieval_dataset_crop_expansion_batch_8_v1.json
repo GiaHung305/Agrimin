@@ -1,0 +1,107 @@
+{
+  "version": "crop-expansion-batch-8-retrieval-v1",
+  "items": [
+    {
+      "id": "chard-not-spinach",
+      "category": "crop_expansion",
+      "query": "Cải cầu vồng Swiss chard, không phải cải bó xôi, cần gieo sâu, bố trí khoảng cách và tưới thế nào?",
+      "relevant_sources": ["Cải cầu vồng - gieo trồng, khoảng cách và tưới nước"]
+    },
+    {
+      "id": "kale-establishment",
+      "category": "crop_expansion",
+      "query": "Cải xoăn kale cần chuẩn bị cây giống, khoảng cách và duy trì ẩm ra sao?",
+      "relevant_sources": ["Cải xoăn kale - gieo trồng, khoảng cách và tưới nước"]
+    },
+    {
+      "id": "lemongrass-division-water",
+      "category": "crop_expansion",
+      "query": "Cây sả lemongrass nhân giống bằng tách bụi và quản lý nước như thế nào?",
+      "relevant_sources": ["Sả - nhân giống, trồng và quản lý nước"]
+    },
+    {
+      "id": "turnip-not-radish",
+      "category": "crop_expansion",
+      "query": "Củ cải turnip Brassica rapa, không phải radish, gieo hạt và tưới để tránh củ nứt hoặc xơ ra sao?",
+      "relevant_sources": ["Củ cải turnip - gieo hạt, khoảng cách và tưới nước"]
+    },
+    {
+      "id": "watercress-wet-medium",
+      "category": "crop_expansion",
+      "query": "Xà lách xoong watercress nhân giống bằng hạt hoặc hom và giữ môi trường nước bão hòa như thế nào?",
+      "relevant_sources": ["Xà lách xoong - nhân giống và duy trì môi trường nước"]
+    },
+    {
+      "id": "leek-not-spring-onion",
+      "category": "crop_expansion",
+      "query": "Tỏi tây leek Allium ampeloprasum, không phải hành lá, cần cây giống, khoảng cách và tưới sâu ra sao?",
+      "relevant_sources": ["Tỏi tây leek - cây giống, khoảng cách và tưới nước"]
+    },
+    {
+      "id": "zucchini-summer-squash",
+      "category": "crop_expansion",
+      "query": "Bí ngòi zucchini thuộc summer squash cần gieo, bố trí cây và tưới thế nào để hạn chế thối quả?",
+      "relevant_sources": ["Bí ngòi zucchini - gieo trồng, khoảng cách và tưới"]
+    },
+    {
+      "id": "brussels-sprouts-establishment",
+      "category": "crop_expansion",
+      "query": "Cải Brussels trồng từ hạt hoặc cây con, bố trí khoảng cách và giữ ẩm thế nào để mầm không nứt?",
+      "relevant_sources": ["Cải Brussels - cây giống, khoảng cách và tưới nước"]
+    },
+    {
+      "id": "purslane-soil-light",
+      "category": "crop_expansion",
+      "query": "Rau sam Portulaca oleracea cần loại đất, ánh sáng và độ ẩm nào khi trồng trong vườn hoặc chậu?",
+      "relevant_sources": ["Rau sam - đất, ánh sáng và quản lý ẩm"]
+    },
+    {
+      "id": "purslane-harvest",
+      "category": "crop_expansion",
+      "query": "Rau sam nên cắt thu hoạch khi thân non dài bao nhiêu, trước khi ra hoa và lặp lại sau bao lâu?",
+      "relevant_sources": ["Rau sam - thời điểm và cách thu hoạch"]
+    },
+    {
+      "id": "galangal-not-ginger",
+      "category": "crop_expansion",
+      "query": "Riềng galangal, không phải gừng hay nghệ, trồng thân rễ trong đất hoặc giá thể và tưới ra sao?",
+      "relevant_sources": ["Riềng - trồng thân rễ, giá thể và tưới"]
+    },
+    {
+      "id": "parsley-not-coriander",
+      "category": "crop_expansion",
+      "query": "Mùi tây parsley Petroselinum crispum, không phải rau mùi coriander, có thời vụ, khoảng cách và độ sâu gieo nào?",
+      "relevant_sources": ["Mùi tây parsley - thời vụ, khoảng cách và độ sâu gieo"]
+    },
+    {
+      "id": "mung-bean-establishment",
+      "category": "crop_expansion",
+      "query": "Đậu xanh mung bean cần chuẩn bị đất, chọn giống, gieo hạt và tỉa cây con thế nào?",
+      "relevant_sources": ["Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng"]
+    },
+    {
+      "id": "lotus-root-propagation",
+      "category": "crop_expansion",
+      "query": "Sen lấy củ cần chọn củ giống, đặt hom và chuẩn bị đáy ao giữ nước như thế nào?",
+      "relevant_sources": ["Sen lấy củ - nhân giống và chuẩn bị ao đất"]
+    },
+    {
+      "id": "yam-vinh-long",
+      "category": "crop_expansion",
+      "query": "Khoai mỡ yam ở Mang Thít Vĩnh Long chọn giống, quản lý nước, luân canh lúa và thu hoạch ra sao?",
+      "relevant_sources": ["Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch"]
+    },
+    {
+      "id": "taro-stem-not-taro",
+      "category": "crop_expansion",
+      "query": "Dọc mùng Colocasia gigantea, không phải khoai môn Colocasia esculenta, cần đất, ánh sáng và chắn gió ra sao?",
+      "relevant_sources": ["Dọc mùng Colocasia gigantea - đất, ánh sáng và chắn gió"]
+    },
+    {
+      "id": "bok-choy-not-napa",
+      "category": "crop_expansion",
+      "query": "Cải thìa bok choy pak choi, không phải cải thảo napa, gieo trực tiếp, tỉa cây và thu hoạch thế nào?",
+      "relevant_sources": ["Cải thìa bok choy - gieo trực tiếp và thu hoạch"]
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+{
+  "version": "crop-expansion-batch-7-retrieval-v1",
+  "items": [
+    {
+      "id": "jute-mallow-establishment",
+      "category": "crop_expansion",
+      "query": "Rau đay gieo vào tháng nào, chọn đất, làm luống và bố trí mật độ ra sao?",
+      "relevant_sources": ["Rau đay - thời vụ, đất, luống và mật độ"]
+    },
+    {
+      "id": "jute-mallow-water-care",
+      "category": "crop_expansion",
+      "query": "Rau đay cần tưới giữ ẩm, chống úng và tỉa cây như thế nào?",
+      "relevant_sources": ["Rau đay - tưới nước, chăm sóc và tỉa cây"]
+    },
+    {
+      "id": "chinese-cabbage-establishment",
+      "category": "crop_expansion",
+      "query": "Cải thảo cải bao an toàn có thời vụ, vườn ươm, loại đất và mật độ trồng như thế nào?",
+      "relevant_sources": ["Cải thảo an toàn - thời vụ, vườn ươm, đất và mật độ"]
+    },
+    {
+      "id": "chinese-cabbage-ipm",
+      "category": "crop_expansion",
+      "query": "Quản lý sâu tơ và bọ nhảy trên cải thảo bằng luân canh, thủ công và bẫy pheromone ra sao?",
+      "relevant_sources": ["Cải thảo an toàn - biện pháp IPM canh tác và vật lý"]
+    },
+    {
+      "id": "chrysanthemum-greens-sowing",
+      "category": "crop_expansion",
+      "query": "Chuẩn bị khay, đất, lượng hạt và gieo cải cúc tần ô trong thùng xốp thế nào?",
+      "relevant_sources": ["Cải cúc tần ô - chuẩn bị khay và gieo hạt"]
+    },
+    {
+      "id": "chrysanthemum-greens-care",
+      "category": "crop_expansion",
+      "query": "Cải cúc tần ô trong khay cần tưới vào lúc nào và chăm sóc gốc cây ra sao?",
+      "relevant_sources": ["Cải cúc tần ô - tưới và chăm sóc trong khay"]
+    },
+    {
+      "id": "beetroot-bat-xat",
+      "category": "crop_expansion",
+      "query": "Củ dền đỏ ở Bát Xát cần xử lý đất, tưới thoát nước và bố trí thời vụ thu hoạch ra sao?",
+      "relevant_sources": ["Củ dền đỏ Bát Xát - đất, nước, thời vụ và thu hoạch"]
+    },
+    {
+      "id": "winged-bean-growth",
+      "category": "crop_expansion",
+      "query": "Đậu rồng đậu khế nảy mầm sau bao lâu và khi nào bắt đầu cho thu hoạch trái?",
+      "relevant_sources": ["Đậu rồng - sinh trưởng và thời gian cho quả"]
+    },
+    {
+      "id": "winged-bean-snail",
+      "category": "crop_expansion",
+      "query": "Ốc ma gây hại đậu rồng lúc nào và có thể bắt, gom hoặc bẫy vật lý thế nào?",
+      "relevant_sources": ["Đậu rồng - nhận biết và quản lý ốc ma bằng biện pháp vật lý"]
+    },
+    {
+      "id": "shallot-drought-ipm",
+      "category": "crop_expansion",
+      "query": "Mô hình hành tím Ninh Thuận làm rãnh, tiết kiệm nước chống hạn và dùng bẫy dính IPM thế nào?",
+      "relevant_sources": ["Hành tím Ninh Thuận - tiết kiệm nước, chống hạn và IPM"]
+    },
+    {
+      "id": "jicama-soil-bed",
+      "category": "crop_expansion",
+      "query": "Củ đậu củ sắn nước hợp loại đất nào, làm luống và cân đối dinh dưỡng ra sao?",
+      "relevant_sources": ["Củ đậu - chọn đất, làm luống và dinh dưỡng"]
+    },
+    {
+      "id": "jicama-pruning-water",
+      "category": "crop_expansion",
+      "query": "Củ đậu cần bấm ngọn, tỉa hoa và giữ ẩm tránh úng như thế nào để phát triển củ?",
+      "relevant_sources": ["Củ đậu - bấm ngọn, tỉa hoa và quản lý nước"]
+    }
+  ]
+}

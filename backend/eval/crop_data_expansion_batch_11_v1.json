@@ -1,0 +1,129 @@
+{
+  "version": "crop-data-expansion-batch-11-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn"
+  ],
+  "documents": [
+    {
+      "title": "Chuối - nhận diện và đường lây bệnh héo vàng lá Panama",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+      "source_type": "extension",
+      "author": "Cục Bảo vệ thực vật; Viện Nghiên cứu Rau quả; Viện Bảo vệ thực vật; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-03-19T15:21:00+07:00",
+      "format": "html_markers",
+      "start_marker": "Nhằm chủ động phòng chống bệnh héo vàng lá chuối",
+      "end_marker": "4. Biện pháp phòng, chống bệnh héo vàng lá chuối",
+      "content_prefix": "Tên cây và phạm vi: chuối, banana, Musa spp. Tài liệu nhận diện bệnh héo vàng lá chuối, còn gọi là héo rũ Panama, do Fusarium oxysporum f. sp. cubense; không áp dụng triệu chứng hoặc đường lây này cho cây khác. Cần phân biệt vàng lá từ lá già, đổi màu bó mạch và thân giả vẫn đứng với thiếu dinh dưỡng hoặc úng nước trước khi kết luận.",
+      "crop_keys": ["banana"],
+      "required_terms": ["héo rũ Panama", "Triệu chứng", "bó mạch", "Phương thức lây lan"],
+      "min_chars": 1000
+    },
+    {
+      "title": "Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+      "source_type": "extension",
+      "author": "Cục Bảo vệ thực vật; Viện Nghiên cứu Rau quả; Viện Bảo vệ thực vật; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-03-19T15:21:00+07:00",
+      "format": "html_markers",
+      "start_marker": "4.1. Sử dụng giống sạch bệnh, giống kháng bệnh",
+      "end_marker": "4.4. Biện pháp hóa học",
+      "exclude_marker_ranges": [
+        {
+          "start_marker": "- Xử lý cây giống trước khi trồng:",
+          "end_marker": "b) Bón phân"
+        }
+      ],
+      "content_prefix": "Tên cây và phạm vi: chuối, banana, Musa spp. Lát IPM này ưu tiên giống sạch hoặc kháng bệnh, quản lý đất và nước, dinh dưỡng cân đối, vệ sinh, luân canh và Trichoderma. Khuyến nghị nhúng giống bằng thuốc và toàn bộ mục biện pháp hóa học đã bị loại; không tự suy ra thuốc, nồng độ hoặc thời gian cách ly từ tài liệu này.",
+      "crop_keys": ["banana"],
+      "required_terms": ["giống sạch bệnh", "Quản lý nước", "Luân canh cây trồng", "Biện pháp sinh học"],
+      "forbidden_terms": ["Bordeaux", "Zineb", "Propiconazole", "Carbosulfan"],
+      "min_chars": 900
+    },
+    {
+      "title": "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "source_type": "extension",
+      "author": "Cục Bảo vệ thực vật; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2024-08-14T16:17:00+07:00",
+      "format": "html_markers",
+      "start_marker": "Quy trình kỹ thuật quản lý tổng hợp bệnh khảm lá sắn này",
+      "end_marker": "QUẢN LÝ TỔNG HỢP BỆNH KHẢM LÁ SẮN",
+      "content_prefix": "Tên cây và phạm vi: sắn, khoai mì, cassava, Manihot esculenta; không phải khoai lang, khoai tây hoặc củ sắn nước. Tài liệu hiện hành nhận diện bệnh khảm lá sắn do Begomovirus stanleyi và bọ phấn Bemisia tabaci truyền bệnh; cần đối chiếu biểu hiện trên lá, chồi, tuổi cây và nguồn hom trước khi kết luận.",
+      "crop_keys": ["cassava"],
+      "required_terms": ["Begomovirus stanleyi", "Triệu chứng", "Mức độ gây hại", "Phương thức lan truyền bệnh"],
+      "min_chars": 1100
+    },
+    {
+      "title": "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "source_type": "extension",
+      "author": "Cục Bảo vệ thực vật; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2024-08-14T16:17:00+07:00",
+      "format": "html_markers",
+      "start_marker": "1. Biện pháp phòng bệnh",
+      "end_marker": "- Biện pháp hóa học:",
+      "content_prefix": "Tên cây và phạm vi: sắn, khoai mì, cassava, Manihot esculenta. Lát phòng bệnh giữ kiểm soát hom giống và nguồn bệnh, giống kháng hoặc sạch bệnh, luân canh, chăm sóc nước-dinh dưỡng, bẫy dính vàng và thiên địch của bọ phấn. Mục hóa học đã bị loại; không tự suy ra hoạt chất hoặc lịch phun.",
+      "crop_keys": ["cassava"],
+      "required_terms": ["Kiểm soát nguồn bệnh", "giống sắn kháng bệnh", "Luân canh", "bẫy dính vàng", "Biện pháp sinh học"],
+      "forbidden_terms": ["Phun lần 1", "Phun lần 2", "Bốn đúng"],
+      "min_chars": 1000
+    },
+    {
+      "title": "Sắn - tiêu hủy cây khảm lá theo tuổi và xử lý tàn dư sau thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "source_type": "extension",
+      "author": "Cục Bảo vệ thực vật; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2024-08-14T16:17:00+07:00",
+      "format": "html_markers",
+      "start_marker": "2. Biện pháp trừ bệnh",
+      "end_marker": "BBT",
+      "content_prefix": "Tên cây và phạm vi: sắn, khoai mì, cassava, Manihot esculenta. Quyết định tiêu hủy phải dựa trên mức bệnh, khả năng cho năng suất và tuổi cây: cây non bệnh nặng khác với cây trên hai tháng tuổi; thân cây bệnh sau thu hoạch không được dùng làm hom giống.",
+      "crop_keys": ["cassava"],
+      "required_terms": ["Chỉ tiêu hủy cây bị bệnh nặng", "Từ khi trồng đến 2 tháng tuổi", "Cây sắn trên 2 tháng tuổi", "sau khi thu hoạch củ"],
+      "min_chars": 550
+    },
+    {
+      "title": "Khoai tây vụ đông miền Bắc - phân biệt sương mai, héo vàng, héo xanh và xoăn lá",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "source_type": "extension",
+      "author": "Vũ Thị Thủy; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-10-09T14:03:00+07:00",
+      "format": "html_markers",
+      "start_marker": "b) Bệnh hại:",
+      "end_marker": "Biện pháp phòng trừ tổng hợp với các loại bệnh hại:",
+      "content_prefix": "Tên cây và phạm vi: khoai tây, potato, Solanum tuberosum; không phải khoai lang, khoai môn hoặc sắn. Lát chẩn đoán cho vụ đông miền Bắc phân biệt sương mai, héo vàng do nấm, héo xanh do vi khuẩn và xoăn lá do virus bằng triệu chứng, bộ phận hại và điều kiện phát sinh; không dùng riêng một dấu hiệu để kết luận.",
+      "crop_keys": ["potato"],
+      "required_terms": ["Bệnh sương mai", "Bệnh héo vàng", "Bệnh héo xanh", "Bệnh xoăn lá"],
+      "min_chars": 900
+    },
+    {
+      "title": "Khoai tây vụ đông miền Bắc - IPM canh tác không dùng danh sách thuốc cũ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "source_type": "extension",
+      "author": "Vũ Thị Thủy; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-10-09T14:03:00+07:00",
+      "format": "html_markers",
+      "start_marker": "Biện pháp phòng trừ tổng hợp với các loại bệnh hại:",
+      "end_marker": "- Phòng trừ bằng thuốc hóa học:",
+      "content_prefix": "Tên cây và phạm vi: khoai tây, potato, Solanum tuberosum trong vụ đông miền Bắc. Lát IPM chỉ giữ luân canh, giống sạch bệnh, mật độ, phân hữu cơ hoai mục và cân đối dinh dưỡng, tránh gây vết thương, loại cây bệnh và vệ sinh sau thu hoạch. Danh sách thuốc cũ từ năm 2015 đã bị loại hoàn toàn.",
+      "crop_keys": ["potato"],
+      "required_terms": ["Luân canh", "giống sạch bệnh", "Bón cân đối NPK", "vệ sinh đồng ruộng"],
+      "forbidden_terms": ["Regent", "Ridomil", "nước rửa chén", "thuốc hóa học"],
+      "min_chars": 500
+    },
+    {
+      "title": "Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "source_type": "extension",
+      "author": "Vũ Thị Thủy; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-10-09T14:03:00+07:00",
+      "format": "html_markers",
+      "start_marker": "IV. THU HOẠCH VÀ BẢO QUẢN",
+      "end_marker": "Vũ Thị Thủy",
+      "content_prefix": "Tên cây và phạm vi: khoai tây, potato, Solanum tuberosum trong vụ đông miền Bắc. Chỉ báo lá vàng, ngừng tưới, thời tiết thu hoạch, phân loại và điều kiện bảo quản là hướng dẫn của nguồn năm 2015; phải ưu tiên loại bỏ củ thối hoặc xanh và điều chỉnh theo mục đích khoai thương phẩm hay khoai giống.",
+      "crop_keys": ["potato"],
+      "required_terms": ["80% số lá", "ngừng tưới nước", "phân loại củ", "Bảo quản khoai tây"],
+      "min_chars": 1000
+    }
+  ]
+}

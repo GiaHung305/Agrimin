@@ -1,0 +1,114 @@
+{
+  "version": "crop-data-expansion-batch-13-v1",
+  "allowed_domains": [
+    "ask.ifas.ufl.edu"
+  ],
+  "documents": [
+    {
+      "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+      "source": "https://ask.ifas.ufl.edu/publication/VH021",
+      "source_type": "extension",
+      "author": "University of Florida IFAS Extension",
+      "format": "html_markers",
+      "start_marker": "Table 1. Planting guide for Florida vegetables.",
+      "end_marker": "Table 3. Products currently labeled for insect and mite management in home vegetable gardens.",
+      "content_prefix": "Phạm vi đối chiếu tên cây: củ dền/beetroot (beets); ớt ngọt/bell pepper và ớt cay/chili (sweet and hot peppers); súp lơ xanh/broccoli; cải Brussels/brussels sprouts; súp lơ trắng/cauliflower; cần tây/celery; cải cầu vồng/chard (Swiss chard); su su/chayote; cải thảo/chinese cabbage; cà tím/eggplant; đậu cô ve/green bean (bush and pole beans); cải xoăn/kale; su hào/kohlrabi; tỏi tây/leek; xà lách/lettuce; dưa lưới/melon (cantaloupe and honeydew); hành tây/onion; đậu Hà Lan/pea; khoai tây/potato; bí đỏ/pumpkin; hành tím/shallot; rau bina/spinach; hành lá/spring onion; ngô ngọt/sweet corn; khoai lang/sweet potato; củ cải turnip; dưa hấu/watermelon. Bảng thuộc điều kiện Florida, Hoa Kỳ; ngày gieo, khoảng cách và năng suất chỉ là dữ liệu đối chiếu, không phải lịch canh tác hay định mức áp dụng trực tiếp tại Việt Nam. Cần hiệu chỉnh theo vùng khí hậu, giống, đất và khuyến cáo địa phương. Lát dữ liệu dừng trước bảng sản phẩm bảo vệ thực vật.",
+      "crop_keys": [
+        "beetroot",
+        "bell_pepper",
+        "broccoli",
+        "brussels_sprouts",
+        "cauliflower",
+        "celery",
+        "chard",
+        "chayote",
+        "chili",
+        "chinese_cabbage",
+        "eggplant",
+        "green_bean",
+        "kale",
+        "kohlrabi",
+        "leek",
+        "lettuce",
+        "melon",
+        "onion",
+        "pea",
+        "potato",
+        "pumpkin",
+        "shallot",
+        "spinach",
+        "spring_onion",
+        "sweet_corn",
+        "sweet_potato",
+        "turnip",
+        "watermelon"
+      ],
+      "required_terms": [
+        "Beets",
+        "Broccoli",
+        "Chinese cabbage",
+        "Peppers",
+        "Swiss chard",
+        "Potatoes, sweet",
+        "Watermelon",
+        "Chayote"
+      ],
+      "forbidden_terms": [
+        "Malathion",
+        "carbaryl",
+        "mancozeb",
+        "Imidacloprid",
+        "Products currently labeled for insect and mite management"
+      ],
+      "min_chars": 8000
+    },
+    {
+      "title": "UF IFAS Florida - thử nghiệm nhà kính cho sáu loại rau gia vị",
+      "source": "https://ask.ifas.ufl.edu/publication/CV272",
+      "source_type": "extension",
+      "author": "University of Florida IFAS Extension",
+      "format": "html_markers",
+      "start_marker": "The University of Florida conducted studies at Live Oak",
+      "end_marker": "The quality of 'Galia' fruit grown hydroponically",
+      "content_prefix": "Phạm vi định danh: húng quế/basil; thì là/dill; kinh giới Tây/marjoram; mùi tây/parsley; bạc hà/mint; hẹ/chives. Đây là kết quả thử nghiệm rau gia vị trong nhà kính và hệ thủy canh tại Florida, Hoa Kỳ, không phải quy trình đồng ruộng Việt Nam. Mùi tây/parsley trong tài liệu này không phải ngò rí/coriander và không phải ngò gai/culantro. Chỉ dùng để đối chiếu khả năng sản xuất và lựa chọn cây; mọi lịch vụ, môi trường và kỹ thuật phải được xác minh tại địa phương.",
+      "crop_keys": ["basil", "chives", "dill", "marjoram", "mint", "parsley"],
+      "required_terms": [
+        "basil",
+        "dill",
+        "sweet marjoram",
+        "parsley",
+        "mints and chives"
+      ],
+      "forbidden_terms": [
+        "pesticide",
+        "insecticide",
+        "fungicide"
+      ],
+      "min_chars": 650
+    },
+    {
+      "title": "UF IFAS Florida - nhận diện mùa vụ húng quế ngò rí và thì là",
+      "source": "https://ask.ifas.ufl.edu/publication/FY1554",
+      "source_type": "extension",
+      "author": "University of Florida IFAS Extension",
+      "format": "html_markers",
+      "start_marker": "Basil (Ocimum basilicum) is a warm-season herb",
+      "end_marker": "Roselle hibiscus",
+      "content_prefix": "Phạm vi định danh: húng quế/basil (Ocimum basilicum), ngò rí/coriander hay cilantro (Coriandrum sativum), và thì là/dill (Anethum graveolens). Cilantro trong tài liệu là ngò rí/coriander, không phải mùi tây/parsley và không phải ngò gai/culantro. Mùa nóng/mùa mát được mô tả cho Florida, Hoa Kỳ, chỉ dùng đối chiếu sinh thái và không chuyển nguyên lịch vụ sang Việt Nam.",
+      "crop_keys": ["basil", "coriander", "dill"],
+      "required_terms": [
+        "Ocimum basilicum",
+        "Coriandrum sativum",
+        "Anethum graveolens",
+        "warm-season herb",
+        "cool season"
+      ],
+      "forbidden_terms": [
+        "pesticide",
+        "insecticide",
+        "fungicide"
+      ],
+      "min_chars": 750
+    }
+  ]
+}

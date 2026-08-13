@@ -1,0 +1,65 @@
+{
+  "version": "crop-expansion-batch-4-retrieval-v1",
+  "items": [
+    {
+      "id": "fish-mint-cultivation",
+      "category": "crop_expansion",
+      "query": "Trồng diếp cá cần chuẩn bị đất, giống và khoảng cách như thế nào?",
+      "relevant_sources": ["Cẩm nang trồng diếp cá an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "mint-cultivation",
+      "category": "crop_expansion",
+      "query": "Cách trồng húng cây húng lủi bằng cành và chăm sóc sau trồng",
+      "relevant_sources": ["Cẩm nang trồng húng cây an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "basil-cultivation",
+      "category": "crop_expansion",
+      "query": "Húng quế gieo hạt, làm đất và trồng với khoảng cách bao nhiêu?",
+      "relevant_sources": ["Cẩm nang trồng húng quế an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "marjoram-cultivation",
+      "category": "crop_expansion",
+      "query": "Kinh giới nên trồng mùa nào, gieo hạt hay giâm cành và chuẩn bị đất ra sao?",
+      "relevant_sources": ["Cẩm nang trồng kinh giới an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "culantro-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng ngò gai mùi tàu từ chuẩn bị đất đến mật độ trồng",
+      "relevant_sources": ["Cẩm nang trồng ngò gai an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "vietnamese-coriander-cultivation",
+      "category": "crop_expansion",
+      "query": "Rau răm thích hợp với đất thế nào và giâm cành ra sao?",
+      "relevant_sources": ["Cẩm nang trồng rau răm an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "perilla-cultivation",
+      "category": "crop_expansion",
+      "query": "Tía tô trồng quanh năm bằng hạt như thế nào và khoảng cách bao nhiêu?",
+      "relevant_sources": ["Cẩm nang trồng tía tô an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "dill-cultivation",
+      "category": "crop_expansion",
+      "query": "Thì là trồng vào tháng nào, làm đất và gieo hạt thế nào?",
+      "relevant_sources": ["Cẩm nang trồng thì là an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "wild-betel-cultivation",
+      "category": "crop_expansion",
+      "query": "Lá lốt chọn cành giống, giâm cành và bố trí khoảng cách trồng ra sao?",
+      "relevant_sources": ["Cẩm nang trồng lá lốt an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "coriander-cultivation",
+      "category": "crop_expansion",
+      "query": "Ngò rí rau mùi cần xử lý hạt và gieo trồng như thế nào?",
+      "relevant_sources": ["Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất"]
+    }
+  ]
+}

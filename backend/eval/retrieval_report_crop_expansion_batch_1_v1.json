@@ -1,0 +1,564 @@
+{
+  "dataset_version": "crop-expansion-batch-1-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 0.9933100657623489,
+    "mean_latency_ms": 4049.4825
+  },
+  "items": [
+    {
+      "id": "bitter-melon-cultivation",
+      "query": "Kỹ thuật trồng khổ qua an toàn trong mùa mưa như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng khổ qua an toàn - phần cây khổ qua"
+      ],
+      "latency_ms": 8046.14,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ed899013-c139-44c3-b37b-f44d5340633d",
+          "chunk_id": "c1cfb931-f894-4c44-a85e-7ed0ab87ee55",
+          "title": "Cẩm nang trồng khổ qua an toàn - phần cây khổ qua",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01639344262295082,
+          "rerank_score": 0.8607274889945984,
+          "relevant": true
+        },
+        {
+          "document_id": "da11f7dd-39ca-4445-ab80-0f742a6d7dd8",
+          "chunk_id": "30cf0d2d-97f5-49a6-bbb2-225a58ba7f48",
+          "title": "Tài liệu hướng dẫn thực hành VietSHEP về an toàn thực phẩm trong trồng trọt — phần 05/20 (trang 29-35)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/09/hangweb/4-viet-shep-attp-out.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.0028570392169058323,
+          "relevant": false
+        },
+        {
+          "document_id": "1dbc1f0c-13df-4088-b473-02bcc0078ead",
+          "chunk_id": "087429a1-cc48-40db-a6f0-edd1784bc58c",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 03/04 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.0004614490026142448,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cucumber-soil-water",
+      "query": "Dưa leo cần chuẩn bị đất và tưới nước ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng dưa leo an toàn - phần cây dưa leo"
+      ],
+      "latency_ms": 6035.12,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e2ee9bf6-d306-46db-b596-edd35b1c5e6a",
+          "chunk_id": "b5927446-2b61-43db-a068-cbf2ea68d3b1",
+          "title": "Cẩm nang trồng dưa leo an toàn - phần cây dưa leo",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.7990990877151489,
+          "relevant": true
+        },
+        {
+          "document_id": "e2ee9bf6-d306-46db-b596-edd35b1c5e6a",
+          "chunk_id": "2b98c80d-f2cd-4260-9f19-c4503ad6f380",
+          "title": "Cẩm nang trồng dưa leo an toàn - phần cây dưa leo",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03331730769230769,
+          "rerank_score": 0.706475019454956,
+          "relevant": true
+        },
+        {
+          "document_id": "4293bcdc-f0cd-4fbd-8f17-24218823fc4e",
+          "chunk_id": "0f1a6ec1-a323-48b0-b3b3-94aa43594dc0",
+          "title": "Cẩm nang trồng bí đao an toàn - phần cây bí đao",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033254269449715365,
+          "rerank_score": 0.027056584134697914,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "winter-melon-cultivation",
+      "query": "Hướng dẫn kỹ thuật trồng và chăm sóc bí đao an toàn",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng bí đao an toàn - phần cây bí đao"
+      ],
+      "latency_ms": 4290.86,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4293bcdc-f0cd-4fbd-8f17-24218823fc4e",
+          "chunk_id": "0f1a6ec1-a323-48b0-b3b3-94aa43594dc0",
+          "title": "Cẩm nang trồng bí đao an toàn - phần cây bí đao",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01639344262295082,
+          "rerank_score": 0.27299895882606506,
+          "relevant": true
+        },
+        {
+          "document_id": "3ca144f7-8091-40e2-87b9-7a53f325d4aa",
+          "chunk_id": "0b8e101c-81f9-4b14-bc86-21f826811a56",
+          "title": "Sách hướng dẫn kỹ thuật trồng thanh long — phần 01/05 (trang 1-7)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_thanh_long_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.011388488113880157,
+          "relevant": false
+        },
+        {
+          "document_id": "86a70389-dc8e-4aa0-ad50-2ce4b31682db",
+          "chunk_id": "9c53a2d4-c95a-4dc7-909b-5b751d8ecbc3",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 02/04 (trang 8-14)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.00013832779950462282,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pumpkin-care",
+      "query": "Cách chăm sóc bí đỏ để cây phát triển tốt",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng bí đỏ an toàn - phần cây bí đỏ"
+      ],
+      "latency_ms": 3483.68,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "1009fb32-e2d5-491b-ba72-7ef996576164",
+          "chunk_id": "0b429416-6321-4198-9df0-e25e0e285ba8",
+          "title": "Cẩm nang trồng bí đỏ an toàn - phần cây bí đỏ",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01639344262295082,
+          "rerank_score": 0.7701995372772217,
+          "relevant": true
+        },
+        {
+          "document_id": "7b63c0b9-e976-41b2-9dd1-a3d9f1f89bac",
+          "chunk_id": "926fff7b-0c7f-4a6c-a491-3ea230330103",
+          "title": "Sách hướng dẫn kỹ thuật trồng thanh long — phần 05/05 (trang 29-32)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_thanh_long_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.031818181818181815,
+          "rerank_score": 0.002792389364913106,
+          "relevant": false
+        },
+        {
+          "document_id": "86a70389-dc8e-4aa0-ad50-2ce4b31682db",
+          "chunk_id": "9c53a2d4-c95a-4dc7-909b-5b751d8ecbc3",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 02/04 (trang 8-14)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.0004057959886267781,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "bottle-gourd-trellis",
+      "query": "Kỹ thuật làm giàn và chăm sóc cây bầu",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng bầu an toàn - phần cây bầu"
+      ],
+      "latency_ms": 3606.32,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "32cf3b64-c96f-4f24-84fd-994262575b09",
+          "chunk_id": "5ca4d35c-e83b-4875-a344-597564451fd8",
+          "title": "Cẩm nang trồng bầu an toàn - phần cây bầu",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.8090201616287231,
+          "relevant": true
+        },
+        {
+          "document_id": "32cf3b64-c96f-4f24-84fd-994262575b09",
+          "chunk_id": "2c1c6b7e-6853-4a23-b64a-175c349097c2",
+          "title": "Cẩm nang trồng bầu an toàn - phần cây bầu",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.7664267420768738,
+          "relevant": true
+        },
+        {
+          "document_id": "09ed8c3e-f3a7-44a3-95f9-7b72f37c5ced",
+          "chunk_id": "5120246f-134a-494f-a181-4bd593fadad1",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 03/10 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03307692307692307,
+          "rerank_score": 0.5727275013923645,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "chili-care",
+      "query": "Quy trình trồng và chăm sóc cây ớt an toàn",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng ớt an toàn - phần cây ớt"
+      ],
+      "latency_ms": 3433.79,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "2c274245-d3bf-4ad9-a6bd-221dd083e540",
+          "chunk_id": "97cf225e-7b1e-4aab-87c2-7a5a396b6288",
+          "title": "Cẩm nang trồng ớt an toàn - phần cây ớt",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9188537001609802,
+          "relevant": true
+        },
+        {
+          "document_id": "2c274245-d3bf-4ad9-a6bd-221dd083e540",
+          "chunk_id": "06f8fd87-a972-4114-a1dd-d5ff1363fe7f",
+          "title": "Cẩm nang trồng ớt an toàn - phần cây ớt",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03282201405152225,
+          "rerank_score": 0.8431478142738342,
+          "relevant": true
+        },
+        {
+          "document_id": "e2ee9bf6-d306-46db-b596-edd35b1c5e6a",
+          "chunk_id": "b5927446-2b61-43db-a068-cbf2ea68d3b1",
+          "title": "Cẩm nang trồng dưa leo an toàn - phần cây dưa leo",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032959850606909424,
+          "rerank_score": 0.029902957379817963,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "eggplant-disease",
+      "query": "Cà tím thường bị sâu bệnh gì và chăm sóc thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng cà tím an toàn - phần cây cà tím"
+      ],
+      "latency_ms": 3355.48,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "400c37b3-ff82-4bcb-b190-24bc2a41a579",
+          "chunk_id": "33fa17d8-ea23-4f55-a253-a64bc04a68bb",
+          "title": "Cẩm nang trồng cà tím an toàn - phần cây cà tím",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "fusion_low_rerank_confidence",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.01447237003594637,
+          "relevant": true
+        },
+        {
+          "document_id": "ad66fbfb-98b5-4228-a17e-48f2ea8fa926",
+          "chunk_id": "ac7b6327-8edb-4625-8821-f4f8570fa415",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 06/10 (trang 36-42)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "fusion_low_rerank_confidence",
+          "fusion_score": 0.03423707440100883,
+          "rerank_score": 0.026320472359657288,
+          "relevant": false
+        },
+        {
+          "document_id": "22bc9319-ddfa-4c27-a119-97be7ecad158",
+          "chunk_id": "aeed7e58-6154-47ad-b194-d43a074c95a0",
+          "title": "Sách hướng dẫn tái canh cà phê",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+          "ranking_strategy": "fusion_low_rerank_confidence",
+          "fusion_score": 0.033699902248289344,
+          "rerank_score": 0.012409506365656853,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "green-bean-cultivation",
+      "query": "Kỹ thuật trồng đậu cô ve an toàn",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng đậu cô ve và đậu đũa an toàn"
+      ],
+      "latency_ms": 3153.48,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "f68347e5-8f03-4e16-bcf6-f587e1a2f346",
+          "chunk_id": "ee43dbf5-f4c0-431c-b24e-fdfcaa80eab8",
+          "title": "Cẩm nang trồng đậu cô ve và đậu đũa an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01639344262295082,
+          "rerank_score": 0.9774810075759888,
+          "relevant": true
+        },
+        {
+          "document_id": "9e352e6e-eee7-44ac-b3a0-37ec439ae40b",
+          "chunk_id": "a2be6699-465e-44de-ab89-1072cbc92219",
+          "title": "Tài liệu hướng dẫn thực hành VietSHEP về an toàn thực phẩm trong trồng trọt — phần 08/20 (trang 50-56)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/09/hangweb/4-viet-shep-attp-out.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03280885780885781,
+          "rerank_score": 0.07187026739120483,
+          "relevant": false
+        },
+        {
+          "document_id": "caf656f2-0a76-4d61-883d-5f71c1867acc",
+          "chunk_id": "8c9342d4-e3c0-40b6-aaa8-dcd8e2038e02",
+          "title": "Tài liệu hướng dẫn thực hành VietSHEP về an toàn thực phẩm trong trồng trọt — phần 19/20 (trang 127-133)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/09/hangweb/4-viet-shep-attp-out.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.013966686092317104,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "yardlong-bean-cultivation",
+      "query": "Kỹ thuật trồng đậu đũa và phòng sâu đục quả",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng đậu cô ve và đậu đũa an toàn"
+      ],
+      "latency_ms": 3609.79,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "f68347e5-8f03-4e16-bcf6-f587e1a2f346",
+          "chunk_id": "ee43dbf5-f4c0-431c-b24e-fdfcaa80eab8",
+          "title": "Cẩm nang trồng đậu cô ve và đậu đũa an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8503158092498779,
+          "relevant": true
+        },
+        {
+          "document_id": "e2eabbcd-8825-42e0-8cda-b6bac0958644",
+          "chunk_id": "dd0ce1bd-234e-47e1-82f7-5b380c218135",
+          "title": "Sách hướng dẫn kỹ thuật trồng thanh long — phần 03/05 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_thanh_long_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033353365384615384,
+          "rerank_score": 0.6017029285430908,
+          "relevant": false
+        },
+        {
+          "document_id": "22bc9319-ddfa-4c27-a119-97be7ecad158",
+          "chunk_id": "9a774c13-cc66-42c7-9d44-8dfef40eb48c",
+          "title": "Sách hướng dẫn tái canh cà phê",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.00932272244244814,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "water-spinach-vietgap",
+      "query": "Trồng rau muống nước an toàn theo VietGAP cần làm gì?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng rau muống nước an toàn"
+      ],
+      "latency_ms": 2962.19,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ac06dc49-0ad3-4d28-9150-a3fc099e466a",
+          "chunk_id": "6923d532-f5c2-49c3-950d-154876cf7036",
+          "title": "Cẩm nang trồng rau muống nước an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-nang-trong-rau-muong-nuoc.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03355762172742843,
+          "rerank_score": 0.9818605184555054,
+          "relevant": true
+        },
+        {
+          "document_id": "ac06dc49-0ad3-4d28-9150-a3fc099e466a",
+          "chunk_id": "344586c5-fdba-4fc1-8bb0-2dbcf595b0da",
+          "title": "Cẩm nang trồng rau muống nước an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-nang-trong-rau-muong-nuoc.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.9338117837905884,
+          "relevant": true
+        },
+        {
+          "document_id": "ac06dc49-0ad3-4d28-9150-a3fc099e466a",
+          "chunk_id": "5f9c210d-12fa-43e6-a20b-bad3ff3d9e1b",
+          "title": "Cẩm nang trồng rau muống nước an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-nang-trong-rau-muong-nuoc.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034725474889409316,
+          "rerank_score": 0.0014374041929841042,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "mustard-greens-organic",
+      "query": "Kỹ thuật trồng cải xanh theo hướng hữu cơ",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ"
+      ],
+      "latency_ms": 3216.7,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9673529267311096,
+          "relevant": true
+        },
+        {
+          "document_id": "74a8bcec-b5f4-4524-bde8-6707c80d9703",
+          "chunk_id": "3f53211e-9da3-4927-b226-b6c1ced5d418",
+          "title": "Trích yếu: Phối hợp phân hữu cơ và vô cơ trong sản xuất rau an toàn phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03289412313432836,
+          "rerank_score": 0.46049049496650696,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "57dc5f0d-dd16-405d-9cb8-c087188c052a",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.16535909473896027,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "lettuce-organic",
+      "query": "Cách gieo trồng xà lách hữu cơ an toàn",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ"
+      ],
+      "latency_ms": 3400.24,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.6739867925643921,
+          "relevant": true
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "57dc5f0d-dd16-405d-9cb8-c087188c052a",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.18741025030612946,
+          "relevant": true
+        },
+        {
+          "document_id": "2c274245-d3bf-4ad9-a6bd-221dd083e540",
+          "chunk_id": "fa7bafe1-7936-4572-b55a-0085543041d7",
+          "title": "Cẩm nang trồng ớt an toàn - phần cây ớt",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03261768082663605,
+          "rerank_score": 0.0448162741959095,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "version": "crop-expansion-batch-10-retrieval-v1",
+  "items": [
+    {
+      "id": "tomato-nutrition-not-eggplant",
+      "category": "crop_depth_lookalike",
+      "query": "Cà chua tomato, không phải cà tím, ở vùng rau an toàn phía Bắc có lịch bón hữu cơ và bón thúc từ hồi xanh, ra hoa đến thu quả đợt đầu thế nào?",
+      "relevant_sources": ["Cà chua an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng"]
+    },
+    {
+      "id": "cucumber-nutrition-not-zucchini",
+      "category": "crop_depth_lookalike",
+      "query": "Dưa chuột dưa leo cucumber, không phải bí ngòi zucchini, ở phía Bắc bón lót và bón thúc theo hồi xanh, ra hoa, đậu quả ra sao?",
+      "relevant_sources": ["Dưa chuột an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng"]
+    },
+    {
+      "id": "water-spinach-nutrition-not-spinach",
+      "category": "crop_depth_lookalike",
+      "query": "Rau muống water spinach Ipomoea aquatica, không phải cải bó xôi spinach, ở phía Bắc bón hữu cơ và bón sau mỗi lần thu hoạch thế nào?",
+      "relevant_sources": ["Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch"]
+    },
+    {
+      "id": "malabar-spinach-nutrition-not-water-spinach",
+      "category": "crop_depth_lookalike",
+      "query": "Mồng tơi Malabar spinach Basella alba, không phải rau muống water spinach, ở phía Bắc bón lót và bón sau thu hoạch ra sao?",
+      "relevant_sources": ["Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch"]
+    },
+    {
+      "id": "cabbage-nutrition-not-napa",
+      "category": "crop_depth_lookalike",
+      "query": "Bắp cải cabbage, không phải cải thảo napa cabbage, ở phía Bắc bón hữu cơ và chia bón thúc qua hồi xanh, trải lá bàng, bắt đầu cuốn thế nào?",
+      "relevant_sources": ["Bắp cải an toàn phía Bắc - phân hữu cơ và lịch bón cuốn bắp"]
+    },
+    {
+      "id": "radish-nutrition-not-turnip",
+      "category": "crop_depth_lookalike",
+      "query": "Củ cải radish Raphanus sativus, không phải turnip Brassica rapa, ở phía Bắc chia bón thúc khi sinh trưởng thân lá, bắt đầu tạo củ và củ phát triển ra sao?",
+      "relevant_sources": ["Củ cải radish an toàn phía Bắc - phân hữu cơ và lịch bón tạo củ"]
+    }
+  ]
+}

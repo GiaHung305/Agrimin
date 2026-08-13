@@ -1,0 +1,209 @@
+{
+  "version": "crop-data-expansion-batch-15-v1",
+  "documents": 16,
+  "sources": 11,
+  "ready": 0,
+  "already_active": 16,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "USU Extension - atiso dat nuoc va trong cay",
+      "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+      "crop_keys": [
+        "artichoke"
+      ],
+      "characters": 1789,
+      "content_sha256": "743fdcfb4f8d19c468fa74765a38048d5b556a92281c812ea11d0f3facbf49cb",
+      "source_sha256": "9fcf8cfad6d59e320be1ebe4c85f00a56c5e3a1d5676178bd511c1d650e81fc2",
+      "status": "already_active",
+      "document_id": "458ef95d-bca8-4576-b9fc-3daa0bd2e5d5"
+    },
+    {
+      "title": "USU Extension - atiso nhan biet luc thu nu",
+      "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+      "crop_keys": [
+        "artichoke"
+      ],
+      "characters": 683,
+      "content_sha256": "f0ae07c3cc1b5ac7edcefc2fed784e8907e99d025c5ecd7eff5e4b47b2a47543",
+      "source_sha256": "9fcf8cfad6d59e320be1ebe4c85f00a56c5e3a1d5676178bd511c1d650e81fc2",
+      "status": "already_active",
+      "document_id": "23a86bed-88c5-4758-bee4-d0008b8ad8b6"
+    },
+    {
+      "title": "USU Extension - toi giong dat trong va nuoc",
+      "source": "https://extension.usu.edu/yardandgarden/research/garlic-in-the-garden",
+      "crop_keys": [
+        "garlic"
+      ],
+      "characters": 2481,
+      "content_sha256": "3695c291541d414f5dd8a719c55c7f4275977d4a4fb347d19e7feee3ae3656bf",
+      "source_sha256": "b236e78bc0092c01db87dda08b3c68d4f3d639b6a32b20fe4cb8f1bc9e1e2039",
+      "status": "already_active",
+      "document_id": "0fca6569-a45c-41fa-9792-262a78b00c35"
+    },
+    {
+      "title": "USU Extension - toi nhan biet chin va bao quan",
+      "source": "https://extension.usu.edu/yardandgarden/research/garlic-in-the-garden",
+      "crop_keys": [
+        "garlic"
+      ],
+      "characters": 947,
+      "content_sha256": "67ff4a3ec4674ff05b3b8291ebed34426240dcc80ec30116e2ca7b52bb4e5e8c",
+      "source_sha256": "b236e78bc0092c01db87dda08b3c68d4f3d639b6a32b20fe4cb8f1bc9e1e2039",
+      "status": "already_active",
+      "document_id": "331cb14b-a9b2-461c-bf22-669542f0d086"
+    },
+    {
+      "title": "UF IFAS - ngo gai phan biet ngo ri va cach trong",
+      "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/culantro/",
+      "crop_keys": [
+        "culantro"
+      ],
+      "characters": 3307,
+      "content_sha256": "da67dd8e2c0dbc9066db51141eead6406f7ceb133c146cff57242abef8473b7b",
+      "source_sha256": "6dbd44a549cd7821135649f1927ae2a3fb55ac16b4fdc1d12aecdaa74a821bd4",
+      "status": "already_active",
+      "document_id": "2da66b43-65cb-4d12-afa8-b4142d7f4ff4"
+    },
+    {
+      "title": "NC State Extension - diep ca dat am va kiem soat lan",
+      "source": "https://plants.ces.ncsu.edu/plants/houttuynia-cordata/",
+      "crop_keys": [
+        "fish_mint"
+      ],
+      "characters": 2231,
+      "content_sha256": "3f6a70cf3fc4f2ba1a8d3e3537af381250ecffc8deda428c96edb34012469101",
+      "source_sha256": "5f4e06f894afecf73b80fc99207d12e06762b2ce453730482265719809205bad",
+      "status": "already_active",
+      "document_id": "4a9c9100-2856-40e7-87ef-7365ad2131e5"
+    },
+    {
+      "title": "UF IFAS - cu dau dinh danh thoi gian tao cu va an toan",
+      "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/jicama/",
+      "crop_keys": [
+        "jicama"
+      ],
+      "characters": 1667,
+      "content_sha256": "f4839a065793b97939be6b8489d9e20cd0927da257ce25652f1b835174f896e4",
+      "source_sha256": "d1ea5b4446dc9a6b09e544d2c6002c2b2b14d32a57548194b7501bfe94fee4c6",
+      "status": "already_active",
+      "document_id": "1bf8531a-c614-4829-8398-b961c44e9154"
+    },
+    {
+      "title": "UF IFAS - thanh long nguong nhiet gio ngap han man",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+      "crop_keys": [
+        "dragon_fruit"
+      ],
+      "characters": 1120,
+      "content_sha256": "fb85dadf322a3c5d869c30492186c395b45b2bcc6d3bf6186cdb72cafd2688c2",
+      "source_sha256": "e048dbec155f11c1bc10786a85b1cfa1fea0a06232e18cc55fa5c7d0ddf6bb0d",
+      "status": "already_active",
+      "document_id": "44d31743-f311-4b48-acb4-e565c4009af6"
+    },
+    {
+      "title": "UF IFAS - xoai nguong nhiet gio ngap han man",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+      "crop_keys": [
+        "mango"
+      ],
+      "characters": 721,
+      "content_sha256": "a987e0bdef2e26e2649b4777e3b61193a9af74ec34aac3c824e8955770333ade",
+      "source_sha256": "e048dbec155f11c1bc10786a85b1cfa1fea0a06232e18cc55fa5c7d0ddf6bb0d",
+      "status": "already_active",
+      "document_id": "2f6dbdf9-a146-448c-b8be-49b9496dfb66"
+    },
+    {
+      "title": "UF IFAS - dua khom thich nghi nhiet han ngap va gio",
+      "source": "https://ask.ifas.ufl.edu/publication/MG055",
+      "crop_keys": [
+        "pineapple"
+      ],
+      "characters": 2116,
+      "content_sha256": "1178eafb20593a9d46686a0652591421c61613b6f4ce4477ced281a9bc574003",
+      "source_sha256": "a1a327f2f3b5dea768800119d8d76e32d5404b09d766e9946fa81a70bf9ddd0e",
+      "status": "already_active",
+      "document_id": "bab462d6-fdd8-4fcc-9154-496c348fc0b0"
+    },
+    {
+      "title": "UF IFAS - dua khom vat lieu nhan giong dat va thoat nuoc",
+      "source": "https://ask.ifas.ufl.edu/publication/MG055",
+      "crop_keys": [
+        "pineapple"
+      ],
+      "characters": 1665,
+      "content_sha256": "a93520db38a817a2a6368563680617ebfe6a5f769d90b89df3df6833e3e8cd00",
+      "source_sha256": "a1a327f2f3b5dea768800119d8d76e32d5404b09d766e9946fa81a70bf9ddd0e",
+      "status": "already_active",
+      "document_id": "ae5511b5-9bd3-4006-8359-ed46b2075ae7"
+    },
+    {
+      "title": "UF IFAS - tia to rau sam cai xoong o giai doan rau mam",
+      "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/microgreens/",
+      "crop_keys": [
+        "perilla",
+        "purslane",
+        "watercress"
+      ],
+      "characters": 3816,
+      "content_sha256": "40782fd2ba3e97a302d1ff61c8b1285d3934d0ffe02b501a511b28a00ec5b49a",
+      "source_sha256": "f4d6fa37cd3c9febfc466391aa9998640fea1e583a5784ff46161265a239c706",
+      "status": "already_active",
+      "document_id": "730c474a-402b-4027-834f-418c2a4de214"
+    },
+    {
+      "title": "UF IFAS - tieu chuan hoa ten rau chau A de tranh nham cay",
+      "source": "https://ask.ifas.ufl.edu/publication/CV301",
+      "crop_keys": [
+        "galangal",
+        "jute_mallow",
+        "taro",
+        "vietnamese_coriander"
+      ],
+      "characters": 3714,
+      "content_sha256": "d6d4d70b4847b13eaa9c78500c037fad9730945cf1a3b803ac07ce22a9961967",
+      "source_sha256": "efd2c320680f6b83946fb4d0713f657763009c57b5f9181e483414f95c2ada5b",
+      "status": "already_active",
+      "document_id": "da2b1ad7-60d2-4356-b72c-5bb8703a8f06"
+    },
+    {
+      "title": "ICAR IISR - ho tieu den dao tao canh tac va vat lieu giong",
+      "source": "https://www.icar.gov.in/en/training-agro-technological-practices-sustainable-black-pepper-production",
+      "crop_keys": [
+        "pepper"
+      ],
+      "characters": 4065,
+      "content_sha256": "ef531291be8f8abc8d987d5f2dd3f1f64fdb5b037bd90bb004364f426ce47866",
+      "source_sha256": "955c1752d2dd5ba6c520b5c7b46ef6b73ce32774985305bfc895a8b05bec9044",
+      "status": "already_active",
+      "document_id": "da33c985-1052-4642-8ab6-d8ef6b6e71e5"
+    },
+    {
+      "title": "UF IFAS - tan o dinh danh dat nhiet gieo va trong",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1276",
+      "crop_keys": [
+        "chrysanthemum_greens"
+      ],
+      "characters": 4595,
+      "content_sha256": "75b85a33c21c56ee62005a169fc33454a2e691a04a94ebf97c0f9d0902552484",
+      "source_sha256": "c57d105fcdaf977dc471f3d9e39fc98ab23615a4fa03587cc8d9e8579d5920cf",
+      "status": "already_active",
+      "document_id": "13fc142a-b175-4862-b5fd-732c36a662fb"
+    },
+    {
+      "title": "UF IFAS - tan o chi bao va phuong phap thu",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1276",
+      "crop_keys": [
+        "chrysanthemum_greens"
+      ],
+      "characters": 779,
+      "content_sha256": "a80fc20c816ff2aae24bd0d3e6570c1a6f1d5bf31f2f54294de0bc04169637dd",
+      "source_sha256": "c57d105fcdaf977dc471f3d9e39fc98ab23615a4fa03587cc8d9e8579d5920cf",
+      "status": "already_active",
+      "document_id": "37e004b7-4b0d-4766-a09b-2fcc9208381e"
+    }
+  ]
+}

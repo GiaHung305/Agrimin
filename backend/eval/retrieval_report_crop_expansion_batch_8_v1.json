@@ -1,0 +1,789 @@
+{
+  "dataset_version": "crop-expansion-batch-8-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 6268.46294117647
+  },
+  "items": [
+    {
+      "id": "chard-not-spinach",
+      "query": "Cải cầu vồng Swiss chard, không phải cải bó xôi, cần gieo sâu, bố trí khoảng cách và tưới thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cải cầu vồng - gieo trồng, khoảng cách và tưới nước"
+      ],
+      "latency_ms": 20404.52,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e5ea040b-0fc0-4600-a5e6-f84f1c7a8c2f",
+          "chunk_id": "c8df1435-924f-43bf-ad80-db798bea8ece",
+          "title": "Cải cầu vồng - gieo trồng, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/swiss-chard-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8581627607345581,
+          "relevant": true
+        },
+        {
+          "document_id": "b77b5520-627e-428d-90b6-e7f46c714676",
+          "chunk_id": "81fb663a-a2d9-48c8-9092-d07e4f5f04d9",
+          "title": "Cải thảo an toàn - thời vụ, vườn ươm, đất và mật độ",
+          "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03274672187715666,
+          "rerank_score": 0.051532499492168427,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03280885780885781,
+          "rerank_score": 0.030621565878391266,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "kale-establishment",
+      "query": "Cải xoăn kale cần chuẩn bị cây giống, khoảng cách và duy trì ẩm ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cải xoăn kale - gieo trồng, khoảng cách và tưới nước"
+      ],
+      "latency_ms": 11014.1,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ce9ca066-a424-40a5-9533-53c999eca565",
+          "chunk_id": "b60ef4bc-b3d5-4de8-9bf9-2c386b25d175",
+          "title": "Cải xoăn kale - gieo trồng, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/kale-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8272949457168579,
+          "relevant": true
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "655520a3-d882-4a9c-a5d2-b12a3d6e1c1e",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032539682539682535,
+          "rerank_score": 0.15583445131778717,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03384176587301587,
+          "rerank_score": 0.003824974177405238,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "lemongrass-division-water",
+      "query": "Cây sả lemongrass nhân giống bằng tách bụi và quản lý nước như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Sả - nhân giống, trồng và quản lý nước"
+      ],
+      "latency_ms": 12619.31,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "620dcf38-c7c6-4e8d-b561-2e6ee791b987",
+          "chunk_id": "d893b773-b091-418e-9fbd-36c15a81da6c",
+          "title": "Sả - nhân giống, trồng và quản lý nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/lemongrass-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9946370720863342,
+          "relevant": true
+        },
+        {
+          "document_id": "f6719415-6a33-4dd9-8dee-dbd789605a88",
+          "chunk_id": "af6deb84-6dad-408e-bb4a-948be04c0fd4",
+          "title": "Sả Nam Đàn Nghệ An - thích nghi đất thiếu nước và mốc thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/nghe-an-loi-nhuan-60--80-trieu-dongha-tu-trong-sa-19309.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.19343556463718414,
+          "relevant": false
+        },
+        {
+          "document_id": "5fdc7c45-734a-4d41-98be-7250491180a1",
+          "chunk_id": "5492812e-46e9-40d5-b00f-5cf72dbccb9f",
+          "title": "Sen lấy củ - nhân giống và chuẩn bị ao đất",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-sen-lay-cu-1532.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033699902248289344,
+          "rerank_score": 0.03628141060471535,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "turnip-not-radish",
+      "query": "Củ cải turnip Brassica rapa, không phải radish, gieo hạt và tưới để tránh củ nứt hoặc xơ ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Củ cải turnip - gieo hạt, khoảng cách và tưới nước"
+      ],
+      "latency_ms": 9656.35,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "33c19820-60e2-44a8-8163-1baa2385ebd8",
+          "chunk_id": "812ffd72-0a18-47fe-9391-70c9e7232ca8",
+          "title": "Củ cải turnip - gieo hạt, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/rutabagas-and-turnips-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.31846824288368225,
+          "relevant": true
+        },
+        {
+          "document_id": "00fbacb8-c941-4bcd-8e4c-eb7d3eec4190",
+          "chunk_id": "fa32d770-49f7-4a35-a823-29f6fbaf3d25",
+          "title": "Kỹ thuật trồng cải củ - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-cai-cu-4939.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03205357142857143,
+          "rerank_score": 0.1433137059211731,
+          "relevant": false
+        },
+        {
+          "document_id": "00fbacb8-c941-4bcd-8e4c-eb7d3eec4190",
+          "chunk_id": "6821aa0a-a165-4690-a1c2-46905a1b3d62",
+          "title": "Kỹ thuật trồng cải củ - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-cai-cu-4939.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.12023308128118515,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "watercress-wet-medium",
+      "query": "Xà lách xoong watercress nhân giống bằng hạt hoặc hom và giữ môi trường nước bão hòa như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Xà lách xoong - nhân giống và duy trì môi trường nước"
+      ],
+      "latency_ms": 5375.99,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "134fe3e3-09ed-499e-80a5-30ccbc76b2d5",
+          "chunk_id": "3120ca83-0c99-4fa0-9a4f-6c5944250861",
+          "title": "Xà lách xoong - nhân giống và duy trì môi trường nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/watercress-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9701179265975952,
+          "relevant": true
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.008145138621330261,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "57dc5f0d-dd16-405d-9cb8-c087188c052a",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032834101382488476,
+          "rerank_score": 0.0015507650095969439,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "leek-not-spring-onion",
+      "query": "Tỏi tây leek Allium ampeloprasum, không phải hành lá, cần cây giống, khoảng cách và tưới sâu ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Tỏi tây leek - cây giống, khoảng cách và tưới nước"
+      ],
+      "latency_ms": 5283.04,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e5d08859-6e78-4a23-a93f-a0f240ce8dd7",
+          "chunk_id": "e0c517af-1d41-40f3-8e44-bbaf6f059b4b",
+          "title": "Tỏi tây leek - cây giống, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/leeks-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9322982430458069,
+          "relevant": true
+        },
+        {
+          "document_id": "152f0a67-0759-4e1e-a7ea-10747e5cdb35",
+          "chunk_id": "f84478ba-fd7f-47f5-a8e2-8178aa5cbabc",
+          "title": "Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-toi-951.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.33050331473350525,
+          "relevant": false
+        },
+        {
+          "document_id": "1efce99c-0208-4500-bc3e-e490ce5a1cda",
+          "chunk_id": "5af6732b-4366-47ff-b291-9a019ff6a2bf",
+          "title": "Kỹ thuật trồng, chăm sóc, thu hoạch và để giống hẹ",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/nghien-cuu-trien-khai/ky-thuat-trong-he-1036.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032539682539682535,
+          "rerank_score": 0.23766928911209106,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "zucchini-summer-squash",
+      "query": "Bí ngòi zucchini thuộc summer squash cần gieo, bố trí cây và tưới thế nào để hạn chế thối quả?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Bí ngòi zucchini - gieo trồng, khoảng cách và tưới"
+      ],
+      "latency_ms": 3847.9,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "d18ecb50-cd0f-47fd-b079-1f7bef392d4c",
+          "chunk_id": "5248d42b-b928-4eb9-b230-b11ec74d01fe",
+          "title": "Bí ngòi zucchini - gieo trồng, khoảng cách và tưới",
+          "source": "https://extension.usu.edu/yardandgarden/research/summer-and-winter-squash-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9752242565155029,
+          "relevant": true
+        },
+        {
+          "document_id": "753561a6-8ea7-4e79-92de-61cae66903bf",
+          "chunk_id": "6386a7e7-888d-4fa8-9677-232f31db81b3",
+          "title": "Bí ngòi miền Bắc - mật độ, độ ẩm và thụ phấn bổ sung",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.9452778100967407,
+          "relevant": false
+        },
+        {
+          "document_id": "7965cb3a-00f3-4014-ab95-01abc8c05f33",
+          "chunk_id": "df2ce154-789c-4ba5-b416-02b4083db104",
+          "title": "Bí ngòi miền Bắc - nhận diện giống, thời vụ và gieo cây con",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.6306468844413757,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "brussels-sprouts-establishment",
+      "query": "Cải Brussels trồng từ hạt hoặc cây con, bố trí khoảng cách và giữ ẩm thế nào để mầm không nứt?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cải Brussels - cây giống, khoảng cách và tưới nước"
+      ],
+      "latency_ms": 3838.53,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "10518fb3-0c11-45ce-9252-28e3239aecbb",
+          "chunk_id": "6a7f92c4-e851-4aa3-8e98-06eedb3d2c3e",
+          "title": "Cải Brussels - cây giống, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/brussel-sprouts-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8183862566947937,
+          "relevant": true
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "bcd2e038-63ac-47c6-be78-a09b5e3344c3",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.22976306080818176,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.031818181818181815,
+          "rerank_score": 0.06069337576627731,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "purslane-soil-light",
+      "query": "Rau sam Portulaca oleracea cần loại đất, ánh sáng và độ ẩm nào khi trồng trong vườn hoặc chậu?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Rau sam - đất, ánh sáng và quản lý ẩm"
+      ],
+      "latency_ms": 2974.71,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "49f80a89-93c7-4b5c-9206-ad093b142a8e",
+          "chunk_id": "c52cf491-185a-4a1d-a241-4bd1997fbeac",
+          "title": "Rau sam - đất, ánh sáng và quản lý ẩm",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9842930436134338,
+          "relevant": true
+        },
+        {
+          "document_id": "4cfd02b8-246c-499d-8ad2-1ab85b638458",
+          "chunk_id": "b72d045a-69e4-48ae-ab96-4d690ea07617",
+          "title": "Rau sam - thời điểm và cách thu hoạch",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.12900374829769135,
+          "relevant": false
+        },
+        {
+          "document_id": "21a1f3de-089b-43a7-a145-e244b3209902",
+          "chunk_id": "e5648ec8-3912-483a-8eab-41805df8320b",
+          "title": "Dọc mùng Colocasia gigantea - đất, ánh sáng và chắn gió",
+          "source": "https://utgardens.tennessee.edu/thailand-giant-elephant-ear-will-get-all-your-neighbors-talking-and-gawking/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.006401415914297104,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "purslane-harvest",
+      "query": "Rau sam nên cắt thu hoạch khi thân non dài bao nhiêu, trước khi ra hoa và lặp lại sau bao lâu?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Rau sam - thời điểm và cách thu hoạch"
+      ],
+      "latency_ms": 3292.76,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4cfd02b8-246c-499d-8ad2-1ab85b638458",
+          "chunk_id": "b72d045a-69e4-48ae-ab96-4d690ea07617",
+          "title": "Rau sam - thời điểm và cách thu hoạch",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01639344262295082,
+          "rerank_score": 0.9159494638442993,
+          "relevant": true
+        },
+        {
+          "document_id": "330e5795-3b82-49b3-9be8-d15a68481a2d",
+          "chunk_id": "905f2ce1-8ce4-4471-bc45-8ea00edf5432",
+          "title": "Cẩm nang trồng rau răm an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03423707440100883,
+          "rerank_score": 0.0021294269245117903,
+          "relevant": false
+        },
+        {
+          "document_id": "060047aa-2053-4272-ba86-e7d057778244",
+          "chunk_id": "5f1aade6-8086-421b-90fc-b180f0b0fb4c",
+          "title": "Kỹ thuật trồng và chăm sóc cây rau ngót - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-rau-ngot-18184.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.00015690932923462242,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "galangal-not-ginger",
+      "query": "Riềng galangal, không phải gừng hay nghệ, trồng thân rễ trong đất hoặc giá thể và tưới ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Riềng - trồng thân rễ, giá thể và tưới"
+      ],
+      "latency_ms": 3527.02,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "dd418618-dc5a-4225-9c5e-07c2dcf3521c",
+          "chunk_id": "47ce0ea6-8dbb-4e18-b35a-24b4a21628ed",
+          "title": "Riềng - trồng thân rễ, giá thể và tưới",
+          "source": "https://ask.ifas.ufl.edu/publication/EP638",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9389947056770325,
+          "relevant": true
+        },
+        {
+          "document_id": "b330a3f1-4240-484a-b791-ec02236a740a",
+          "chunk_id": "c1ec274f-f93c-46a7-92a5-fa92023ad8c6",
+          "title": "Trích yếu: Trồng xen sầu riêng trong vườn cà phê vối",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-xen-cay-sau-rieng-trong-vuon-ca-phe-voi-17952.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.0029891475569456816,
+          "relevant": false
+        },
+        {
+          "document_id": "4cd0e2d1-c27c-4278-a8ff-723cab07c7a7",
+          "chunk_id": "fc2b86df-e32a-4036-b82c-0a9af0349bdc",
+          "title": "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-gung-721.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.01362768653780222,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "parsley-not-coriander",
+      "query": "Mùi tây parsley Petroselinum crispum, không phải rau mùi coriander, có thời vụ, khoảng cách và độ sâu gieo nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Mùi tây parsley - thời vụ, khoảng cách và độ sâu gieo"
+      ],
+      "latency_ms": 3982.52,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e96422a9-8fc9-48c3-b5ab-b97cc0ca6982",
+          "chunk_id": "9bbf5be5-f61a-4f33-a0ac-cf0c6c245286",
+          "title": "Mùi tây parsley - thời vụ, khoảng cách và độ sâu gieo",
+          "source": "https://ask.ifas.ufl.edu/publication/CV294?downloadOpen=true",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9357215762138367,
+          "relevant": true
+        },
+        {
+          "document_id": "7abc89b7-9d7e-46d0-afc2-c6de7e06d7fc",
+          "chunk_id": "57a96ddb-fd12-4118-82e7-4d8b89fa989d",
+          "title": "Kỹ thuật trồng cần tây - đất, gieo hạt, mật độ, tưới và thu hoạch",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/trong-rau-can-tay-don-gian-cho-nang-suat-cao-1956.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03159203980099502,
+          "rerank_score": 0.008028351701796055,
+          "relevant": false
+        },
+        {
+          "document_id": "dcfabd60-c31f-461a-b4b3-c6bf2a4846d7",
+          "chunk_id": "842d4d29-d2e2-486c-95ce-6d2e0ede6d68",
+          "title": "Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.9709270596504211,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mung-bean-establishment",
+      "query": "Đậu xanh mung bean cần chuẩn bị đất, chọn giống, gieo hạt và tỉa cây con thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng"
+      ],
+      "latency_ms": 4767.42,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "f40b084f-7f6d-4a7e-ae17-d051cef18bbb",
+          "chunk_id": "1f6c2a66-f8aa-47dd-a5e6-0d3b4f504fe5",
+          "title": "Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-va-cham-soc-cay-dau-xanh-863.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9961398243904114,
+          "relevant": true
+        },
+        {
+          "document_id": "f40b084f-7f6d-4a7e-ae17-d051cef18bbb",
+          "chunk_id": "12a49bba-415b-4f14-891f-605cd592bad9",
+          "title": "Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-va-cham-soc-cay-dau-xanh-863.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03347376023110255,
+          "rerank_score": 0.7823485732078552,
+          "relevant": true
+        },
+        {
+          "document_id": "266d51c5-c905-49ce-ae31-5d9ffe9003b4",
+          "chunk_id": "71e57da2-c45f-4f8f-b3d7-2050d0d8badf",
+          "title": "Tài liệu tập huấn kỹ thuật trồng đậu bắp - giống và gieo trồng",
+          "source": "https://snnmt.vinhlong.gov.vn/Portals/1041/TaiLieuKyThuat/4_Tailieu_THKN_Kythuattrongdaubap_duyetFinal.pdf?ver=jhpds4TvJO3Bhiyfspttow%3D%3D",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.4711509346961975,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "lotus-root-propagation",
+      "query": "Sen lấy củ cần chọn củ giống, đặt hom và chuẩn bị đáy ao giữ nước như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Sen lấy củ - nhân giống và chuẩn bị ao đất"
+      ],
+      "latency_ms": 4146.45,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "5fdc7c45-734a-4d41-98be-7250491180a1",
+          "chunk_id": "5492812e-46e9-40d5-b00f-5cf72dbccb9f",
+          "title": "Sen lấy củ - nhân giống và chuẩn bị ao đất",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-sen-lay-cu-1532.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9261901378631592,
+          "relevant": true
+        },
+        {
+          "document_id": "558a63db-d788-428c-812a-dbf0228a00d0",
+          "chunk_id": "39f48a65-e78f-40fa-8200-f61ef8b3040c",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 04/04 (trang 22-28)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.12463195621967316,
+          "relevant": false
+        },
+        {
+          "document_id": "00fbacb8-c941-4bcd-8e4c-eb7d3eec4190",
+          "chunk_id": "6821aa0a-a165-4690-a1c2-46905a1b3d62",
+          "title": "Kỹ thuật trồng cải củ - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-cai-cu-4939.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.030952380952380953,
+          "rerank_score": 0.0009524475899524987,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "yam-vinh-long",
+      "query": "Khoai mỡ yam ở Mang Thít Vĩnh Long chọn giống, quản lý nước, luân canh lúa và thu hoạch ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch"
+      ],
+      "latency_ms": 3657.33,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "148f424e-6179-4e09-becd-5830bfa9e713",
+          "chunk_id": "39db0302-7d2a-45f1-9948-c505e279124d",
+          "title": "Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/vinh-long-tuan-thu-ky-thuat-canh-tac--canh-dong-khoai-mo-ngay-cang-mo-rong-19139.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9889427423477173,
+          "relevant": true
+        },
+        {
+          "document_id": "148f424e-6179-4e09-becd-5830bfa9e713",
+          "chunk_id": "3eda2880-967f-4caa-939b-0f57aa825bcb",
+          "title": "Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/vinh-long-tuan-thu-ky-thuat-canh-tac--canh-dong-khoai-mo-ngay-cang-mo-rong-19139.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03393300248138958,
+          "rerank_score": 0.7540140151977539,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "cbd99705-e0a0-4dec-9b07-e02711334ec7",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.06073163449764252,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "taro-stem-not-taro",
+      "query": "Dọc mùng Colocasia gigantea, không phải khoai môn Colocasia esculenta, cần đất, ánh sáng và chắn gió ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Dọc mùng Colocasia gigantea - đất, ánh sáng và chắn gió"
+      ],
+      "latency_ms": 3561.84,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "21a1f3de-089b-43a7-a145-e244b3209902",
+          "chunk_id": "e5648ec8-3912-483a-8eab-41805df8320b",
+          "title": "Dọc mùng Colocasia gigantea - đất, ánh sáng và chắn gió",
+          "source": "https://utgardens.tennessee.edu/thailand-giant-elephant-ear-will-get-all-your-neighbors-talking-and-gawking/",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9981589913368225,
+          "relevant": true
+        },
+        {
+          "document_id": "19256690-17e6-4b23-9486-01eedc780dc0",
+          "chunk_id": "a39bd7c9-ebb1-43e6-9ca4-61c4d5c5b5a0",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 02/10 (trang 8-14)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03359375,
+          "rerank_score": 0.028640661388635635,
+          "relevant": false
+        },
+        {
+          "document_id": "c1faa64b-cb40-44f6-b574-c3438ae31940",
+          "chunk_id": "971ed734-1049-45a8-b3d5-bb5092aa4f6b",
+          "title": "Kỹ thuật trồng khoai môn - giống, đất, phân bón, mật độ và chăm sóc",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-khoai-mon-842.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.7621648907661438,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "bok-choy-not-napa",
+      "query": "Cải thìa bok choy pak choi, không phải cải thảo napa, gieo trực tiếp, tỉa cây và thu hoạch thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cải thìa bok choy - gieo trực tiếp và thu hoạch"
+      ],
+      "latency_ms": 4614.08,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "d431a956-3f1d-407c-a0c8-8ed80b74e2d2",
+          "chunk_id": "2566a740-7f79-479f-816b-84283f4bc3ce",
+          "title": "Cải thìa bok choy - gieo trực tiếp và thu hoạch",
+          "source": "https://extension.oregonstate.edu/catalog/pub/em-9128-growing-vegetables-central-oregon?reference=catalog",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9570154547691345,
+          "relevant": true
+        },
+        {
+          "document_id": "b77b5520-627e-428d-90b6-e7f46c714676",
+          "chunk_id": "81fb663a-a2d9-48c8-9092-d07e4f5f04d9",
+          "title": "Cải thảo an toàn - thời vụ, vườn ươm, đất và mật độ",
+          "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.23712816834449768,
+          "relevant": false
+        },
+        {
+          "document_id": "df001466-81c0-4c7f-b447-2f04bacf6849",
+          "chunk_id": "30e5efd2-89b8-4859-bf64-eba1b149682f",
+          "title": "Cải thảo an toàn - biện pháp IPM canh tác và vật lý",
+          "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.13999398052692413,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

@@ -1,0 +1,156 @@
+{
+  "version": "crop-data-expansion-batch-7-v1",
+  "documents": 12,
+  "sources": 7,
+  "ready": 0,
+  "already_active": 12,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Rau đay - thời vụ, đất, luống và mật độ",
+      "source": "https://agro.gov.vn/vn/tID11789_ky-thuat-trong-rau-day-theo-huong-san-xuat-sach.html",
+      "crop_keys": [
+        "jute_mallow"
+      ],
+      "characters": 777,
+      "content_sha256": "8fa04394698911d2e09344939cea9a20cdc304aef48d01743f5bb09b1aeed988",
+      "source_sha256": "84031423216c22cf1cb492d2309485a40dd1aff5f7260528863ea5c7f6e92552",
+      "status": "already_active",
+      "document_id": "48051b84-c0bf-43ed-af9f-257e5a9160dd"
+    },
+    {
+      "title": "Rau đay - tưới nước, chăm sóc và tỉa cây",
+      "source": "https://agro.gov.vn/vn/tID11789_ky-thuat-trong-rau-day-theo-huong-san-xuat-sach.html",
+      "crop_keys": [
+        "jute_mallow"
+      ],
+      "characters": 702,
+      "content_sha256": "fef4d2e77366d83063a9ee6a124893cc10bd741f1278f20554bc65dcba09bd8e",
+      "source_sha256": "84031423216c22cf1cb492d2309485a40dd1aff5f7260528863ea5c7f6e92552",
+      "status": "already_active",
+      "document_id": "ead11233-8474-401d-a1ba-3140472224d0"
+    },
+    {
+      "title": "Cải thảo an toàn - thời vụ, vườn ươm, đất và mật độ",
+      "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+      "crop_keys": [
+        "chinese_cabbage"
+      ],
+      "characters": 2800,
+      "content_sha256": "b6facce4c10003c4ca12e74a843f70bd81ea6e620f94f79188a26762722d1318",
+      "source_sha256": "fe633dd03f1fe3b670735f10e6b962fe973ced0a0f2718a72dfd3f9f48dc031c",
+      "status": "already_active",
+      "document_id": "b77b5520-627e-428d-90b6-e7f46c714676"
+    },
+    {
+      "title": "Cải thảo an toàn - biện pháp IPM canh tác và vật lý",
+      "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+      "crop_keys": [
+        "chinese_cabbage"
+      ],
+      "characters": 1022,
+      "content_sha256": "df0915cc9a42d9cb64fb7c2f8faeb8b9064be27963efe563d379be931ac3e7d0",
+      "source_sha256": "fe633dd03f1fe3b670735f10e6b962fe973ced0a0f2718a72dfd3f9f48dc031c",
+      "status": "already_active",
+      "document_id": "df001466-81c0-4c7f-b447-2f04bacf6849"
+    },
+    {
+      "title": "Cải cúc tần ô - chuẩn bị khay và gieo hạt",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cach-trong-rau-cai-cuc-trong-thung-xop-952.html",
+      "crop_keys": [
+        "chrysanthemum_greens"
+      ],
+      "characters": 573,
+      "content_sha256": "579a01f3a80f0bce933759972c283f74ef97cac97ca922dec79189debcd63871",
+      "source_sha256": "eb8e4bae523b1b92780f4cebd68f9fb56f9fe25a1459c7dad4bd2cf00214eaa8",
+      "status": "already_active",
+      "document_id": "79ba15f2-ab4c-4e15-91e0-5d9efd1c5719"
+    },
+    {
+      "title": "Cải cúc tần ô - tưới và chăm sóc trong khay",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cach-trong-rau-cai-cuc-trong-thung-xop-952.html",
+      "crop_keys": [
+        "chrysanthemum_greens"
+      ],
+      "characters": 639,
+      "content_sha256": "09df2d700d82628025f1cc46f5dbceb86b8db85c070f45f51196bb10765b32c4",
+      "source_sha256": "eb8e4bae523b1b92780f4cebd68f9fb56f9fe25a1459c7dad4bd2cf00214eaa8",
+      "status": "already_active",
+      "document_id": "f820f12b-c6c4-4e10-90b5-f266eca62389"
+    },
+    {
+      "title": "Củ dền đỏ Bát Xát - đất, nước, thời vụ và thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/lao-cai-cu-den-do--cay-trong-moi-cho-nong-nghiep-bat-xat-21478.html",
+      "crop_keys": [
+        "beetroot"
+      ],
+      "characters": 1126,
+      "content_sha256": "8df99e073e8d67397f624f20b6063a88627ec4dbcc403b8c438f5e3e1b841f68",
+      "source_sha256": "3f4ea656f39930e69de444ae3dbbcb94d1fbf7778777770394bcae0789987b87",
+      "status": "already_active",
+      "document_id": "e856e160-cf7a-4aa4-9672-22171ea0573b"
+    },
+    {
+      "title": "Đậu rồng - sinh trưởng và thời gian cho quả",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-benh-hai-chinh-tren-cay-dau-rong-psophocarpus-tetragonolobus-27112.html",
+      "crop_keys": [
+        "winged_bean"
+      ],
+      "characters": 626,
+      "content_sha256": "3307a4e2b73e33624dd538d107c060c2243cea30b9b1762f68a8d09efb91fd73",
+      "source_sha256": "06238dd6dce3d6aa58fa414fce575dc6724894937b46389da7d3260dd146e9a6",
+      "status": "already_active",
+      "document_id": "5af92c2d-f9ba-4377-81c5-ad26966c902e"
+    },
+    {
+      "title": "Đậu rồng - nhận biết và quản lý ốc ma bằng biện pháp vật lý",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-benh-hai-chinh-tren-cay-dau-rong-psophocarpus-tetragonolobus-27112.html",
+      "crop_keys": [
+        "winged_bean"
+      ],
+      "characters": 848,
+      "content_sha256": "64e7851dd6a7528fed4f9c9099fa3fc4581032b6728476999b9a522d02f6833a",
+      "source_sha256": "06238dd6dce3d6aa58fa414fce575dc6724894937b46389da7d3260dd146e9a6",
+      "status": "already_active",
+      "document_id": "85e549c9-be42-4bc1-b1ab-310acb1442ec"
+    },
+    {
+      "title": "Hành tím Ninh Thuận - tiết kiệm nước, chống hạn và IPM",
+      "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/ninh-thuan-hoi-thao-dau-bo-mo-hinh-canh-tac-cay-hanh-thich-ung-voi-bien-doi-khi-hau-27730.html",
+      "crop_keys": [
+        "shallot"
+      ],
+      "characters": 1115,
+      "content_sha256": "01ae2e76a099eb68acc9d773cc3e9ba99aae6b0170260ba209bb45ebe83b737d",
+      "source_sha256": "a1f436f4612fff8278c2095ba65c2f1e65a4aaf9d91298c6963e9b6ce657944e",
+      "status": "already_active",
+      "document_id": "161892da-70c7-458b-96e8-e2fb48180833"
+    },
+    {
+      "title": "Củ đậu - chọn đất, làm luống và dinh dưỡng",
+      "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/bac-giang-trong-cu-dau-cho-thu-nhap-on-dinh-20044.html",
+      "crop_keys": [
+        "jicama"
+      ],
+      "characters": 1004,
+      "content_sha256": "8950e2c4b5294347c9e889407d6373738ca026b24e65a9a1928317fd7d00bc36",
+      "source_sha256": "e9aa30456fa1682f6cc6f2c72f78e2072d7410645bbc966e38483f34a1e8cf9f",
+      "status": "already_active",
+      "document_id": "a1f9fb21-bb4d-4fa3-9997-7efb96997f02"
+    },
+    {
+      "title": "Củ đậu - bấm ngọn, tỉa hoa và quản lý nước",
+      "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/bac-giang-trong-cu-dau-cho-thu-nhap-on-dinh-20044.html",
+      "crop_keys": [
+        "jicama"
+      ],
+      "characters": 818,
+      "content_sha256": "50318e04e587a12a6598d8bf5cc6f650e409744d1c8886ed630fec82359a07bc",
+      "source_sha256": "e9aa30456fa1682f6cc6f2c72f78e2072d7410645bbc966e38483f34a1e8cf9f",
+      "status": "already_active",
+      "document_id": "f9d65ce2-adfd-4553-af19-6057f405ae68"
+    }
+  ]
+}

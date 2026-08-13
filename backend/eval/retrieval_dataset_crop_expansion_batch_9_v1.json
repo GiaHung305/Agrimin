@@ -1,0 +1,53 @@
+{
+  "version": "crop-expansion-batch-9-retrieval-v1",
+  "items": [
+    {
+      "id": "zucchini-northern-season-seedling",
+      "category": "crop_depth_p1",
+      "query": "Bí ngòi Star Ol ở miền Bắc Việt Nam nên gieo vụ nào, chuẩn bị đất và cây con ra sao?",
+      "relevant_sources": ["Bí ngòi miền Bắc - nhận diện giống, thời vụ và gieo cây con"]
+    },
+    {
+      "id": "zucchini-not-pumpkin",
+      "category": "crop_lookalike",
+      "query": "Bí ngòi zucchini Cucurbita pepo, không phải bí đỏ hay bí xanh, có thời vụ và cách gieo cây con nào cho các tỉnh miền Bắc?",
+      "relevant_sources": ["Bí ngòi miền Bắc - nhận diện giống, thời vụ và gieo cây con"]
+    },
+    {
+      "id": "zucchini-nutrition-stages",
+      "category": "crop_depth_p1",
+      "query": "Lịch bón lót và ba lần bón thúc cho bí ngòi Star Ol miền Bắc theo các giai đoạn bén rễ, ra hoa và nuôi quả là gì?",
+      "relevant_sources": ["Bí ngòi miền Bắc - dinh dưỡng và lịch bón theo giai đoạn"]
+    },
+    {
+      "id": "zucchini-moisture-pollination",
+      "category": "crop_depth_p1",
+      "query": "Bí ngòi miền Bắc cần mật độ, độ ẩm và thụ phấn bổ sung vào thời điểm nào?",
+      "relevant_sources": ["Bí ngòi miền Bắc - mật độ, độ ẩm và thụ phấn bổ sung"]
+    },
+    {
+      "id": "zucchini-cultural-ipm",
+      "category": "crop_depth_p1",
+      "query": "Bí ngòi thường gặp sâu bệnh gì và nên quản lý bằng biện pháp canh tác IPM như luân canh, vệ sinh, tưới và che phủ ra sao, không hỏi thuốc hóa học?",
+      "relevant_sources": ["Bí ngòi miền Bắc - sâu bệnh chính và IPM canh tác"]
+    },
+    {
+      "id": "zucchini-harvest",
+      "category": "crop_depth_p1",
+      "query": "Bí ngòi Star Ol thu hái sau nở hoa bao nhiêu ngày, nhận biết kích thước quả và cắt cuống thế nào?",
+      "relevant_sources": ["Bí ngòi miền Bắc - chỉ tiêu và cách thu hái"]
+    },
+    {
+      "id": "lemongrass-nghe-an",
+      "category": "crop_depth_p1",
+      "query": "Sả gia vị ở Nam Xuân, Nam Đàn, Nghệ An thích nghi ra sao trên đất lúa cao cưỡng thiếu nước và sau bao lâu bắt đầu thu hoạch?",
+      "relevant_sources": ["Sả Nam Đàn Nghệ An - thích nghi đất thiếu nước và mốc thu hoạch"]
+    },
+    {
+      "id": "lemongrass-not-java-citronella",
+      "category": "crop_lookalike",
+      "query": "Sả gia vị lemongrass Cymbopogon citratus tại Nam Đàn Nghệ An, không phải sả Java lấy tinh dầu, có bằng chứng thích nghi vùng và mốc thu hoạch nào?",
+      "relevant_sources": ["Sả Nam Đàn Nghệ An - thích nghi đất thiếu nước và mốc thu hoạch"]
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+{
+  "version": "crop-data-expansion-batch-13-v1",
+  "documents": 3,
+  "sources": 3,
+  "ready": 0,
+  "already_active": 3,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+      "source": "https://ask.ifas.ufl.edu/publication/VH021",
+      "crop_keys": [
+        "beetroot",
+        "bell_pepper",
+        "broccoli",
+        "brussels_sprouts",
+        "cauliflower",
+        "celery",
+        "chard",
+        "chayote",
+        "chili",
+        "chinese_cabbage",
+        "eggplant",
+        "green_bean",
+        "kale",
+        "kohlrabi",
+        "leek",
+        "lettuce",
+        "melon",
+        "onion",
+        "pea",
+        "potato",
+        "pumpkin",
+        "shallot",
+        "spinach",
+        "spring_onion",
+        "sweet_corn",
+        "sweet_potato",
+        "turnip",
+        "watermelon"
+      ],
+      "characters": 19101,
+      "content_sha256": "658c43f7381b381a860c4698df3f3dad7f1cb65a2f6aa177645dcd58f6a9a944",
+      "source_sha256": "d2c66d767a8a2d80f432cf9e3b4bef667399c70f50fc4b23c3f5e55f543c3711",
+      "status": "already_active",
+      "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d"
+    },
+    {
+      "title": "UF IFAS Florida - thử nghiệm nhà kính cho sáu loại rau gia vị",
+      "source": "https://ask.ifas.ufl.edu/publication/CV272",
+      "crop_keys": [
+        "basil",
+        "chives",
+        "dill",
+        "marjoram",
+        "mint",
+        "parsley"
+      ],
+      "characters": 2279,
+      "content_sha256": "43e03654dd46b46920074e9f51886f93f13bfdd3df5a937049621f98e793a981",
+      "source_sha256": "27a7ed495f1920db5cc724286e4d1a0224aad0b365ccc722f939de1e65901600",
+      "status": "already_active",
+      "document_id": "645ef2c9-ff24-4935-b2fd-96168e07d4d7"
+    },
+    {
+      "title": "UF IFAS Florida - nhận diện mùa vụ húng quế ngò rí và thì là",
+      "source": "https://ask.ifas.ufl.edu/publication/FY1554",
+      "crop_keys": [
+        "basil",
+        "coriander",
+        "dill"
+      ],
+      "characters": 2245,
+      "content_sha256": "6ca3c738c5a3cd9743b537a1b13514eb60318b152b9368959114894c6ba38465",
+      "source_sha256": "66386a7b112d08a795989224ef074013ef271051437b7982110a3c1263e92b61",
+      "status": "already_active",
+      "document_id": "05e90873-2d91-407d-9b35-1f006637f35e"
+    }
+  ]
+}

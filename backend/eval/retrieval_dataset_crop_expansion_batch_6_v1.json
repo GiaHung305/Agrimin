@@ -1,0 +1,65 @@
+{
+  "version": "crop-expansion-batch-6-retrieval-v1",
+  "items": [
+    {
+      "id": "banana-soil-propagation",
+      "category": "crop_expansion",
+      "query": "Chuối cần chọn đất, chuẩn bị hố, nhân giống và bố trí thời vụ trồng như thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng chuối - chuẩn bị đất, nhân giống và thời vụ"]
+    },
+    {
+      "id": "banana-density-care",
+      "category": "crop_expansion",
+      "query": "Mật độ, cách trồng, bón phân, tưới và tỉa cây con cho chuối ra sao?",
+      "relevant_sources": ["Kỹ thuật trồng chuối - mật độ, cách trồng, bón phân và chăm sóc"]
+    },
+    {
+      "id": "taro-cultivation",
+      "category": "crop_expansion",
+      "query": "Khoai môn chọn củ giống, làm đất, bón phân, chọn mật độ và tưới chăm sóc thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng khoai môn - giống, đất, phân bón, mật độ và chăm sóc"]
+    },
+    {
+      "id": "luffa-cultivation",
+      "category": "crop_expansion",
+      "query": "Trồng mướp cần làm luống, bố trí mật độ, bón thúc và làm giàn như thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng mướp - đất, mật độ, dinh dưỡng, giàn và thu hoạch"]
+    },
+    {
+      "id": "artichoke-cultivation",
+      "category": "crop_expansion",
+      "query": "Quy trình trồng atisô ở Lâm Đồng yêu cầu khí hậu, đất, cây giống, mật độ và phân bón ra sao?",
+      "relevant_sources": ["Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc"]
+    },
+    {
+      "id": "artichoke-harvest",
+      "category": "crop_expansion",
+      "query": "Atisô thu hoạch lá, bông, thân và rễ vào thời điểm nào, bảo quản ra sao?",
+      "relevant_sources": ["Quy trình thu hoạch atisô tại Lâm Đồng"]
+    },
+    {
+      "id": "chives-cultivation",
+      "category": "crop_expansion",
+      "query": "Hẹ trồng bằng củ hoặc hạt, chăm sóc, thu hoạch lá và để giống như thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng, chăm sóc, thu hoạch và để giống hẹ"]
+    },
+    {
+      "id": "spinach-climate-sowing",
+      "category": "crop_expansion",
+      "query": "Cải bó xôi rau chân vịt cần khí hậu, đất, thời vụ, phân bón và gieo hạt ra sao?",
+      "relevant_sources": ["Cải bó xôi - khí hậu, đất, thời vụ, dinh dưỡng và gieo trồng"]
+    },
+    {
+      "id": "spinach-care-harvest",
+      "category": "crop_expansion",
+      "query": "Cải bó xôi chăm sóc sau gieo, bón thúc, quản lý sâu bệnh sinh học và thu hoạch thế nào?",
+      "relevant_sources": ["Cải bó xôi - chăm sóc, quản lý sâu bệnh sinh học và thu hoạch"]
+    },
+    {
+      "id": "celery-cultivation",
+      "category": "crop_expansion",
+      "query": "Cần tây chọn đất, xử lý hạt, gieo trồng, bố trí khoảng cách, tưới và thu hoạch thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng cần tây - đất, gieo hạt, mật độ, tưới và thu hoạch"]
+    }
+  ]
+}

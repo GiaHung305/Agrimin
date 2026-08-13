@@ -1,0 +1,132 @@
+{
+  "version": "crop-data-expansion-batch-4-v1",
+  "documents": 10,
+  "sources": 1,
+  "ready": 0,
+  "already_active": 10,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Cẩm nang trồng diếp cá an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "fish_mint"
+      ],
+      "characters": 1580,
+      "content_sha256": "ac6ea17a831cdbcfb661cd3e262051c18fe0106f20f3325d711db00b7709e612",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "1b71eea9-5374-454b-a73f-bfcfecf12062"
+    },
+    {
+      "title": "Cẩm nang trồng húng cây an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "mint"
+      ],
+      "characters": 1413,
+      "content_sha256": "bb50a34450f0a48b5f42499685bbd342f51b73ca8e26176a2b1dac248776b747",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "b9928538-b69e-4849-83a6-0f998943367d"
+    },
+    {
+      "title": "Cẩm nang trồng húng quế an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "basil"
+      ],
+      "characters": 1409,
+      "content_sha256": "7745e535bb1d62b0784ce752c65a38fd78a62ab992460ee71097e73714b30bb3",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "4c58b49b-4daa-471b-a3de-69b83e94671f"
+    },
+    {
+      "title": "Cẩm nang trồng kinh giới an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "marjoram"
+      ],
+      "characters": 1861,
+      "content_sha256": "06628079cc48172342a3f6d1dea1da88f9b3d9366df28173d9d1b4e54c07bf91",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "859f6617-5234-4c3e-96d5-6e5d80f0ab0f"
+    },
+    {
+      "title": "Cẩm nang trồng ngò gai an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "culantro"
+      ],
+      "characters": 1764,
+      "content_sha256": "9a9b3878c0bcb197e876286f5b14e639a3b27b0ca0ee63ae08a3f977c5bef34d",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "31506f1e-9952-4661-84aa-b0d94f072ed4"
+    },
+    {
+      "title": "Cẩm nang trồng rau răm an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "vietnamese_coriander"
+      ],
+      "characters": 1767,
+      "content_sha256": "3ea83702343489d56e8e266703774183872720eba47e724380cdd84710a81b5d",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "330e5795-3b82-49b3-9be8-d15a68481a2d"
+    },
+    {
+      "title": "Cẩm nang trồng tía tô an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "perilla"
+      ],
+      "characters": 1756,
+      "content_sha256": "2173e7c113a4066e8ca056c12ec6bb1358a5c0a5f54bb18bac368a044e67bf71",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "9b9b42fb-0f97-44d1-86e0-11a5f86a0e3e"
+    },
+    {
+      "title": "Cẩm nang trồng thì là an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "dill"
+      ],
+      "characters": 990,
+      "content_sha256": "ccf63acae2373bd80ecb5910962df6f296d8b92da94aced531a78d9b52c50bd3",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "9ff46a2a-fb15-4e90-b381-ebabb1870367"
+    },
+    {
+      "title": "Cẩm nang trồng lá lốt an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "wild_betel"
+      ],
+      "characters": 1463,
+      "content_sha256": "f87a425f24533ba3857faa6f74c165a134de88d85b2b29ba97a8f061890d0546",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "29979a5d-ba11-47bf-8f74-71a29ae438f1"
+    },
+    {
+      "title": "Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+      "crop_keys": [
+        "coriander"
+      ],
+      "characters": 1134,
+      "content_sha256": "b31ce22512570d0eff70a2acc47b4034774df6d5bdfcd2d07cf4a7673e602fa4",
+      "source_sha256": "9c6e4dcb1d059d80c1b471fd328a6a09b892cf1bbf06dbfe92f2f25d5ce5c144",
+      "status": "already_active",
+      "document_id": "dcfabd60-c31f-461a-b4b3-c6bf2a4846d7"
+    }
+  ]
+}

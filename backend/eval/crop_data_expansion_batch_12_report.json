@@ -1,0 +1,74 @@
+{
+  "version": "crop-data-expansion-batch-12-v1",
+  "documents": 5,
+  "sources": 3,
+  "ready": 0,
+  "already_active": 5,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Dưa leo, đậu bắp và khổ qua - thu hái, phân loại và tạm trữ tại HTX",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/cong-nghe-bao-quan-sau-thu-hoach-rau-cu-qua-7674.html",
+      "crop_keys": [
+        "cucumber",
+        "okra",
+        "bitter_melon"
+      ],
+      "characters": 913,
+      "content_sha256": "d3da745c82f68f55f20277f31b760668ec703a92795b0db6943badeb7b3ae7d4",
+      "source_sha256": "2f4e156a1b7161bbec2e07e9dd281e96f357b2ca280479c4398a4c85856bac15",
+      "status": "already_active",
+      "document_id": "02487302-25e0-4cea-b0c0-222cf542ba78"
+    },
+    {
+      "title": "Măng tây xanh Hòa Vang Đà Nẵng - cây con, xuống giống, dinh dưỡng và nước",
+      "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+      "crop_keys": [
+        "asparagus"
+      ],
+      "characters": 2512,
+      "content_sha256": "9435319d86cba21512c637e67d1ed76c4bfe99de42565aea8206524bb087a1ce",
+      "source_sha256": "21d961dacf660102a7776639c233ec9008df6685bf10443fb6bed4ef42f4df75",
+      "status": "already_active",
+      "document_id": "e05003fb-1721-48da-9a80-525688d97d33"
+    },
+    {
+      "title": "Măng tây xanh Hòa Vang Đà Nẵng - chu kỳ và kỹ thuật thu hoạch",
+      "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+      "crop_keys": [
+        "asparagus"
+      ],
+      "characters": 928,
+      "content_sha256": "a709ac2227cd5c518664bca227d5584a07f082c1ab9d3a72611dc7001182ad28",
+      "source_sha256": "21d961dacf660102a7776639c233ec9008df6685bf10443fb6bed4ef42f4df75",
+      "status": "already_active",
+      "document_id": "ffded296-c82f-4dc3-83e1-e99c1f2ff972"
+    },
+    {
+      "title": "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+      "crop_keys": [
+        "carrot"
+      ],
+      "characters": 2766,
+      "content_sha256": "4a9305ca4ed7e26b8b9a3c0e16b4e94c1ac5122cf2847c8b4ca6887635789aec",
+      "source_sha256": "2cd2bc19e5b2b1f8695849acf6dec5ddbc43784ce2d487d54c46ec7b024412a2",
+      "status": "already_active",
+      "document_id": "052e4aad-2f0f-4150-bc0d-2463457b13e2"
+    },
+    {
+      "title": "Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+      "crop_keys": [
+        "carrot"
+      ],
+      "characters": 681,
+      "content_sha256": "51e09c72607c8292a72a2d480f19b2480a92e64bcd572b3632a5ceaa54cf782f",
+      "source_sha256": "2cd2bc19e5b2b1f8695849acf6dec5ddbc43784ce2d487d54c46ec7b024412a2",
+      "status": "already_active",
+      "document_id": "61eecf28-31ea-4171-bc79-33ec225d39d8"
+    }
+  ]
+}

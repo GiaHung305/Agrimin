@@ -1,0 +1,53 @@
+{
+  "version": "crop-expansion-batch-11-retrieval-v1",
+  "items": [
+    {
+      "id": "banana-panama-diagnosis-not-nutrition",
+      "category": "crop_depth_disease_differential",
+      "query": "Chuối vàng từ lá già lên lá non, thân giả vẫn đứng và bó mạch nâu đỏ thì nhận diện bệnh Panama thế nào, khác thiếu dinh dưỡng hay úng nước ra sao?",
+      "relevant_sources": ["Chuối - nhận diện và đường lây bệnh héo vàng lá Panama"]
+    },
+    {
+      "id": "banana-panama-cultural-ipm",
+      "category": "crop_depth_safe_ipm",
+      "query": "Vườn chuối ở Bình Phước có nguy cơ héo vàng Panama thì phòng bằng giống sạch bệnh, thoát nước, dinh dưỡng, vệ sinh và luân canh thế nào, chưa nói thuốc hóa học?",
+      "relevant_sources": ["Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác"]
+    },
+    {
+      "id": "cassava-mosaic-diagnosis-not-other-tubers",
+      "category": "crop_depth_lookalike",
+      "query": "Sắn khoai mì cassava, không phải khoai lang hay khoai tây, có lá khảm vàng xanh xoăn vặn và chùn ngọn: bệnh lây qua hom và bọ phấn như thế nào?",
+      "relevant_sources": ["Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá"]
+    },
+    {
+      "id": "cassava-mosaic-nonchemical-prevention",
+      "category": "crop_depth_safe_ipm",
+      "query": "Phòng bệnh khảm lá sắn bằng hom sạch, giống kháng, luân canh, bẫy dính vàng và thiên địch bọ phấn ra sao, không hỏi lịch phun thuốc?",
+      "relevant_sources": ["Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch"]
+    },
+    {
+      "id": "cassava-mosaic-removal-by-age",
+      "category": "crop_depth_stage",
+      "query": "Cây sắn khảm lá nặng dưới 2 tháng và cây trên 2 tháng phải xử lý khác nhau thế nào, thân bệnh sau thu hoạch có được giữ làm hom không?",
+      "relevant_sources": ["Sắn - tiêu hủy cây khảm lá theo tuổi và xử lý tàn dư sau thu hoạch"]
+    },
+    {
+      "id": "potato-disease-differential-not-cassava",
+      "category": "crop_depth_disease_differential",
+      "query": "Khoai tây vụ đông miền Bắc, không phải sắn: phân biệt sương mai, héo vàng, héo xanh vi khuẩn và xoăn lá virus theo triệu chứng nào?",
+      "relevant_sources": ["Khoai tây vụ đông miền Bắc - phân biệt sương mai, héo vàng, héo xanh và xoăn lá"]
+    },
+    {
+      "id": "potato-cultural-ipm-no-legacy-chemicals",
+      "category": "crop_depth_safe_ipm",
+      "query": "Khoai tây vụ đông phòng bệnh bằng luân canh, giống sạch, mật độ, bón cân đối và vệ sinh đồng ruộng thế nào, không dùng danh sách thuốc cũ?",
+      "relevant_sources": ["Khoai tây vụ đông miền Bắc - IPM canh tác không dùng danh sách thuốc cũ"]
+    },
+    {
+      "id": "potato-harvest-storage-not-sweet-potato",
+      "category": "crop_depth_lookalike",
+      "query": "Khoai tây potato, không phải khoai lang: khi bao nhiêu lá vàng thì thu hoạch, cần ngừng tưới và bảo quản củ tránh xanh mọc mầm thế nào?",
+      "relevant_sources": ["Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ"]
+    }
+  ]
+}

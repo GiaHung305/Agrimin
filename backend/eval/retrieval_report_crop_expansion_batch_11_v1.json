@@ -1,0 +1,384 @@
+{
+  "dataset_version": "crop-expansion-batch-11-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 12374.475
+  },
+  "items": [
+    {
+      "id": "banana-panama-diagnosis-not-nutrition",
+      "query": "Chuối vàng từ lá già lên lá non, thân giả vẫn đứng và bó mạch nâu đỏ thì nhận diện bệnh Panama thế nào, khác thiếu dinh dưỡng hay úng nước ra sao?",
+      "category": "crop_depth_disease_differential",
+      "relevant_sources": [
+        "Chuối - nhận diện và đường lây bệnh héo vàng lá Panama"
+      ],
+      "latency_ms": 28584.66,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e1e1f043-51a0-48a5-9a6c-9454788ce3dd",
+          "chunk_id": "8302fe39-4df8-425d-880e-da1a3b2cd678",
+          "title": "Chuối - nhận diện và đường lây bệnh héo vàng lá Panama",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9988707900047302,
+          "relevant": true
+        },
+        {
+          "document_id": "e1e1f043-51a0-48a5-9a6c-9454788ce3dd",
+          "chunk_id": "925cce0b-b6e6-457f-912f-c24d1feaae3d",
+          "title": "Chuối - nhận diện và đường lây bệnh héo vàng lá Panama",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.16184452176094055,
+          "relevant": true
+        },
+        {
+          "document_id": "17494b69-69b9-4dd1-bab3-c34b25579e5c",
+          "chunk_id": "0cbb0e46-9e3b-4ce2-99e9-dc18a92e17ca",
+          "title": "Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.024774393066763878,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "banana-panama-cultural-ipm",
+      "query": "Vườn chuối ở Bình Phước có nguy cơ héo vàng Panama thì phòng bằng giống sạch bệnh, thoát nước, dinh dưỡng, vệ sinh và luân canh thế nào, chưa nói thuốc hóa học?",
+      "category": "crop_depth_safe_ipm",
+      "relevant_sources": [
+        "Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác"
+      ],
+      "latency_ms": 14035.2,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "17494b69-69b9-4dd1-bab3-c34b25579e5c",
+          "chunk_id": "0cbb0e46-9e3b-4ce2-99e9-dc18a92e17ca",
+          "title": "Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9474247694015503,
+          "relevant": true
+        },
+        {
+          "document_id": "17494b69-69b9-4dd1-bab3-c34b25579e5c",
+          "chunk_id": "173cdc4b-9289-4291-a025-d3aefb2a707a",
+          "title": "Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.9351686835289001,
+          "relevant": true
+        },
+        {
+          "document_id": "e1e1f043-51a0-48a5-9a6c-9454788ce3dd",
+          "chunk_id": "8302fe39-4df8-425d-880e-da1a3b2cd678",
+          "title": "Chuối - nhận diện và đường lây bệnh héo vàng lá Panama",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.901675283908844,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cassava-mosaic-diagnosis-not-other-tubers",
+      "query": "Sắn khoai mì cassava, không phải khoai lang hay khoai tây, có lá khảm vàng xanh xoăn vặn và chùn ngọn: bệnh lây qua hom và bọ phấn như thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá"
+      ],
+      "latency_ms": 15159.39,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "46b690c0-956b-4c70-b858-739f21cf5571",
+          "chunk_id": "38c09dca-b884-470e-9d43-68fb3e0b0c94",
+          "title": "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9950850605964661,
+          "relevant": true
+        },
+        {
+          "document_id": "84647851-842e-4493-b39c-43ffa514a07e",
+          "chunk_id": "dcd48918-2b9f-4caf-b7ef-10a3104665c0",
+          "title": "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.8306735157966614,
+          "relevant": false
+        },
+        {
+          "document_id": "1a357247-1eaa-4e12-b2c6-5c0da7f0d6a5",
+          "chunk_id": "59465af1-32a6-44d7-8419-fe3aaff34d8c",
+          "title": "Khoai tây vụ đông miền Bắc - phân biệt sương mai, héo vàng, héo xanh và xoăn lá",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.6344550251960754,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cassava-mosaic-nonchemical-prevention",
+      "query": "Phòng bệnh khảm lá sắn bằng hom sạch, giống kháng, luân canh, bẫy dính vàng và thiên địch bọ phấn ra sao, không hỏi lịch phun thuốc?",
+      "category": "crop_depth_safe_ipm",
+      "relevant_sources": [
+        "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch"
+      ],
+      "latency_ms": 11740.08,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "84647851-842e-4493-b39c-43ffa514a07e",
+          "chunk_id": "dcd48918-2b9f-4caf-b7ef-10a3104665c0",
+          "title": "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9989847540855408,
+          "relevant": true
+        },
+        {
+          "document_id": "46b690c0-956b-4c70-b858-739f21cf5571",
+          "chunk_id": "38c09dca-b884-470e-9d43-68fb3e0b0c94",
+          "title": "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.6937714219093323,
+          "relevant": false
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "df575d25-f574-4679-ac24-2b2ca82362e6",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03307692307692307,
+          "rerank_score": 0.15769806504249573,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cassava-mosaic-removal-by-age",
+      "query": "Cây sắn khảm lá nặng dưới 2 tháng và cây trên 2 tháng phải xử lý khác nhau thế nào, thân bệnh sau thu hoạch có được giữ làm hom không?",
+      "category": "crop_depth_stage",
+      "relevant_sources": [
+        "Sắn - tiêu hủy cây khảm lá theo tuổi và xử lý tàn dư sau thu hoạch"
+      ],
+      "latency_ms": 9576.79,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "0bec23c0-15f1-4e9b-bac1-a79ef79eab6c",
+          "chunk_id": "cb2acf70-898a-4d06-b600-77ebbc547343",
+          "title": "Sắn - tiêu hủy cây khảm lá theo tuổi và xử lý tàn dư sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9979392886161804,
+          "relevant": true
+        },
+        {
+          "document_id": "84647851-842e-4493-b39c-43ffa514a07e",
+          "chunk_id": "dcd48918-2b9f-4caf-b7ef-10a3104665c0",
+          "title": "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034097782258064514,
+          "rerank_score": 0.8840826749801636,
+          "relevant": false
+        },
+        {
+          "document_id": "46b690c0-956b-4c70-b858-739f21cf5571",
+          "chunk_id": "9b3ada28-ab45-4521-9155-00daee1e5065",
+          "title": "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.7808466553688049,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "potato-disease-differential-not-cassava",
+      "query": "Khoai tây vụ đông miền Bắc, không phải sắn: phân biệt sương mai, héo vàng, héo xanh vi khuẩn và xoăn lá virus theo triệu chứng nào?",
+      "category": "crop_depth_disease_differential",
+      "relevant_sources": [
+        "Khoai tây vụ đông miền Bắc - phân biệt sương mai, héo vàng, héo xanh và xoăn lá"
+      ],
+      "latency_ms": 5930.98,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "1a357247-1eaa-4e12-b2c6-5c0da7f0d6a5",
+          "chunk_id": "59465af1-32a6-44d7-8419-fe3aaff34d8c",
+          "title": "Khoai tây vụ đông miền Bắc - phân biệt sương mai, héo vàng, héo xanh và xoăn lá",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9984599351882935,
+          "relevant": true
+        },
+        {
+          "document_id": "e0534558-af24-48ca-8b37-e0ea4198dfd0",
+          "chunk_id": "5af49e24-421d-4c22-aa23-53f9916d2d00",
+          "title": "Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033353365384615384,
+          "rerank_score": 0.5903795957565308,
+          "relevant": false
+        },
+        {
+          "document_id": "46b690c0-956b-4c70-b858-739f21cf5571",
+          "chunk_id": "38c09dca-b884-470e-9d43-68fb3e0b0c94",
+          "title": "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.25556886196136475,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "potato-cultural-ipm-no-legacy-chemicals",
+      "query": "Khoai tây vụ đông phòng bệnh bằng luân canh, giống sạch, mật độ, bón cân đối và vệ sinh đồng ruộng thế nào, không dùng danh sách thuốc cũ?",
+      "category": "crop_depth_safe_ipm",
+      "relevant_sources": [
+        "Khoai tây vụ đông miền Bắc - IPM canh tác không dùng danh sách thuốc cũ"
+      ],
+      "latency_ms": 6754.33,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "7ec645c2-7d13-4aed-b443-4a75d7319d6c",
+          "chunk_id": "8de7151b-f5d6-4b7d-970b-b32a63eba21a",
+          "title": "Khoai tây vụ đông miền Bắc - IPM canh tác không dùng danh sách thuốc cũ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9990150928497314,
+          "relevant": true
+        },
+        {
+          "document_id": "84647851-842e-4493-b39c-43ffa514a07e",
+          "chunk_id": "dcd48918-2b9f-4caf-b7ef-10a3104665c0",
+          "title": "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033254269449715365,
+          "rerank_score": 0.4637531340122223,
+          "relevant": false
+        },
+        {
+          "document_id": "148f424e-6179-4e09-becd-5830bfa9e713",
+          "chunk_id": "39db0302-7d2a-45f1-9948-c505e279124d",
+          "title": "Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/vinh-long-tuan-thu-ky-thuat-canh-tac--canh-dong-khoai-mo-ngay-cang-mo-rong-19139.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03307692307692307,
+          "rerank_score": 0.03550839424133301,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "potato-harvest-storage-not-sweet-potato",
+      "query": "Khoai tây potato, không phải khoai lang: khi bao nhiêu lá vàng thì thu hoạch, cần ngừng tưới và bảo quản củ tránh xanh mọc mầm thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ"
+      ],
+      "latency_ms": 7214.37,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e0534558-af24-48ca-8b37-e0ea4198dfd0",
+          "chunk_id": "5af49e24-421d-4c22-aa23-53f9916d2d00",
+          "title": "Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9933371543884277,
+          "relevant": true
+        },
+        {
+          "document_id": "7ec645c2-7d13-4aed-b443-4a75d7319d6c",
+          "chunk_id": "8de7151b-f5d6-4b7d-970b-b32a63eba21a",
+          "title": "Khoai tây vụ đông miền Bắc - IPM canh tác không dùng danh sách thuốc cũ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03289412313432836,
+          "rerank_score": 0.16148735582828522,
+          "relevant": false
+        },
+        {
+          "document_id": "c9895da8-a895-41af-8e61-e3e4d42341b5",
+          "chunk_id": "a0f1665d-71ea-4e5a-86e6-37313641453f",
+          "title": "Kỹ thuật khoai lang - đặt dây, bón phân và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/12/hangweb/so_thang_8_tong_hop_3_compressed.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.01709158904850483,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": false,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": false
+    }
+  }
+}

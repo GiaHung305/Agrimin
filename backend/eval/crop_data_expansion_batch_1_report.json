@@ -1,0 +1,135 @@
+{
+  "version": "crop-data-expansion-batch-1-v1",
+  "documents": 10,
+  "sources": 3,
+  "ready": 0,
+  "already_active": 10,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Cẩm nang trồng khổ qua an toàn - phần cây khổ qua",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "bitter_melon"
+      ],
+      "characters": 5166,
+      "content_sha256": "2a80691d960225439793dcd9c0da57ca76a33829484b403886d63654b8ffffd2",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "ed899013-c139-44c3-b37b-f44d5340633d"
+    },
+    {
+      "title": "Cẩm nang trồng dưa leo an toàn - phần cây dưa leo",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "cucumber"
+      ],
+      "characters": 3543,
+      "content_sha256": "ec21ea5633474bb6c13955dd9ec0bd7e3449e37114d36c179ae15b1749e126ca",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "e2ee9bf6-d306-46db-b596-edd35b1c5e6a"
+    },
+    {
+      "title": "Cẩm nang trồng bí đao an toàn - phần cây bí đao",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "winter_melon"
+      ],
+      "characters": 5474,
+      "content_sha256": "afc737ec4bbfaea5429ddfa53e97c86451f0dff3d688e789f5712a8bc7ec08ee",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "4293bcdc-f0cd-4fbd-8f17-24218823fc4e"
+    },
+    {
+      "title": "Cẩm nang trồng bí đỏ an toàn - phần cây bí đỏ",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "pumpkin"
+      ],
+      "characters": 3123,
+      "content_sha256": "83e11f595510667c19ec89b205d58b446b73ab545a03dba83ac897abf3509d27",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "1009fb32-e2d5-491b-ba72-7ef996576164"
+    },
+    {
+      "title": "Cẩm nang trồng bầu an toàn - phần cây bầu",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "bottle_gourd"
+      ],
+      "characters": 3267,
+      "content_sha256": "e0aa2dcb3e62725dd173eebc9268b937cc410a372ddb94870ba04eea70e4913d",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "32cf3b64-c96f-4f24-84fd-994262575b09"
+    },
+    {
+      "title": "Cẩm nang trồng ớt an toàn - phần cây ớt",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "chili"
+      ],
+      "characters": 5284,
+      "content_sha256": "e75bc20a454f86568808a9cf71a57063462c627ed52665f02d736d9c9a3128f0",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "2c274245-d3bf-4ad9-a6bd-221dd083e540"
+    },
+    {
+      "title": "Cẩm nang trồng cà tím an toàn - phần cây cà tím",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "eggplant"
+      ],
+      "characters": 2956,
+      "content_sha256": "cf265613d6380bed8510bd080f9277cc418a45b75ae2fb97df649ae6fe5df5ea",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "400c37b3-ff82-4bcb-b190-24bc2a41a579"
+    },
+    {
+      "title": "Cẩm nang trồng đậu cô ve và đậu đũa an toàn",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+      "crop_keys": [
+        "green_bean",
+        "yardlong_bean"
+      ],
+      "characters": 2616,
+      "content_sha256": "e1d7293f4a5413dfb661132b6ed5c5fa18b0964ba0f38ed258585811400fda80",
+      "source_sha256": "d1acc024866201bfc273e774ac02895085180d5b2bbd11341fbd92a6465efc01",
+      "status": "already_active",
+      "document_id": "f68347e5-8f03-4e16-bcf6-f587e1a2f346"
+    },
+    {
+      "title": "Cẩm nang trồng rau muống nước an toàn",
+      "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-nang-trong-rau-muong-nuoc.pdf",
+      "crop_keys": [
+        "water_spinach"
+      ],
+      "characters": 21607,
+      "content_sha256": "988cc8572d600c15b5082d713d93c6cd44b8ef550cc7a7b51464ef5e19672462",
+      "source_sha256": "4ed1d032b05e4b0ce4daf35e2ad986db0bf10849710a769db28fe1ff0d07ab5c",
+      "status": "already_active",
+      "document_id": "ac06dc49-0ad3-4d28-9150-a3fc099e466a"
+    },
+    {
+      "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+      "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+      "crop_keys": [
+        "mustard_greens",
+        "choy_sum",
+        "lettuce"
+      ],
+      "characters": 5590,
+      "content_sha256": "b814b24dc05b4730c160711aa462336e79ff961578522721d9b57c3dd53363bb",
+      "source_sha256": "aba2e988c6692128c002beddadcba3bec065cbb9f07b8434abed9c156153f58e",
+      "status": "already_active",
+      "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e"
+    }
+  ]
+}

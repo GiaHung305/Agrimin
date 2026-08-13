@@ -54,3 +54,32 @@ async def test_bm25_excludes_configured_placeholder_sources(monkeypatch):
     bm25_module.invalidate_bm25_index()
     result = await bm25_module.bm25_search("sầu riêng")
     assert [item["source"] for item in result] == ["Khuyen nong"]
+
+
+@pytest.mark.asyncio
+async def test_bm25_uses_reviewed_title_for_crop_identity(monkeypatch):
+    class QdrantWithCropTitles:
+        async def scroll(self, **kwargs):
+            return [
+                SimpleNamespace(
+                    payload={
+                        "title": "Kỹ thuật trồng rau mồng tơi an toàn",
+                        "content": "Thời vụ, làm đất và chăm sóc chi tiết.",
+                        "source": "Khuyen nong mong toi",
+                    }
+                ),
+                SimpleNamespace(
+                    payload={
+                        "title": "Kỹ thuật trồng rau khác",
+                        "content": "Cách trồng và chăm sóc rau an toàn.",
+                        "source": "Khuyen nong rau khac",
+                    }
+                ),
+            ], None
+
+    monkeypatch.setattr(bm25_module, "qdrant_client", QdrantWithCropTitles())
+    bm25_module.invalidate_bm25_index()
+
+    result = await bm25_module.bm25_search("trồng rau mồng tơi an toàn")
+
+    assert result[0]["source"] == "Khuyen nong mong toi"

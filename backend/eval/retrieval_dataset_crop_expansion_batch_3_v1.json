@@ -1,0 +1,113 @@
+{
+  "version": "crop-expansion-batch-3-retrieval-v1",
+  "items": [
+    {
+      "id": "amaranth-cultivation",
+      "category": "crop_expansion",
+      "query": "Rau dền trồng vào thời vụ nào, chuẩn bị đất và mật độ ra sao?",
+      "relevant_sources": ["Cẩm nang trồng rau dền an toàn - phần canh tác không hóa chất"]
+    },
+    {
+      "id": "asparagus-seed-soil",
+      "category": "crop_expansion",
+      "query": "Cách chọn giống, ươm cây và chuẩn bị đất trồng măng tây",
+      "relevant_sources": ["Cẩm nang trồng măng tây - giống, đất và chăm sóc"]
+    },
+    {
+      "id": "asparagus-harvest",
+      "category": "crop_expansion",
+      "query": "Khi nào có thể thu hoạch măng tây và sơ chế măng thế nào?",
+      "relevant_sources": ["Cẩm nang trồng măng tây - thu hoạch và sơ chế"]
+    },
+    {
+      "id": "chayote-anthracnose",
+      "category": "crop_expansion",
+      "query": "Nhận biết bệnh thán thư trên su su và phòng bệnh bằng biện pháp canh tác không dùng thuốc",
+      "relevant_sources": ["Bệnh thán thư hại cây su su và biện pháp canh tác phòng trừ"]
+    },
+    {
+      "id": "katuk-cultivation",
+      "category": "crop_expansion",
+      "query": "Chuẩn bị đất, nhân giống và trồng cây rau ngót như thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng và chăm sóc cây rau ngót - phần canh tác"]
+    },
+    {
+      "id": "katuk-irrigation-rejuvenation",
+      "category": "crop_expansion",
+      "query": "Nguồn nước tưới cho rau ngót và cách đốn trẻ hóa cây lâu năm",
+      "relevant_sources": ["Kỹ thuật trồng và chăm sóc cây rau ngót - nước tưới và trẻ hóa"]
+    },
+    {
+      "id": "radish-cultivation",
+      "category": "crop_expansion",
+      "query": "Cách làm đất, gieo hạt và chăm sóc củ cải trắng",
+      "relevant_sources": ["Kỹ thuật trồng cải củ - phần canh tác"]
+    },
+    {
+      "id": "radish-harvest",
+      "category": "crop_expansion",
+      "query": "Củ cải trắng gieo bao lâu thì thu hoạch và năng suất theo từng vụ?",
+      "relevant_sources": ["Kỹ thuật trồng cải củ - phần thu hoạch"]
+    },
+    {
+      "id": "melon-greenhouse",
+      "category": "crop_expansion",
+      "query": "Quy trình trồng dưa lưới trên giá thể trong nhà màng từ cây con đến thu hoạch",
+      "relevant_sources": ["Kỹ thuật trồng dưa lưới trên giá thể trong nhà màng"]
+    },
+    {
+      "id": "watermelon-nursery",
+      "category": "crop_expansion",
+      "query": "Thời vụ, cách ươm cây con và mật độ trồng dưa hấu",
+      "relevant_sources": ["Kỹ thuật trồng dưa hấu - thời vụ, vườn ươm và mật độ"]
+    },
+    {
+      "id": "watermelon-care-harvest",
+      "category": "crop_expansion",
+      "query": "Tưới nước, thụ phấn, chọn quả và thu hoạch dưa hấu thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng dưa hấu - dinh dưỡng, chăm sóc và thu hoạch"]
+    },
+    {
+      "id": "pea-cultivation",
+      "category": "crop_expansion",
+      "query": "Trồng đậu Hà Lan an toàn cần thời vụ, đất và mật độ như thế nào?",
+      "relevant_sources": ["Kỹ thuật trồng đậu Hà Lan an toàn - phần canh tác"]
+    },
+    {
+      "id": "pea-harvest",
+      "category": "crop_expansion",
+      "query": "Thu hoạch đậu Hà Lan ăn quả non và lấy hạt vào thời điểm nào?",
+      "relevant_sources": ["Kỹ thuật trồng đậu Hà Lan an toàn - phần thu hoạch"]
+    },
+    {
+      "id": "okra-seed-planting",
+      "category": "crop_expansion",
+      "query": "Đặc điểm sinh thái, chọn hạt giống và gieo trồng đậu bắp tại Vĩnh Long",
+      "relevant_sources": ["Tài liệu tập huấn kỹ thuật trồng đậu bắp - giống và gieo trồng"]
+    },
+    {
+      "id": "okra-harvest-storage",
+      "category": "crop_expansion",
+      "query": "Tiêu chuẩn thu hoạch, phân loại và bảo quản trái đậu bắp",
+      "relevant_sources": ["Tài liệu tập huấn kỹ thuật trồng đậu bắp - thu hoạch và bảo quản"]
+    },
+    {
+      "id": "sweet-corn-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng ngô ngọt từ ngâm hạt, mật độ đến thu hoạch bắp",
+      "relevant_sources": ["Kỹ thuật trồng ngô ngọt"]
+    },
+    {
+      "id": "onion-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật làm đất, mật độ và chăm sóc hành củ an toàn",
+      "relevant_sources": ["Kỹ thuật trồng hành củ và hành hoa an toàn"]
+    },
+    {
+      "id": "spring-onion-harvest",
+      "category": "crop_expansion",
+      "query": "Trồng hành hoa hành lá và thu hoạch theo phương pháp nào?",
+      "relevant_sources": ["Kỹ thuật trồng hành củ và hành hoa an toàn"]
+    }
+  ]
+}

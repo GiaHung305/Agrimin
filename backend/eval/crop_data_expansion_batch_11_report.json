@@ -1,0 +1,108 @@
+{
+  "version": "crop-data-expansion-batch-11-v1",
+  "documents": 8,
+  "sources": 3,
+  "ready": 0,
+  "already_active": 8,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Chuối - nhận diện và đường lây bệnh héo vàng lá Panama",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+      "crop_keys": [
+        "banana"
+      ],
+      "characters": 4165,
+      "content_sha256": "eb2f6a00da956772a691a8a2d6725f5f44bbf350fb6ad273c4ea0c982adc3ccd",
+      "source_sha256": "a867d79e55b30eab1d918a727c72d3722e19d739fed70e018dc6803a8beb20b8",
+      "status": "already_active",
+      "document_id": "e1e1f043-51a0-48a5-9a6c-9454788ce3dd"
+    },
+    {
+      "title": "Chuối - phòng bệnh Panama bằng giống sạch, đất nước và IPM canh tác",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quan-ly-tong-hop-benh-heo-vang-la-chuoi-20942.html",
+      "crop_keys": [
+        "banana"
+      ],
+      "characters": 2396,
+      "content_sha256": "811012dd117e7ae6ef3b5b22694a1e491a8256ca1344e37379160f21a94618b5",
+      "source_sha256": "a867d79e55b30eab1d918a727c72d3722e19d739fed70e018dc6803a8beb20b8",
+      "status": "already_active",
+      "document_id": "17494b69-69b9-4dd1-bab3-c34b25579e5c"
+    },
+    {
+      "title": "Sắn - nhận diện, mức độ hại và đường lây bệnh khảm lá",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "crop_keys": [
+        "cassava"
+      ],
+      "characters": 3720,
+      "content_sha256": "e8e02ee986db015e6cd91cf5e66bf53a22e7b2926c99714c994e34c49584eff3",
+      "source_sha256": "11fd2d573926a19263608337787f1a87b7e5dbcded13024311b01c0de4570f01",
+      "status": "already_active",
+      "document_id": "46b690c0-956b-4c70-b858-739f21cf5571"
+    },
+    {
+      "title": "Sắn - phòng khảm lá bằng giống sạch, luân canh, bẫy vàng và thiên địch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "crop_keys": [
+        "cassava"
+      ],
+      "characters": 2434,
+      "content_sha256": "7db9e551aad359e80310a876b8583b2c6b430479db99686d963da193e0b4f807",
+      "source_sha256": "11fd2d573926a19263608337787f1a87b7e5dbcded13024311b01c0de4570f01",
+      "status": "already_active",
+      "document_id": "84647851-842e-4493-b39c-43ffa514a07e"
+    },
+    {
+      "title": "Sắn - tiêu hủy cây khảm lá theo tuổi và xử lý tàn dư sau thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
+      "crop_keys": [
+        "cassava"
+      ],
+      "characters": 1071,
+      "content_sha256": "d46920c6d8970969b6ed734cd4bce2c4833140732e80ac5cd5f900d030e528cb",
+      "source_sha256": "11fd2d573926a19263608337787f1a87b7e5dbcded13024311b01c0de4570f01",
+      "status": "already_active",
+      "document_id": "0bec23c0-15f1-4e9b-bac1-a79ef79eab6c"
+    },
+    {
+      "title": "Khoai tây vụ đông miền Bắc - phân biệt sương mai, héo vàng, héo xanh và xoăn lá",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "crop_keys": [
+        "potato"
+      ],
+      "characters": 2124,
+      "content_sha256": "ea11aeb3736a6cc70813627958bd94655190acda9a647cdc88665e28ac711f21",
+      "source_sha256": "e9e248108266b0708ffafdb1c5345126793f4928a29f2fe1680f3d8fab444a89",
+      "status": "already_active",
+      "document_id": "1a357247-1eaa-4e12-b2c6-5c0da7f0d6a5"
+    },
+    {
+      "title": "Khoai tây vụ đông miền Bắc - IPM canh tác không dùng danh sách thuốc cũ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "crop_keys": [
+        "potato"
+      ],
+      "characters": 859,
+      "content_sha256": "79721b3f4d3c0f506846394bed7c933c6d3e658d5750101adbb1e1db92756332",
+      "source_sha256": "e9e248108266b0708ffafdb1c5345126793f4928a29f2fe1680f3d8fab444a89",
+      "status": "already_active",
+      "document_id": "7ec645c2-7d13-4aed-b443-4a75d7319d6c"
+    },
+    {
+      "title": "Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "crop_keys": [
+        "potato"
+      ],
+      "characters": 2588,
+      "content_sha256": "8e0844542f198f3c0c2eaa2ff93e7ff63680d76a5c6c6e5977bf977f5624c96a",
+      "source_sha256": "e9e248108266b0708ffafdb1c5345126793f4928a29f2fe1680f3d8fab444a89",
+      "status": "already_active",
+      "document_id": "e0534558-af24-48ca-8b37-e0ea4198dfd0"
+    }
+  ]
+}

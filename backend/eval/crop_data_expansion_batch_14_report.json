@@ -1,0 +1,122 @@
+{
+  "version": "crop-data-expansion-batch-14-v1",
+  "documents": 9,
+  "sources": 6,
+  "ready": 0,
+  "already_active": 9,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "UF IFAS Florida - rau dền gieo trồng và quản lý nước",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+      "crop_keys": [
+        "amaranth"
+      ],
+      "characters": 3759,
+      "content_sha256": "a116f13df4f1f8c900e93fe48e4d58c01e8949cd40d92f7ce5b002a1a256946c",
+      "source_sha256": "6fbbaff444867307042364c1d56bd0769daf2a93d46fa0f057ce62bf5b27bc5c",
+      "status": "already_active",
+      "document_id": "af1a1d88-8d9d-477a-9e92-f8e12a1a1114"
+    },
+    {
+      "title": "UF IFAS Florida - rau dền thu hái và làm mát sau thu hoạch",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+      "crop_keys": [
+        "amaranth"
+      ],
+      "characters": 1186,
+      "content_sha256": "2592a6827d0f4691d795c7eb0ceab827cfc73e3074b7ff6b31ddd3d623895db7",
+      "source_sha256": "6fbbaff444867307042364c1d56bd0769daf2a93d46fa0f057ce62bf5b27bc5c",
+      "status": "already_active",
+      "document_id": "dce4cd6e-2038-46db-bdef-97461e2e0656"
+    },
+    {
+      "title": "UF IFAS Florida - cải thìa định danh đất ẩm và khoảng cách",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+      "crop_keys": [
+        "bok_choy"
+      ],
+      "characters": 2931,
+      "content_sha256": "88f7142b4c0212913f9a632c61e035b3e25c65852a67a778b86f41e12319c2b6",
+      "source_sha256": "610a7decfcedc6bd3c1a233c1a84dafa5228174da3de5760cc1e9159f9af07f3",
+      "status": "already_active",
+      "document_id": "b0d39ff3-a598-49c4-89bb-b0673dd00eda"
+    },
+    {
+      "title": "UF IFAS Florida - cải thìa nhận biết lúc thu",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+      "crop_keys": [
+        "bok_choy"
+      ],
+      "characters": 1084,
+      "content_sha256": "2e7444ffa3b31453a6f8a484fe823a01f2d560e146fe13ede55efbb0af335cb3",
+      "source_sha256": "610a7decfcedc6bd3c1a233c1a84dafa5228174da3de5760cc1e9159f9af07f3",
+      "status": "already_active",
+      "document_id": "362dc7bd-67a9-4984-b024-204ad1ebe93b"
+    },
+    {
+      "title": "UF IFAS Florida - bầu sao gieo cây nước và giàn",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1272",
+      "crop_keys": [
+        "bottle_gourd"
+      ],
+      "characters": 878,
+      "content_sha256": "afa7a4ba004155e10d5374ed9238b28da334e2f6c9d9c6aac35cce78d64e285b",
+      "source_sha256": "99db3613ae84413d4c75ec1fed14ca4988ff277084694812c368184a25320a75",
+      "status": "already_active",
+      "document_id": "e3f38395-e5b5-4771-9ee7-a358bc4c10e7"
+    },
+    {
+      "title": "UF IFAS Florida - mướp gieo cây nước giàn và thu non",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1285",
+      "crop_keys": [
+        "luffa"
+      ],
+      "characters": 4629,
+      "content_sha256": "80819d737b00290d9f1aaa97a283fd2296e3b4072564df2c66037b5483a98448",
+      "source_sha256": "c436c9c62191f7d07ce5eab7650a6d363821d240546e0c2c8175087f1a9f3992",
+      "status": "already_active",
+      "document_id": "4a3394c7-ebce-4a77-8e3b-a76e8ef2a479"
+    },
+    {
+      "title": "UF IFAS Florida - đậu đũa đất khí hậu gieo và làm giàn",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+      "crop_keys": [
+        "yardlong_bean"
+      ],
+      "characters": 2314,
+      "content_sha256": "51cce6fe77b2ba0e9dc9a55683d2abe30dd190b805d4b10b8b11b5be6f95a182",
+      "source_sha256": "83343d785a5cd73ffa36b67dfc7d07715b7d2b44edd22a46efded57919c01ffb",
+      "status": "already_active",
+      "document_id": "e61fb4ca-33d8-46dd-b2a8-45f54c7dfc6f"
+    },
+    {
+      "title": "UF IFAS Florida - đậu đũa nhận biết độ non khi thu",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+      "crop_keys": [
+        "yardlong_bean"
+      ],
+      "characters": 1479,
+      "content_sha256": "0b7af761e2b05a876571c8bf1163aa9af0546607657553ab2aa48986afa86dd9",
+      "source_sha256": "83343d785a5cd73ffa36b67dfc7d07715b7d2b44edd22a46efded57919c01ffb",
+      "status": "already_active",
+      "document_id": "cb35a488-585a-4f68-80df-3a35f6e06347"
+    },
+    {
+      "title": "UF IFAS Florida - đậu rồng đậu nành và đậu đũa trong nhóm họ đậu châu Á",
+      "source": "https://ask.ifas.ufl.edu/publication/CV125",
+      "crop_keys": [
+        "soybean",
+        "winged_bean",
+        "yardlong_bean"
+      ],
+      "characters": 1815,
+      "content_sha256": "264f9814e750b90ab17c07774ed20e84691087f807b37e284bb7626b6282350a",
+      "source_sha256": "b6dfe87c437ddde2f5a3b47aa74efc452b1ad536ec1a7d332638553dbb87751b",
+      "status": "already_active",
+      "document_id": "349fa0d8-cfa7-437a-bfc1-704d05032a5d"
+    }
+  ]
+}

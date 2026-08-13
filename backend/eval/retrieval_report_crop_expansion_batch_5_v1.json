@@ -1,0 +1,655 @@
+{
+  "dataset_version": "crop-expansion-batch-5-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 8454.607142857143
+  },
+  "items": [
+    {
+      "id": "peanut-cultivation",
+      "query": "Trồng lạc đậu phộng cần chọn thời vụ, làm đất và mật độ như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc"
+      ],
+      "latency_ms": 25721.21,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "45195435-880a-4e09-86dd-48bbbb7412e9",
+          "chunk_id": "170fbd6a-6800-4ed2-b506-6e4406aa2bf8",
+          "title": "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.958317220211029,
+          "relevant": true
+        },
+        {
+          "document_id": "45195435-880a-4e09-86dd-48bbbb7412e9",
+          "chunk_id": "c97c3803-8645-4a42-a363-b538d623e725",
+          "title": "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03355327468230694,
+          "rerank_score": 0.6791167259216309,
+          "relevant": true
+        },
+        {
+          "document_id": "86a70389-dc8e-4aa0-ad50-2ce4b31682db",
+          "chunk_id": "34ad718e-ec25-4293-a3d4-de95e429bbd7",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 02/04 (trang 8-14)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.0015660177450627089,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "peanut-harvest",
+      "query": "Lạc đậu phụng thu hoạch lúc nào, phơi và bảo quản ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình thu hoạch và bảo quản lạc đậu phộng"
+      ],
+      "latency_ms": 18784.89,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "9bdee428-b484-4c06-a061-b3cf268fe705",
+          "chunk_id": "0e478a99-40f4-42d7-a4fe-13d102c12820",
+          "title": "Quy trình thu hoạch và bảo quản lạc đậu phộng",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9906160235404968,
+          "relevant": true
+        },
+        {
+          "document_id": "cf0edd9a-9f49-4c95-8dd5-8cfa305b3c5a",
+          "chunk_id": "edcdb13a-fe8f-465c-954a-f7db76e95747",
+          "title": "Quy trình thu hoạch và bảo quản đậu tương đậu nành",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033293211362542124,
+          "rerank_score": 0.5182004570960999,
+          "relevant": false
+        },
+        {
+          "document_id": "45195435-880a-4e09-86dd-48bbbb7412e9",
+          "chunk_id": "170fbd6a-6800-4ed2-b506-6e4406aa2bf8",
+          "title": "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.05282077193260193,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "soybean-cultivation",
+      "query": "Kỹ thuật chọn thời vụ, làm đất và gieo đậu tương đậu nành",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc"
+      ],
+      "latency_ms": 8428.07,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "323046f2-e7f1-4d43-b751-4966fc06356f",
+          "chunk_id": "28cab032-54f7-479d-a44d-e4591ddb03ab",
+          "title": "Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9806713461875916,
+          "relevant": true
+        },
+        {
+          "document_id": "323046f2-e7f1-4d43-b751-4966fc06356f",
+          "chunk_id": "b7e9e7b7-3e9c-49af-b610-3caef6bf8812",
+          "title": "Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.8516479730606079,
+          "relevant": true
+        },
+        {
+          "document_id": "323046f2-e7f1-4d43-b751-4966fc06356f",
+          "chunk_id": "67050cc4-b940-43c4-8eee-26abc6c8c5b6",
+          "title": "Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.2278718203306198,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "soybean-harvest",
+      "query": "Đậu tương thu hoạch, phơi và bảo quản hạt như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình thu hoạch và bảo quản đậu tương đậu nành"
+      ],
+      "latency_ms": 5853.67,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "cf0edd9a-9f49-4c95-8dd5-8cfa305b3c5a",
+          "chunk_id": "edcdb13a-fe8f-465c-954a-f7db76e95747",
+          "title": "Quy trình thu hoạch và bảo quản đậu tương đậu nành",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.98103928565979,
+          "relevant": true
+        },
+        {
+          "document_id": "9bdee428-b484-4c06-a061-b3cf268fe705",
+          "chunk_id": "0e478a99-40f4-42d7-a4fe-13d102c12820",
+          "title": "Quy trình thu hoạch và bảo quản lạc đậu phộng",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03307692307692307,
+          "rerank_score": 0.3768303692340851,
+          "relevant": false
+        },
+        {
+          "document_id": "323046f2-e7f1-4d43-b751-4966fc06356f",
+          "chunk_id": "67050cc4-b940-43c4-8eee-26abc6c8c5b6",
+          "title": "Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03303719497749348,
+          "rerank_score": 0.0025046661030501127,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "sweet-potato-cultivation",
+      "query": "Khoai lang đặt dây, bón phân và chăm sóc ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật khoai lang - đặt dây, bón phân và chăm sóc"
+      ],
+      "latency_ms": 5598.68,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "c9895da8-a895-41af-8e61-e3e4d42341b5",
+          "chunk_id": "a0f1665d-71ea-4e5a-86e6-37313641453f",
+          "title": "Kỹ thuật khoai lang - đặt dây, bón phân và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/12/hangweb/so_thang_8_tong_hop_3_compressed.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9827226400375366,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "9476eb92-873d-4354-bbbd-56217aa0b935",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03347376023110255,
+          "rerank_score": 0.33391669392585754,
+          "relevant": false
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "aacfee9b-d0b2-4907-9753-f9fe719675bb",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.031229177489876747,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cassava-cultivation",
+      "query": "Trồng sắn khoai mì bền vững cần chọn đất, thời vụ, giống và mật độ ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình sắn khoai mì bền vững - đất, thời vụ và giống",
+        "Quy trình sắn khoai mì bền vững - trồng, dinh dưỡng và chăm sóc"
+      ],
+      "latency_ms": 6023.35,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "71746ffe-5637-4aea-b3d2-316d82d215fa",
+          "chunk_id": "65d7de70-c134-4c03-85f7-2ffbee8059b2",
+          "title": "Quy trình sắn khoai mì bền vững - đất, thời vụ và giống",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9621639251708984,
+          "relevant": true
+        },
+        {
+          "document_id": "71746ffe-5637-4aea-b3d2-316d82d215fa",
+          "chunk_id": "981665b5-f880-427e-bdad-2cc55cee33f5",
+          "title": "Quy trình sắn khoai mì bền vững - đất, thời vụ và giống",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034725474889409316,
+          "rerank_score": 0.5190556645393372,
+          "relevant": true
+        },
+        {
+          "document_id": "210cd8e4-9eff-49b9-9a96-0251b22240e0",
+          "chunk_id": "3cd672da-206c-4dbc-bad4-58a09973be66",
+          "title": "Quy trình sắn khoai mì bền vững - tưới và tiêu nước",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.4452757239341736,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cassava-water",
+      "query": "Sắn khoai mì cần tưới và tiêu nước thế nào để giữ độ ẩm?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình sắn khoai mì bền vững - tưới và tiêu nước"
+      ],
+      "latency_ms": 5481.27,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "210cd8e4-9eff-49b9-9a96-0251b22240e0",
+          "chunk_id": "3cd672da-206c-4dbc-bad4-58a09973be66",
+          "title": "Quy trình sắn khoai mì bền vững - tưới và tiêu nước",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9881325364112854,
+          "relevant": true
+        },
+        {
+          "document_id": "71746ffe-5637-4aea-b3d2-316d82d215fa",
+          "chunk_id": "65d7de70-c134-4c03-85f7-2ffbee8059b2",
+          "title": "Quy trình sắn khoai mì bền vững - đất, thời vụ và giống",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.3447820842266083,
+          "relevant": false
+        },
+        {
+          "document_id": "8838de3b-f529-4323-a856-0203219eea6a",
+          "chunk_id": "a14dbc56-3de7-4a8d-9bfe-c1fe2d3105cb",
+          "title": "Quy trình sắn khoai mì bền vững - trồng, dinh dưỡng và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033293211362542124,
+          "rerank_score": 0.09682683646678925,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "turmeric-cultivation",
+      "query": "Giống nghệ N8 trồng mùa nào, làm đất, bố trí mật độ và bón phân ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình giống nghệ N8 - thời vụ, đất, mật độ và phân bón"
+      ],
+      "latency_ms": 4928.02,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "50e7c80c-77d7-4bec-a913-31774b6ac349",
+          "chunk_id": "a2e4129d-5ef7-4397-8357-a6945dff5b64",
+          "title": "Quy trình giống nghệ N8 - thời vụ, đất, mật độ và phân bón",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9885862469673157,
+          "relevant": true
+        },
+        {
+          "document_id": "209d5cd8-496a-4e96-af9a-fa54f0cf0538",
+          "chunk_id": "9bba7127-4e97-42ce-80ae-33c15f2eaf7b",
+          "title": "Quy trình giống nghệ N8 - thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.34370994567871094,
+          "relevant": false
+        },
+        {
+          "document_id": "421a3567-16f1-4426-bf98-a3ada6f2140c",
+          "chunk_id": "d310b8ae-6fe7-45e2-a485-45481d0f2815",
+          "title": "Kỹ thuật trồng ngô ngọt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-ngo-ngot-867.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.0048713525757193565,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "turmeric-harvest",
+      "query": "Nghệ N8 thu hoạch củ đúng thời điểm và thao tác như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình giống nghệ N8 - thu hoạch"
+      ],
+      "latency_ms": 5075.04,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "209d5cd8-496a-4e96-af9a-fa54f0cf0538",
+          "chunk_id": "9bba7127-4e97-42ce-80ae-33c15f2eaf7b",
+          "title": "Quy trình giống nghệ N8 - thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9951921701431274,
+          "relevant": true
+        },
+        {
+          "document_id": "50e7c80c-77d7-4bec-a913-31774b6ac349",
+          "chunk_id": "a2e4129d-5ef7-4397-8357-a6945dff5b64",
+          "title": "Quy trình giống nghệ N8 - thời vụ, đất, mật độ và phân bón",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.6513145565986633,
+          "relevant": false
+        },
+        {
+          "document_id": "bea5e0f4-95b7-48e3-b3b1-66dcfa223429",
+          "chunk_id": "933365d3-cd01-4e1e-b909-bc4bbcba96ab",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 10/10 (trang 64-68)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 2.72359284281265e-05,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "ginger-cultivation",
+      "query": "Ủ hom gừng, chọn đất và làm đất trồng gừng như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân"
+      ],
+      "latency_ms": 5122.05,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4cd0e2d1-c27c-4278-a8ff-723cab07c7a7",
+          "chunk_id": "fc2b86df-e32a-4036-b82c-0a9af0349bdc",
+          "title": "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-gung-721.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9968447685241699,
+          "relevant": true
+        },
+        {
+          "document_id": "71746ffe-5637-4aea-b3d2-316d82d215fa",
+          "chunk_id": "981665b5-f880-427e-bdad-2cc55cee33f5",
+          "title": "Quy trình sắn khoai mì bền vững - đất, thời vụ và giống",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03205357142857143,
+          "rerank_score": 0.013003624975681305,
+          "relevant": false
+        },
+        {
+          "document_id": "7405f426-305c-4c0a-b102-dfe665d2f8c5",
+          "chunk_id": "2f7f02df-3370-4e47-9e3e-5eae61e517da",
+          "title": "Sách hướng dẫn kỹ thuật trồng thanh long — phần 02/05 (trang 8-14)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_thanh_long_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03317934138829661,
+          "rerank_score": 0.01214567106217146,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "ginger-nutrition",
+      "query": "Cây gừng cần bón phân theo các giai đoạn như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân"
+      ],
+      "latency_ms": 4692.44,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4cd0e2d1-c27c-4278-a8ff-723cab07c7a7",
+          "chunk_id": "c06e705b-bcea-4a1c-bbdb-efbe1b4fd0bc",
+          "title": "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-gung-721.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9983353018760681,
+          "relevant": true
+        },
+        {
+          "document_id": "4cd0e2d1-c27c-4278-a8ff-723cab07c7a7",
+          "chunk_id": "fc2b86df-e32a-4036-b82c-0a9af0349bdc",
+          "title": "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-gung-721.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.10027610510587692,
+          "relevant": true
+        },
+        {
+          "document_id": "818fbe29-22ee-484b-bfa2-dfe7ac7e0606",
+          "chunk_id": "f60fa16a-dd5f-49e0-959b-f4619dfb9466",
+          "title": "Tài liệu canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu — phần 14/15 (trang 92-98)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/02/hangweb/5-canh-tac-lua-cafe-18-3-out.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.00012002380390185863,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pennywort-cultivation",
+      "query": "Rau má chọn giống, chuẩn bị đất và trồng như thế nào để xanh tốt?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc"
+      ],
+      "latency_ms": 5845.11,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "6c457bab-cd23-4fa8-a4ad-026509041c78",
+          "chunk_id": "64707ba9-8d4a-410e-a13f-5db9e33b3692",
+          "title": "Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-rau-ma-xanh-tot-nang-suat-1771.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.9945266842842102,
+          "relevant": true
+        },
+        {
+          "document_id": "060047aa-2053-4272-ba86-e7d057778244",
+          "chunk_id": "5f1aade6-8086-421b-90fc-b180f0b0fb4c",
+          "title": "Kỹ thuật trồng và chăm sóc cây rau ngót - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-rau-ngot-18184.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034477459016393444,
+          "rerank_score": 0.2177019715309143,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "57dc5f0d-dd16-405d-9cb8-c087188c052a",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.018637577071785927,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pennywort-nutrition",
+      "query": "Rau má cần tưới nước và bón phân chăm sóc như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc"
+      ],
+      "latency_ms": 8175.12,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "6c457bab-cd23-4fa8-a4ad-026509041c78",
+          "chunk_id": "64707ba9-8d4a-410e-a13f-5db9e33b3692",
+          "title": "Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-rau-ma-xanh-tot-nang-suat-1771.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8319961428642273,
+          "relevant": true
+        },
+        {
+          "document_id": "9c63ddac-c7f0-40e6-ae0f-1af96c89e8cd",
+          "chunk_id": "0a058d77-24e8-4f61-b960-c2cc01730266",
+          "title": "Kỹ thuật trồng và chăm sóc cây rau ngót - nước tưới và trẻ hóa",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-rau-ngot-18184.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03257575757575758,
+          "rerank_score": 0.11125069111585617,
+          "relevant": false
+        },
+        {
+          "document_id": "421a3567-16f1-4426-bf98-a3ada6f2140c",
+          "chunk_id": "d310b8ae-6fe7-45e2-a485-45481d0f2815",
+          "title": "Kỹ thuật trồng ngô ngọt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-ngo-ngot-867.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.0009922245517373085,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "garlic-cultivation",
+      "query": "Tỏi trồng thời vụ nào, chọn đất, giống và mật độ ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc"
+      ],
+      "latency_ms": 8635.58,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "152f0a67-0759-4e1e-a7ea-10747e5cdb35",
+          "chunk_id": "f84478ba-fd7f-47f5-a8e2-8178aa5cbabc",
+          "title": "Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-toi-951.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.608544111251831,
+          "relevant": true
+        },
+        {
+          "document_id": "421a3567-16f1-4426-bf98-a3ada6f2140c",
+          "chunk_id": "d310b8ae-6fe7-45e2-a485-45481d0f2815",
+          "title": "Kỹ thuật trồng ngô ngọt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-ngo-ngot-867.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.19362784922122955,
+          "relevant": false
+        },
+        {
+          "document_id": "cd430b88-8d1c-4b5b-93e1-ed07a1cbaabc",
+          "chunk_id": "a4df2704-7712-40a2-b7ca-ac5605657333",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 09/10 (trang 57-63)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 2.0341949493740685e-05,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "version": "crop-data-expansion-batch-2-v1",
+  "documents": 6,
+  "sources": 6,
+  "ready": 0,
+  "already_active": 6,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-trong-ngo-vu-dong-tren-dat-2-lua-phan-1-12767.html",
+      "crop_keys": [
+        "maize"
+      ],
+      "characters": 6038,
+      "content_sha256": "83d83dd9162d4fcf3b1dd3cf402c7c2ffaea3e0db09a7ed21f7b33d3472c39fd",
+      "source_sha256": "eaf82af777ea4fef9aaf456755db1990552f234717fa265a6c8b1ed0c285387e",
+      "status": "already_active",
+      "document_id": "be2751f5-7d5d-496a-8699-eec3f80394d3"
+    },
+    {
+      "title": "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+      "crop_keys": [
+        "maize"
+      ],
+      "characters": 5643,
+      "content_sha256": "0f6776c964114bae27ea1463d974ece6c0aca26b4be0a7183c2f1fd793954629",
+      "source_sha256": "7f0e4047ba4d835632b16fa229f66f22efb8fe34ec9acb6945be4462f4ddd86f",
+      "status": "already_active",
+      "document_id": "446087d7-e822-44c0-aca0-0aa332999f77"
+    },
+    {
+      "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "crop_keys": [
+        "potato"
+      ],
+      "characters": 18117,
+      "content_sha256": "a2cdb169b4d76b9da1ad7f31bcd37f9f2ad173db9211e26c59cf78a4c5d11c0c",
+      "source_sha256": "a974a9178732b919d39a328abc49abd9f86aad1c85e1d003b52fa8d206bfb7d5",
+      "status": "already_active",
+      "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093"
+    },
+    {
+      "title": "Kỹ thuật trồng ớt ngọt theo hướng an toàn",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ot-ngot-capsicum-annum-l-theo-huong-an-toan-9759.html",
+      "crop_keys": [
+        "bell_pepper"
+      ],
+      "characters": 4048,
+      "content_sha256": "31ca88b4970f3019e32d443d0027d1893d8e39f52fb6651f1182ee7baea9f439",
+      "source_sha256": "fc36f703f6966d52e31c50d97f7f6acd75f0b0f86bbc5504c6adefbb2e92858d",
+      "status": "already_active",
+      "document_id": "05daeee1-c976-459f-b87a-38e5749cdf78"
+    },
+    {
+      "title": "Kỹ thuật trồng rau mồng tơi an toàn",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-mong-toi-an-toan-5596.html",
+      "crop_keys": [
+        "malabar_spinach"
+      ],
+      "characters": 3143,
+      "content_sha256": "abb02702b570de394fa382caba72ef3e41e1547725495c0c5c722ff587fcc734",
+      "source_sha256": "518ab439227f53430656388d7e835b8598ddd68b767de9bb41b61d7105475217",
+      "status": "already_active",
+      "document_id": "882f2859-fdf0-4722-a664-f0c07be179c3"
+    },
+    {
+      "title": "Sâu tơ hại rau cải và biện pháp phòng trừ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+      "crop_keys": [
+        "broccoli",
+        "cauliflower",
+        "kohlrabi",
+        "cabbage",
+        "choy_sum",
+        "mustard_greens"
+      ],
+      "characters": 2817,
+      "content_sha256": "79c48d038f51d9fc0225764c2258338e6ff399f652f0ac5872dd43908e839342",
+      "source_sha256": "f3a394970820e84adfa81b6cb254b728575fc6807a36a9163acc307507b101f1",
+      "status": "already_active",
+      "document_id": "6c9d9211-44fb-400c-9e4e-76e7a2f706a2"
+    }
+  ]
+}

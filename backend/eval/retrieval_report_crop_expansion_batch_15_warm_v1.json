@@ -1,0 +1,744 @@
+{
+  "dataset_version": "crop-expansion-batch-15-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 5,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 0.9949825493217617,
+    "mean_latency_ms": 5440.095
+  },
+  "items": [
+    {
+      "id": "artichoke-not-roselle-establishment",
+      "query": "Atisô lấy nụ globe artichoke Cynara, không phải atisô đỏ bụp giấm: đất thoát nước, cây giống và tưới theo USU thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "USU Extension - atiso dat nuoc va trong cay"
+      ],
+      "latency_ms": 15600.85,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "458ef95d-bca8-4576-b9fc-3daa0bd2e5d5",
+          "chunk_id": "a2a81da6-ec76-4ad0-9db6-86f8fabb1528",
+          "title": "USU Extension - atiso dat nuoc va trong cay",
+          "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9994186162948608,
+          "relevant": true
+        },
+        {
+          "document_id": "23a86bed-88c5-4758-bee4-d0008b8ad8b6",
+          "chunk_id": "a2fa0fc1-a8dd-43c0-9080-4eda987f036b",
+          "title": "USU Extension - atiso nhan biet luc thu nu",
+          "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9151461720466614,
+          "relevant": false
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "0c3b85a9-6ec3-49d8-81eb-dc78dd00bbb3",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.5661165118217468,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "artichoke-bud-harvest",
+      "query": "Atisô lấy nụ nên thu lúc lá bắc còn khép hay đã mở, cắt nụ ra sao theo USU?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "USU Extension - atiso nhan biet luc thu nu"
+      ],
+      "latency_ms": 10636.1,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "23a86bed-88c5-4758-bee4-d0008b8ad8b6",
+          "chunk_id": "a2fa0fc1-a8dd-43c0-9080-4eda987f036b",
+          "title": "USU Extension - atiso nhan biet luc thu nu",
+          "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9747629165649414,
+          "relevant": true
+        },
+        {
+          "document_id": "458ef95d-bca8-4576-b9fc-3daa0bd2e5d5",
+          "chunk_id": "a2a81da6-ec76-4ad0-9db6-86f8fabb1528",
+          "title": "USU Extension - atiso dat nuoc va trong cay",
+          "source": "https://extension.usu.edu/yardandgarden/research/artichoke-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.17115077376365662,
+          "relevant": false
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "0c3b85a9-6ec3-49d8-81eb-dc78dd00bbb3",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03278478057889822,
+          "rerank_score": 0.05431808531284332,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "garlic-not-elephant-establishment",
+      "query": "Tỏi thật Allium sativum khác elephant garlic gần họ tỏi tây thế nào; chọn tép giống, trồng và tưới theo USU?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "USU Extension - toi giong dat trong va nuoc"
+      ],
+      "latency_ms": 6547.4,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "0fca6569-a45c-41fa-9792-262a78b00c35",
+          "chunk_id": "1af2f56a-06a1-402b-9d99-15c03c02d902",
+          "title": "USU Extension - toi giong dat trong va nuoc",
+          "source": "https://extension.usu.edu/yardandgarden/research/garlic-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9963687658309937,
+          "relevant": true
+        },
+        {
+          "document_id": "152f0a67-0759-4e1e-a7ea-10747e5cdb35",
+          "chunk_id": "f84478ba-fd7f-47f5-a8e2-8178aa5cbabc",
+          "title": "Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-toi-951.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.6648898720741272,
+          "relevant": false
+        },
+        {
+          "document_id": "e5d08859-6e78-4a23-a93f-a0f240ce8dd7",
+          "chunk_id": "e0c517af-1d41-40f3-8e44-bbaf6f059b4b",
+          "title": "Tỏi tây leek - cây giống, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/leeks-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.34039750695228577,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "garlic-cure-storage",
+      "query": "Tỏi bắt đầu vàng lá thì thu và hong chữa củ, nhận biết đã khô, bảo quản ra sao?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "USU Extension - toi nhan biet chin va bao quan"
+      ],
+      "latency_ms": 3732.28,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "331cb14b-a9b2-461c-bf22-669542f0d086",
+          "chunk_id": "38452d97-a3c1-4638-a2b3-e1a9319ab5a2",
+          "title": "USU Extension - toi nhan biet chin va bao quan",
+          "source": "https://extension.usu.edu/yardandgarden/research/garlic-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03355762172742843,
+          "rerank_score": 0.942824125289917,
+          "relevant": true
+        },
+        {
+          "document_id": "152f0a67-0759-4e1e-a7ea-10747e5cdb35",
+          "chunk_id": "f84478ba-fd7f-47f5-a8e2-8178aa5cbabc",
+          "title": "Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-toi-951.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.013855421686746987,
+          "rerank_score": 0.014839008450508118,
+          "relevant": false
+        },
+        {
+          "document_id": "61eecf28-31ea-4171-bc79-33ec225d39d8",
+          "chunk_id": "e067e082-a2d7-4e4e-977c-5f12b915fbe0",
+          "title": "Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.006049502640962601,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "culantro-not-cilantro",
+      "query": "Ngò gai mùi tàu culantro Eryngium foetidum, không phải ngò rí cilantro Coriandrum: bóng râm, đất ẩm, gieo và hái lá thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS - ngo gai phan biet ngo ri va cach trong"
+      ],
+      "latency_ms": 4191.57,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "2da66b43-65cb-4d12-afa8-b4142d7f4ff4",
+          "chunk_id": "89d74cbb-edfe-4c78-832e-13c42b1541e6",
+          "title": "UF IFAS - ngo gai phan biet ngo ri va cach trong",
+          "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/culantro/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9986904263496399,
+          "relevant": true
+        },
+        {
+          "document_id": "31506f1e-9952-4661-84aa-b0d94f072ed4",
+          "chunk_id": "b591c890-a5a0-4e69-a4d0-9e87047cf467",
+          "title": "Cẩm nang trồng ngò gai an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9515209794044495,
+          "relevant": false
+        },
+        {
+          "document_id": "2da66b43-65cb-4d12-afa8-b4142d7f4ff4",
+          "chunk_id": "d3a0c826-40e8-4fab-98a9-006b92ad44fb",
+          "title": "UF IFAS - ngo gai phan biet ngo ri va cach trong",
+          "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/culantro/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03284382284382284,
+          "rerank_score": 0.029835036024451256,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "fish-mint-not-mentha",
+      "query": "Diếp cá fish mint Houttuynia cordata, không phải bạc hà Mentha: cần đất ẩm, chịu bóng và phải chặn thân rễ lan ra sao?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "NC State Extension - diep ca dat am va kiem soat lan"
+      ],
+      "latency_ms": 3482.86,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4a9c9100-2856-40e7-87ef-7365ad2131e5",
+          "chunk_id": "c22d03bc-020f-45c0-9be5-038a393d1910",
+          "title": "NC State Extension - diep ca dat am va kiem soat lan",
+          "source": "https://plants.ces.ncsu.edu/plants/houttuynia-cordata/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9995484948158264,
+          "relevant": true
+        },
+        {
+          "document_id": "1b71eea9-5374-454b-a73f-bfcfecf12062",
+          "chunk_id": "32ea3754-b030-43d2-9322-e0a241a0bfac",
+          "title": "Cẩm nang trồng diếp cá an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.962848424911499,
+          "relevant": false
+        },
+        {
+          "document_id": "b9928538-b69e-4849-83a6-0f998943367d",
+          "chunk_id": "4524d9c5-66a8-4c1e-96d8-2a682119a0e0",
+          "title": "Cẩm nang trồng húng cây an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.17423272132873535,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "jicama-not-cassava-food-safety",
+      "query": "Củ đậu jicama Pachyrhizus erosus không phải sắn cassava: cần bao lâu ấm để tạo củ và bộ phận nào độc không được ăn?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS - cu dau dinh danh thoi gian tao cu va an toan"
+      ],
+      "latency_ms": 3460.68,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "1bf8531a-c614-4829-8398-b961c44e9154",
+          "chunk_id": "66c90aff-97f5-4b21-9407-567e772e31ed",
+          "title": "UF IFAS - cu dau dinh danh thoi gian tao cu va an toan",
+          "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/jicama/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9937999844551086,
+          "relevant": true
+        },
+        {
+          "document_id": "a1f9fb21-bb4d-4fa3-9997-7efb96997f02",
+          "chunk_id": "901a1769-a491-4ffb-9708-006a4ee2de38",
+          "title": "Củ đậu - chọn đất, làm luống và dinh dưỡng",
+          "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/bac-giang-trong-cu-dau-cho-thu-nhap-on-dinh-20044.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.6951048970222473,
+          "relevant": false
+        },
+        {
+          "document_id": "f9d65ce2-adfd-4553-af19-6057f405ae68",
+          "chunk_id": "45ffcda2-be1a-4ee3-819c-7143d68a34c7",
+          "title": "Củ đậu - bấm ngọn, tỉa hoa và quản lý nước",
+          "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/bac-giang-trong-cu-dau-cho-thu-nhap-on-dinh-20044.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.6099979877471924,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "dragon-fruit-climate-stress",
+      "query": "Thanh long pitaya Selenicereus chịu nóng, gió, ngập, mặn và hạn như thế nào theo bảng môi trường UF IFAS?",
+      "category": "crop_depth_climate",
+      "relevant_sources": [
+        "UF IFAS - thanh long nguong nhiet gio ngap han man"
+      ],
+      "latency_ms": 3444.27,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "44d31743-f311-4b48-acb4-e565c4009af6",
+          "chunk_id": "0cd7fb44-6673-4109-abcf-a7356a96459e",
+          "title": "UF IFAS - thanh long nguong nhiet gio ngap han man",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9889757633209229,
+          "relevant": true
+        },
+        {
+          "document_id": "2f6dbdf9-a146-448c-b8be-49b9496dfb66",
+          "chunk_id": "c6573200-a564-4f06-9b23-0746c5205a04",
+          "title": "UF IFAS - xoai nguong nhiet gio ngap han man",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.18496964871883392,
+          "relevant": false
+        },
+        {
+          "document_id": "bab462d6-fdd8-4fcc-9154-496c348fc0b0",
+          "chunk_id": "03efa580-2e3a-46f3-ac8b-1b3e5569ead1",
+          "title": "UF IFAS - dua khom thich nghi nhiet han ngap va gio",
+          "source": "https://ask.ifas.ufl.edu/publication/MG055",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.04957904666662216,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mango-climate-stress",
+      "query": "Xoài Mangifera indica có mức chịu gió, ngập, mặn và hạn ra sao trong bảng môi trường UF IFAS?",
+      "category": "crop_depth_climate",
+      "relevant_sources": [
+        "UF IFAS - xoai nguong nhiet gio ngap han man"
+      ],
+      "latency_ms": 3239.65,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "2f6dbdf9-a146-448c-b8be-49b9496dfb66",
+          "chunk_id": "c6573200-a564-4f06-9b23-0746c5205a04",
+          "title": "UF IFAS - xoai nguong nhiet gio ngap han man",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9960808157920837,
+          "relevant": true
+        },
+        {
+          "document_id": "44d31743-f311-4b48-acb4-e565c4009af6",
+          "chunk_id": "0cd7fb44-6673-4109-abcf-a7356a96459e",
+          "title": "UF IFAS - thanh long nguong nhiet gio ngap han man",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.3532114624977112,
+          "relevant": false
+        },
+        {
+          "document_id": "bab462d6-fdd8-4fcc-9154-496c348fc0b0",
+          "chunk_id": "03efa580-2e3a-46f3-ac8b-1b3e5569ead1",
+          "title": "UF IFAS - dua khom thich nghi nhiet han ngap va gio",
+          "source": "https://ask.ifas.ufl.edu/publication/MG055",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.027950815856456757,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pineapple-climate-stress",
+      "query": "Dứa thơm khóm pineapple phản ứng với lạnh nóng, hạn, úng, gió và mặn ra sao theo UF IFAS?",
+      "category": "crop_depth_climate",
+      "relevant_sources": [
+        "UF IFAS - dua khom thich nghi nhiet han ngap va gio"
+      ],
+      "latency_ms": 2809.97,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "bab462d6-fdd8-4fcc-9154-496c348fc0b0",
+          "chunk_id": "03efa580-2e3a-46f3-ac8b-1b3e5569ead1",
+          "title": "UF IFAS - dua khom thich nghi nhiet han ngap va gio",
+          "source": "https://ask.ifas.ufl.edu/publication/MG055",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9738102555274963,
+          "relevant": true
+        },
+        {
+          "document_id": "2f6dbdf9-a146-448c-b8be-49b9496dfb66",
+          "chunk_id": "c6573200-a564-4f06-9b23-0746c5205a04",
+          "title": "UF IFAS - xoai nguong nhiet gio ngap han man",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03384176587301587,
+          "rerank_score": 0.12899936735630035,
+          "relevant": false
+        },
+        {
+          "document_id": "44d31743-f311-4b48-acb4-e565c4009af6",
+          "chunk_id": "0cd7fb44-6673-4109-abcf-a7356a96459e",
+          "title": "UF IFAS - thanh long nguong nhiet gio ngap han man",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1499",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.05068955570459366,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pineapple-propagules",
+      "query": "Dứa pineapple phân biệt chồi ngọn crown, slip, hapa, sucker và ratoon; vật liệu trồng cần hong và vào giá thể sạch thế nào?",
+      "category": "crop_depth_establishment",
+      "relevant_sources": [
+        "UF IFAS - dua khom vat lieu nhan giong dat va thoat nuoc"
+      ],
+      "latency_ms": 3427.2,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ae5511b5-9bd3-4006-8359-ed46b2075ae7",
+          "chunk_id": "c5b3ad3e-298a-483c-b409-c346c707cf28",
+          "title": "UF IFAS - dua khom vat lieu nhan giong dat va thoat nuoc",
+          "source": "https://ask.ifas.ufl.edu/publication/MG055",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9993870258331299,
+          "relevant": true
+        },
+        {
+          "document_id": "f84b22ae-906f-41d9-9ec0-fcffb10d7714",
+          "chunk_id": "1a7efa30-5334-481c-a6e0-d2edb6425342",
+          "title": "Quy trình tạm thời phòng chống bệnh thối nõn và thối rễ cây dứa",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033040796963946864,
+          "rerank_score": 0.3851776421070099,
+          "relevant": false
+        },
+        {
+          "document_id": "bab462d6-fdd8-4fcc-9154-496c348fc0b0",
+          "chunk_id": "03efa580-2e3a-46f3-ac8b-1b3e5569ead1",
+          "title": "UF IFAS - dua khom thich nghi nhiet han ngap va gio",
+          "source": "https://ask.ifas.ufl.edu/publication/MG055",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.04219925403594971,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "perilla-purslane-watercress-microgreens",
+      "query": "Chỉ ở giai đoạn rau mầm: tía tô shiso, rau sam purslane và cải xoong watercress gieo che hạt, chiếu sáng và cắt thu thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS - tia to rau sam cai xoong o giai doan rau mam"
+      ],
+      "latency_ms": 3211.2,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "730c474a-402b-4027-834f-418c2a4de214",
+          "chunk_id": "528ff2df-1abd-4d13-a913-1682cb92999c",
+          "title": "UF IFAS - tia to rau sam cai xoong o giai doan rau mam",
+          "source": "https://gardeningsolutions.ifas.ufl.edu/plants/edibles/vegetables/microgreens/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9973358511924744,
+          "relevant": true
+        },
+        {
+          "document_id": "134fe3e3-09ed-499e-80a5-30ccbc76b2d5",
+          "chunk_id": "3120ca83-0c99-4fa0-9a4f-6c5944250861",
+          "title": "Xà lách xoong - nhân giống và duy trì môi trường nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/watercress-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.288177490234375,
+          "relevant": false
+        },
+        {
+          "document_id": "49f80a89-93c7-4b5c-9206-ad093b142a8e",
+          "chunk_id": "c52cf491-185a-4a1d-a241-4bd1997fbeac",
+          "title": "Rau sam - đất, ánh sáng và quản lý ẩm",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032959850606909424,
+          "rerank_score": 0.26280784606933594,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "asian-vegetable-alias-disambiguation",
+      "query": "Bảng tên rau châu Á phân biệt riềng galangal, Indian taro, Tossa jute rau đay và Vietnamese coriander rau răm thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS - tieu chuan hoa ten rau chau A de tranh nham cay"
+      ],
+      "latency_ms": 4373.4,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "da2b1ad7-60d2-4356-b72c-5bb8703a8f06",
+          "chunk_id": "159b685d-8eca-4de7-b50f-b38d01492f16",
+          "title": "UF IFAS - tieu chuan hoa ten rau chau A de tranh nham cay",
+          "source": "https://ask.ifas.ufl.edu/publication/CV301",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9955234527587891,
+          "relevant": true
+        },
+        {
+          "document_id": "330e5795-3b82-49b3-9be8-d15a68481a2d",
+          "chunk_id": "905f2ce1-8ce4-4471-bc45-8ea00edf5432",
+          "title": "Cẩm nang trồng rau răm an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.7959034442901611,
+          "relevant": false
+        },
+        {
+          "document_id": "48051b84-c0bf-43ed-af9f-257e5a9160dd",
+          "chunk_id": "acf1f1ff-6506-4f8a-ab58-49e081ae4518",
+          "title": "Rau đay - thời vụ, đất, luống và mật độ",
+          "source": "https://agro.gov.vn/vn/tID11789_ky-thuat-trong-rau-day-theo-huong-san-xuat-sach.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03289412313432836,
+          "rerank_score": 0.667195737361908,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "black-pepper-not-capsicum",
+      "query": "Hồ tiêu đen black pepper Piper nigrum, không phải ớt Capsicum: ICAR-IISR xác nhận những nội dung đào tạo nào về giống, vườn ươm và canh tác?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "ICAR IISR - ho tieu den dao tao canh tac va vat lieu giong"
+      ],
+      "latency_ms": 5396.73,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "da33c985-1052-4642-8ab6-d8ef6b6e71e5",
+          "chunk_id": "6f2967b5-adc2-40ca-baac-ec5d29b740c8",
+          "title": "ICAR IISR - ho tieu den dao tao canh tac va vat lieu giong",
+          "source": "https://www.icar.gov.in/en/training-agro-technological-practices-sustainable-black-pepper-production",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9999011754989624,
+          "relevant": true
+        },
+        {
+          "document_id": "da33c985-1052-4642-8ab6-d8ef6b6e71e5",
+          "chunk_id": "4ed7f44b-eace-4854-88cc-f534dacd0353",
+          "title": "ICAR IISR - ho tieu den dao tao canh tac va vat lieu giong",
+          "source": "https://www.icar.gov.in/en/training-agro-technological-practices-sustainable-black-pepper-production",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.30199381709098816,
+          "relevant": true
+        },
+        {
+          "document_id": "05daeee1-c976-459f-b87a-38e5749cdf78",
+          "chunk_id": "a80a9a18-3f1a-4ab4-a615-147beb3166b5",
+          "title": "Kỹ thuật trồng ớt ngọt theo hướng an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ot-ngot-capsicum-annum-l-theo-huong-an-toan-9759.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.02388046495616436,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "chrysanthemum-greens-not-ornamental",
+      "query": "Tần ô cải cúc Tong Hao Glebionis coronaria, không phải cúc cảnh: giống lá rộng/lá hẹp, đất, nhiệt, bóng râm và gieo thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS - tan o dinh danh dat nhiet gieo va trong"
+      ],
+      "latency_ms": 8613.34,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "13fc142a-b175-4862-b5fd-732c36a662fb",
+          "chunk_id": "3695d720-a04a-456c-b2c6-4ce09a4b835d",
+          "title": "UF IFAS - tan o dinh danh dat nhiet gieo va trong",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1276",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9998074173927307,
+          "relevant": true
+        },
+        {
+          "document_id": "79ba15f2-ab4c-4e15-91e0-5d9efd1c5719",
+          "chunk_id": "f0f77f6a-1594-4c6d-a0a9-2a083d9f8721",
+          "title": "Cải cúc tần ô - chuẩn bị khay và gieo hạt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cach-trong-rau-cai-cuc-trong-thung-xop-952.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.993995726108551,
+          "relevant": false
+        },
+        {
+          "document_id": "37e004b7-4b0d-4766-a09b-2fcc9208381e",
+          "chunk_id": "40c68078-48cc-4e40-821e-ae52877cc65d",
+          "title": "UF IFAS - tan o chi bao va phuong phap thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1276",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.7694110870361328,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "chrysanthemum-greens-harvest",
+      "query": "Tần ô cải cúc thu một lần và thu nhiều lần khác nhau thế nào, cần chừa cành hay lá gốc ra sao?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "UF IFAS - tan o chi bao va phuong phap thu"
+      ],
+      "latency_ms": 4874.02,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "37e004b7-4b0d-4766-a09b-2fcc9208381e",
+          "chunk_id": "40c68078-48cc-4e40-821e-ae52877cc65d",
+          "title": "UF IFAS - tan o chi bao va phuong phap thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1276",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034362192622950816,
+          "rerank_score": 0.9889989495277405,
+          "relevant": true
+        },
+        {
+          "document_id": "f820f12b-c6c4-4e10-90b5-f266eca62389",
+          "chunk_id": "2aa7ce4d-62ad-4638-844b-9c885cb05df7",
+          "title": "Cải cúc tần ô - tưới và chăm sóc trong khay",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cach-trong-rau-cai-cuc-trong-thung-xop-952.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.031462365591397846,
+          "rerank_score": 0.10474903881549835,
+          "relevant": false
+        },
+        {
+          "document_id": "79ba15f2-ab4c-4e15-91e0-5d9efd1c5719",
+          "chunk_id": "f0f77f6a-1594-4c6d-a0a9-2a083d9f8721",
+          "title": "Cải cúc tần ô - chuẩn bị khay và gieo hạt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cach-trong-rau-cai-cuc-trong-thung-xop-952.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.015151515151515152,
+          "rerank_score": 0.06040913611650467,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

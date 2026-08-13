@@ -1,0 +1,216 @@
+{
+  "version": "crop-data-expansion-batch-8-v1",
+  "documents": 17,
+  "sources": 16,
+  "ready": 0,
+  "already_active": 17,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Cải cầu vồng - gieo trồng, khoảng cách và tưới nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/swiss-chard-in-the-garden",
+      "crop_keys": [
+        "chard"
+      ],
+      "characters": 1973,
+      "content_sha256": "0657b69c2a6f1713251bdbc2686ddb97d3f885b809feaf5096228c14d6c92483",
+      "source_sha256": "ee0b9e11412032398c64eff4ad7c82643141ab811e268939d7fc90ddf88f4029",
+      "status": "already_active",
+      "document_id": "e5ea040b-0fc0-4600-a5e6-f84f1c7a8c2f"
+    },
+    {
+      "title": "Cải xoăn kale - gieo trồng, khoảng cách và tưới nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/kale-in-the-garden",
+      "crop_keys": [
+        "kale"
+      ],
+      "characters": 1823,
+      "content_sha256": "b2f06772e334969ea5a56e2e2304e7a0955683ad8f0cc5f82056e007791db200",
+      "source_sha256": "810703686a7d3cdaddec17512a3706b23fd59a21f0e943fc3832f1de536c1e00",
+      "status": "already_active",
+      "document_id": "ce9ca066-a424-40a5-9533-53c999eca565"
+    },
+    {
+      "title": "Sả - nhân giống, trồng và quản lý nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/lemongrass-in-the-garden",
+      "crop_keys": [
+        "lemongrass"
+      ],
+      "characters": 1521,
+      "content_sha256": "d3149a5ca9007f610a4d2c317283dba9a9b7e39e7fb06c0d1c36569be221b73a",
+      "source_sha256": "e76666f18384fd271666572804a2f67269198c1e02e4cf4293736aa0007394c9",
+      "status": "already_active",
+      "document_id": "620dcf38-c7c6-4e8d-b561-2e6ee791b987"
+    },
+    {
+      "title": "Củ cải turnip - gieo hạt, khoảng cách và tưới nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/rutabagas-and-turnips-in-the-garden",
+      "crop_keys": [
+        "turnip"
+      ],
+      "characters": 1969,
+      "content_sha256": "a09eadc2dd55eb3d099f170f158a61421d574735162097584e625d3155da9e68",
+      "source_sha256": "1611846b151bf1daaeba34a250e56aca1b75c4a15c516c8525c6f1ba08cd2e67",
+      "status": "already_active",
+      "document_id": "33c19820-60e2-44a8-8163-1baa2385ebd8"
+    },
+    {
+      "title": "Xà lách xoong - nhân giống và duy trì môi trường nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/watercress-in-the-garden",
+      "crop_keys": [
+        "watercress"
+      ],
+      "characters": 1375,
+      "content_sha256": "c107e0438fd47ef17672307ebad518dc31b198deb63cb22cfa3a8610e2fae430",
+      "source_sha256": "c55a523c0cf8905f89fdc27d4968de59f8a9ef4ec1fe23e57932f84546522f7d",
+      "status": "already_active",
+      "document_id": "134fe3e3-09ed-499e-80a5-30ccbc76b2d5"
+    },
+    {
+      "title": "Tỏi tây leek - cây giống, khoảng cách và tưới nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/leeks-in-the-garden",
+      "crop_keys": [
+        "leek"
+      ],
+      "characters": 1433,
+      "content_sha256": "efebdfc50276a0a6321a9000283063214458cafd2577057f128539a96830122c",
+      "source_sha256": "ce41cd51a494ba5271a93eb16fc4bfb6f9b95d403980e39f01608ec8bbedb61c",
+      "status": "already_active",
+      "document_id": "e5d08859-6e78-4a23-a93f-a0f240ce8dd7"
+    },
+    {
+      "title": "Bí ngòi zucchini - gieo trồng, khoảng cách và tưới",
+      "source": "https://extension.usu.edu/yardandgarden/research/summer-and-winter-squash-in-the-garden",
+      "crop_keys": [
+        "zucchini"
+      ],
+      "characters": 2183,
+      "content_sha256": "2d200765900b37fba2fbf2dc536365b4eed84ca37c96e763caad704fb7a4f4cb",
+      "source_sha256": "fac5fc2f09b01cf7abaaf75e05c18932e7499206d97511f0d296ba5da9452dc9",
+      "status": "already_active",
+      "document_id": "d18ecb50-cd0f-47fd-b079-1f7bef392d4c"
+    },
+    {
+      "title": "Cải Brussels - cây giống, khoảng cách và tưới nước",
+      "source": "https://extension.usu.edu/yardandgarden/research/brussel-sprouts-in-the-garden",
+      "crop_keys": [
+        "brussels_sprouts"
+      ],
+      "characters": 1662,
+      "content_sha256": "b9753ac0785fec19408c55ce949fe55236d7b1af584c0a2c63904cac49dab875",
+      "source_sha256": "fb2a8366871ba0eabb8261d7c0f52348fa899d9c17e023d207edab5ac2bf982f",
+      "status": "already_active",
+      "document_id": "10518fb3-0c11-45ce-9252-28e3239aecbb"
+    },
+    {
+      "title": "Rau sam - đất, ánh sáng và quản lý ẩm",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+      "crop_keys": [
+        "purslane"
+      ],
+      "characters": 921,
+      "content_sha256": "524c917911b84470012ba5dd515d6d8f3da908e259943b45d8b8e68330f18f0c",
+      "source_sha256": "07a4d3c6e60dcf6a9e660e8c6d0faee1e23683c4cd6dfe6317c3a03fbefa8198",
+      "status": "already_active",
+      "document_id": "49f80a89-93c7-4b5c-9206-ad093b142a8e"
+    },
+    {
+      "title": "Rau sam - thời điểm và cách thu hoạch",
+      "source": "https://ask.ifas.ufl.edu/publication/HS1484",
+      "crop_keys": [
+        "purslane"
+      ],
+      "characters": 830,
+      "content_sha256": "2c14c1622ba430b33e0d25b4d134462852846f7241c3d90fc900060e0d805a1a",
+      "source_sha256": "07a4d3c6e60dcf6a9e660e8c6d0faee1e23683c4cd6dfe6317c3a03fbefa8198",
+      "status": "already_active",
+      "document_id": "4cfd02b8-246c-499d-8ad2-1ab85b638458"
+    },
+    {
+      "title": "Riềng - trồng thân rễ, giá thể và tưới",
+      "source": "https://ask.ifas.ufl.edu/publication/EP638",
+      "crop_keys": [
+        "galangal"
+      ],
+      "characters": 1844,
+      "content_sha256": "ab8a00f72401c0f5ab2613a28aebf947f94d90d4053dd1a883b5a9d13ae6a09e",
+      "source_sha256": "fd78dfec3ee2b2fed7a285a263dc09f8887794d8e0342bf3206719f21fa853d6",
+      "status": "already_active",
+      "document_id": "dd418618-dc5a-4225-9c5e-07c2dcf3521c"
+    },
+    {
+      "title": "Mùi tây parsley - thời vụ, khoảng cách và độ sâu gieo",
+      "source": "https://ask.ifas.ufl.edu/publication/CV294?downloadOpen=true",
+      "crop_keys": [
+        "parsley"
+      ],
+      "characters": 1466,
+      "content_sha256": "30c07c14740e95925eae69bc0070d0748018224bfb21acb2515afc7525918516",
+      "source_sha256": "ba548e310256f5c0a03878aaccc6da6726761ce9ce3a3e9565b35c6d88cb9b9e",
+      "status": "already_active",
+      "document_id": "e96422a9-8fc9-48c3-b5ab-b97cc0ca6982"
+    },
+    {
+      "title": "Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng",
+      "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-va-cham-soc-cay-dau-xanh-863.html",
+      "crop_keys": [
+        "mung_bean"
+      ],
+      "characters": 3748,
+      "content_sha256": "b6ef61262e1df7696aa2b4e29b67ca526edde432a13b11813d60463a3b870dbe",
+      "source_sha256": "36f1df92503d055baaa9ca7438f93c2d05b3a3194d118f2490b4b48364c5e0f9",
+      "status": "already_active",
+      "document_id": "f40b084f-7f6d-4a7e-ae17-d051cef18bbb"
+    },
+    {
+      "title": "Sen lấy củ - nhân giống và chuẩn bị ao đất",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-sen-lay-cu-1532.html",
+      "crop_keys": [
+        "lotus_root"
+      ],
+      "characters": 1433,
+      "content_sha256": "9fafd3be3144424915db0fb1956bb992a1bfffc631df1d9c88aa622932777086",
+      "source_sha256": "1fc89494fd358950d5316a89c1709ab9992ad843d83f716a75b07bc6404ed844",
+      "status": "already_active",
+      "document_id": "5fdc7c45-734a-4d41-98be-7250491180a1"
+    },
+    {
+      "title": "Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/vinh-long-tuan-thu-ky-thuat-canh-tac--canh-dong-khoai-mo-ngay-cang-mo-rong-19139.html",
+      "crop_keys": [
+        "yam"
+      ],
+      "characters": 2431,
+      "content_sha256": "df4846a685c3222cf303a657b9af5f9c208979693fb7527dd73a7bbf1912fede",
+      "source_sha256": "051774889fbdc3337baccc52e393b157ab100c932d63042dd665cb444d75b66d",
+      "status": "already_active",
+      "document_id": "148f424e-6179-4e09-becd-5830bfa9e713"
+    },
+    {
+      "title": "Dọc mùng Colocasia gigantea - đất, ánh sáng và chắn gió",
+      "source": "https://utgardens.tennessee.edu/thailand-giant-elephant-ear-will-get-all-your-neighbors-talking-and-gawking/",
+      "crop_keys": [
+        "taro_stem"
+      ],
+      "characters": 705,
+      "content_sha256": "d20c31e072e9f4084e1051bbf2370eaf722fe4cfd357399d500ea9c62673fe31",
+      "source_sha256": "b5e3574da8ddf344c670d9160471eb7efd8ea55cba263874bb2a6b8936e203a6",
+      "status": "already_active",
+      "document_id": "21a1f3de-089b-43a7-a145-e244b3209902"
+    },
+    {
+      "title": "Cải thìa bok choy - gieo trực tiếp và thu hoạch",
+      "source": "https://extension.oregonstate.edu/catalog/pub/em-9128-growing-vegetables-central-oregon?reference=catalog",
+      "crop_keys": [
+        "bok_choy"
+      ],
+      "characters": 696,
+      "content_sha256": "27d51dc86c65580cf9767b42a368d96772afdbcbdd01f9219bc3fc7384ad2aa9",
+      "source_sha256": "854f29e96c9616571c8d691575aa9a50ebe67ad3cad67571102c5b1b99030c60",
+      "status": "already_active",
+      "document_id": "d431a956-3f1d-407c-a0c8-8ed80b74e2d2"
+    }
+  ]
+}

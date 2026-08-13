@@ -1,0 +1,81 @@
+{
+  "version": "crop-data-expansion-batch-12-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn",
+    "dbc.danang.gov.vn",
+    "khoahockythuat.ninhbinh.gov.vn"
+  ],
+  "documents": [
+    {
+      "title": "Dưa leo, đậu bắp và khổ qua - thu hái, phân loại và tạm trữ tại HTX",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/cong-nghe-bao-quan-sau-thu-hoach-rau-cu-qua-7674.html",
+      "source_type": "extension",
+      "author": "ThS. Vũ Công Khanh - Phân Viện Cơ Điện Nông nghiệp và Công nghệ Sau Thu hoạch; Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2013-05-21T15:30:00+07:00",
+      "format": "html_markers",
+      "start_marker": "• Quy trình STH chung cho rau ăn trái",
+      "end_marker": "ThS. Vũ Công Khanh",
+      "content_prefix": "Phạm vi cây: dưa leo/dưa chuột cucumber (Cucumis sativus), đậu bắp okra (Abelmoschus esculentus) và khổ qua/mướp đắng bitter melon (Momordica charantia). Đây là quy trình sau thu hoạch quy mô HTX từ nghiên cứu tại TP.HCM, không phải quy trình canh tác toàn quốc. Lát này chỉ giữ thu hái tránh đất-dập, vận chuyển, phân loại, bao bì thoáng và tạm trữ mát; toàn bộ các mục xử lý khử khuẩn ở phía trước không được đưa vào.",
+      "crop_keys": ["cucumber", "okra", "bitter_melon"],
+      "required_terms": ["dưa leo", "đậu bắp", "khổ qua", "không tiếp xúc với đất", "Tạm trữ trong kho mát"],
+      "forbidden_terms": ["chlorine", "ozone", "cloramin", "hóa chất"],
+      "min_chars": 700
+    },
+    {
+      "title": "Măng tây xanh Hòa Vang Đà Nẵng - cây con, xuống giống, dinh dưỡng và nước",
+      "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+      "source_type": "government",
+      "author": "Hoàng Oanh - Trung tâm Công nghệ Sinh học Đà Nẵng",
+      "format": "html_markers",
+      "start_marker": "1. Sản xuất cây con giống",
+      "end_marker": "– Phòng trừ sâu, bệnh",
+      "content_prefix": "Tên cây và phạm vi: măng tây xanh, asparagus, Asparagus officinalis; không phải măng tre, măng le hoặc măng trúc. Quy trình được xây dựng cho huyện Hòa Vang, TP. Đà Nẵng; thời vụ và mọi lượng bón giữ nguyên đơn vị 1.000 m², phải quy đổi đúng diện tích và điều chỉnh theo đất, không tự suy rộng toàn quốc.",
+      "crop_keys": ["asparagus"],
+      "required_terms": ["Sản xuất cây con giống", "Kỹ thuật trồng", "1.500-2.000 cây", "Lượng bón", "độ ẩm ở mức 65-70%"],
+      "forbidden_terms": ["Ridomil", "Mancozeb", "Radiant 60SC", "Neem Nano"],
+      "min_chars": 1500
+    },
+    {
+      "title": "Măng tây xanh Hòa Vang Đà Nẵng - chu kỳ và kỹ thuật thu hoạch",
+      "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+      "source_type": "government",
+      "author": "Hoàng Oanh - Trung tâm Công nghệ Sinh học Đà Nẵng",
+      "format": "html_markers",
+      "start_marker": "4. Thu hoạch",
+      "end_marker": "Hoàng Oanh",
+      "content_prefix": "Tên cây và phạm vi: măng tây xanh, asparagus, Asparagus officinalis tại huyện Hòa Vang, TP. Đà Nẵng; không phải các loại măng tre. Mốc lứa măng tơ, chu kỳ thu-nghỉ dưỡng cây mẹ và thao tác thu là bằng chứng địa phương, cần điều chỉnh theo sức cây và đầu ra thực tế.",
+      "crop_keys": ["asparagus"],
+      "required_terms": ["Lứa măng tơ", "4-5 tháng", "thu măng hằng ngày", "5-8 giờ sáng", "Kỹ thuật thu hoạch"],
+      "min_chars": 650
+    },
+    {
+      "title": "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+      "source_type": "government",
+      "author": "Thanh Liên; Liên hiệp các Hội Khoa học và Kỹ thuật Ninh Bình",
+      "published_date": "2015-07-29T00:00:00+07:00",
+      "format": "html_markers",
+      "start_marker": "1. Thời vụ",
+      "end_marker": "Phòng trừ sâu bệnh:",
+      "content_prefix": "Tên cây và phạm vi: cà rốt, carrot, Daucus carota subsp. sativus; không phải củ cải radish hoặc turnip. Lịch vụ và định lượng trên 1 ha thuộc điều kiện mát, đất nhẹ của đồng bằng sông Hồng; phải quy đổi đúng diện tích, phân tích đất và không chuyển nguyên lịch sang miền Nam.",
+      "crop_keys": ["carrot"],
+      "required_terms": ["Vụ chính", "Chọn và làm đất", "Lượng phân bón cho 1ha", "Xử lý và gieo hạt", "trước khi thu hoạch 10 ngày"],
+      "forbidden_terms": ["thuốc hóa học", "thuốc trừ cỏ", "Ronstar", "Carbenzadim"],
+      "min_chars": 1700
+    },
+    {
+      "title": "Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+      "source_type": "government",
+      "author": "Thanh Liên; Liên hiệp các Hội Khoa học và Kỹ thuật Ninh Bình",
+      "published_date": "2015-07-29T00:00:00+07:00",
+      "format": "html_markers",
+      "start_marker": "Thu hoạch: Khi củ cà rốt vừa tới độ",
+      "end_marker": "Thanh Liên",
+      "content_prefix": "Tên cây và phạm vi: cà rốt, carrot, Daucus carota subsp. sativus tại đồng bằng sông Hồng; không phải củ cải radish hay turnip. Dùng chuyển màu lá và vai củ tròn đều làm chỉ báo kết hợp, thu lúc khô ráo, giảm tổn thương và chuyển nhanh; không suy diễn thành chuẩn kích cỡ bắt buộc cho mọi giống.",
+      "crop_keys": ["carrot"],
+      "required_terms": ["vai củ tròn đều", "ngày khô nắng", "làm sạch đất", "xếp nhẹ nhàng", "vận chuyển"],
+      "min_chars": 600
+    }
+  ]
+}

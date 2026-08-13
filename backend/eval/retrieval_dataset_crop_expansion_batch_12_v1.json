@@ -1,0 +1,35 @@
+{
+  "version": "crop-expansion-batch-12-retrieval-v1",
+  "items": [
+    {
+      "id": "fruit-vegetable-htx-postharvest",
+      "category": "crop_depth_harvest",
+      "query": "Dưa leo, đậu bắp và khổ qua ở HTX sau thu hoạch nên tránh chạm đất, phân loại, đóng bao thoáng và tạm trữ mát thế nào, không hỏi chlorine hay ozone?",
+      "relevant_sources": ["Dưa leo, đậu bắp và khổ qua - thu hái, phân loại và tạm trữ tại HTX"]
+    },
+    {
+      "id": "asparagus-establishment-not-bamboo-shoot",
+      "category": "crop_depth_lookalike",
+      "query": "Măng tây xanh asparagus ở Hòa Vang Đà Nẵng, không phải măng tre: ươm cây, xuống giống, mật độ, bón và giữ ẩm thế nào?",
+      "relevant_sources": ["Măng tây xanh Hòa Vang Đà Nẵng - cây con, xuống giống, dinh dưỡng và nước"]
+    },
+    {
+      "id": "asparagus-harvest-cycle",
+      "category": "crop_depth_harvest",
+      "query": "Măng tây xanh ở Hòa Vang sau trồng bao lâu thu lứa măng tơ, chu kỳ thu và nghỉ dưỡng cây mẹ, giờ thu buổi sáng và thao tác cắt thế nào?",
+      "relevant_sources": ["Măng tây xanh Hòa Vang Đà Nẵng - chu kỳ và kỹ thuật thu hoạch"]
+    },
+    {
+      "id": "carrot-establishment-not-radish",
+      "category": "crop_depth_lookalike",
+      "query": "Cà rốt carrot Daucus carota ở đồng bằng sông Hồng, không phải củ cải radish: thời vụ, đất, xử lý gieo hạt, tưới và bón theo ha thế nào?",
+      "relevant_sources": ["Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc"]
+    },
+    {
+      "id": "carrot-harvest-not-turnip",
+      "category": "crop_depth_harvest",
+      "query": "Cà rốt, không phải turnip: nhận biết độ thu hoạch bằng màu lá và vai củ, thu ngày khô, làm sạch và vận chuyển giảm dập thế nào?",
+      "relevant_sources": ["Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển"]
+    }
+  ]
+}

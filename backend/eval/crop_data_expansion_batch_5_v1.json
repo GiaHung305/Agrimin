@@ -1,0 +1,110 @@
+{
+  "version": "crop-data-expansion-batch-5-v1",
+  "allowed_domains": ["khuyennongvn.gov.vn", "khoahockythuat.ninhbinh.gov.vn"],
+  "documents": [
+    {
+      "title": "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+      "source_type": "government", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2018-05-01",
+      "format": "pdf", "page_start": 8, "page_end": 13,
+      "content_prefix": "Tên cây và từ đồng nghĩa: lạc, đậu phộng, đậu phụng, peanut, Arachis hypogaea.",
+      "crop_keys": ["peanut"], "required_terms": ["lạc", "thời vụ", "làm đất"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình thu hoạch và bảo quản lạc đậu phộng",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+      "source_type": "government", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2018-05-01",
+      "format": "pdf", "page_start": 21, "page_end": 22, "start_marker": "1.8. THU HOẠCH VÀ BẢO QUẢN",
+      "content_prefix": "Tên cây và từ đồng nghĩa: lạc, đậu phộng, đậu phụng, peanut, Arachis hypogaea.",
+      "crop_keys": ["peanut"], "required_terms": ["THU HOẠCH", "BẢO QUẢN", "phơi"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+      "source_type": "government", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2018-05-01",
+      "format": "pdf", "page_start": 8, "page_end": 13,
+      "content_prefix": "Tên cây và từ đồng nghĩa: đậu tương, đậu nành, soybean, Glycine max.",
+      "crop_keys": ["soybean"], "required_terms": ["đậu tương", "thời vụ", "làm đất"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình thu hoạch và bảo quản đậu tương đậu nành",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/dau_tuong_in_1.pdf",
+      "source_type": "government", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2018-05-01",
+      "format": "pdf", "page_start": 19, "page_end": 20, "start_marker": "1.8. THU HOẠCH VÀ BẢO QUẢN",
+      "content_prefix": "Tên cây và từ đồng nghĩa: đậu tương, đậu nành, soybean, Glycine max.",
+      "crop_keys": ["soybean"], "required_terms": ["THU HOẠCH", "BẢO QUẢN", "phơi"], "min_chars": 500
+    },
+    {
+      "title": "Kỹ thuật khoai lang - đặt dây, bón phân và chăm sóc",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/12/hangweb/so_thang_8_tong_hop_3_compressed.pdf",
+      "source_type": "extension", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2021-08-01",
+      "format": "pdf", "page_start": 21, "page_end": 21, "start_marker": "4. Đặt dây", "end_marker": "8. Thu hoạch, bảo quản",
+      "content_prefix": "Tên cây và từ đồng nghĩa: khoai lang, sweet potato, Ipomoea batatas.",
+      "crop_keys": ["sweet_potato"], "required_terms": ["Đặt dây", "Phân bón", "Chăm sóc"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình sắn khoai mì bền vững - đất, thời vụ và giống",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+      "source_type": "extension", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2024-08-13",
+      "format": "dnn_voice", "start_marker": "1. Đất trồng", "end_marker": "3.2. Chất lượng hom giống",
+      "content_prefix": "Tên cây và từ đồng nghĩa: sắn, khoai mì, cassava, Manihot esculenta.",
+      "crop_keys": ["cassava"], "required_terms": ["Đất trồng", "Thời vụ", "giống"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình sắn khoai mì bền vững - trồng, dinh dưỡng và chăm sóc",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+      "source_type": "extension", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2024-08-13",
+      "format": "dnn_voice", "start_marker": "4. Kỹ thuật trồng và chăm sóc", "end_marker": "4.5. Phòng trừ cỏ dại",
+      "content_prefix": "Tên cây và từ đồng nghĩa: sắn, khoai mì, cassava, Manihot esculenta.",
+      "crop_keys": ["cassava"], "required_terms": ["Kỹ thuật trồng", "Mật độ", "Bón phân"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình sắn khoai mì bền vững - tưới và tiêu nước",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
+      "source_type": "extension", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2024-08-13",
+      "format": "dnn_voice", "start_marker": "4.6. Tưới tiêu nước", "end_marker": "5. Trồng xen và luân canh",
+      "content_prefix": "Tên cây và từ đồng nghĩa: sắn, khoai mì, cassava, Manihot esculenta.",
+      "crop_keys": ["cassava"], "required_terms": ["Tưới tiêu nước", "độ ẩm"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình giống nghệ N8 - thời vụ, đất, mật độ và phân bón",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+      "source_type": "extension", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2023-09-19",
+      "format": "dnn_voice", "start_marker": "2. KỸ THUẬT TRỒNG VÀ CHĂM SÓC", "end_marker": "Chuẩn bị hom hoặc cây giống",
+      "content_prefix": "Tên cây và từ đồng nghĩa: nghệ, turmeric, Curcuma longa; quy trình áp dụng cho giống nghệ N8.",
+      "crop_keys": ["turmeric"], "required_terms": ["Thời vụ", "Mật độ", "Phân bón"], "min_chars": 500
+    },
+    {
+      "title": "Quy trình giống nghệ N8 - thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
+      "source_type": "extension", "author": "Trung tâm Khuyến nông Quốc gia", "published_date": "2023-09-19",
+      "format": "dnn_voice", "start_marker": "3. THU HOẠCH", "end_marker": "Lê Thị Loan",
+      "content_prefix": "Tên cây và từ đồng nghĩa: nghệ, turmeric, Curcuma longa; quy trình áp dụng cho giống nghệ N8.",
+      "crop_keys": ["turmeric"], "required_terms": ["THU HOẠCH"], "min_chars": 500
+    },
+    {
+      "title": "Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-gung-721.html",
+      "source_type": "government", "author": "Sở Khoa học và Công nghệ tỉnh Ninh Bình", "published_date": "2017-12-21",
+      "format": "html", "element_class": "art-cont", "start_marker": "3. Cách ủ hom gừng", "end_marker": "7. Phòng trừ sâu bệnh",
+      "content_prefix": "Tên cây và từ đồng nghĩa: gừng, ginger, Zingiber officinale.",
+      "crop_keys": ["ginger"], "required_terms": ["ủ hom gừng", "chọn đất", "bón phân"], "min_chars": 500
+    },
+    {
+      "title": "Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-rau-ma-xanh-tot-nang-suat-1771.html",
+      "source_type": "government", "author": "Sở Khoa học và Công nghệ tỉnh Ninh Bình", "published_date": "2022-12-06",
+      "format": "html", "element_class": "art-cont", "start_marker": "Chọn giống hợp lý", "end_marker": "Phòng trừ sâu bệnh",
+      "content_prefix": "Tên cây và từ đồng nghĩa: rau má, pennywort, Centella asiatica.",
+      "crop_keys": ["pennywort"], "required_terms": ["Chọn giống", "Bón phân"], "min_chars": 500
+    },
+    {
+      "title": "Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc",
+      "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-toi-951.html",
+      "source_type": "government", "author": "Sở Khoa học và Công nghệ tỉnh Ninh Bình", "published_date": "2018-11-27",
+      "format": "html", "element_class": "art-cont", "start_marker": "3. Kỹ thuật trồng tỏi", "end_marker": "4. Phòng chữa bệnh cho tỏi",
+      "content_prefix": "Tên cây và từ đồng nghĩa: tỏi, garlic, Allium sativum.",
+      "crop_keys": ["garlic"], "required_terms": ["Kỹ thuật trồng tỏi", "Thời vụ", "Đất trồng"], "min_chars": 500
+    }
+  ]
+}

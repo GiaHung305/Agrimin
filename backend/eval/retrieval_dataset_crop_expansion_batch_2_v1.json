@@ -1,0 +1,53 @@
+{
+  "version": "crop-expansion-batch-2-retrieval-v1",
+  "items": [
+    {
+      "id": "maize-winter-cultivation",
+      "category": "crop_expansion",
+      "query": "Trồng ngô vụ đông trên đất hai vụ lúa cần chuẩn bị đất và mật độ thế nào?",
+      "relevant_sources": ["Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa"]
+    },
+    {
+      "id": "maize-fall-armyworm",
+      "category": "crop_expansion",
+      "query": "Phòng chống sâu keo mùa thu trên cây ngô bằng biện pháp tổng hợp ra sao?",
+      "relevant_sources": ["Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô"]
+    },
+    {
+      "id": "potato-winter-cultivation",
+      "category": "crop_expansion",
+      "query": "Quy trình trồng và chăm sóc khoai tây vụ đông trên đất hai vụ lúa",
+      "relevant_sources": ["Quy trình kỹ thuật sản xuất khoai tây vụ đông"]
+    },
+    {
+      "id": "potato-harvest-storage",
+      "category": "crop_expansion",
+      "query": "Khi nào thu hoạch khoai tây và bảo quản củ sau thu hoạch thế nào?",
+      "relevant_sources": ["Quy trình kỹ thuật sản xuất khoai tây vụ đông"]
+    },
+    {
+      "id": "bell-pepper-safe-cultivation",
+      "category": "crop_expansion",
+      "query": "Kỹ thuật trồng ớt chuông an toàn từ vườn ươm đến thu hoạch",
+      "relevant_sources": ["Kỹ thuật trồng ớt ngọt theo hướng an toàn"]
+    },
+    {
+      "id": "malabar-spinach-cultivation",
+      "category": "crop_expansion",
+      "query": "Cách trồng và chăm sóc rau mồng tơi an toàn",
+      "relevant_sources": ["Kỹ thuật trồng rau mồng tơi an toàn"]
+    },
+    {
+      "id": "broccoli-diamondback-moth",
+      "category": "crop_expansion",
+      "query": "Sâu tơ hại bông cải xanh có đặc điểm gì và phòng trừ thế nào?",
+      "relevant_sources": ["Sâu tơ hại rau cải và biện pháp phòng trừ"]
+    },
+    {
+      "id": "kohlrabi-diamondback-moth",
+      "category": "crop_expansion",
+      "query": "Biện pháp quản lý sâu tơ trên cây su hào theo hướng tổng hợp",
+      "relevant_sources": ["Sâu tơ hại rau cải và biện pháp phòng trừ"]
+    }
+  ]
+}

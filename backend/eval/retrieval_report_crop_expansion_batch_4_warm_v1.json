@@ -1,0 +1,474 @@
+{
+  "dataset_version": "crop-expansion-batch-4-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 19193.944
+  },
+  "items": [
+    {
+      "id": "fish-mint-cultivation",
+      "query": "Trồng diếp cá cần chuẩn bị đất, giống và khoảng cách như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng diếp cá an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 43876.16,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "1b71eea9-5374-454b-a73f-bfcfecf12062",
+          "chunk_id": "32ea3754-b030-43d2-9322-e0a241a0bfac",
+          "title": "Cẩm nang trồng diếp cá an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9663297533988953,
+          "relevant": true
+        },
+        {
+          "document_id": "558a63db-d788-428c-812a-dbf0228a00d0",
+          "chunk_id": "39f48a65-e78f-40fa-8200-f61ef8b3040c",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 04/04 (trang 22-28)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03255760368663595,
+          "rerank_score": 0.05612317472696304,
+          "relevant": false
+        },
+        {
+          "document_id": "266d51c5-c905-49ce-ae31-5d9ffe9003b4",
+          "chunk_id": "71e57da2-c45f-4f8f-b3d7-2050d0d8badf",
+          "title": "Tài liệu tập huấn kỹ thuật trồng đậu bắp - giống và gieo trồng",
+          "source": "https://snnmt.vinhlong.gov.vn/Portals/1041/TaiLieuKyThuat/4_Tailieu_THKN_Kythuattrongdaubap_duyetFinal.pdf?ver=jhpds4TvJO3Bhiyfspttow%3D%3D",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03284382284382284,
+          "rerank_score": 0.005976102314889431,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mint-cultivation",
+      "query": "Cách trồng húng cây húng lủi bằng cành và chăm sóc sau trồng",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng húng cây an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 17701.94,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b9928538-b69e-4849-83a6-0f998943367d",
+          "chunk_id": "4524d9c5-66a8-4c1e-96d8-2a682119a0e0",
+          "title": "Cẩm nang trồng húng cây an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.964917004108429,
+          "relevant": true
+        },
+        {
+          "document_id": "4c58b49b-4daa-471b-a3de-69b83e94671f",
+          "chunk_id": "8056c243-80df-4210-a21f-14064ab2d315",
+          "title": "Cẩm nang trồng húng quế an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033699902248289344,
+          "rerank_score": 0.601219892501831,
+          "relevant": false
+        },
+        {
+          "document_id": "ba7e3193-f740-472b-a5ae-b69c83a557d1",
+          "chunk_id": "30b0acd6-f391-4b9a-ba73-aa2caba204ea",
+          "title": "Kỹ thuật trồng đậu Hà Lan an toàn - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-dau-ha-lan-theo-huong-san-xuat-rau-an-toan-819.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.0006608432158827782,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "basil-cultivation",
+      "query": "Húng quế gieo hạt, làm đất và trồng với khoảng cách bao nhiêu?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng húng quế an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 18307.79,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4c58b49b-4daa-471b-a3de-69b83e94671f",
+          "chunk_id": "8056c243-80df-4210-a21f-14064ab2d315",
+          "title": "Cẩm nang trồng húng quế an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9904265999794006,
+          "relevant": true
+        },
+        {
+          "document_id": "b9928538-b69e-4849-83a6-0f998943367d",
+          "chunk_id": "4524d9c5-66a8-4c1e-96d8-2a682119a0e0",
+          "title": "Cẩm nang trồng húng cây an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033353365384615384,
+          "rerank_score": 0.4476419687271118,
+          "relevant": false
+        },
+        {
+          "document_id": "11fe69f1-48c5-4ccb-b760-24bacedab9c1",
+          "chunk_id": "ea5b8210-5e5e-44fc-9593-3fde54c4b9c7",
+          "title": "Cẩm nang trồng măng tây - giống, đất và chăm sóc",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/02/Cam-nang-Cay-Mang-Tay.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.024258224293589592,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "marjoram-cultivation",
+      "query": "Kinh giới nên trồng mùa nào, gieo hạt hay giâm cành và chuẩn bị đất ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng kinh giới an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 27149.12,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "859f6617-5234-4c3e-96d5-6e5d80f0ab0f",
+          "chunk_id": "be381f6a-bb08-4131-a9aa-1127d0946e9d",
+          "title": "Cẩm nang trồng kinh giới an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9946931004524231,
+          "relevant": true
+        },
+        {
+          "document_id": "34dd8f31-14ee-4bfa-a211-698ea9a028f7",
+          "chunk_id": "954675d6-3440-41dc-8420-d3d31324ce1a",
+          "title": "Kỹ thuật trồng dưa hấu - thời vụ, vườn ươm và mật độ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-dua-hau-20894.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033345212639581845,
+          "rerank_score": 0.20296090841293335,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "57dc5f0d-dd16-405d-9cb8-c087188c052a",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.003096876433119178,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "culantro-cultivation",
+      "query": "Kỹ thuật trồng ngò gai mùi tàu từ chuẩn bị đất đến mật độ trồng",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng ngò gai an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 31014.01,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "31506f1e-9952-4661-84aa-b0d94f072ed4",
+          "chunk_id": "b591c890-a5a0-4e69-a4d0-9e87047cf467",
+          "title": "Cẩm nang trồng ngò gai an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.5528598427772522,
+          "relevant": true
+        },
+        {
+          "document_id": "dcfabd60-c31f-461a-b4b3-c6bf2a4846d7",
+          "chunk_id": "842d4d29-d2e2-486c-95ce-6d2e0ede6d68",
+          "title": "Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03363858363858364,
+          "rerank_score": 0.47273528575897217,
+          "relevant": false
+        },
+        {
+          "document_id": "7405f426-305c-4c0a-b102-dfe665d2f8c5",
+          "chunk_id": "2f7f02df-3370-4e47-9e3e-5eae61e517da",
+          "title": "Sách hướng dẫn kỹ thuật trồng thanh long — phần 02/05 (trang 8-14)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_thanh_long_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.060586072504520416,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "vietnamese-coriander-cultivation",
+      "query": "Rau răm thích hợp với đất thế nào và giâm cành ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng rau răm an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 23275.29,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "330e5795-3b82-49b3-9be8-d15a68481a2d",
+          "chunk_id": "905f2ce1-8ce4-4471-bc45-8ea00edf5432",
+          "title": "Cẩm nang trồng rau răm an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.7549551725387573,
+          "relevant": true
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032296380090497734,
+          "rerank_score": 0.0015407571336254478,
+          "relevant": false
+        },
+        {
+          "document_id": "cd430b88-8d1c-4b5b-93e1-ed07a1cbaabc",
+          "chunk_id": "a4df2704-7712-40a2-b7ca-ac5605657333",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 09/10 (trang 57-63)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 1.7016764104482718e-05,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "perilla-cultivation",
+      "query": "Tía tô trồng quanh năm bằng hạt như thế nào và khoảng cách bao nhiêu?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng tía tô an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 10961.35,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "9b9b42fb-0f97-44d1-86e0-11a5f86a0e3e",
+          "chunk_id": "fe698eec-183b-42c3-af92-ebd603cfba33",
+          "title": "Cẩm nang trồng tía tô an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9753333330154419,
+          "relevant": true
+        },
+        {
+          "document_id": "11fe69f1-48c5-4ccb-b760-24bacedab9c1",
+          "chunk_id": "41a6b906-d539-474a-a167-50031c05eacd",
+          "title": "Cẩm nang trồng măng tây - giống, đất và chăm sóc",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/02/Cam-nang-Cay-Mang-Tay.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.031404518329070756,
+          "rerank_score": 0.0009409438353031874,
+          "relevant": false
+        },
+        {
+          "document_id": "ad66fbfb-98b5-4228-a17e-48f2ea8fa926",
+          "chunk_id": "75971a09-81d6-4b46-ae10-cc30e0929e71",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 06/10 (trang 36-42)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.00010217964882031083,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "dill-cultivation",
+      "query": "Thì là trồng vào tháng nào, làm đất và gieo hạt thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng thì là an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 5676.26,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "9ff46a2a-fb15-4e90-b381-ebabb1870367",
+          "chunk_id": "4f955781-afc6-48d4-9dc0-800d01d48ece",
+          "title": "Cẩm nang trồng thì là an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03330520732883317,
+          "rerank_score": 0.9951614737510681,
+          "relevant": true
+        },
+        {
+          "document_id": "34dd8f31-14ee-4bfa-a211-698ea9a028f7",
+          "chunk_id": "954675d6-3440-41dc-8420-d3d31324ce1a",
+          "title": "Kỹ thuật trồng dưa hấu - thời vụ, vườn ươm và mật độ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-dua-hau-20894.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.360269159078598,
+          "relevant": false
+        },
+        {
+          "document_id": "00fbacb8-c941-4bcd-8e4c-eb7d3eec4190",
+          "chunk_id": "6821aa0a-a165-4690-a1c2-46905a1b3d62",
+          "title": "Kỹ thuật trồng cải củ - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-cai-cu-4939.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03331730769230769,
+          "rerank_score": 0.17420370876789093,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "wild-betel-cultivation",
+      "query": "Lá lốt chọn cành giống, giâm cành và bố trí khoảng cách trồng ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng lá lốt an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 5561.67,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "29979a5d-ba11-47bf-8f74-71a29ae438f1",
+          "chunk_id": "8caf39a7-f5f1-4c44-9d88-fb25644ece98",
+          "title": "Cẩm nang trồng lá lốt an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.9603049159049988,
+          "relevant": true
+        },
+        {
+          "document_id": "421a3567-16f1-4426-bf98-a3ada6f2140c",
+          "chunk_id": "d310b8ae-6fe7-45e2-a485-45481d0f2815",
+          "title": "Kỹ thuật trồng ngô ngọt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-ngo-ngot-867.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.0029284439515322447,
+          "relevant": false
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "4839d234-11d4-4176-b530-4c65c022a0a8",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.0002733682922553271,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "coriander-cultivation",
+      "query": "Ngò rí rau mùi cần xử lý hạt và gieo trồng như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất"
+      ],
+      "latency_ms": 8415.85,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "dcfabd60-c31f-461a-b4b3-c6bf2a4846d7",
+          "chunk_id": "842d4d29-d2e2-486c-95ce-6d2e0ede6d68",
+          "title": "Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9904528856277466,
+          "relevant": true
+        },
+        {
+          "document_id": "421a3567-16f1-4426-bf98-a3ada6f2140c",
+          "chunk_id": "d310b8ae-6fe7-45e2-a485-45481d0f2815",
+          "title": "Kỹ thuật trồng ngô ngọt",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-ngo-ngot-867.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.0680084079504013,
+          "relevant": false
+        },
+        {
+          "document_id": "446087d7-e822-44c0-aca0-0aa332999f77",
+          "chunk_id": "32da4f7c-864b-4aae-a1b4-27bef46b6911",
+          "title": "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.015847181901335716,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": false,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": false
+    }
+  }
+}

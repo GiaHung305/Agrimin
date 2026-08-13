@@ -1,0 +1,19 @@
+{
+  "version": "crop-expansion-batch-5-retrieval-v1",
+  "items": [
+    {"id":"peanut-cultivation","category":"crop_expansion","query":"Trồng lạc đậu phộng cần chọn thời vụ, làm đất và mật độ như thế nào?","relevant_sources":["Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc"]},
+    {"id":"peanut-harvest","category":"crop_expansion","query":"Lạc đậu phụng thu hoạch lúc nào, phơi và bảo quản ra sao?","relevant_sources":["Quy trình thu hoạch và bảo quản lạc đậu phộng"]},
+    {"id":"soybean-cultivation","category":"crop_expansion","query":"Kỹ thuật chọn thời vụ, làm đất và gieo đậu tương đậu nành","relevant_sources":["Quy trình trồng đậu tương đậu nành - đất, giống và chăm sóc"]},
+    {"id":"soybean-harvest","category":"crop_expansion","query":"Đậu tương thu hoạch, phơi và bảo quản hạt như thế nào?","relevant_sources":["Quy trình thu hoạch và bảo quản đậu tương đậu nành"]},
+    {"id":"sweet-potato-cultivation","category":"crop_expansion","query":"Khoai lang đặt dây, bón phân và chăm sóc ra sao?","relevant_sources":["Kỹ thuật khoai lang - đặt dây, bón phân và chăm sóc"]},
+    {"id":"cassava-cultivation","category":"crop_expansion","query":"Trồng sắn khoai mì bền vững cần chọn đất, thời vụ, giống và mật độ ra sao?","relevant_sources":["Quy trình sắn khoai mì bền vững - đất, thời vụ và giống","Quy trình sắn khoai mì bền vững - trồng, dinh dưỡng và chăm sóc"]},
+    {"id":"cassava-water","category":"crop_expansion","query":"Sắn khoai mì cần tưới và tiêu nước thế nào để giữ độ ẩm?","relevant_sources":["Quy trình sắn khoai mì bền vững - tưới và tiêu nước"]},
+    {"id":"turmeric-cultivation","category":"crop_expansion","query":"Giống nghệ N8 trồng mùa nào, làm đất, bố trí mật độ và bón phân ra sao?","relevant_sources":["Quy trình giống nghệ N8 - thời vụ, đất, mật độ và phân bón"]},
+    {"id":"turmeric-harvest","category":"crop_expansion","query":"Nghệ N8 thu hoạch củ đúng thời điểm và thao tác như thế nào?","relevant_sources":["Quy trình giống nghệ N8 - thu hoạch"]},
+    {"id":"ginger-cultivation","category":"crop_expansion","query":"Ủ hom gừng, chọn đất và làm đất trồng gừng như thế nào?","relevant_sources":["Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân"]},
+    {"id":"ginger-nutrition","category":"crop_expansion","query":"Cây gừng cần bón phân theo các giai đoạn như thế nào?","relevant_sources":["Kỹ thuật trồng gừng - ủ hom, chọn đất, làm đất và bón phân"]},
+    {"id":"pennywort-cultivation","category":"crop_expansion","query":"Rau má chọn giống, chuẩn bị đất và trồng như thế nào để xanh tốt?","relevant_sources":["Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc"]},
+    {"id":"pennywort-nutrition","category":"crop_expansion","query":"Rau má cần tưới nước và bón phân chăm sóc như thế nào?","relevant_sources":["Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc"]},
+    {"id":"garlic-cultivation","category":"crop_expansion","query":"Tỏi trồng thời vụ nào, chọn đất, giống và mật độ ra sao?","relevant_sources":["Kỹ thuật trồng tỏi - đất, giống, mật độ và chăm sóc"]}
+  ]
+}

@@ -1,0 +1,384 @@
+{
+  "dataset_version": "crop-expansion-batch-13-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 5,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 0.9598603945740938,
+    "mean_latency_ms": 14988.32625
+  },
+  "items": [
+    {
+      "id": "parsley-not-coriander-greenhouse",
+      "query": "Tài liệu thử nghiệm trồng mùi tây parsley trong nhà kính Florida, không phải ngò rí coriander hay ngò gai culantro, có nhắc những rau gia vị nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - thử nghiệm nhà kính cho sáu loại rau gia vị"
+      ],
+      "latency_ms": 35598.37,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "645ef2c9-ff24-4935-b2fd-96168e07d4d7",
+          "chunk_id": "e7ceec54-ecb0-45c4-92fa-893d7116f5af",
+          "title": "UF IFAS Florida - thử nghiệm nhà kính cho sáu loại rau gia vị",
+          "source": "https://ask.ifas.ufl.edu/publication/CV272",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.999760091304779,
+          "relevant": true
+        },
+        {
+          "document_id": "05e90873-2d91-407d-9b35-1f006637f35e",
+          "chunk_id": "983d96f8-6b7d-45fe-9969-bc01cdd1512a",
+          "title": "UF IFAS Florida - nhận diện mùa vụ húng quế ngò rí và thì là",
+          "source": "https://ask.ifas.ufl.edu/publication/FY1554",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.9824661016464233,
+          "relevant": false
+        },
+        {
+          "document_id": "e96422a9-8fc9-48c3-b5ab-b97cc0ca6982",
+          "chunk_id": "9bbf5be5-f61a-4f33-a0ac-cf0c6c245286",
+          "title": "Mùi tây parsley - thời vụ, khoảng cách và độ sâu gieo",
+          "source": "https://ask.ifas.ufl.edu/publication/CV294?downloadOpen=true",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.374972403049469,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "coriander-not-parsley-scientific-name",
+      "query": "Ngò rí coriander cilantro Coriandrum sativum thuộc nhóm mùa nào ở Florida, không hỏi mùi tây parsley hay ngò gai culantro?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - nhận diện mùa vụ húng quế ngò rí và thì là"
+      ],
+      "latency_ms": 22906.73,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "05e90873-2d91-407d-9b35-1f006637f35e",
+          "chunk_id": "983d96f8-6b7d-45fe-9969-bc01cdd1512a",
+          "title": "UF IFAS Florida - nhận diện mùa vụ húng quế ngò rí và thì là",
+          "source": "https://ask.ifas.ufl.edu/publication/FY1554",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9978694915771484,
+          "relevant": true
+        },
+        {
+          "document_id": "dcfabd60-c31f-461a-b4b3-c6bf2a4846d7",
+          "chunk_id": "842d4d29-d2e2-486c-95ce-6d2e0ede6d68",
+          "title": "Cẩm nang trồng ngò rí an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.5311216711997986,
+          "relevant": false
+        },
+        {
+          "document_id": "31506f1e-9952-4661-84aa-b0d94f072ed4",
+          "chunk_id": "b591c890-a5a0-4e69-a4d0-9e87047cf467",
+          "title": "Cẩm nang trồng ngò gai an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Ky-thuat-trong-cay-gia-vi.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03359375,
+          "rerank_score": 0.1400783807039261,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "sweet-hot-pepper-table",
+      "query": "Bảng gieo trồng Florida phân biệt ớt ngọt bell pepper và ớt cay hot pepper chili như thế nào; không chuyển lịch này sang Việt Nam?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"
+      ],
+      "latency_ms": 14516.09,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "6bc3a868-1613-4c5d-af9a-a38db61191c6",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9372984170913696,
+          "relevant": true
+        },
+        {
+          "document_id": "05daeee1-c976-459f-b87a-38e5749cdf78",
+          "chunk_id": "a80a9a18-3f1a-4ab4-a615-147beb3166b5",
+          "title": "Kỹ thuật trồng ớt ngọt theo hướng an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ot-ngot-capsicum-annum-l-theo-huong-an-toan-9759.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034725474889409316,
+          "rerank_score": 0.31566154956817627,
+          "relevant": false
+        },
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "70ccb0f7-b426-410e-9424-894c4f05c068",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.0007232250063680112,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "broccoli-cauliflower-table",
+      "query": "Đối chiếu hàng súp lơ xanh broccoli và súp lơ trắng cauliflower trong bảng giống, khoảng cách và thu hoạch rau Florida?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"
+      ],
+      "latency_ms": 18529.8,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "6bc3a868-1613-4c5d-af9a-a38db61191c6",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9922163486480713,
+          "relevant": true
+        },
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "9977d36a-860a-4b4a-b53b-50ea0241150f",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.055904172360897064,
+          "relevant": true
+        },
+        {
+          "document_id": "6c9d9211-44fb-400c-9e4e-76e7a2f706a2",
+          "chunk_id": "1db90689-a5b2-47ec-a6f9-6293822783e9",
+          "title": "Sâu tơ hại rau cải và biện pháp phòng trừ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.004694507457315922,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "chard-spinach-table",
+      "query": "Cải cầu vồng Swiss chard khác rau bina spinach: tìm đúng bảng gieo trồng và thu hoạch Florida của hai cây này?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"
+      ],
+      "latency_ms": 13759.02,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "6bc3a868-1613-4c5d-af9a-a38db61191c6",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9585021138191223,
+          "relevant": true
+        },
+        {
+          "document_id": "e5ea040b-0fc0-4600-a5e6-f84f1c7a8c2f",
+          "chunk_id": "c8df1435-924f-43bf-ad80-db798bea8ece",
+          "title": "Cải cầu vồng - gieo trồng, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/swiss-chard-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.5014472007751465,
+          "relevant": false
+        },
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "b15ef4db-93de-4feb-912f-f69faf64bb16",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.00016967506962828338,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "leek-spring-onion-shallot-table",
+      "query": "Tìm nguồn đối chiếu tỏi tây leek, hành lá spring onion và hành tím shallot; đây là ba nhóm Allium dễ bị gọi lẫn nhưng không phải một cây?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"
+      ],
+      "latency_ms": 5677.73,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "6bc3a868-1613-4c5d-af9a-a38db61191c6",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034477459016393444,
+          "rerank_score": 0.8627064228057861,
+          "relevant": true
+        },
+        {
+          "document_id": "e5d08859-6e78-4a23-a93f-a0f240ce8dd7",
+          "chunk_id": "e0c517af-1d41-40f3-8e44-bbaf6f059b4b",
+          "title": "Tỏi tây leek - cây giống, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/leeks-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.5377539992332458,
+          "relevant": false
+        },
+        {
+          "document_id": "161892da-70c7-458b-96e8-e2fb48180833",
+          "chunk_id": "cff6e2b5-ee84-4ecc-85b4-a631fca09a83",
+          "title": "Hành tím Ninh Thuận - tiết kiệm nước, chống hạn và IPM",
+          "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/ninh-thuan-hoi-thao-dau-bo-mo-hinh-canh-tac-cay-hanh-thich-ung-voi-bien-doi-khi-hau-27730.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.5315559506416321,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "sweet-potato-not-potato-table",
+      "query": "Khoai lang sweet potato không phải khoai tây potato: nguồn nào có hàng gieo trồng và thu hoạch riêng cho cả hai ở Florida?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"
+      ],
+      "latency_ms": 4417.68,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "6bc3a868-1613-4c5d-af9a-a38db61191c6",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034725474889409316,
+          "rerank_score": 0.22038719058036804,
+          "relevant": true
+        },
+        {
+          "document_id": "c9895da8-a895-41af-8e61-e3e4d42341b5",
+          "chunk_id": "a0f1665d-71ea-4e5a-86e6-37313641453f",
+          "title": "Kỹ thuật khoai lang - đặt dây, bón phân và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/12/hangweb/so_thang_8_tong_hop_3_compressed.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033254269449715365,
+          "rerank_score": 0.12065817415714264,
+          "relevant": false
+        },
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "b15ef4db-93de-4feb-912f-f69faf64bb16",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03381768504719324,
+          "rerank_score": 0.0019814756233245134,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "melon-watermelon-table",
+      "query": "Dưa lưới melon cantaloupe honeydew và dưa hấu watermelon có hàng riêng trong bảng rau Florida nào, và lịch cần hiệu chỉnh trước khi dùng ở Việt Nam?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu"
+      ],
+      "latency_ms": 4501.19,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "6bc3a868-1613-4c5d-af9a-a38db61191c6",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8756657242774963,
+          "relevant": true
+        },
+        {
+          "document_id": "645ef2c9-ff24-4935-b2fd-96168e07d4d7",
+          "chunk_id": "e7ceec54-ecb0-45c4-92fa-893d7116f5af",
+          "title": "UF IFAS Florida - thử nghiệm nhà kính cho sáu loại rau gia vị",
+          "source": "https://ask.ifas.ufl.edu/publication/CV272",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.038798779249191284,
+          "relevant": false
+        },
+        {
+          "document_id": "d13d1ee0-6643-461c-9df5-9445076b766d",
+          "chunk_id": "ef1b8be4-6052-4b6f-9185-314f3438f3dc",
+          "title": "UF IFAS Florida - bảng gieo trồng và thu hoạch cho 28 cây rau đối chiếu",
+          "source": "https://ask.ifas.ufl.edu/publication/VH021",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03347376023110255,
+          "rerank_score": 0.0010369813535362482,
+          "relevant": true
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": false,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": false
+    }
+  }
+}

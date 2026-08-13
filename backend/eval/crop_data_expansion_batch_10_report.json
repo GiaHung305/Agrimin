@@ -1,0 +1,84 @@
+{
+  "version": "crop-data-expansion-batch-10-v1",
+  "documents": 6,
+  "sources": 1,
+  "ready": 0,
+  "already_active": 6,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Cà chua an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "crop_keys": [
+        "tomato"
+      ],
+      "characters": 1842,
+      "content_sha256": "9d46cf0120505b871ececd28138b6150f94f51a1f3906c2a189fae50e5e5f439",
+      "source_sha256": "796eccffb4566f225aa296e591c20ebcb7aba04ca9661f444bf709789ea75a5c",
+      "status": "already_active",
+      "document_id": "d53ee85b-e7a9-44e9-8eb0-32e3b76c238c"
+    },
+    {
+      "title": "Dưa chuột an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "crop_keys": [
+        "cucumber"
+      ],
+      "characters": 1858,
+      "content_sha256": "8fc3e0b3dc1730fd2371441ae9efe1ea270907b5468de4ab443696e29149be11",
+      "source_sha256": "796eccffb4566f225aa296e591c20ebcb7aba04ca9661f444bf709789ea75a5c",
+      "status": "already_active",
+      "document_id": "4dab0a2e-7618-406b-b034-d7b9b4bf45ac"
+    },
+    {
+      "title": "Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "crop_keys": [
+        "water_spinach"
+      ],
+      "characters": 1605,
+      "content_sha256": "7262e55b21ab92b7ca8bce3289d8faf42756f01fd442a4cab0e9819e4a657368",
+      "source_sha256": "796eccffb4566f225aa296e591c20ebcb7aba04ca9661f444bf709789ea75a5c",
+      "status": "already_active",
+      "document_id": "b33d3e09-e6b4-48cd-a620-0a7f3f3470aa"
+    },
+    {
+      "title": "Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "crop_keys": [
+        "malabar_spinach"
+      ],
+      "characters": 1682,
+      "content_sha256": "cba3848de0a0956daa767baf0b09adc3642a5221af5f8b6d3168d1140081a1a7",
+      "source_sha256": "796eccffb4566f225aa296e591c20ebcb7aba04ca9661f444bf709789ea75a5c",
+      "status": "already_active",
+      "document_id": "eb97fdb8-6020-4896-9674-89a314f32a41"
+    },
+    {
+      "title": "Bắp cải an toàn phía Bắc - phân hữu cơ và lịch bón cuốn bắp",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "crop_keys": [
+        "cabbage"
+      ],
+      "characters": 1845,
+      "content_sha256": "acb512bbeb633f9d51239d44f45f26bc3241d1b86441206ca099bf8a9260b8be",
+      "source_sha256": "796eccffb4566f225aa296e591c20ebcb7aba04ca9661f444bf709789ea75a5c",
+      "status": "already_active",
+      "document_id": "8461ca04-1eab-4da4-a84d-530d5e31ed2c"
+    },
+    {
+      "title": "Củ cải radish an toàn phía Bắc - phân hữu cơ và lịch bón tạo củ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "crop_keys": [
+        "radish"
+      ],
+      "characters": 1737,
+      "content_sha256": "af16061e5402f810db47e3f640a87ab60cb0466ed7672f020123293e88c6c98d",
+      "source_sha256": "796eccffb4566f225aa296e591c20ebcb7aba04ca9661f444bf709789ea75a5c",
+      "status": "already_active",
+      "document_id": "f619c8b3-cd73-4020-86d3-3dcc8ea0de0d"
+    }
+  ]
+}

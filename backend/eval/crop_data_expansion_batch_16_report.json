@@ -1,0 +1,145 @@
+{
+  "version": "crop-data-expansion-batch-16-v1",
+  "documents": 11,
+  "sources": 8,
+  "ready": 0,
+  "already_active": 11,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "UC Davis - rau ngot va la lot dinh danh nhan giong",
+      "source": "https://horticulture.ucdavis.edu/sites/g/files/dgvnsk1816/files/extension_material_files/Bates_Strengthening_Informal_Indigenous_Seed_Systems.pdf",
+      "crop_keys": [
+        "katuk",
+        "wild_betel"
+      ],
+      "characters": 647,
+      "content_sha256": "2834bede7667e56c8bac5581a4e30908b85001c2e0ad11fb94baeafb5b295797",
+      "source_sha256": "71c6b6139cef6e297b29948c609d654e5659e55cc1a07d116d355fd5e7b0ee61",
+      "status": "already_active",
+      "document_id": "83bd30d8-01e6-4959-ba9f-990a255e6800"
+    },
+    {
+      "title": "University of Miami - rau ngot thoi diem trong thu va choi non",
+      "source": "https://greenu.miami.edu/_assets/pdf/cg-katuk.pdf",
+      "crop_keys": [
+        "katuk"
+      ],
+      "characters": 707,
+      "content_sha256": "8bba2d7a04f65c220380854291514d0440895615a91d5a7aa1fca1f1cd84604f",
+      "source_sha256": "05a0a2ece2f945ec1b52f6cd139e5320cb3bce7107ae4d8f8ffcf3c1ff420dd6",
+      "status": "already_active",
+      "document_id": "bc03275b-d339-4ccc-990e-68b1e23e7556"
+    },
+    {
+      "title": "NC State Extension - rau ma dat am nhan giong va an toan dat",
+      "source": "https://plants.ces.ncsu.edu/plants/centella-asiatica/",
+      "crop_keys": [
+        "pennywort"
+      ],
+      "characters": 1885,
+      "content_sha256": "dbd105116435d017b34479f58ab65914320b7f2dbb39d35eb2545315cea30e50",
+      "source_sha256": "896894d5a1078c51062355d77e829eed9772f2bc2b843fea854a5cbfda0e749f",
+      "status": "already_active",
+      "document_id": "570b7268-c65f-4559-aa5b-89b2e6ff7f82"
+    },
+    {
+      "title": "Purdue Extension - dau xanh gieo khoang cach va moc chin",
+      "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+      "crop_keys": [
+        "mung_bean"
+      ],
+      "characters": 673,
+      "content_sha256": "c9cb9b5aefbd996e842a5904770477ea0ab69ee3e31a4a816505c6d5eaf3bba6",
+      "source_sha256": "54717af5e8ebe62227867379a71067aa4fee97cab5872c09b44e5c29ab5abb30",
+      "status": "already_active",
+      "document_id": "79a6bb84-9bbc-4873-bfa4-eb232f7b0d74"
+    },
+    {
+      "title": "Purdue Extension - bi dao dinh danh khoang cach va thu",
+      "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+      "crop_keys": [
+        "winter_melon"
+      ],
+      "characters": 650,
+      "content_sha256": "1bcca0d1a966443f9f26b1a05ab1942c9aeee9da1258600ff6d0beca96f8e79e",
+      "source_sha256": "54717af5e8ebe62227867379a71067aa4fee97cab5872c09b44e5c29ab5abb30",
+      "status": "already_active",
+      "document_id": "04f2175b-7054-41ee-bba1-f100fd486bd7"
+    },
+    {
+      "title": "Purdue Extension - sen lay cu moi truong nuoc va than re",
+      "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+      "crop_keys": [
+        "lotus_root"
+      ],
+      "characters": 885,
+      "content_sha256": "ee6352348ca32ccde5a6a2d7b24a489a5c097a5490928358e39ed1c098233a8a",
+      "source_sha256": "54717af5e8ebe62227867379a71067aa4fee97cab5872c09b44e5c29ab5abb30",
+      "status": "already_active",
+      "document_id": "178d1d54-4730-4e0a-b56c-03cda69d88bd"
+    },
+    {
+      "title": "Clemson Extension - lac dau phong dinh danh gieo va dat",
+      "source": "https://hgic.clemson.edu/factsheet/peanut/",
+      "crop_keys": [
+        "peanut"
+      ],
+      "characters": 4064,
+      "content_sha256": "8a0a345a5cfcfd65167ccfcf8e231438434beccdc11cc350a7e1dbcd8ed41d10",
+      "source_sha256": "6366540b42d8ed109a474f9ff5c0931802f0ce8392302072da8e4d49192c2d7c",
+      "status": "already_active",
+      "document_id": "0a660b86-7564-4514-968c-a9eaa3130870"
+    },
+    {
+      "title": "Clemson Extension - lac dau phong nhan biet chin va lam kho",
+      "source": "https://hgic.clemson.edu/factsheet/peanut/",
+      "crop_keys": [
+        "peanut"
+      ],
+      "characters": 4094,
+      "content_sha256": "82b35018db5609dd572109c7da1dfd3557efd64707732efbc39ffe84ebf33f74",
+      "source_sha256": "6366540b42d8ed109a474f9ff5c0931802f0ce8392302072da8e4d49192c2d7c",
+      "status": "already_active",
+      "document_id": "e5eb6c67-dd57-4f74-9517-40c220174211"
+    },
+    {
+      "title": "ICAR IIPR - dau xanh giong ngan ngay theo vung sinh thai",
+      "source": "https://icar.gov.in/sites/default/files/2025-12/October_2025%20Indian%20Farming.pdf",
+      "crop_keys": [
+        "mung_bean"
+      ],
+      "characters": 2039,
+      "content_sha256": "e85049c502e9baf5212a6c9afd97706b12f13c8b08d4c727fe5f0a888e9f459a",
+      "source_sha256": "fd106df51dacee81f25c061a78c7bcb121e8d483f2a72508c3cc38f0f72aafa3",
+      "status": "already_active",
+      "document_id": "b4f18479-4c20-459a-ad19-bdefbc7d20c6"
+    },
+    {
+      "title": "University of Guam Extension - khoai mo khoai tu dinh danh mua trong",
+      "source": "https://www.uog.edu/_resources/files/extension/Crop_Chart_6_23_16.pdf",
+      "crop_keys": [
+        "yam"
+      ],
+      "characters": 601,
+      "content_sha256": "78a08f5ce1213c4e2579da82cc91b48391a63a12e5b653f3378eba450a978d0a",
+      "source_sha256": "0fb8c0f76cb4f11b2eaf98db7c84f7aa498c86d64e02bb5bce68bf6a9b2e7a14",
+      "status": "already_active",
+      "document_id": "2225531f-0675-4e97-b4ca-28d679290fdf"
+    },
+    {
+      "title": "Codex IR-4 - doc mung phan biet taro stems va Colocasia gigantea",
+      "source": "https://ir4.cals.ncsu.edu/fooduse/Crop%20Grouping/Type%202%20Vegetable%20Commodity%20Groups%202017.pdf",
+      "crop_keys": [
+        "taro_stem"
+      ],
+      "characters": 609,
+      "content_sha256": "bf604289c162227c0e3a866d86502a7ea8262361561a5e6bedd21f6157fe26c2",
+      "source_sha256": "918f4deb3872de31102ed018628d966d078cdc467b59caa27cac242e93b205c4",
+      "status": "already_active",
+      "document_id": "9b355e68-9122-43fc-911a-e09c7b201ffa"
+    }
+  ]
+}

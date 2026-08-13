@@ -1,0 +1,75 @@
+{
+  "version": "crop-data-expansion-batch-2-v1",
+  "allowed_domains": ["khuyennongvn.gov.vn"],
+  "documents": [
+    {
+      "title": "Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-trong-ngo-vu-dong-tren-dat-2-lua-phan-1-12767.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-09-08",
+      "format": "dnn_voice",
+      "crop_keys": ["maize"],
+      "required_terms": ["ngô", "đất 2 vụ lúa", "phân bón"],
+      "min_chars": 5000
+    },
+    {
+      "title": "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2020-01-21",
+      "format": "dnn_voice",
+      "crop_keys": ["maize"],
+      "required_terms": ["sâu keo mùa thu", "ngô", "biện pháp sinh học"],
+      "min_chars": 5000
+    },
+    {
+      "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2015-10-09",
+      "format": "dnn_voice",
+      "crop_keys": ["potato"],
+      "required_terms": ["khoai tây", "kỹ thuật trồng", "thu hoạch"],
+      "min_chars": 15000
+    },
+    {
+      "title": "Kỹ thuật trồng ớt ngọt theo hướng an toàn",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ot-ngot-capsicum-annum-l-theo-huong-an-toan-9759.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2014-05-21",
+      "format": "dnn_voice",
+      "content_prefix": "Tên cây và từ đồng nghĩa: ớt chuông, ớt ngọt, bell pepper, sweet pepper.",
+      "version": "crop-data-expansion-batch-2-bell-pepper-alias-v2",
+      "replace_active": true,
+      "crop_keys": ["bell_pepper"],
+      "required_terms": ["ớt ngọt", "vườn ươm", "thu hoạch"],
+      "min_chars": 3000
+    },
+    {
+      "title": "Kỹ thuật trồng rau mồng tơi an toàn",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-mong-toi-an-toan-5596.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2012-05-07",
+      "format": "dnn_voice",
+      "crop_keys": ["malabar_spinach"],
+      "required_terms": ["mồng tơi", "làm đất", "thu hoạch"],
+      "min_chars": 2200
+    },
+    {
+      "title": "Sâu tơ hại rau cải và biện pháp phòng trừ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2024-01-05",
+      "format": "dnn_voice",
+      "crop_keys": ["broccoli", "cauliflower", "kohlrabi", "cabbage", "choy_sum", "mustard_greens"],
+      "required_terms": ["sâu tơ", "su hào", "súp lơ"],
+      "min_chars": 2500
+    }
+  ]
+}

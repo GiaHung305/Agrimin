@@ -1,0 +1,64 @@
+{
+  "version": "crop-scope-cleanup-v1",
+  "scope": "crop_production_only",
+  "action": "soft_deactivate",
+  "reason": "Remove livestock, aquaculture, test and sample evidence from active crop-production retrieval while preserving audit records.",
+  "documents": [
+    {
+      "id": "17ab0a40-7a1b-4a41-86fc-242dc5198720",
+      "title": "Ky thuat trong ca chua",
+      "source": "Tai lieu mau",
+      "category": "sample_source",
+      "reason": "Untraceable sample source; an authoritative tomato source is already active."
+    },
+    {
+      "id": "b39d0c35-7f85-4a9a-bb99-65b6a02dd3a5",
+      "title": "ky_thuat_trong_sau_rieng (1)",
+      "source": "tai lieu pdf mau",
+      "category": "sample_source",
+      "reason": "Untraceable sample PDF; authoritative durian sources are already active."
+    },
+    {
+      "id": "3f313859-8100-43b4-afed-a771b7f9a48c",
+      "title": "Test luu tru Supabase 3",
+      "source": "Test",
+      "category": "test_data",
+      "reason": "Storage integration test document, not agricultural evidence."
+    },
+    {
+      "id": "a8005b08-1a82-4627-a947-fb2f51431036",
+      "title": "Trích yếu: Chăm sóc và nuôi dưỡng bê theo mẹ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-cham-soc-nuoi-duong-be-theo-me-16364.html",
+      "category": "livestock",
+      "reason": "Outside the user-selected crop-production scope."
+    },
+    {
+      "id": "e2987332-d94b-44c7-a5ad-50419e4ee22a",
+      "title": "Bản tin Khuyến nông số 6 năm 2025 — nuôi tôm kết hợp cá rô phi và kỹ thuật nông nghiệp — phần 01/05 (trang 1-7)",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2025/12/19/hangweb/ban-tin-so6-compressed.pdf",
+      "category": "mixed_livestock_aquaculture",
+      "reason": "Mixed-domain bulletin is too coarse for crop-only retrieval and precise citation."
+    },
+    {
+      "id": "2d03a91f-b70b-4047-978c-cb412a9161b5",
+      "title": "Bản tin Khuyến nông số 6 năm 2025 — nuôi tôm kết hợp cá rô phi và kỹ thuật nông nghiệp — phần 02/05 (trang 8-14)",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2025/12/19/hangweb/ban-tin-so6-compressed.pdf",
+      "category": "mixed_livestock_aquaculture",
+      "reason": "Contains goat, poultry and fishing material outside crop production."
+    },
+    {
+      "id": "d9f23a46-e776-46bb-afdd-8bc3ae4f31cb",
+      "title": "Bản tin Khuyến nông số 6 năm 2025 — nuôi tôm kết hợp cá rô phi và kỹ thuật nông nghiệp — phần 03/05 (trang 15-21)",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2025/12/19/hangweb/ban-tin-so6-compressed.pdf",
+      "category": "mixed_livestock_aquaculture",
+      "reason": "Mixes rice, aquaculture and forestry; specialized rice sources remain active."
+    },
+    {
+      "id": "a2043d28-42da-4e94-be15-98a25dfc47f3",
+      "title": "Bản tin Khuyến nông số 6 năm 2025 — nuôi tôm kết hợp cá rô phi và kỹ thuật nông nghiệp — phần 04/05 (trang 22-28)",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2025/12/19/hangweb/ban-tin-so6-compressed.pdf",
+      "category": "mixed_livestock_aquaculture",
+      "reason": "Mixes livestock feed, veterinary, crop and aquaculture advice in one citation unit."
+    }
+  ]
+}

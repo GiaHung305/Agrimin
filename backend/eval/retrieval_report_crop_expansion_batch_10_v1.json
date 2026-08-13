@@ -1,0 +1,294 @@
+{
+  "dataset_version": "crop-expansion-batch-10-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 13353.705
+  },
+  "items": [
+    {
+      "id": "tomato-nutrition-not-eggplant",
+      "query": "Cà chua tomato, không phải cà tím, ở vùng rau an toàn phía Bắc có lịch bón hữu cơ và bón thúc từ hồi xanh, ra hoa đến thu quả đợt đầu thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Cà chua an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng"
+      ],
+      "latency_ms": 28707.28,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "d53ee85b-e7a9-44e9-8eb0-32e3b76c238c",
+          "chunk_id": "33fc0879-2acc-411e-a1ec-638a4cd228b0",
+          "title": "Cà chua an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.8811463117599487,
+          "relevant": true
+        },
+        {
+          "document_id": "74a8bcec-b5f4-4524-bde8-6707c80d9703",
+          "chunk_id": "3f53211e-9da3-4927-b226-b6c1ced5d418",
+          "title": "Trích yếu: Phối hợp phân hữu cơ và vô cơ trong sản xuất rau an toàn phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.8326746225357056,
+          "relevant": false
+        },
+        {
+          "document_id": "4dab0a2e-7618-406b-b034-d7b9b4bf45ac",
+          "chunk_id": "37eb0619-4ef5-4289-813e-4bb733b5577c",
+          "title": "Dưa chuột an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.026323111727833748,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cucumber-nutrition-not-zucchini",
+      "query": "Dưa chuột dưa leo cucumber, không phải bí ngòi zucchini, ở phía Bắc bón lót và bón thúc theo hồi xanh, ra hoa, đậu quả ra sao?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Dưa chuột an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng"
+      ],
+      "latency_ms": 13796.97,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4dab0a2e-7618-406b-b034-d7b9b4bf45ac",
+          "chunk_id": "37eb0619-4ef5-4289-813e-4bb733b5577c",
+          "title": "Dưa chuột an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.8756468296051025,
+          "relevant": true
+        },
+        {
+          "document_id": "753561a6-8ea7-4e79-92de-61cae66903bf",
+          "chunk_id": "6386a7e7-888d-4fa8-9677-232f31db81b3",
+          "title": "Bí ngòi miền Bắc - mật độ, độ ẩm và thụ phấn bổ sung",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.7980727553367615,
+          "relevant": false
+        },
+        {
+          "document_id": "8716e2df-35b9-4bbc-adaa-3aaf779746f6",
+          "chunk_id": "902acb14-361e-42a8-9523-ee022cca695f",
+          "title": "Bí ngòi miền Bắc - chỉ tiêu và cách thu hái",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-bi-ngoi-star-ol-13358.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03359375,
+          "rerank_score": 0.5253131985664368,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "water-spinach-nutrition-not-spinach",
+      "query": "Rau muống water spinach Ipomoea aquatica, không phải cải bó xôi spinach, ở phía Bắc bón hữu cơ và bón sau mỗi lần thu hoạch thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch"
+      ],
+      "latency_ms": 18488.26,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b33d3e09-e6b4-48cd-a620-0a7f3f3470aa",
+          "chunk_id": "f49f2463-5aff-4736-bb5b-d7b43b6673f7",
+          "title": "Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank_topic_intent",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9983294606208801,
+          "relevant": true
+        },
+        {
+          "document_id": "eda8b2be-3991-4a1f-884a-44579044f902",
+          "chunk_id": "c11f7e82-5355-45be-955f-33a8f7f024b3",
+          "title": "Cải bó xôi - chăm sóc, quản lý sâu bệnh sinh học và thu hoạch",
+          "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+          "ranking_strategy": "rerank_topic_intent",
+          "fusion_score": 0.033405483405483404,
+          "rerank_score": 0.7385286092758179,
+          "relevant": false
+        },
+        {
+          "document_id": "eb97fdb8-6020-4896-9674-89a314f32a41",
+          "chunk_id": "86a0300d-fb82-4528-bb8f-62194226f492",
+          "title": "Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank_topic_intent",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.9560577273368835,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "malabar-spinach-nutrition-not-water-spinach",
+      "query": "Mồng tơi Malabar spinach Basella alba, không phải rau muống water spinach, ở phía Bắc bón lót và bón sau thu hoạch ra sao?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch"
+      ],
+      "latency_ms": 10033.86,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "eb97fdb8-6020-4896-9674-89a314f32a41",
+          "chunk_id": "86a0300d-fb82-4528-bb8f-62194226f492",
+          "title": "Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9915050864219666,
+          "relevant": true
+        },
+        {
+          "document_id": "882f2859-fdf0-4722-a664-f0c07be179c3",
+          "chunk_id": "9dc0a88e-8c07-438f-827e-d614967008cd",
+          "title": "Kỹ thuật trồng rau mồng tơi an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-mong-toi-an-toan-5596.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03280885780885781,
+          "rerank_score": 0.10125885903835297,
+          "relevant": false
+        },
+        {
+          "document_id": "b33d3e09-e6b4-48cd-a620-0a7f3f3470aa",
+          "chunk_id": "f49f2463-5aff-4736-bb5b-d7b43b6673f7",
+          "title": "Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank_crop_intent",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9550579190254211,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "cabbage-nutrition-not-napa",
+      "query": "Bắp cải cabbage, không phải cải thảo napa cabbage, ở phía Bắc bón hữu cơ và chia bón thúc qua hồi xanh, trải lá bàng, bắt đầu cuốn thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Bắp cải an toàn phía Bắc - phân hữu cơ và lịch bón cuốn bắp"
+      ],
+      "latency_ms": 4487.59,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "8461ca04-1eab-4da4-a84d-530d5e31ed2c",
+          "chunk_id": "998605cb-1e18-4c5b-8699-9fb571fde8e2",
+          "title": "Bắp cải an toàn phía Bắc - phân hữu cơ và lịch bón cuốn bắp",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.48373091220855713,
+          "relevant": true
+        },
+        {
+          "document_id": "b77b5520-627e-428d-90b6-e7f46c714676",
+          "chunk_id": "81fb663a-a2d9-48c8-9092-d07e4f5f04d9",
+          "title": "Cải thảo an toàn - thời vụ, vườn ươm, đất và mật độ",
+          "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.07260546088218689,
+          "relevant": false
+        },
+        {
+          "document_id": "df001466-81c0-4c7f-b447-2f04bacf6849",
+          "chunk_id": "30e5efd2-89b8-4859-bf64-eba1b149682f",
+          "title": "Cải thảo an toàn - biện pháp IPM canh tác và vật lý",
+          "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03393300248138958,
+          "rerank_score": 0.03605032339692116,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "radish-nutrition-not-turnip",
+      "query": "Củ cải radish Raphanus sativus, không phải turnip Brassica rapa, ở phía Bắc chia bón thúc khi sinh trưởng thân lá, bắt đầu tạo củ và củ phát triển ra sao?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Củ cải radish an toàn phía Bắc - phân hữu cơ và lịch bón tạo củ"
+      ],
+      "latency_ms": 4608.27,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "f619c8b3-cd73-4020-86d3-3dcc8ea0de0d",
+          "chunk_id": "e950db78-b4c4-4aa3-a4ad-5e21ee7f22b8",
+          "title": "Củ cải radish an toàn phía Bắc - phân hữu cơ và lịch bón tạo củ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9213584065437317,
+          "relevant": true
+        },
+        {
+          "document_id": "33c19820-60e2-44a8-8163-1baa2385ebd8",
+          "chunk_id": "812ffd72-0a18-47fe-9391-70c9e7232ca8",
+          "title": "Củ cải turnip - gieo hạt, khoảng cách và tưới nước",
+          "source": "https://extension.usu.edu/yardandgarden/research/rutabagas-and-turnips-in-the-garden",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.5365092158317566,
+          "relevant": false
+        },
+        {
+          "document_id": "5fa9c8a9-6473-4434-933e-dae6d3e8dff0",
+          "chunk_id": "a643a7c4-5d3b-4f40-9d8a-6fd0982720b5",
+          "title": "Kỹ thuật trồng cải củ - phần thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-cai-cu-4939.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03359375,
+          "rerank_score": 0.36356058716773987,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": false,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": false
+    }
+  }
+}

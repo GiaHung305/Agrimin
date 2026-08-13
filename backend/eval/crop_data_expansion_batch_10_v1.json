@@ -1,0 +1,90 @@
+{
+  "version": "crop-data-expansion-batch-10-v1",
+  "allowed_domains": ["khuyennongvn.gov.vn"],
+  "documents": [
+    {
+      "title": "Cà chua an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-05-12T14:35:00+07:00",
+      "format": "html_markers",
+      "start_marker": "a) Kỹ thuật bón phân cho sản xuất cà chua an toàn",
+      "end_marker": "b) Kỹ thuật bón phân cho sản xuất dưa chuột an toàn",
+      "content_prefix": "Tên cây và phạm vi: cà chua, tomato, Solanum lycopersicum; không áp dụng số liệu này cho cà tím, cà pháo hoặc cây khác họ. Quy trình phối hợp phân hữu cơ và vô cơ cho vùng rau an toàn ở các tỉnh phía Bắc Việt Nam; mọi lượng bón giữ nguyên đơn vị trên 1 ha và phải quy đổi đúng diện tích, loại phân, đất và điều kiện địa phương.",
+      "crop_keys": ["tomato"],
+      "required_terms": ["cà chua an toàn", "tổng lượng phân bón cho 1 ha", "Thời kỳ hồi xanh", "Thời kỳ thu quả đợt đầu"],
+      "min_chars": 700
+    },
+    {
+      "title": "Dưa chuột an toàn phía Bắc - phân hữu cơ và lịch bón theo sinh trưởng",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-05-12T14:35:00+07:00",
+      "format": "html_markers",
+      "start_marker": "b) Kỹ thuật bón phân cho sản xuất dưa chuột an toàn",
+      "end_marker": "c) Kỹ thuật bón phân cho sản xuất rau muống an toàn",
+      "content_prefix": "Tên cây và phạm vi: dưa chuột, dưa leo, cucumber, Cucumis sativus; không đồng nhất với bí ngòi zucchini hoặc các cây bầu bí khác. Quy trình phối hợp phân hữu cơ và vô cơ cho vùng rau an toàn ở các tỉnh phía Bắc Việt Nam; mọi lượng bón giữ nguyên đơn vị trên 1 ha và phải quy đổi đúng diện tích, loại phân, đất và điều kiện địa phương.",
+      "crop_keys": ["cucumber"],
+      "required_terms": ["dưa chuột an toàn", "tổng lượng phân bón cho 1 ha", "Thời kỳ bắt đầu xuất hiện hoa", "Thời kỳ thu quả đợt đầu"],
+      "min_chars": 700
+    },
+    {
+      "title": "Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-05-12T14:35:00+07:00",
+      "format": "html_markers",
+      "start_marker": "c) Kỹ thuật bón phân cho sản xuất rau muống an toàn",
+      "end_marker": "d) Kỹ thuật bón phân cho sản xuất rau mồng tơi an toàn",
+      "content_prefix": "Tên cây và phạm vi: rau muống, water spinach, Ipomoea aquatica; không phải cải bó xôi spinach hoặc mồng tơi Malabar spinach. Quy trình phối hợp phân hữu cơ và vô cơ cho vùng rau an toàn ở các tỉnh phía Bắc Việt Nam; mọi lượng bón giữ nguyên đơn vị trên 1 ha, không bón trực tiếp lên cây và phải quy đổi đúng diện tích, đất và điều kiện địa phương.",
+      "crop_keys": ["water_spinach"],
+      "required_terms": ["rau muống an toàn", "tổng lượng phân bón cho 1 ha", "thời kỳ cây con", "sau mỗi lần thu hoạch"],
+      "min_chars": 700
+    },
+    {
+      "title": "Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-05-12T14:35:00+07:00",
+      "format": "html_markers",
+      "start_marker": "d) Kỹ thuật bón phân cho sản xuất rau mồng tơi an toàn",
+      "end_marker": "e) Kỹ thuật bón phân cho sản xuất bắp cải an toàn",
+      "content_prefix": "Tên cây và phạm vi: mồng tơi, Malabar spinach, Basella alba; không phải rau muống water spinach hoặc cải bó xôi spinach. Quy trình phối hợp phân hữu cơ và vô cơ cho vùng rau an toàn ở các tỉnh phía Bắc Việt Nam; mọi lượng bón giữ nguyên đơn vị trên 1 ha, không bón trực tiếp lên cây và phải quy đổi đúng diện tích, đất và điều kiện địa phương.",
+      "crop_keys": ["malabar_spinach"],
+      "required_terms": ["rau mồng tơi an toàn", "tổng lượng phân bón cho 1 ha", "thời kỳ cây con", "sau mỗi lần thu hoạch"],
+      "min_chars": 700
+    },
+    {
+      "title": "Bắp cải an toàn phía Bắc - phân hữu cơ và lịch bón cuốn bắp",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-05-12T14:35:00+07:00",
+      "format": "html_markers",
+      "start_marker": "e) Kỹ thuật bón phân cho sản xuất bắp cải an toàn",
+      "end_marker": "g) Kỹ thuật bón phân cho sản xuất củ cải an toàn",
+      "content_prefix": "Tên cây và phạm vi: bắp cải, cabbage, Brassica oleracea var. capitata; không đồng nhất với cải thảo napa cabbage hoặc cải thìa. Quy trình phối hợp phân hữu cơ và vô cơ cho vùng rau an toàn ở các tỉnh phía Bắc Việt Nam; mọi lượng bón giữ nguyên đơn vị trên 1 ha và phải quy đổi đúng diện tích, loại phân, đất và điều kiện địa phương.",
+      "crop_keys": ["cabbage"],
+      "required_terms": ["bắp cải an toàn", "tổng lượng phân bón cho 1 ha", "Thời kỳ trải lá bàng", "bắt đầu cuốn"],
+      "min_chars": 700
+    },
+    {
+      "title": "Củ cải radish an toàn phía Bắc - phân hữu cơ và lịch bón tạo củ",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "published_date": "2021-05-12T14:35:00+07:00",
+      "format": "html_markers",
+      "start_marker": "g) Kỹ thuật bón phân cho sản xuất củ cải an toàn",
+      "end_marker": "BBT (gt)",
+      "content_prefix": "Tên cây và phạm vi: củ cải radish, Raphanus sativus; không phải củ cải turnip Brassica rapa. Quy trình phối hợp phân hữu cơ và vô cơ cho vùng rau an toàn ở các tỉnh phía Bắc Việt Nam; mọi lượng bón giữ nguyên đơn vị trên 1 ha và phải quy đổi đúng diện tích, loại phân, đất và điều kiện địa phương.",
+      "crop_keys": ["radish"],
+      "required_terms": ["củ cải an toàn", "tổng lượng phân bón cho 1 ha", "bắt đầu tạo củ", "củ phát triển"],
+      "min_chars": 700
+    }
+  ]
+}

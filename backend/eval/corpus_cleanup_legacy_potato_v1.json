@@ -1,0 +1,15 @@
+{
+  "version": "legacy-potato-replacement-v1",
+  "scope": "replace_legacy_unsafe_document",
+  "action": "soft_deactivate",
+  "reason": "Replace the broad 2015 potato document containing obsolete pesticide lists with bounded diagnostic, cultural-IPM and harvest slices while preserving audit history.",
+  "documents": [
+    {
+      "id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+      "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+      "category": "legacy_pesticide_content",
+      "reason": "The original coarse document includes obsolete pesticide names, mixtures and unsafe household-detergent advice; audited non-chemical replacement slices are ingested in Batch 11."
+    }
+  ]
+}

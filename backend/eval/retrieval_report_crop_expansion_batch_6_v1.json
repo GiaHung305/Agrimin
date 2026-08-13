@@ -1,0 +1,474 @@
+{
+  "dataset_version": "crop-expansion-batch-6-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 0.9919720789148186,
+    "mean_latency_ms": 8461.936
+  },
+  "items": [
+    {
+      "id": "banana-soil-propagation",
+      "query": "Chuối cần chọn đất, chuẩn bị hố, nhân giống và bố trí thời vụ trồng như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng chuối - chuẩn bị đất, nhân giống và thời vụ"
+      ],
+      "latency_ms": 24335.53,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "50ec6510-17ee-40d0-b814-c348547c8ddb",
+          "chunk_id": "cc3f5df4-cab8-426a-98fd-07d9245b32c7",
+          "title": "Kỹ thuật trồng chuối - chuẩn bị đất, nhân giống và thời vụ",
+          "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9988700747489929,
+          "relevant": true
+        },
+        {
+          "document_id": "50ec6510-17ee-40d0-b814-c348547c8ddb",
+          "chunk_id": "fa939385-a991-416d-8d96-a82240855d03",
+          "title": "Kỹ thuật trồng chuối - chuẩn bị đất, nhân giống và thời vụ",
+          "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.8159996867179871,
+          "relevant": true
+        },
+        {
+          "document_id": "ec03de7e-2c02-4adf-97d4-c3bac1ed3ed7",
+          "chunk_id": "12beeb6d-8a5c-47e3-86f1-787b7707f573",
+          "title": "Kỹ thuật trồng chuối - mật độ, cách trồng, bón phân và chăm sóc",
+          "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0332972582972583,
+          "rerank_score": 0.7620634436607361,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "banana-density-care",
+      "query": "Mật độ, cách trồng, bón phân, tưới và tỉa cây con cho chuối ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng chuối - mật độ, cách trồng, bón phân và chăm sóc"
+      ],
+      "latency_ms": 14831.13,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ec03de7e-2c02-4adf-97d4-c3bac1ed3ed7",
+          "chunk_id": "12beeb6d-8a5c-47e3-86f1-787b7707f573",
+          "title": "Kỹ thuật trồng chuối - mật độ, cách trồng, bón phân và chăm sóc",
+          "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034362192622950816,
+          "rerank_score": 0.9860063791275024,
+          "relevant": true
+        },
+        {
+          "document_id": "ec03de7e-2c02-4adf-97d4-c3bac1ed3ed7",
+          "chunk_id": "e77e0a5c-c895-4b87-84c7-e58bebf65a59",
+          "title": "Kỹ thuật trồng chuối - mật độ, cách trồng, bón phân và chăm sóc",
+          "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.7807419896125793,
+          "relevant": true
+        },
+        {
+          "document_id": "ec03de7e-2c02-4adf-97d4-c3bac1ed3ed7",
+          "chunk_id": "047f7f68-4fe7-49be-88d9-18ef440fe69d",
+          "title": "Kỹ thuật trồng chuối - mật độ, cách trồng, bón phân và chăm sóc",
+          "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.6210929751396179,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "taro-cultivation",
+      "query": "Khoai môn chọn củ giống, làm đất, bón phân, chọn mật độ và tưới chăm sóc thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng khoai môn - giống, đất, phân bón, mật độ và chăm sóc"
+      ],
+      "latency_ms": 8977.19,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "c1faa64b-cb40-44f6-b574-c3438ae31940",
+          "chunk_id": "971ed734-1049-45a8-b3d5-bb5092aa4f6b",
+          "title": "Kỹ thuật trồng khoai môn - giống, đất, phân bón, mật độ và chăm sóc",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-khoai-mon-842.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9821009039878845,
+          "relevant": true
+        },
+        {
+          "document_id": "c1faa64b-cb40-44f6-b574-c3438ae31940",
+          "chunk_id": "2c24916f-996a-474e-9eed-1b5da054c132",
+          "title": "Kỹ thuật trồng khoai môn - giống, đất, phân bón, mật độ và chăm sóc",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-khoai-mon-842.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9335252046585083,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "aacfee9b-d0b2-4907-9753-f9fe719675bb",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.4719690978527069,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "luffa-cultivation",
+      "query": "Trồng mướp cần làm luống, bố trí mật độ, bón thúc và làm giàn như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng mướp - đất, mật độ, dinh dưỡng, giàn và thu hoạch"
+      ],
+      "latency_ms": 5572.05,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "1c58f235-ff47-4c20-8e9b-32cf8c211efa",
+          "chunk_id": "086efe0a-821b-48f8-82ea-03ddef9080c5",
+          "title": "Kỹ thuật trồng mướp - đất, mật độ, dinh dưỡng, giàn và thu hoạch",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-gieo-trong-cay-muop-cho-nang-suat-cao-1977.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9961251616477966,
+          "relevant": true
+        },
+        {
+          "document_id": "bea5e0f4-95b7-48e3-b3b1-66dcfa223429",
+          "chunk_id": "933365d3-cd01-4e1e-b909-bc4bbcba96ab",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 10/10 (trang 64-68)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.0009719515219330788,
+          "relevant": false
+        },
+        {
+          "document_id": "22bc9319-ddfa-4c27-a119-97be7ecad158",
+          "chunk_id": "aeed7e58-6154-47ad-b194-d43a074c95a0",
+          "title": "Sách hướng dẫn tái canh cà phê",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 4.755432019010186e-05,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "artichoke-cultivation",
+      "query": "Quy trình trồng atisô ở Lâm Đồng yêu cầu khí hậu, đất, cây giống, mật độ và phân bón ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc"
+      ],
+      "latency_ms": 5888.29,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "0c3b85a9-6ec3-49d8-81eb-dc78dd00bbb3",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9977872371673584,
+          "relevant": true
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "655520a3-d882-4a9c-a5d2-b12a3d6e1c1e",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.43154364824295044,
+          "relevant": true
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "bcd2e038-63ac-47c6-be78-a09b5e3344c3",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03393300248138958,
+          "rerank_score": 0.01367262564599514,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "artichoke-harvest",
+      "query": "Atisô thu hoạch lá, bông, thân và rễ vào thời điểm nào, bảo quản ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình thu hoạch atisô tại Lâm Đồng"
+      ],
+      "latency_ms": 4968.06,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "7e4000f5-0d48-462b-88ae-a782e4065f89",
+          "chunk_id": "881dfea3-ff1e-4b81-9c5c-ffc67ced9299",
+          "title": "Quy trình thu hoạch atisô tại Lâm Đồng",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9838706254959106,
+          "relevant": true
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "0c3b85a9-6ec3-49d8-81eb-dc78dd00bbb3",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.6730636954307556,
+          "relevant": false
+        },
+        {
+          "document_id": "58c0f80f-fa35-4d1e-8c14-c7e9c1e5e355",
+          "chunk_id": "655520a3-d882-4a9c-a5d2-b12a3d6e1c1e",
+          "title": "Quy trình sản xuất atisô - điều kiện, giống, đất, trồng và chăm sóc",
+          "source": "https://vbpl.moj.gov.vn/FileData/TW/Lists/vbpq/Attachments/173075/81.2024.QD.UBND.%20PL%2003%2012.2024%20Phu%20luc%20cay%20lam%20nghiep%20va%20duoc%20lieu.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03356532356532356,
+          "rerank_score": 0.10942472517490387,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "chives-cultivation",
+      "query": "Hẹ trồng bằng củ hoặc hạt, chăm sóc, thu hoạch lá và để giống như thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng, chăm sóc, thu hoạch và để giống hẹ"
+      ],
+      "latency_ms": 5053.75,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "1efce99c-0208-4500-bc3e-e490ce5a1cda",
+          "chunk_id": "934555f0-ed99-4fff-ad6c-8b80324c653c",
+          "title": "Kỹ thuật trồng, chăm sóc, thu hoạch và để giống hẹ",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/nghien-cuu-trien-khai/ky-thuat-trong-he-1036.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9977284073829651,
+          "relevant": true
+        },
+        {
+          "document_id": "1efce99c-0208-4500-bc3e-e490ce5a1cda",
+          "chunk_id": "5af6732b-4366-47ff-b291-9a019ff6a2bf",
+          "title": "Kỹ thuật trồng, chăm sóc, thu hoạch và để giống hẹ",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/nghien-cuu-trien-khai/ky-thuat-trong-he-1036.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9868419766426086,
+          "relevant": true
+        },
+        {
+          "document_id": "c322dae0-101c-4f1f-bdb0-150ff36f8ab0",
+          "chunk_id": "f602c2f5-4a1e-4f20-b928-8dc3d208c682",
+          "title": "Kỹ thuật trồng hành củ và hành hoa an toàn",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-hanh-cu-hanh-hoa-an-toan-1251.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0323015873015873,
+          "rerank_score": 0.007498545106500387,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "spinach-climate-sowing",
+      "query": "Cải bó xôi rau chân vịt cần khí hậu, đất, thời vụ, phân bón và gieo hạt ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cải bó xôi - khí hậu, đất, thời vụ, dinh dưỡng và gieo trồng"
+      ],
+      "latency_ms": 5099.33,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "915f0244-fe62-4046-90f5-d3dfef8151b7",
+          "chunk_id": "cb2dc208-45b5-4371-9771-fbe9e7fd99b8",
+          "title": "Cải bó xôi - khí hậu, đất, thời vụ, dinh dưỡng và gieo trồng",
+          "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9768266081809998,
+          "relevant": true
+        },
+        {
+          "document_id": "eda8b2be-3991-4a1f-884a-44579044f902",
+          "chunk_id": "c11f7e82-5355-45be-955f-33a8f7f024b3",
+          "title": "Cải bó xôi - chăm sóc, quản lý sâu bệnh sinh học và thu hoạch",
+          "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9217290282249451,
+          "relevant": false
+        },
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "2bfa37b3-c733-44e7-a360-81a82ad5bcca",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.11061227321624756,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "spinach-care-harvest",
+      "query": "Cải bó xôi chăm sóc sau gieo, bón thúc, quản lý sâu bệnh sinh học và thu hoạch thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Cải bó xôi - chăm sóc, quản lý sâu bệnh sinh học và thu hoạch"
+      ],
+      "latency_ms": 4924.75,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "eda8b2be-3991-4a1f-884a-44579044f902",
+          "chunk_id": "c11f7e82-5355-45be-955f-33a8f7f024b3",
+          "title": "Cải bó xôi - chăm sóc, quản lý sâu bệnh sinh học và thu hoạch",
+          "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9633268713951111,
+          "relevant": true
+        },
+        {
+          "document_id": "915f0244-fe62-4046-90f5-d3dfef8151b7",
+          "chunk_id": "cb2dc208-45b5-4371-9771-fbe9e7fd99b8",
+          "title": "Cải bó xôi - khí hậu, đất, thời vụ, dinh dưỡng và gieo trồng",
+          "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03363858363858364,
+          "rerank_score": 0.3690347373485565,
+          "relevant": false
+        },
+        {
+          "document_id": "eda8b2be-3991-4a1f-884a-44579044f902",
+          "chunk_id": "a803eb47-5855-4608-8d15-2ab51bbf5853",
+          "title": "Cải bó xôi - chăm sóc, quản lý sâu bệnh sinh học và thu hoạch",
+          "source": "https://nongthonmoi.hatinh.gov.vn/Tin-trong-nuoc/Trong-cay-tien-ty-Bi-ki-p-trong-rau-cai-than-ky-56402.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.001863964251242578,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "celery-cultivation",
+      "query": "Cần tây chọn đất, xử lý hạt, gieo trồng, bố trí khoảng cách, tưới và thu hoạch thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng cần tây - đất, gieo hạt, mật độ, tưới và thu hoạch"
+      ],
+      "latency_ms": 4969.28,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "7abc89b7-9d7e-46d0-afc2-c6de7e06d7fc",
+          "chunk_id": "57a96ddb-fd12-4118-82e7-4d8b89fa989d",
+          "title": "Kỹ thuật trồng cần tây - đất, gieo hạt, mật độ, tưới và thu hoạch",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/trong-rau-can-tay-don-gian-cho-nang-suat-cao-1956.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.9401004910469055,
+          "relevant": true
+        },
+        {
+          "document_id": "3c9ced16-a0e6-4278-a77a-a041bdabbc9e",
+          "chunk_id": "6162baa1-9756-4836-a8dc-b647ca902b71",
+          "title": "Trích yếu: Kỹ thuật trồng cà rốt an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ca-rot-an-toan-6115.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03278478057889822,
+          "rerank_score": 0.78035968542099,
+          "relevant": false
+        },
+        {
+          "document_id": "11fe69f1-48c5-4ccb-b760-24bacedab9c1",
+          "chunk_id": "ea5b8210-5e5e-44fc-9593-3fde54c4b9c7",
+          "title": "Cẩm nang trồng măng tây - giống, đất và chăm sóc",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/02/Cam-nang-Cay-Mang-Tay.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.1870596557855606,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

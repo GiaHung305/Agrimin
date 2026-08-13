@@ -1,0 +1,10 @@
+{
+  "version": "crop-expansion-batch-16-retrieval-baseline-v1",
+  "promotion_thresholds": {
+    "minimum_recall_at_1": 0.85,
+    "minimum_recall_at_k": 1.0,
+    "minimum_mrr": 0.9,
+    "minimum_ndcg_at_k": 0.9,
+    "maximum_mean_latency_ms": 10000.0
+  }
+}

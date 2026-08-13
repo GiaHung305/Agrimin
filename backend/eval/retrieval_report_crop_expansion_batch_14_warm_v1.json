@@ -1,0 +1,429 @@
+{
+  "dataset_version": "crop-expansion-batch-14-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 5,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 0.9910800876831318,
+    "mean_latency_ms": 6185.776666666667
+  },
+  "items": [
+    {
+      "id": "vegetable-amaranth-not-grain",
+      "query": "Rau dền ăn lá vegetable amaranth Amaranthus tricolor, không phải dền hạt hay dền cảnh: gieo, cấy, nhiệt độ, ánh sáng và tưới thế nào theo nguồn Florida?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - rau dền gieo trồng và quản lý nước"
+      ],
+      "latency_ms": 13633.5,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "af1a1d88-8d9d-477a-9e92-f8e12a1a1114",
+          "chunk_id": "33f3848d-5e85-4e8c-badd-3a411284f80e",
+          "title": "UF IFAS Florida - rau dền gieo trồng và quản lý nước",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9996397495269775,
+          "relevant": true
+        },
+        {
+          "document_id": "dce4cd6e-2038-46db-bdef-97461e2e0656",
+          "chunk_id": "3d40b127-6983-4654-a269-ea9a363aae29",
+          "title": "UF IFAS Florida - rau dền thu hái và làm mát sau thu hoạch",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.923561155796051,
+          "relevant": false
+        },
+        {
+          "document_id": "3d7a23ae-a26f-44dc-874c-9b06c0159c43",
+          "chunk_id": "7d9ac7de-70a3-47a7-99cb-98d72b550f89",
+          "title": "Cẩm nang trồng rau dền an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-Nang-Rau-An-La-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.8129087090492249,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "amaranth-repeat-harvest",
+      "query": "Rau dền ăn lá thu một lần hay cắt lặp, dấu hiệu không nên thu khi ra hoa và làm mát sau thu hoạch theo nguồn UF IFAS?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "UF IFAS Florida - rau dền thu hái và làm mát sau thu hoạch"
+      ],
+      "latency_ms": 13147.57,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "dce4cd6e-2038-46db-bdef-97461e2e0656",
+          "chunk_id": "3d40b127-6983-4654-a269-ea9a363aae29",
+          "title": "UF IFAS Florida - rau dền thu hái và làm mát sau thu hoạch",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9320425987243652,
+          "relevant": true
+        },
+        {
+          "document_id": "af1a1d88-8d9d-477a-9e92-f8e12a1a1114",
+          "chunk_id": "33f3848d-5e85-4e8c-badd-3a411284f80e",
+          "title": "UF IFAS Florida - rau dền gieo trồng và quản lý nước",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1407",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.011386138613861386,
+          "rerank_score": 0.220033660531044,
+          "relevant": false
+        },
+        {
+          "document_id": "3d7a23ae-a26f-44dc-874c-9b06c0159c43",
+          "chunk_id": "7d9ac7de-70a3-47a7-99cb-98d72b550f89",
+          "title": "Cẩm nang trồng rau dền an toàn - phần canh tác không hóa chất",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-Nang-Rau-An-La-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.016129032258064516,
+          "rerank_score": 0.1511957198381424,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "bok-choy-not-napa-establishment",
+      "query": "Cải thìa cải chíp bok choy Brassica rapa chinensis, không phải cải thảo napa: đất ẩm và khoảng cách theo tài liệu Florida ra sao?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - cải thìa định danh đất ẩm và khoảng cách"
+      ],
+      "latency_ms": 6314.12,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b0d39ff3-a598-49c4-89bb-b0673dd00eda",
+          "chunk_id": "12610f31-5b43-4a50-a3c0-443199abff16",
+          "title": "UF IFAS Florida - cải thìa định danh đất ẩm và khoảng cách",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.999461829662323,
+          "relevant": true
+        },
+        {
+          "document_id": "362dc7bd-67a9-4984-b024-204ad1ebe93b",
+          "chunk_id": "5bfac389-5931-43d9-b030-6766f4b417b0",
+          "title": "UF IFAS Florida - cải thìa nhận biết lúc thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9762648940086365,
+          "relevant": false
+        },
+        {
+          "document_id": "d431a956-3f1d-407c-a0c8-8ed80b74e2d2",
+          "chunk_id": "2566a740-7f79-479f-816b-84283f4bc3ce",
+          "title": "Cải thìa bok choy - gieo trực tiếp và thu hoạch",
+          "source": "https://extension.oregonstate.edu/catalog/pub/em-9128-growing-vegetables-central-oregon?reference=catalog",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.808070957660675,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "bok-choy-harvest-leaves",
+      "query": "Cải thìa bok choy nên dựa vào số lá và vị để quyết định lúc thu như thế nào, không hỏi thuốc sâu?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "UF IFAS Florida - cải thìa nhận biết lúc thu"
+      ],
+      "latency_ms": 4383.44,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "362dc7bd-67a9-4984-b024-204ad1ebe93b",
+          "chunk_id": "5bfac389-5931-43d9-b030-6766f4b417b0",
+          "title": "UF IFAS Florida - cải thìa nhận biết lúc thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.7402808666229248,
+          "relevant": true
+        },
+        {
+          "document_id": "b0d39ff3-a598-49c4-89bb-b0673dd00eda",
+          "chunk_id": "12610f31-5b43-4a50-a3c0-443199abff16",
+          "title": "UF IFAS Florida - cải thìa định danh đất ẩm và khoảng cách",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1337",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.4722854793071747,
+          "relevant": false
+        },
+        {
+          "document_id": "d431a956-3f1d-407c-a0c8-8ed80b74e2d2",
+          "chunk_id": "2566a740-7f79-479f-816b-84283f4bc3ce",
+          "title": "Cải thìa bok choy - gieo trực tiếp và thu hoạch",
+          "source": "https://extension.oregonstate.edu/catalog/pub/em-9128-growing-vegetables-central-oregon?reference=catalog",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.3077106177806854,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "bottle-gourd-not-winter-melon-luffa",
+      "query": "Bầu bottle gourd long squash, không phải bí đao winter melon hay mướp luffa: gieo trực tiếp, cây con, tưới và bấm ngọn làm giàn thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - bầu sao gieo cây nước và giàn"
+      ],
+      "latency_ms": 3990.71,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e3f38395-e5b5-4771-9ee7-a358bc4c10e7",
+          "chunk_id": "5546874f-9207-4139-aff4-56c0f55df7c2",
+          "title": "UF IFAS Florida - bầu sao gieo cây nước và giàn",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1272",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9988920092582703,
+          "relevant": true
+        },
+        {
+          "document_id": "4a3394c7-ebce-4a77-8e3b-a76e8ef2a479",
+          "chunk_id": "ffcee102-8663-424c-8a18-3eefbd8b0199",
+          "title": "UF IFAS Florida - mướp gieo cây nước giàn và thu non",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1285",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.9633941650390625,
+          "relevant": false
+        },
+        {
+          "document_id": "1c58f235-ff47-4c20-8e9b-32cf8c211efa",
+          "chunk_id": "086efe0a-821b-48f8-82ea-03ddef9080c5",
+          "title": "Kỹ thuật trồng mướp - đất, mật độ, dinh dưỡng, giàn và thu hoạch",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-gieo-trong-cay-muop-cho-nang-suat-cao-1977.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033405483405483404,
+          "rerank_score": 0.1959255486726761,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "luffa-not-bottle-gourd",
+      "query": "Mướp luffa, không phải bầu bottle gourd: đất thoát nước nhưng đủ ẩm, gieo cấy, khoảng cách, làm giàn và thu quả non thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - mướp gieo cây nước giàn và thu non"
+      ],
+      "latency_ms": 3449.75,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "4a3394c7-ebce-4a77-8e3b-a76e8ef2a479",
+          "chunk_id": "ffcee102-8663-424c-8a18-3eefbd8b0199",
+          "title": "UF IFAS Florida - mướp gieo cây nước giàn và thu non",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1285",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9982871413230896,
+          "relevant": true
+        },
+        {
+          "document_id": "1c58f235-ff47-4c20-8e9b-32cf8c211efa",
+          "chunk_id": "086efe0a-821b-48f8-82ea-03ddef9080c5",
+          "title": "Kỹ thuật trồng mướp - đất, mật độ, dinh dưỡng, giàn và thu hoạch",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-gieo-trong-cay-muop-cho-nang-suat-cao-1977.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.8840548992156982,
+          "relevant": false
+        },
+        {
+          "document_id": "4a3394c7-ebce-4a77-8e3b-a76e8ef2a479",
+          "chunk_id": "da68f871-abfa-4d23-8663-a2453c429595",
+          "title": "UF IFAS Florida - mướp gieo cây nước giàn và thu non",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1285",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03359375,
+          "rerank_score": 0.030091330409049988,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "yardlong-bean-not-common-bean",
+      "query": "Đậu đũa yardlong bean Vigna unguiculata, không phải đậu cô ve Phaseolus: khí hậu, đất, gieo và giàn theo hướng dẫn Florida?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - đậu đũa đất khí hậu gieo và làm giàn"
+      ],
+      "latency_ms": 3600.55,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e61fb4ca-33d8-46dd-b2a8-45f54c7dfc6f",
+          "chunk_id": "b25d6202-2c90-4d48-ac09-05e664c99f63",
+          "title": "UF IFAS Florida - đậu đũa đất khí hậu gieo và làm giàn",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9989315867424011,
+          "relevant": true
+        },
+        {
+          "document_id": "cb35a488-585a-4f68-80df-3a35f6e06347",
+          "chunk_id": "6549f180-d523-4800-8733-c897f4ee50a9",
+          "title": "UF IFAS Florida - đậu đũa nhận biết độ non khi thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9881465435028076,
+          "relevant": false
+        },
+        {
+          "document_id": "349fa0d8-cfa7-437a-bfc1-704d05032a5d",
+          "chunk_id": "68cb7feb-6819-4c5b-a99b-5c7d059809d9",
+          "title": "UF IFAS Florida - đậu rồng đậu nành và đậu đũa trong nhóm họ đậu châu Á",
+          "source": "https://ask.ifas.ufl.edu/publication/CV125",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.6982232928276062,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "yardlong-bean-immature-harvest",
+      "query": "Đậu đũa cần thu lúc quả non và hạt chưa già như thế nào; tài liệu nào nói rõ thu thủ công và độ trưởng thành?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "UF IFAS Florida - đậu đũa nhận biết độ non khi thu"
+      ],
+      "latency_ms": 3666.53,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "cb35a488-585a-4f68-80df-3a35f6e06347",
+          "chunk_id": "6549f180-d523-4800-8733-c897f4ee50a9",
+          "title": "UF IFAS Florida - đậu đũa nhận biết độ non khi thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.028629032258064513,
+          "rerank_score": 0.9848415851593018,
+          "relevant": true
+        },
+        {
+          "document_id": "fcae0d2d-6717-4bce-a0d6-2321d112caf1",
+          "chunk_id": "13d8459b-eb91-4d70-9ad7-f9967f207036",
+          "title": "Kỹ thuật trồng đậu Hà Lan an toàn - phần thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-dau-ha-lan-theo-huong-san-xuat-rau-an-toan-819.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.028372609289617486,
+          "rerank_score": 0.8835616111755371,
+          "relevant": false
+        },
+        {
+          "document_id": "f68347e5-8f03-4e16-bcf6-f587e1a2f346",
+          "chunk_id": "ee43dbf5-f4c0-431c-b24e-fdfcaa80eab8",
+          "title": "Cẩm nang trồng đậu cô ve và đậu đũa an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.015384615384615385,
+          "rerank_score": 0.0927540510892868,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "asian-legume-photoperiod-support",
+      "query": "Phân biệt đậu rồng winged bean, đậu nành rau edamame soybean và đậu đũa yard-long bean: quang chu kỳ, xử lý vỏ hạt, tưới và nhu cầu giàn?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UF IFAS Florida - đậu rồng đậu nành và đậu đũa trong nhóm họ đậu châu Á"
+      ],
+      "latency_ms": 3485.82,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "349fa0d8-cfa7-437a-bfc1-704d05032a5d",
+          "chunk_id": "68cb7feb-6819-4c5b-a99b-5c7d059809d9",
+          "title": "UF IFAS Florida - đậu rồng đậu nành và đậu đũa trong nhóm họ đậu châu Á",
+          "source": "https://ask.ifas.ufl.edu/publication/CV125",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9989726543426514,
+          "relevant": true
+        },
+        {
+          "document_id": "5af92c2d-f9ba-4377-81c5-ad26966c902e",
+          "chunk_id": "505fd5d1-daeb-4c2a-b796-c9de3b12e388",
+          "title": "Đậu rồng - sinh trưởng và thời gian cho quả",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-benh-hai-chinh-tren-cay-dau-rong-psophocarpus-tetragonolobus-27112.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.8527088761329651,
+          "relevant": false
+        },
+        {
+          "document_id": "cb35a488-585a-4f68-80df-3a35f6e06347",
+          "chunk_id": "6549f180-d523-4800-8733-c897f4ee50a9",
+          "title": "UF IFAS Florida - đậu đũa nhận biết độ non khi thu",
+          "source": "https://ask.ifas.ufl.edu/publication/HS1268",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034097782258064514,
+          "rerank_score": 0.4267362058162689,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

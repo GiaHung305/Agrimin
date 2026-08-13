@@ -1,0 +1,59 @@
+{
+  "version": "crop-expansion-batch-14-retrieval-v1",
+  "items": [
+    {
+      "id": "vegetable-amaranth-not-grain",
+      "category": "crop_depth_lookalike",
+      "query": "Rau dền ăn lá vegetable amaranth Amaranthus tricolor, không phải dền hạt hay dền cảnh: gieo, cấy, nhiệt độ, ánh sáng và tưới thế nào theo nguồn Florida?",
+      "relevant_sources": ["UF IFAS Florida - rau dền gieo trồng và quản lý nước"]
+    },
+    {
+      "id": "amaranth-repeat-harvest",
+      "category": "crop_depth_harvest",
+      "query": "Rau dền ăn lá thu một lần hay cắt lặp, dấu hiệu không nên thu khi ra hoa và làm mát sau thu hoạch theo nguồn UF IFAS?",
+      "relevant_sources": ["UF IFAS Florida - rau dền thu hái và làm mát sau thu hoạch"]
+    },
+    {
+      "id": "bok-choy-not-napa-establishment",
+      "category": "crop_depth_lookalike",
+      "query": "Cải thìa cải chíp bok choy Brassica rapa chinensis, không phải cải thảo napa: đất ẩm và khoảng cách theo tài liệu Florida ra sao?",
+      "relevant_sources": ["UF IFAS Florida - cải thìa định danh đất ẩm và khoảng cách"]
+    },
+    {
+      "id": "bok-choy-harvest-leaves",
+      "category": "crop_depth_harvest",
+      "query": "Cải thìa bok choy nên dựa vào số lá và vị để quyết định lúc thu như thế nào, không hỏi thuốc sâu?",
+      "relevant_sources": ["UF IFAS Florida - cải thìa nhận biết lúc thu"]
+    },
+    {
+      "id": "bottle-gourd-not-winter-melon-luffa",
+      "category": "crop_depth_lookalike",
+      "query": "Bầu bottle gourd long squash, không phải bí đao winter melon hay mướp luffa: gieo trực tiếp, cây con, tưới và bấm ngọn làm giàn thế nào?",
+      "relevant_sources": ["UF IFAS Florida - bầu sao gieo cây nước và giàn"]
+    },
+    {
+      "id": "luffa-not-bottle-gourd",
+      "category": "crop_depth_lookalike",
+      "query": "Mướp luffa, không phải bầu bottle gourd: đất thoát nước nhưng đủ ẩm, gieo cấy, khoảng cách, làm giàn và thu quả non thế nào?",
+      "relevant_sources": ["UF IFAS Florida - mướp gieo cây nước giàn và thu non"]
+    },
+    {
+      "id": "yardlong-bean-not-common-bean",
+      "category": "crop_depth_lookalike",
+      "query": "Đậu đũa yardlong bean Vigna unguiculata, không phải đậu cô ve Phaseolus: khí hậu, đất, gieo và giàn theo hướng dẫn Florida?",
+      "relevant_sources": ["UF IFAS Florida - đậu đũa đất khí hậu gieo và làm giàn"]
+    },
+    {
+      "id": "yardlong-bean-immature-harvest",
+      "category": "crop_depth_harvest",
+      "query": "Đậu đũa cần thu lúc quả non và hạt chưa già như thế nào; tài liệu nào nói rõ thu thủ công và độ trưởng thành?",
+      "relevant_sources": ["UF IFAS Florida - đậu đũa nhận biết độ non khi thu"]
+    },
+    {
+      "id": "asian-legume-photoperiod-support",
+      "category": "crop_depth_lookalike",
+      "query": "Phân biệt đậu rồng winged bean, đậu nành rau edamame soybean và đậu đũa yard-long bean: quang chu kỳ, xử lý vỏ hạt, tưới và nhu cầu giàn?",
+      "relevant_sources": ["UF IFAS Florida - đậu rồng đậu nành và đậu đũa trong nhóm họ đậu châu Á"]
+    }
+  ]
+}

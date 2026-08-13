@@ -1,0 +1,71 @@
+{
+  "version": "crop-expansion-batch-16-retrieval-v1",
+  "items": [
+    {
+      "id": "katuk-wild-betel-disambiguation",
+      "category": "crop_depth_lookalike",
+      "query": "Phân biệt rau ngót katuk Sauropus androgynus với lá lốt leaf pepper Piper sarmentosum: bộ phận ăn và nhân bằng hom hay tách bụi?",
+      "relevant_sources": ["UC Davis - rau ngot va la lot dinh danh nhan giong"]
+    },
+    {
+      "id": "katuk-tender-tips",
+      "category": "crop_depth_harvest",
+      "query": "Rau ngót katuk Sauropus androgynus cho chồi non tender tips tăng trưởng thế nào và phiếu Miami ghi mùa trồng thu ra sao?",
+      "relevant_sources": ["University of Miami - rau ngot thoi diem trong thu va choi non"]
+    },
+    {
+      "id": "pennywort-not-hydrocotyle-heavy-metal",
+      "category": "crop_depth_lookalike",
+      "query": "Rau má Centella asiatica, không phải Hydrocotyle pennywort: đất ẩm thoát nước, nhân giống và nguy cơ hút kim loại nặng cần lưu ý gì?",
+      "relevant_sources": ["NC State Extension - rau ma dat am nhan giong va an toan dat"]
+    },
+    {
+      "id": "mung-bean-purdue-row",
+      "category": "crop_depth_lookalike",
+      "query": "Đậu xanh mung bean Vigna radiata, không phải đậu nành hay azuki: bảng Purdue ghi độ sâu gieo, khoảng cách và số ngày thế nào?",
+      "relevant_sources": ["Purdue Extension - dau xanh gieo khoang cach va moc chin"]
+    },
+    {
+      "id": "winter-melon-not-bottle-gourd",
+      "category": "crop_depth_lookalike",
+      "query": "Bí đao bí xanh winter melon Benincasa hispida, không phải bầu Lagenaria hay dưa gang: hàng Purdue nói gieo, khoảng cách và quả non già thế nào?",
+      "relevant_sources": ["Purdue Extension - bi dao dinh danh khoang cach va thu"]
+    },
+    {
+      "id": "lotus-root-is-rhizome",
+      "category": "crop_depth_lookalike",
+      "query": "Sen lấy củ Chinese lotus Nelumbo nucifera: vì sao củ thực ra là thân rễ phình trong bùn, trồng bằng rhizome hay hạt trong vườn nước?",
+      "relevant_sources": ["Purdue Extension - sen lay cu moi truong nuoc va than re"]
+    },
+    {
+      "id": "peanut-pegging-establishment",
+      "category": "crop_depth_establishment",
+      "query": "Lạc đậu phộng Arachis hypogaea tạo tia củ peg chui xuống đất thế nào; gieo và giữ ẩm ban đầu theo Clemson?",
+      "relevant_sources": ["Clemson Extension - lac dau phong dinh danh gieo va dat"]
+    },
+    {
+      "id": "peanut-maturity-curing",
+      "category": "crop_depth_harvest",
+      "query": "Lạc đậu phộng nhận biết chín bằng màu trong vỏ và phép cạo vỏ ra sao; đào, hong và chữa khô thế nào để tránh mốc?",
+      "relevant_sources": ["Clemson Extension - lac dau phong nhan biet chin va lam kho"]
+    },
+    {
+      "id": "mung-bean-short-duration-icar",
+      "category": "crop_depth_climate",
+      "query": "ICAR-IIPR mô tả giống đậu xanh mungbean ngắn ngày IPM 410-3 Shikha và IPM 205-7 Virat thích nghi vùng và chín bao lâu?",
+      "relevant_sources": ["ICAR IIPR - dau xanh giong ngan ngay theo vung sinh thai"]
+    },
+    {
+      "id": "true-yam-not-sweet-potato-taro",
+      "category": "crop_depth_lookalike",
+      "query": "Khoai mỡ khoai từ true yam khác khoai lang và khoai môn: bảng Guam liệt kê Dioscorea esculenta, alata, rotundata cùng cửa sổ trồng nào?",
+      "relevant_sources": ["University of Guam Extension - khoai mo khoai tu dinh danh mua trong"]
+    },
+    {
+      "id": "taro-stem-zuiki-identity",
+      "category": "crop_depth_lookalike",
+      "query": "Dọc mùng taro stems và zuiki được Codex nối với Colocasia esculenta và Colocasia gigantea thế nào; đây có phải hướng dẫn ăn sống không?",
+      "relevant_sources": ["Codex IR-4 - doc mung phan biet taro stems va Colocasia gigantea"]
+    }
+  ]
+}

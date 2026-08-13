@@ -1,0 +1,249 @@
+{
+  "dataset_version": "crop-expansion-batch-12-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 9535.34
+  },
+  "items": [
+    {
+      "id": "fruit-vegetable-htx-postharvest",
+      "query": "Dưa leo, đậu bắp và khổ qua ở HTX sau thu hoạch nên tránh chạm đất, phân loại, đóng bao thoáng và tạm trữ mát thế nào, không hỏi chlorine hay ozone?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "Dưa leo, đậu bắp và khổ qua - thu hái, phân loại và tạm trữ tại HTX"
+      ],
+      "latency_ms": 18468.79,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "02487302-25e0-4cea-b0c0-222cf542ba78",
+          "chunk_id": "fadfb633-37e2-4b0a-9e32-3315be5115cd",
+          "title": "Dưa leo, đậu bắp và khổ qua - thu hái, phân loại và tạm trữ tại HTX",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/cong-nghe-bao-quan-sau-thu-hoach-rau-cu-qua-7674.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9988719820976257,
+          "relevant": true
+        },
+        {
+          "document_id": "e2ee9bf6-d306-46db-b596-edd35b1c5e6a",
+          "chunk_id": "2b98c80d-f2cd-4260-9f19-c4503ad6f380",
+          "title": "Cẩm nang trồng dưa leo an toàn - phần cây dưa leo",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.21353156864643097,
+          "relevant": false
+        },
+        {
+          "document_id": "e0534558-af24-48ca-8b37-e0ea4198dfd0",
+          "chunk_id": "5af49e24-421d-4c22-aa23-53f9916d2d00",
+          "title": "Khoai tây vụ đông miền Bắc - chỉ báo thu hoạch và bảo quản củ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.030952380952380953,
+          "rerank_score": 0.003775117453187704,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "asparagus-establishment-not-bamboo-shoot",
+      "query": "Măng tây xanh asparagus ở Hòa Vang Đà Nẵng, không phải măng tre: ươm cây, xuống giống, mật độ, bón và giữ ẩm thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Măng tây xanh Hòa Vang Đà Nẵng - cây con, xuống giống, dinh dưỡng và nước"
+      ],
+      "latency_ms": 13541.4,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e05003fb-1721-48da-9a80-525688d97d33",
+          "chunk_id": "93a4d534-83b2-4348-857b-394d4d3ec34d",
+          "title": "Măng tây xanh Hòa Vang Đà Nẵng - cây con, xuống giống, dinh dưỡng và nước",
+          "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+          "ranking_strategy": "rerank_topic_intent",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9998242259025574,
+          "relevant": true
+        },
+        {
+          "document_id": "11fe69f1-48c5-4ccb-b760-24bacedab9c1",
+          "chunk_id": "6f7a44e2-7a16-40b4-8e9d-705d7a7809b4",
+          "title": "Cẩm nang trồng măng tây - giống, đất và chăm sóc",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/02/Cam-nang-Cay-Mang-Tay.pdf",
+          "ranking_strategy": "rerank_topic_intent",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.33011096715927124,
+          "relevant": false
+        },
+        {
+          "document_id": "ffded296-c82f-4dc3-83e1-e99c1f2ff972",
+          "chunk_id": "ef5d13b6-5af4-45ac-b852-7c61855cf794",
+          "title": "Măng tây xanh Hòa Vang Đà Nẵng - chu kỳ và kỹ thuật thu hoạch",
+          "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+          "ranking_strategy": "rerank_topic_intent",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9893542528152466,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "asparagus-harvest-cycle",
+      "query": "Măng tây xanh ở Hòa Vang sau trồng bao lâu thu lứa măng tơ, chu kỳ thu và nghỉ dưỡng cây mẹ, giờ thu buổi sáng và thao tác cắt thế nào?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "Măng tây xanh Hòa Vang Đà Nẵng - chu kỳ và kỹ thuật thu hoạch"
+      ],
+      "latency_ms": 6184.88,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ffded296-c82f-4dc3-83e1-e99c1f2ff972",
+          "chunk_id": "ef5d13b6-5af4-45ac-b852-7c61855cf794",
+          "title": "Măng tây xanh Hòa Vang Đà Nẵng - chu kỳ và kỹ thuật thu hoạch",
+          "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9993932247161865,
+          "relevant": true
+        },
+        {
+          "document_id": "ee3ea96c-ea65-49c3-8ca0-b98790f22759",
+          "chunk_id": "b59031fe-efc6-416e-b0f5-fdbfddb96ea3",
+          "title": "Cẩm nang trồng măng tây - thu hoạch và sơ chế",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/02/Cam-nang-Cay-Mang-Tay.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.4972888231277466,
+          "relevant": false
+        },
+        {
+          "document_id": "e05003fb-1721-48da-9a80-525688d97d33",
+          "chunk_id": "f50d7eb2-b300-4b28-aba7-648c3a5084da",
+          "title": "Măng tây xanh Hòa Vang Đà Nẵng - cây con, xuống giống, dinh dưỡng và nước",
+          "source": "https://dbc.danang.gov.vn/khoa-hoc/ky-thuat-trong-cham-soc-thu-hoach-cay-mang-tay-xanh-aasparagus-officinalis-l-tai-tp-da-nang/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.3210984468460083,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "carrot-establishment-not-radish",
+      "query": "Cà rốt carrot Daucus carota ở đồng bằng sông Hồng, không phải củ cải radish: thời vụ, đất, xử lý gieo hạt, tưới và bón theo ha thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc"
+      ],
+      "latency_ms": 5477.41,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "052e4aad-2f0f-4150-bc0d-2463457b13e2",
+          "chunk_id": "e5cb60b4-8a97-4c05-8f71-7f738c3965bd",
+          "title": "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9998661279678345,
+          "relevant": true
+        },
+        {
+          "document_id": "61eecf28-31ea-4171-bc79-33ec225d39d8",
+          "chunk_id": "e067e082-a2d7-4e4e-977c-5f12b915fbe0",
+          "title": "Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9983770847320557,
+          "relevant": false
+        },
+        {
+          "document_id": "3c9ced16-a0e6-4278-a77a-a041bdabbc9e",
+          "chunk_id": "6162baa1-9756-4836-a8dc-b647ca902b71",
+          "title": "Trích yếu: Kỹ thuật trồng cà rốt an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ca-rot-an-toan-6115.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03356532356532356,
+          "rerank_score": 0.9631772041320801,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "carrot-harvest-not-turnip",
+      "query": "Cà rốt, không phải turnip: nhận biết độ thu hoạch bằng màu lá và vai củ, thu ngày khô, làm sạch và vận chuyển giảm dập thế nào?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển"
+      ],
+      "latency_ms": 4004.22,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "61eecf28-31ea-4171-bc79-33ec225d39d8",
+          "chunk_id": "e067e082-a2d7-4e4e-977c-5f12b915fbe0",
+          "title": "Cà rốt đồng bằng sông Hồng - nhận biết độ thu hoạch và vận chuyển",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9988258481025696,
+          "relevant": true
+        },
+        {
+          "document_id": "052e4aad-2f0f-4150-bc0d-2463457b13e2",
+          "chunk_id": "e5cb60b4-8a97-4c05-8f71-7f738c3965bd",
+          "title": "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.7384508848190308,
+          "relevant": false
+        },
+        {
+          "document_id": "3c9ced16-a0e6-4278-a77a-a041bdabbc9e",
+          "chunk_id": "6162baa1-9756-4836-a8dc-b647ca902b71",
+          "title": "Trích yếu: Kỹ thuật trồng cà rốt an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ca-rot-an-toan-6115.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.6504012942314148,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

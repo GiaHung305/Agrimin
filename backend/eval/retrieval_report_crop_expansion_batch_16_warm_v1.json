@@ -1,0 +1,519 @@
+{
+  "dataset_version": "crop-expansion-batch-16-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 5,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 6675.175454545454
+  },
+  "items": [
+    {
+      "id": "katuk-wild-betel-disambiguation",
+      "query": "Phân biệt rau ngót katuk Sauropus androgynus với lá lốt leaf pepper Piper sarmentosum: bộ phận ăn và nhân bằng hom hay tách bụi?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "UC Davis - rau ngot va la lot dinh danh nhan giong"
+      ],
+      "latency_ms": 14053.71,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "83bd30d8-01e6-4959-ba9f-990a255e6800",
+          "chunk_id": "e20bc2bc-e3cd-4b30-867f-c158f802840e",
+          "title": "UC Davis - rau ngot va la lot dinh danh nhan giong",
+          "source": "https://horticulture.ucdavis.edu/sites/g/files/dgvnsk1816/files/extension_material_files/Bates_Strengthening_Informal_Indigenous_Seed_Systems.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9993315935134888,
+          "relevant": true
+        },
+        {
+          "document_id": "bc03275b-d339-4ccc-990e-68b1e23e7556",
+          "chunk_id": "aaa0d855-ca37-49f1-b277-fc52d9dba52c",
+          "title": "University of Miami - rau ngot thoi diem trong thu va choi non",
+          "source": "https://greenu.miami.edu/_assets/pdf/cg-katuk.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.5654076933860779,
+          "relevant": false
+        },
+        {
+          "document_id": "060047aa-2053-4272-ba86-e7d057778244",
+          "chunk_id": "5f1aade6-8086-421b-90fc-b180f0b0fb4c",
+          "title": "Kỹ thuật trồng và chăm sóc cây rau ngót - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-rau-ngot-18184.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.05854303389787674,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "katuk-tender-tips",
+      "query": "Rau ngót katuk Sauropus androgynus cho chồi non tender tips tăng trưởng thế nào và phiếu Miami ghi mùa trồng thu ra sao?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "University of Miami - rau ngot thoi diem trong thu va choi non"
+      ],
+      "latency_ms": 10392.53,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "bc03275b-d339-4ccc-990e-68b1e23e7556",
+          "chunk_id": "aaa0d855-ca37-49f1-b277-fc52d9dba52c",
+          "title": "University of Miami - rau ngot thoi diem trong thu va choi non",
+          "source": "https://greenu.miami.edu/_assets/pdf/cg-katuk.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.998435914516449,
+          "relevant": true
+        },
+        {
+          "document_id": "060047aa-2053-4272-ba86-e7d057778244",
+          "chunk_id": "5f1aade6-8086-421b-90fc-b180f0b0fb4c",
+          "title": "Kỹ thuật trồng và chăm sóc cây rau ngót - phần canh tác",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-rau-ngot-18184.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.7436312437057495,
+          "relevant": false
+        },
+        {
+          "document_id": "83bd30d8-01e6-4959-ba9f-990a255e6800",
+          "chunk_id": "e20bc2bc-e3cd-4b30-867f-c158f802840e",
+          "title": "UC Davis - rau ngot va la lot dinh danh nhan giong",
+          "source": "https://horticulture.ucdavis.edu/sites/g/files/dgvnsk1816/files/extension_material_files/Bates_Strengthening_Informal_Indigenous_Seed_Systems.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.5183142423629761,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pennywort-not-hydrocotyle-heavy-metal",
+      "query": "Rau má Centella asiatica, không phải Hydrocotyle pennywort: đất ẩm thoát nước, nhân giống và nguy cơ hút kim loại nặng cần lưu ý gì?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "NC State Extension - rau ma dat am nhan giong va an toan dat"
+      ],
+      "latency_ms": 8641.36,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "570b7268-c65f-4559-aa5b-89b2e6ff7f82",
+          "chunk_id": "aa7da5de-aa35-4130-9003-fb8231b43f5d",
+          "title": "NC State Extension - rau ma dat am nhan giong va an toan dat",
+          "source": "https://plants.ces.ncsu.edu/plants/centella-asiatica/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9938449859619141,
+          "relevant": true
+        },
+        {
+          "document_id": "6c457bab-cd23-4fa8-a4ad-026509041c78",
+          "chunk_id": "64707ba9-8d4a-410e-a13f-5db9e33b3692",
+          "title": "Kỹ thuật trồng rau má xanh tốt không gồm danh mục thuốc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-rau-ma-xanh-tot-nang-suat-1771.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9669332504272461,
+          "relevant": false
+        },
+        {
+          "document_id": "8a32f324-7003-4bc8-ba12-5f8a2e990f16",
+          "chunk_id": "fcab9e6b-0b0e-4765-a345-9a263914e418",
+          "title": "Trích yếu: Quản lý độ mặn của nước tưới và vùng rễ",
+          "source": "https://www.fao.org/4/t0234e/T0234E02.htm",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.09941790252923965,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mung-bean-purdue-row",
+      "query": "Đậu xanh mung bean Vigna radiata, không phải đậu nành hay azuki: bảng Purdue ghi độ sâu gieo, khoảng cách và số ngày thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Purdue Extension - dau xanh gieo khoang cach va moc chin"
+      ],
+      "latency_ms": 7970.86,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "79a6bb84-9bbc-4873-bfa4-eb232f7b0d74",
+          "chunk_id": "c96f74ff-5d77-4335-b435-5bc24e963d2c",
+          "title": "Purdue Extension - dau xanh gieo khoang cach va moc chin",
+          "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9999401569366455,
+          "relevant": true
+        },
+        {
+          "document_id": "b4f18479-4c20-459a-ad19-bdefbc7d20c6",
+          "chunk_id": "a6b143c4-e39e-4496-b1ef-5bc13fde1f09",
+          "title": "ICAR IIPR - dau xanh giong ngan ngay theo vung sinh thai",
+          "source": "https://icar.gov.in/sites/default/files/2025-12/October_2025%20Indian%20Farming.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.9847588539123535,
+          "relevant": false
+        },
+        {
+          "document_id": "f40b084f-7f6d-4a7e-ae17-d051cef18bbb",
+          "chunk_id": "1f6c2a66-f8aa-47dd-a5e6-0d3b4f504fe5",
+          "title": "Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-va-cham-soc-cay-dau-xanh-863.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.597220242023468,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "winter-melon-not-bottle-gourd",
+      "query": "Bí đao bí xanh winter melon Benincasa hispida, không phải bầu Lagenaria hay dưa gang: hàng Purdue nói gieo, khoảng cách và quả non già thế nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Purdue Extension - bi dao dinh danh khoang cach va thu"
+      ],
+      "latency_ms": 7439.89,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "04f2175b-7054-41ee-bba1-f100fd486bd7",
+          "chunk_id": "253b9319-a9f7-41c9-a7b8-2e4b3e77acc4",
+          "title": "Purdue Extension - bi dao dinh danh khoang cach va thu",
+          "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9999467134475708,
+          "relevant": true
+        },
+        {
+          "document_id": "4293bcdc-f0cd-4fbd-8f17-24218823fc4e",
+          "chunk_id": "cd4e24bf-f8a5-4de3-a403-9eb92d4037e1",
+          "title": "Cẩm nang trồng bí đao an toàn - phần cây bí đao",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.030246178280722652,
+          "rerank_score": 0.07756339013576508,
+          "relevant": false
+        },
+        {
+          "document_id": "4293bcdc-f0cd-4fbd-8f17-24218823fc4e",
+          "chunk_id": "ee8ef64f-ed60-401b-a94f-32f5fe043b60",
+          "title": "Cẩm nang trồng bí đao an toàn - phần cây bí đao",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.025671852899575673,
+          "rerank_score": 0.004637644626200199,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "lotus-root-is-rhizome",
+      "query": "Sen lấy củ Chinese lotus Nelumbo nucifera: vì sao củ thực ra là thân rễ phình trong bùn, trồng bằng rhizome hay hạt trong vườn nước?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Purdue Extension - sen lay cu moi truong nuoc va than re"
+      ],
+      "latency_ms": 5267.45,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "178d1d54-4730-4e0a-b56c-03cda69d88bd",
+          "chunk_id": "d22daf14-96ae-4db3-8289-e887ecc2e34a",
+          "title": "Purdue Extension - sen lay cu moi truong nuoc va than re",
+          "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9987239241600037,
+          "relevant": true
+        },
+        {
+          "document_id": "5fdc7c45-734a-4d41-98be-7250491180a1",
+          "chunk_id": "5492812e-46e9-40d5-b00f-5cf72dbccb9f",
+          "title": "Sen lấy củ - nhân giống và chuẩn bị ao đất",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/ky-thuat-trong-va-cham-soc-sen-lay-cu-1532.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9051960110664368,
+          "relevant": false
+        },
+        {
+          "document_id": "f9d65ce2-adfd-4553-af19-6057f405ae68",
+          "chunk_id": "45ffcda2-be1a-4ee3-819c-7143d68a34c7",
+          "title": "Củ đậu - bấm ngọn, tỉa hoa và quản lý nước",
+          "source": "https://khuyennongvn.gov.vn/thong-tin-thi-truong/thi-truong-trong-nuoc/bac-giang-trong-cu-dau-cho-thu-nhap-on-dinh-20044.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.02924003707136237,
+          "rerank_score": 0.000625721353571862,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "peanut-pegging-establishment",
+      "query": "Lạc đậu phộng Arachis hypogaea tạo tia củ peg chui xuống đất thế nào; gieo và giữ ẩm ban đầu theo Clemson?",
+      "category": "crop_depth_establishment",
+      "relevant_sources": [
+        "Clemson Extension - lac dau phong dinh danh gieo va dat"
+      ],
+      "latency_ms": 3610.88,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "0a660b86-7564-4514-968c-a9eaa3130870",
+          "chunk_id": "278db536-8ef5-4a50-8ad8-9d575ebacefb",
+          "title": "Clemson Extension - lac dau phong dinh danh gieo va dat",
+          "source": "https://hgic.clemson.edu/factsheet/peanut/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9925748109817505,
+          "relevant": true
+        },
+        {
+          "document_id": "45195435-880a-4e09-86dd-48bbbb7412e9",
+          "chunk_id": "170fbd6a-6800-4ed2-b506-6e4406aa2bf8",
+          "title": "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.6368183493614197,
+          "relevant": false
+        },
+        {
+          "document_id": "9bdee428-b484-4c06-a061-b3cf268fe705",
+          "chunk_id": "0e478a99-40f4-42d7-a4fe-13d102c12820",
+          "title": "Quy trình thu hoạch và bảo quản lạc đậu phộng",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03384176587301587,
+          "rerank_score": 0.24280039966106415,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "peanut-maturity-curing",
+      "query": "Lạc đậu phộng nhận biết chín bằng màu trong vỏ và phép cạo vỏ ra sao; đào, hong và chữa khô thế nào để tránh mốc?",
+      "category": "crop_depth_harvest",
+      "relevant_sources": [
+        "Clemson Extension - lac dau phong nhan biet chin va lam kho"
+      ],
+      "latency_ms": 3805.4,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "e5eb6c67-dd57-4f74-9517-40c220174211",
+          "chunk_id": "a613d6f0-e93b-46a6-b9dd-43a723e23cc0",
+          "title": "Clemson Extension - lac dau phong nhan biet chin va lam kho",
+          "source": "https://hgic.clemson.edu/factsheet/peanut/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9824813008308411,
+          "relevant": true
+        },
+        {
+          "document_id": "9bdee428-b484-4c06-a061-b3cf268fe705",
+          "chunk_id": "0e478a99-40f4-42d7-a4fe-13d102c12820",
+          "title": "Quy trình thu hoạch và bảo quản lạc đậu phộng",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.6690037250518799,
+          "relevant": false
+        },
+        {
+          "document_id": "45195435-880a-4e09-86dd-48bbbb7412e9",
+          "chunk_id": "170fbd6a-6800-4ed2-b506-6e4406aa2bf8",
+          "title": "Quy trình trồng lạc đậu phộng - đất, giống và chăm sóc",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/lac_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.014925373134328358,
+          "rerank_score": 0.07363276928663254,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mung-bean-short-duration-icar",
+      "query": "ICAR-IIPR mô tả giống đậu xanh mungbean ngắn ngày IPM 410-3 Shikha và IPM 205-7 Virat thích nghi vùng và chín bao lâu?",
+      "category": "crop_depth_climate",
+      "relevant_sources": [
+        "ICAR IIPR - dau xanh giong ngan ngay theo vung sinh thai"
+      ],
+      "latency_ms": 4961.94,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b4f18479-4c20-459a-ad19-bdefbc7d20c6",
+          "chunk_id": "a6b143c4-e39e-4496-b1ef-5bc13fde1f09",
+          "title": "ICAR IIPR - dau xanh giong ngan ngay theo vung sinh thai",
+          "source": "https://icar.gov.in/sites/default/files/2025-12/October_2025%20Indian%20Farming.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9775977730751038,
+          "relevant": true
+        },
+        {
+          "document_id": "79a6bb84-9bbc-4873-bfa4-eb232f7b0d74",
+          "chunk_id": "c96f74ff-5d77-4335-b435-5bc24e963d2c",
+          "title": "Purdue Extension - dau xanh gieo khoang cach va moc chin",
+          "source": "https://www.purdue.edu/hla/sites/yardandgarden/wp-content/uploads/sites/2/2016/10/HO-187.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.030326563122262045,
+          "rerank_score": 0.20592503249645233,
+          "relevant": false
+        },
+        {
+          "document_id": "f40b084f-7f6d-4a7e-ae17-d051cef18bbb",
+          "chunk_id": "1f6c2a66-f8aa-47dd-a5e6-0d3b4f504fe5",
+          "title": "Đậu xanh - chuẩn bị đất, chọn giống và gieo trồng",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-va-cham-soc-cay-dau-xanh-863.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.010952380952380951,
+          "rerank_score": 0.19400283694267273,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "true-yam-not-sweet-potato-taro",
+      "query": "Khoai mỡ khoai từ true yam khác khoai lang và khoai môn: bảng Guam liệt kê Dioscorea esculenta, alata, rotundata cùng cửa sổ trồng nào?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "University of Guam Extension - khoai mo khoai tu dinh danh mua trong"
+      ],
+      "latency_ms": 3750.1,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "2225531f-0675-4e97-b4ca-28d679290fdf",
+          "chunk_id": "f71b1abb-ace8-4e0b-93bb-d097910ac245",
+          "title": "University of Guam Extension - khoai mo khoai tu dinh danh mua trong",
+          "source": "https://www.uog.edu/_resources/files/extension/Crop_Chart_6_23_16.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.995180606842041,
+          "relevant": true
+        },
+        {
+          "document_id": "148f424e-6179-4e09-becd-5830bfa9e713",
+          "chunk_id": "39db0302-7d2a-45f1-9948-c505e279124d",
+          "title": "Khoai mỡ Vĩnh Long - giống, nước, luân canh và thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/chuong-trinh-nganh-nong-nghiep/tai-co-cau-nganh-nong-nghiep/vinh-long-tuan-thu-ky-thuat-canh-tac--canh-dong-khoai-mo-ngay-cang-mo-rong-19139.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.7711857557296753,
+          "relevant": false
+        },
+        {
+          "document_id": "9b355e68-9122-43fc-911a-e09c7b201ffa",
+          "chunk_id": "2105cff2-7f1e-4d90-8b1d-242d909005cf",
+          "title": "Codex IR-4 - doc mung phan biet taro stems va Colocasia gigantea",
+          "source": "https://ir4.cals.ncsu.edu/fooduse/Crop%20Grouping/Type%202%20Vegetable%20Commodity%20Groups%202017.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03207019897160742,
+          "rerank_score": 0.019006097689270973,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "taro-stem-zuiki-identity",
+      "query": "Dọc mùng taro stems và zuiki được Codex nối với Colocasia esculenta và Colocasia gigantea thế nào; đây có phải hướng dẫn ăn sống không?",
+      "category": "crop_depth_lookalike",
+      "relevant_sources": [
+        "Codex IR-4 - doc mung phan biet taro stems va Colocasia gigantea"
+      ],
+      "latency_ms": 3532.81,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "9b355e68-9122-43fc-911a-e09c7b201ffa",
+          "chunk_id": "2105cff2-7f1e-4d90-8b1d-242d909005cf",
+          "title": "Codex IR-4 - doc mung phan biet taro stems va Colocasia gigantea",
+          "source": "https://ir4.cals.ncsu.edu/fooduse/Crop%20Grouping/Type%202%20Vegetable%20Commodity%20Groups%202017.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9999277591705322,
+          "relevant": true
+        },
+        {
+          "document_id": "21a1f3de-089b-43a7-a145-e244b3209902",
+          "chunk_id": "e5648ec8-3912-483a-8eab-41805df8320b",
+          "title": "Dọc mùng Colocasia gigantea - đất, ánh sáng và chắn gió",
+          "source": "https://utgardens.tennessee.edu/thailand-giant-elephant-ear-will-get-all-your-neighbors-talking-and-gawking/",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9731936454772949,
+          "relevant": false
+        },
+        {
+          "document_id": "c1faa64b-cb40-44f6-b574-c3438ae31940",
+          "chunk_id": "971ed734-1049-45a8-b3d5-bb5092aa4f6b",
+          "title": "Kỹ thuật trồng khoai môn - giống, đất, phân bón, mật độ và chăm sóc",
+          "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-khoai-mon-842.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033353365384615384,
+          "rerank_score": 0.46104952692985535,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

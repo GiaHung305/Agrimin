@@ -1,0 +1,101 @@
+{
+  "version": "crop-expansion-batch-15-retrieval-v1",
+  "items": [
+    {
+      "id": "artichoke-not-roselle-establishment",
+      "category": "crop_depth_lookalike",
+      "query": "Atisô lấy nụ globe artichoke Cynara, không phải atisô đỏ bụp giấm: đất thoát nước, cây giống và tưới theo USU thế nào?",
+      "relevant_sources": ["USU Extension - atiso dat nuoc va trong cay"]
+    },
+    {
+      "id": "artichoke-bud-harvest",
+      "category": "crop_depth_harvest",
+      "query": "Atisô lấy nụ nên thu lúc lá bắc còn khép hay đã mở, cắt nụ ra sao theo USU?",
+      "relevant_sources": ["USU Extension - atiso nhan biet luc thu nu"]
+    },
+    {
+      "id": "garlic-not-elephant-establishment",
+      "category": "crop_depth_lookalike",
+      "query": "Tỏi thật Allium sativum khác elephant garlic gần họ tỏi tây thế nào; chọn tép giống, trồng và tưới theo USU?",
+      "relevant_sources": ["USU Extension - toi giong dat trong va nuoc"]
+    },
+    {
+      "id": "garlic-cure-storage",
+      "category": "crop_depth_harvest",
+      "query": "Tỏi bắt đầu vàng lá thì thu và hong chữa củ, nhận biết đã khô, bảo quản ra sao?",
+      "relevant_sources": ["USU Extension - toi nhan biet chin va bao quan"]
+    },
+    {
+      "id": "culantro-not-cilantro",
+      "category": "crop_depth_lookalike",
+      "query": "Ngò gai mùi tàu culantro Eryngium foetidum, không phải ngò rí cilantro Coriandrum: bóng râm, đất ẩm, gieo và hái lá thế nào?",
+      "relevant_sources": ["UF IFAS - ngo gai phan biet ngo ri va cach trong"]
+    },
+    {
+      "id": "fish-mint-not-mentha",
+      "category": "crop_depth_lookalike",
+      "query": "Diếp cá fish mint Houttuynia cordata, không phải bạc hà Mentha: cần đất ẩm, chịu bóng và phải chặn thân rễ lan ra sao?",
+      "relevant_sources": ["NC State Extension - diep ca dat am va kiem soat lan"]
+    },
+    {
+      "id": "jicama-not-cassava-food-safety",
+      "category": "crop_depth_lookalike",
+      "query": "Củ đậu jicama Pachyrhizus erosus không phải sắn cassava: cần bao lâu ấm để tạo củ và bộ phận nào độc không được ăn?",
+      "relevant_sources": ["UF IFAS - cu dau dinh danh thoi gian tao cu va an toan"]
+    },
+    {
+      "id": "dragon-fruit-climate-stress",
+      "category": "crop_depth_climate",
+      "query": "Thanh long pitaya Selenicereus chịu nóng, gió, ngập, mặn và hạn như thế nào theo bảng môi trường UF IFAS?",
+      "relevant_sources": ["UF IFAS - thanh long nguong nhiet gio ngap han man"]
+    },
+    {
+      "id": "mango-climate-stress",
+      "category": "crop_depth_climate",
+      "query": "Xoài Mangifera indica có mức chịu gió, ngập, mặn và hạn ra sao trong bảng môi trường UF IFAS?",
+      "relevant_sources": ["UF IFAS - xoai nguong nhiet gio ngap han man"]
+    },
+    {
+      "id": "pineapple-climate-stress",
+      "category": "crop_depth_climate",
+      "query": "Dứa thơm khóm pineapple phản ứng với lạnh nóng, hạn, úng, gió và mặn ra sao theo UF IFAS?",
+      "relevant_sources": ["UF IFAS - dua khom thich nghi nhiet han ngap va gio"]
+    },
+    {
+      "id": "pineapple-propagules",
+      "category": "crop_depth_establishment",
+      "query": "Dứa pineapple phân biệt chồi ngọn crown, slip, hapa, sucker và ratoon; vật liệu trồng cần hong và vào giá thể sạch thế nào?",
+      "relevant_sources": ["UF IFAS - dua khom vat lieu nhan giong dat va thoat nuoc"]
+    },
+    {
+      "id": "perilla-purslane-watercress-microgreens",
+      "category": "crop_depth_lookalike",
+      "query": "Chỉ ở giai đoạn rau mầm: tía tô shiso, rau sam purslane và cải xoong watercress gieo che hạt, chiếu sáng và cắt thu thế nào?",
+      "relevant_sources": ["UF IFAS - tia to rau sam cai xoong o giai doan rau mam"]
+    },
+    {
+      "id": "asian-vegetable-alias-disambiguation",
+      "category": "crop_depth_lookalike",
+      "query": "Bảng tên rau châu Á phân biệt riềng galangal, Indian taro, Tossa jute rau đay và Vietnamese coriander rau răm thế nào?",
+      "relevant_sources": ["UF IFAS - tieu chuan hoa ten rau chau A de tranh nham cay"]
+    },
+    {
+      "id": "black-pepper-not-capsicum",
+      "category": "crop_depth_lookalike",
+      "query": "Hồ tiêu đen black pepper Piper nigrum, không phải ớt Capsicum: ICAR-IISR xác nhận những nội dung đào tạo nào về giống, vườn ươm và canh tác?",
+      "relevant_sources": ["ICAR IISR - ho tieu den dao tao canh tac va vat lieu giong"]
+    },
+    {
+      "id": "chrysanthemum-greens-not-ornamental",
+      "category": "crop_depth_lookalike",
+      "query": "Tần ô cải cúc Tong Hao Glebionis coronaria, không phải cúc cảnh: giống lá rộng/lá hẹp, đất, nhiệt, bóng râm và gieo thế nào?",
+      "relevant_sources": ["UF IFAS - tan o dinh danh dat nhiet gieo va trong"]
+    },
+    {
+      "id": "chrysanthemum-greens-harvest",
+      "category": "crop_depth_harvest",
+      "query": "Tần ô cải cúc thu một lần và thu nhiều lần khác nhau thế nào, cần chừa cành hay lá gốc ra sao?",
+      "relevant_sources": ["UF IFAS - tan o chi bao va phuong phap thu"]
+    }
+  ]
+}

@@ -1,0 +1,384 @@
+{
+  "dataset_version": "crop-expansion-batch-2-retrieval-v1",
+  "knowledge_base_version": "kb-v1",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 0.875,
+    "recall_at_k": 1.0,
+    "mrr": 0.9375,
+    "ndcg_at_k": 0.9616783004521589,
+    "mean_latency_ms": 12572.10125
+  },
+  "items": [
+    {
+      "id": "maize-winter-cultivation",
+      "query": "Trồng ngô vụ đông trên đất hai vụ lúa cần chuẩn bị đất và mật độ thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa"
+      ],
+      "latency_ms": 26628.34,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "be2751f5-7d5d-496a-8699-eec3f80394d3",
+          "chunk_id": "1d2239fb-8e6d-4470-9f13-74cd8fa812ce",
+          "title": "Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-trong-ngo-vu-dong-tren-dat-2-lua-phan-1-12767.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9813773036003113,
+          "relevant": true
+        },
+        {
+          "document_id": "be2751f5-7d5d-496a-8699-eec3f80394d3",
+          "chunk_id": "3573a186-66e4-45c7-b0e4-b1a890259b73",
+          "title": "Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-trong-ngo-vu-dong-tren-dat-2-lua-phan-1-12767.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9663042426109314,
+          "relevant": true
+        },
+        {
+          "document_id": "be2751f5-7d5d-496a-8699-eec3f80394d3",
+          "chunk_id": "fc23034b-82ca-42f2-bd9c-f2e275c08343",
+          "title": "Quy trình kỹ thuật trồng ngô vụ đông trên đất hai vụ lúa",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-trong-ngo-vu-dong-tren-dat-2-lua-phan-1-12767.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03387896825396825,
+          "rerank_score": 0.4221266210079193,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "maize-fall-armyworm",
+      "query": "Phòng chống sâu keo mùa thu trên cây ngô bằng biện pháp tổng hợp ra sao?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô"
+      ],
+      "latency_ms": 20193.36,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "446087d7-e822-44c0-aca0-0aa332999f77",
+          "chunk_id": "49531381-51a8-43a2-9686-ba1b0d0acfff",
+          "title": "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.9943212270736694,
+          "relevant": true
+        },
+        {
+          "document_id": "446087d7-e822-44c0-aca0-0aa332999f77",
+          "chunk_id": "b5e77d60-4eca-4db2-be99-4df77c50886a",
+          "title": "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.9881408214569092,
+          "relevant": true
+        },
+        {
+          "document_id": "446087d7-e822-44c0-aca0-0aa332999f77",
+          "chunk_id": "32da4f7c-864b-4aae-a1b4-27bef46b6911",
+          "title": "Quy trình kỹ thuật phòng chống sâu keo mùa thu trên cây ngô",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-phong-chong-sau-keo-mua-thu-spodoptera-frugiperda-19698.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9771780967712402,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "potato-winter-cultivation",
+      "query": "Quy trình trồng và chăm sóc khoai tây vụ đông trên đất hai vụ lúa",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình kỹ thuật sản xuất khoai tây vụ đông"
+      ],
+      "latency_ms": 24070.67,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "cbd99705-e0a0-4dec-9b07-e02711334ec7",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034362192622950816,
+          "rerank_score": 0.9927197694778442,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "9476eb92-873d-4354-bbbd-56217aa0b935",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034725474889409316,
+          "rerank_score": 0.8913928866386414,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "aacfee9b-d0b2-4907-9753-f9fe719675bb",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.6173955202102661,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "potato-harvest-storage",
+      "query": "Khi nào thu hoạch khoai tây và bảo quản củ sau thu hoạch thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Quy trình kỹ thuật sản xuất khoai tây vụ đông"
+      ],
+      "latency_ms": 8805.59,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "9ac7df2a-9516-42a8-8356-27c29cb9fe7a",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9809565544128418,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "cbd99705-e0a0-4dec-9b07-e02711334ec7",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.0470123365521431,
+          "relevant": true
+        },
+        {
+          "document_id": "b5f7f20f-2376-4ec3-93d0-bffa2b476093",
+          "chunk_id": "9476eb92-873d-4354-bbbd-56217aa0b935",
+          "title": "Quy trình kỹ thuật sản xuất khoai tây vụ đông",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-san-xuat-khoai-tay-vu-dong-12936.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03384176587301587,
+          "rerank_score": 0.007281821686774492,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "bell-pepper-safe-cultivation",
+      "query": "Kỹ thuật trồng ớt chuông an toàn từ vườn ươm đến thu hoạch",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng ớt ngọt theo hướng an toàn"
+      ],
+      "latency_ms": 6636.89,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "05daeee1-c976-459f-b87a-38e5749cdf78",
+          "chunk_id": "a80a9a18-3f1a-4ab4-a615-147beb3166b5",
+          "title": "Kỹ thuật trồng ớt ngọt theo hướng an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ot-ngot-capsicum-annum-l-theo-huong-an-toan-9759.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.5324971079826355,
+          "relevant": true
+        },
+        {
+          "document_id": "2c274245-d3bf-4ad9-a6bd-221dd083e540",
+          "chunk_id": "06f8fd87-a972-4114-a1dd-d5ff1363fe7f",
+          "title": "Cẩm nang trồng ớt an toàn - phần cây ớt",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03381768504719324,
+          "rerank_score": 0.4275693893432617,
+          "relevant": false
+        },
+        {
+          "document_id": "2c274245-d3bf-4ad9-a6bd-221dd083e540",
+          "chunk_id": "fa7bafe1-7936-4572-b55a-0085543041d7",
+          "title": "Cẩm nang trồng ớt an toàn - phần cây ớt",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/CN-Rau-An-Qua-An-toan.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033699902248289344,
+          "rerank_score": 0.41291648149490356,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "malabar-spinach-cultivation",
+      "query": "Cách trồng và chăm sóc rau mồng tơi an toàn",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Kỹ thuật trồng rau mồng tơi an toàn"
+      ],
+      "latency_ms": 4317.78,
+      "recall_at_1": 0.0,
+      "recall_at_k": 1.0,
+      "mrr": 0.5,
+      "ndcg_at_k": 0.6934264036172708,
+      "ranked_evidence": [
+        {
+          "document_id": "631fb321-bea2-481a-b5e5-b4ecd226ca4e",
+          "chunk_id": "818a81d4-8a04-4c9b-913b-ef8ba664c38d",
+          "title": "Hướng dẫn kỹ thuật trồng rau cải xanh, cải ngọt và xà lách theo hướng hữu cơ",
+          "source": "https://khuyennong.danang.gov.vn/chi-tiet-tin/group/3/nid/2210/huong-dan-ky-thuat-trong-cac-loai-rau-an-la-theo-huong-huu-co",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01639344262295082,
+          "rerank_score": 0.9533718228340149,
+          "relevant": false
+        },
+        {
+          "document_id": "882f2859-fdf0-4722-a664-f0c07be179c3",
+          "chunk_id": "9dc0a88e-8c07-438f-827e-d614967008cd",
+          "title": "Kỹ thuật trồng rau mồng tơi an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-mong-toi-an-toan-5596.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.4409704804420471,
+          "relevant": true
+        },
+        {
+          "document_id": "882f2859-fdf0-4722-a664-f0c07be179c3",
+          "chunk_id": "192a2adf-beba-410c-8498-20727e202b31",
+          "title": "Kỹ thuật trồng rau mồng tơi an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-rau-mong-toi-an-toan-5596.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033345212639581845,
+          "rerank_score": 0.16230054199695587,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "broccoli-diamondback-moth",
+      "query": "Sâu tơ hại bông cải xanh có đặc điểm gì và phòng trừ thế nào?",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Sâu tơ hại rau cải và biện pháp phòng trừ"
+      ],
+      "latency_ms": 5105.19,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "6c9d9211-44fb-400c-9e4e-76e7a2f706a2",
+          "chunk_id": "1db90689-a5b2-47ec-a6f9-6293822783e9",
+          "title": "Sâu tơ hại rau cải và biện pháp phòng trừ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.9962702989578247,
+          "relevant": true
+        },
+        {
+          "document_id": "6c9d9211-44fb-400c-9e4e-76e7a2f706a2",
+          "chunk_id": "914a2c8c-f028-4ef4-8ccf-0b435f4e23f9",
+          "title": "Sâu tơ hại rau cải và biện pháp phòng trừ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033293211362542124,
+          "rerank_score": 0.8790690898895264,
+          "relevant": true
+        },
+        {
+          "document_id": "22bc9319-ddfa-4c27-a119-97be7ecad158",
+          "chunk_id": "aeed7e58-6154-47ad-b194-d43a074c95a0",
+          "title": "Sách hướng dẫn tái canh cà phê",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.008548718877136707,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "kohlrabi-diamondback-moth",
+      "query": "Biện pháp quản lý sâu tơ trên cây su hào theo hướng tổng hợp",
+      "category": "crop_expansion",
+      "relevant_sources": [
+        "Sâu tơ hại rau cải và biện pháp phòng trừ"
+      ],
+      "latency_ms": 4818.99,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "6c9d9211-44fb-400c-9e4e-76e7a2f706a2",
+          "chunk_id": "1db90689-a5b2-47ec-a6f9-6293822783e9",
+          "title": "Sâu tơ hại rau cải và biện pháp phòng trừ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/sau-to-hai-rau-cai-va-bien-phap-phong-tru-22960.html",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03381768504719324,
+          "rerank_score": 0.3677098751068115,
+          "relevant": true
+        },
+        {
+          "document_id": "1dbc1f0c-13df-4088-b473-02bcc0078ead",
+          "chunk_id": "04c3ff26-e38f-4e0a-bc68-38c181c2033c",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 03/04 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.0070186578668653965,
+          "relevant": false
+        },
+        {
+          "document_id": "1dbc1f0c-13df-4088-b473-02bcc0078ead",
+          "chunk_id": "f006ba4d-2f2a-43a5-a905-9dc219ac5b56",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 03/04 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032834101382488476,
+          "rerank_score": 0.00578009570017457,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": false,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": false
+    }
+  }
+}
