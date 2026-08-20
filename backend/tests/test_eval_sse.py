@@ -7,6 +7,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from eval import run_eval
 from eval.run_eval import citation_matches, parse_sse_response
+from app.services import model_gateway
+from app.services.model_gateway import ModelProviderUnavailable
 
 
 def test_parse_sse_response_handles_event_delimiters():
@@ -27,9 +29,29 @@ def test_citation_match_supports_evidence_objects():
     assert citation_matches("Tài liệu mẫu", citations)
 
 
-def test_eval_import_does_not_require_api_key(monkeypatch):
-    monkeypatch.setattr(run_eval, "judge_client", None)
-    monkeypatch.setattr(run_eval.settings, "google_api_key", "")
+def test_traceable_citation_match_rejects_title_only_or_inactive_evidence():
+    title_only = [{"title": "Khuyến nông Việt Nam"}]
+    inactive = [{
+        "title": "Khuyến nông Việt Nam",
+        "document_id": "doc-1",
+        "chunk_id": "chunk-1",
+        "is_active": False,
+    }]
+    active = [{**inactive[0], "is_active": True}]
 
-    with pytest.raises(RuntimeError, match="GOOGLE_API_KEY is required"):
-        run_eval._get_judge_client()
+    assert not citation_matches(
+        "Khuyến nông", title_only, require_traceable=True
+    )
+    assert not citation_matches(
+        "Khuyến nông", inactive, require_traceable=True
+    )
+    assert citation_matches("Khuyến nông", active, require_traceable=True)
+
+
+@pytest.mark.asyncio
+async def test_eval_import_does_not_require_api_key(monkeypatch):
+    monkeypatch.setattr(model_gateway, "client", None)
+    monkeypatch.setattr(model_gateway.settings, "google_api_key", "")
+
+    with pytest.raises(ModelProviderUnavailable, match="API key is not configured"):
+        await run_eval.llm_judge("expected", "actual")

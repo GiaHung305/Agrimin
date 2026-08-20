@@ -1,5 +1,6 @@
 import os
 import sys
+from datetime import datetime, timezone
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -14,6 +15,7 @@ from app.workflow.nodes import planner, retrieve
 from app.workflow.nodes.research_analysis import (
     MAX_RESEARCH_RETRIES,
     assess_coverage,
+    assess_freshness,
     detect_numeric_conflicts,
     research_retry_limit,
     research_analysis_node,
@@ -27,6 +29,7 @@ def _evidence(
     *,
     score: float = 0.85,
     source_type: str = "government",
+    published_date: str | None = None,
 ) -> dict:
     return {
         "document_id": document_id,
@@ -34,6 +37,7 @@ def _evidence(
         "is_active": True,
         "source": f"Nguồn {document_id}",
         "source_type": source_type,
+        "published_date": published_date,
         "content": content,
         "rerank_score": score,
         "research_questions": [question],
@@ -80,6 +84,7 @@ async def test_planner_keeps_bounded_unique_research_questions(monkeypatch):
     assert result["research_questions"] == [
         "Nhu cầu đất?",
         "Nhu cầu tưới?",
+        "Bệnh thường gặp?",
     ]
     assert result["plan"]["research_questions"] == result["research_questions"]
 
@@ -266,6 +271,52 @@ def test_coverage_requires_authority_for_high_risk_research():
     assert coverage[0]["covered"] is False
 
 
+def test_freshness_is_required_only_for_time_sensitive_questions():
+    stale = _evidence(
+        "doc-old",
+        "Quy định mới nhất về danh mục thuốc hiện nay?",
+        "Quy định cũ.",
+        published_date="2018-01-01T00:00:00+00:00",
+    )
+    now = datetime(2026, 8, 17, tzinfo=timezone.utc)
+
+    assert assess_freshness(
+        "Quy định mới nhất về danh mục thuốc hiện nay?", [stale], now=now
+    )[0] == "stale"
+    assert assess_freshness(
+        "Nguyên tắc thoát nước cho cà chua là gì?", [stale], now=now
+    )[0] == "not_required"
+
+
+def test_time_sensitive_coverage_requires_recent_authoritative_metadata():
+    state = _research_state()
+    question = "Quy định mới nhất về danh mục thuốc hiện nay?"
+    state["question"] = question
+    state["research_questions"] = [question]
+    stale = _evidence(
+        "doc-old",
+        question,
+        "Quy định cũ.",
+        published_date="2018-01-01T00:00:00+00:00",
+    )
+    current = _evidence(
+        "doc-current",
+        question,
+        "Quy định hiện hành.",
+        published_date=datetime.now(timezone.utc).isoformat(),
+    )
+
+    state["retrieved_docs"] = [stale]
+    stale_coverage = assess_coverage(state)[0]
+    state["retrieved_docs"] = [current]
+    current_coverage = assess_coverage(state)[0]
+
+    assert stale_coverage["freshness"] == "stale"
+    assert stale_coverage["covered"] is False
+    assert current_coverage["freshness"] == "current"
+    assert current_coverage["covered"] is True
+
+
 def test_coverage_accepts_dense_sparse_consensus_when_reranker_is_uncertain():
     state = _research_state()
     question = state["research_questions"][0]
@@ -350,6 +401,20 @@ def test_numeric_conflict_is_reported_across_independent_documents():
         "values": ["20", "30"],
         "evidence_ids": ["doc-1:doc-1-chunk", "doc-2:doc-2-chunk"],
     }]
+
+
+def test_rate_conflict_is_reported_with_canonical_unit():
+    state = _research_state()
+    question = state["research_questions"][0]
+    state["retrieved_docs"] = [
+        _evidence("doc-1", question, "Khuyến cáo dùng 2 kg/ha."),
+        _evidence("doc-2", question, "Khuyến cáo dùng 3 kg mỗi ha."),
+    ]
+
+    conflicts = detect_numeric_conflicts(state)
+
+    assert conflicts[0]["unit"] == "kg/ha"
+    assert conflicts[0]["values"] == ["2", "3"]
 
 
 def test_reflection_never_starts_a_second_streamed_generation():

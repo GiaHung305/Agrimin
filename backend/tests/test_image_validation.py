@@ -295,6 +295,50 @@ async def test_analyzer_unavailable_fails_closed(monkeypatch):
 
 
 @pytest.mark.asyncio
+@pytest.mark.parametrize(
+    ("message", "expected_error"),
+    [
+        ("vision model request timed out", "timeout"),
+        ("vision model request was rejected by provider", "unavailable"),
+    ],
+)
+async def test_model_provider_failure_is_classified_without_visual_output(
+    monkeypatch, message, expected_error
+):
+    async def provider_failure(images, **kwargs):
+        raise chat.ModelProviderUnavailable(message)
+
+    monkeypatch.setattr(chat.settings, "vision_analysis_enabled", True)
+    monkeypatch.setattr(chat, "analyze_validated_images", provider_failure)
+
+    result = await chat._prepare_visual_input([
+        chat.ChatImageInput(mime_type="image/png", data_base64=_image_base64())
+    ])
+
+    assert result.vision_error == expected_error
+    assert result.visual_observations == []
+
+
+@pytest.mark.asyncio
+async def test_unexpected_analyzer_error_does_not_log_provider_body(
+    monkeypatch, caplog
+):
+    async def provider_failure(images, **kwargs):
+        raise RuntimeError("sensitive provider response body")
+
+    monkeypatch.setattr(chat.settings, "vision_analysis_enabled", True)
+    monkeypatch.setattr(chat, "analyze_validated_images", provider_failure)
+
+    result = await chat._prepare_visual_input([
+        chat.ChatImageInput(mime_type="image/png", data_base64=_image_base64())
+    ])
+
+    assert result.vision_error == "unavailable"
+    assert "sensitive provider response body" not in caplog.text
+    assert caplog.records[-1].error_type == "RuntimeError"
+
+
+@pytest.mark.asyncio
 async def test_analyzer_prompt_injection_output_is_discarded(monkeypatch):
     async def unsafe_analyzer(images, **kwargs):
         image_id = images[0].observation["image_id"]

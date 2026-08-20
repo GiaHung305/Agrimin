@@ -1,3 +1,4 @@
+import logging
 import uuid
 
 from fastapi import APIRouter, Depends, File, Form, HTTPException, UploadFile, status
@@ -20,11 +21,82 @@ from app.services.semantic_cache import bump_semantic_cache_corpus_version
 from app.retrieval.source_authority import SourceType, authority_score
 
 router = APIRouter(tags=["documents"])
+logger = logging.getLogger(__name__)
 
 
 def _new_storage_key(suffix: str) -> str:
     """Create an object key independent of untrusted display metadata."""
     return f"documents/{uuid.uuid4()}{suffix}"
+
+
+async def _cleanup_failed_upload(file_key: str) -> None:
+    """Best-effort compensation when storage succeeds but ingestion fails."""
+    try:
+        await delete_file(file_key)
+    except Exception:
+        logger.error(
+            "Failed to remove uploaded document after ingestion error",
+            extra={"file_key": file_key},
+            exc_info=True,
+        )
+
+
+async def _restore_qdrant_payload(
+    document_id: str, payload: dict[str, object]
+) -> None:
+    """Best-effort restore without masking the original database error."""
+    try:
+        await qdrant_client.set_payload(
+            collection_name=COLLECTION_NAME,
+            payload=payload,
+            points=Filter(
+                must=[
+                    FieldCondition(
+                        key="document_id", match=MatchValue(value=document_id)
+                    )
+                ]
+            ),
+            wait=True,
+        )
+    except Exception:
+        logger.error(
+            "Failed to restore Qdrant document metadata",
+            extra={"document_id": document_id},
+            exc_info=True,
+        )
+
+
+async def _deactivate_for_retrieval(
+    db: AsyncSession, document: Document, document_id: str
+) -> None:
+    """Commit an inactive tombstone before any destructive external cleanup."""
+    previous_active = bool(document.is_active)
+    qdrant_updated = False
+    try:
+        await qdrant_client.set_payload(
+            collection_name=COLLECTION_NAME,
+            payload={"is_active": False},
+            points=Filter(
+                must=[
+                    FieldCondition(
+                        key="document_id", match=MatchValue(value=document_id)
+                    )
+                ]
+            ),
+            wait=True,
+        )
+        qdrant_updated = True
+        document.is_active = False
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        if qdrant_updated:
+            await _restore_qdrant_payload(
+                document_id, {"is_active": previous_active}
+            )
+        raise
+    invalidate_bm25_index()
+    await bump_semantic_cache_corpus_version()
 
 
 class IngestRequest(BaseModel):
@@ -49,16 +121,20 @@ async def ingest(
     file_key = _new_storage_key(".txt")
     await upload_file(req.content.encode("utf-8"), file_key, content_type="text/plain")
 
-    document = await ingest_document(
-        db=db,
-        title=req.title,
-        content=req.content,
-        source=req.source,
-        source_type=req.source_type,
-        author=req.author,
-        version=req.version,
-        file_key=file_key,
-    )
+    try:
+        document = await ingest_document(
+            db=db,
+            title=req.title,
+            content=req.content,
+            source=req.source,
+            source_type=req.source_type,
+            author=req.author,
+            version=req.version,
+            file_key=file_key,
+        )
+    except Exception:
+        await _cleanup_failed_upload(file_key)
+        raise
     return {"document_id": str(document.id), "title": document.title, "file_key": file_key}
 
 
@@ -95,16 +171,20 @@ async def upload_document(
     file_key = _new_storage_key(".pdf")
     await upload_file(file_bytes, file_key, content_type="application/pdf")
 
-    document = await ingest_document(
-        db=db,
-        title=title,
-        content=content,
-        source=source,
-        source_type=source_type,
-        author=author,
-        version=version,
-        file_key=file_key,
-    )
+    try:
+        document = await ingest_document(
+            db=db,
+            title=title,
+            content=content,
+            source=source,
+            source_type=source_type,
+            author=author,
+            version=version,
+            file_key=file_key,
+        )
+    except Exception:
+        await _cleanup_failed_upload(file_key)
+        raise
     return {
         "document_id": str(document.id),
         "title": document.title,
@@ -128,6 +208,11 @@ async def list_documents(
             "source_type": document.source_type,
             "authority_score": authority_score(document.source_type),
             "version": document.version,
+            "published_date": (
+                document.published_date.isoformat()
+                if document.published_date
+                else None
+            ),
             "is_active": document.is_active,
             "ingested_at": document.ingested_at.isoformat(),
             "file_key": document.file_key,
@@ -147,17 +232,7 @@ async def deactivate_document(
     if not document:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Document not found")
 
-    document.is_active = False
-    await db.commit()
-    await qdrant_client.set_payload(
-        collection_name=COLLECTION_NAME,
-        payload={"is_active": False},
-        points=Filter(
-            must=[FieldCondition(key="document_id", match=MatchValue(value=document_id))]
-        ),
-    )
-    invalidate_bm25_index()
-    await bump_semantic_cache_corpus_version()
+    await _deactivate_for_retrieval(db, document, document_id)
     return {"status": "deactivated", "document_id": document_id}
 
 
@@ -175,6 +250,9 @@ async def purge_document(
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
         )
 
+    # Persist a safe, retryable tombstone first. If any cleanup below fails,
+    # the document remains inactive and a later DELETE can continue idempotently.
+    await _deactivate_for_retrieval(db, document, document_id)
     await qdrant_client.delete(
         collection_name=COLLECTION_NAME,
         points_selector=FilterSelector(
@@ -190,13 +268,15 @@ async def purge_document(
     )
     if document.file_key:
         await delete_file(document.file_key)
-    await db.execute(
-        delete(DocumentChunk).where(DocumentChunk.document_id == document.id)
-    )
-    await db.execute(delete(Document).where(Document.id == document.id))
-    await db.commit()
-    invalidate_bm25_index()
-    await bump_semantic_cache_corpus_version()
+    try:
+        await db.execute(
+            delete(DocumentChunk).where(DocumentChunk.document_id == document.id)
+        )
+        await db.execute(delete(Document).where(Document.id == document.id))
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        raise
     return {"status": "purged", "document_id": document_id}
 
 
@@ -214,20 +294,40 @@ async def update_document_source_type(
             status_code=status.HTTP_404_NOT_FOUND, detail="Document not found"
         )
 
-    document.source_type = req.source_type.value
-    await db.commit()
+    previous_source_type = document.source_type
+    previous_score = authority_score(previous_source_type)
     score = authority_score(req.source_type)
-    await qdrant_client.set_payload(
-        collection_name=COLLECTION_NAME,
-        payload={"source_type": req.source_type.value, "authority_score": score},
-        points=Filter(
-            must=[
-                FieldCondition(
-                    key="document_id", match=MatchValue(value=document_id)
-                )
-            ]
-        ),
-    )
+    qdrant_updated = False
+    try:
+        await qdrant_client.set_payload(
+            collection_name=COLLECTION_NAME,
+            payload={
+                "source_type": req.source_type.value,
+                "authority_score": score,
+            },
+            points=Filter(
+                must=[
+                    FieldCondition(
+                        key="document_id", match=MatchValue(value=document_id)
+                    )
+                ]
+            ),
+            wait=True,
+        )
+        qdrant_updated = True
+        document.source_type = req.source_type.value
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        if qdrant_updated:
+            await _restore_qdrant_payload(
+                document_id,
+                {
+                    "source_type": previous_source_type,
+                    "authority_score": previous_score,
+                },
+            )
+        raise
     invalidate_bm25_index()
     await bump_semantic_cache_corpus_version()
     return {

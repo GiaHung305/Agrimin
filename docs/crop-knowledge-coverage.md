@@ -7,17 +7,13 @@ việc có đủ bằng chứng chuyên biệt để tư vấn từng cây.
 ## Ảnh chụp hiện tại
 
 - 91 cây có chính sách theo dõi, gồm cây trồng chính và danh mục rau mở rộng.
-- 95/95 nguồn đang hoạt động đã được phân loại; không có nguồn chưa kiểm duyệt,
+- 123/123 nguồn đang hoạt động đã được phân loại; không có nguồn chưa kiểm duyệt,
   thiếu trong kho hoặc sai `source_type`.
 - 17.836 ô cần phủ: 844 ô có nguồn đúng cả giai đoạn và vùng, 13.350 ô chỉ có
   tài liệu nền toàn quốc/toàn vụ, và 3.642 ô chưa có bằng chứng phù hợp.
-- Backlog hiện không còn P0; có 70 cây P1 và 21 cây P2. P1 nghĩa là cây đã có ít
-  nhất một nguồn chuyên biệt nhưng còn thiếu nguồn thứ hai hoặc còn từ ba chủ đề
-  trở lên chưa được bao phủ.
-- Mười cây đang ở P2 là lúa, ngô, cà phê, sầu riêng, cây có múi, bắp cải, cải
-  ngọt, cải xanh, bí ngòi và sả. Đây là
-  mức tương đối tốt trong corpus hiện tại, không có nghĩa là đã hoàn chỉnh mọi
-  vùng/vụ.
+- Backlog hiện không còn P0 hoặc P1; 91/91 cây ở P2 theo công thức kiểm toán hiện
+  tại. P2 nghĩa là cây đã có ít nhất hai nguồn chuyên biệt và không còn từ ba
+  chủ đề trở lên hoàn toàn trống; không có nghĩa là đã hoàn chỉnh mọi vùng/vụ.
 
 ## Lô mở rộng rau số 1
 
@@ -527,6 +523,25 @@ Lượt lạnh đạt 8,64 giây, lượt ấm đạt 6,68 giây; cả hai qua t
 
 Các artefact kiểm toán gồm manifest, report ingest, dataset/baseline retrieval
 và hai report cold/warm mang hậu tố `crop_expansion_batch_16_v1`.
+
+## Lô bằng chứng liên ngành số 17
+
+Lô `crop-data-expansion-batch-17-v1` lấy ba lát đã kiểm toán từ hướng dẫn CGIAR
+về đất, nước và IPM nông sinh thái. Pipeline dùng văn bản bitstream chính thức,
+phân trang đầy đủ Qdrant và loại phần phương pháp hóa học khỏi lát IPM. Nguồn
+quốc tế không được gán giả thành một vùng Việt Nam trong ma trận coverage.
+
+## Lô chiều sâu cà chua số 18
+
+Lô `crop-data-expansion-batch-18-v1` bổ sung tài liệu Trung tâm Khuyến nông Quốc
+gia/Viện Bảo vệ thực vật về dấu hiệu sương mai, mốc lá, điều kiện ẩm và biện pháp
+canh tác cà chua. Marker dừng trước phần hóa học; `forbidden_terms` xác nhận lát
+ingest không chứa Ridomil, Mancozeb hoặc Fosetyl. Sau ingest, hai chunk của nguồn
+mới đứng đầu truy hồi triệu chứng cà chua và giúp câu trả lời Vision có citation
+truy vết thay vì bị guardrail chặn do thiếu bằng chứng.
+
+Registry hiện có 125 URL nguồn duy nhất đã phân loại; nguồn CGIAR không nhận nhãn
+vùng giả và nguồn cà chua dùng taxonomy stage/region hiện hữu.
 
 ## Quy tắc bổ sung có kiểm soát
 

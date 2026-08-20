@@ -15,6 +15,7 @@ _indexed_points: list = []
 _index_expires_at = 0.0
 _index_generation = 0
 _index_lock = asyncio.Lock()
+_SCROLL_PAGE_SIZE = 1000
 
 
 def _index_text(payload: dict) -> str:
@@ -48,14 +49,25 @@ async def _get_bm25_index() -> tuple[BM25Plus | None, list]:
         # stale local index for the full TTL.
         while True:
             generation = _index_generation
-            all_points, _ = await qdrant_client.scroll(
-                collection_name=COLLECTION_NAME,
-                limit=10000,
-                with_payload=True,
-                scroll_filter=Filter(
-                    must=[FieldCondition(key="is_active", match=MatchValue(value=True))]
-                ),
-            )
+            all_points = []
+            next_offset = None
+            while True:
+                page, next_offset = await qdrant_client.scroll(
+                    collection_name=COLLECTION_NAME,
+                    limit=_SCROLL_PAGE_SIZE,
+                    offset=next_offset,
+                    with_payload=True,
+                    scroll_filter=Filter(
+                        must=[
+                            FieldCondition(
+                                key="is_active", match=MatchValue(value=True)
+                            )
+                        ]
+                    ),
+                )
+                all_points.extend(page)
+                if next_offset is None:
+                    break
             if generation == _index_generation:
                 break
         all_points = [
@@ -90,6 +102,7 @@ async def bm25_search(query: str, top_k: int = 10) -> list[dict]:
             "source": p.payload.get("source"),
             "source_type": p.payload.get("source_type"),
             "version": p.payload.get("version"),
+            "published_date": p.payload.get("published_date"),
             "document_id": p.payload.get("document_id"),
             "chunk_id": p.payload.get("chunk_id") or (
                 str(p.id) if getattr(p, "id", None) is not None else None

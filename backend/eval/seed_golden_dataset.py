@@ -9,15 +9,34 @@ from sqlalchemy import select
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import AsyncSessionLocal
+from app.core.config import settings
 from app.repository.models import GoldenDataset
 
 
-DATASET_PATH = Path(__file__).with_name("golden_dataset_seed.json")
+DATASET_PATHS = {
+    "v1": Path(__file__).with_name("golden_dataset_seed.json"),
+    "v2": Path(__file__).with_name("golden_dataset_seed_v2.json"),
+}
+
+
+def dataset_path(version: str) -> Path:
+    try:
+        return DATASET_PATHS[version]
+    except KeyError as exc:
+        raise ValueError(f"Unsupported golden dataset version: {version}") from exc
 
 
 async def seed() -> None:
-    payload = json.loads(DATASET_PATH.read_text(encoding="utf-8"))
+    requested_version = settings.eval_dataset_version
+    payload = json.loads(
+        dataset_path(requested_version).read_text(encoding="utf-8")
+    )
     version = payload["version"] if isinstance(payload, dict) else "v1"
+    if version != requested_version:
+        raise ValueError(
+            f"Golden dataset file version {version!r} does not match "
+            f"EVAL_DATASET_VERSION={requested_version!r}"
+        )
     items = payload["items"] if isinstance(payload, dict) else payload
 
     created = 0

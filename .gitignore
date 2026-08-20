@@ -14,3 +14,4 @@ vision_training/data/processed/
 vision_training/artifacts/
 vision_training/.venv/
 backend/eval/agriculture_benchmark_*_20??-??-??.json
+backend/eval/golden_eval_*_20??-??-??.json

@@ -83,3 +83,37 @@ async def test_bm25_uses_reviewed_title_for_crop_identity(monkeypatch):
     result = await bm25_module.bm25_search("trồng rau mồng tơi an toàn")
 
     assert result[0]["source"] == "Khuyen nong mong toi"
+
+
+@pytest.mark.asyncio
+async def test_bm25_indexes_every_qdrant_scroll_page(monkeypatch):
+    class PaginatedQdrant:
+        def __init__(self):
+            self.offsets = []
+
+        async def scroll(self, **kwargs):
+            offset = kwargs.get("offset")
+            self.offsets.append(offset)
+            if offset is None:
+                return [
+                    SimpleNamespace(
+                        payload={"content": "tai lieu cu", "source": "A"}
+                    )
+                ], "page-2"
+            return [
+                SimpleNamespace(
+                    payload={
+                        "content": "giu nuoc tiet kiem nuoc bang che phu",
+                        "source": "CGIAR",
+                    }
+                )
+            ], None
+
+    fake_qdrant = PaginatedQdrant()
+    monkeypatch.setattr(bm25_module, "qdrant_client", fake_qdrant)
+    bm25_module.invalidate_bm25_index()
+
+    result = await bm25_module.bm25_search("giu nuoc tiet kiem nuoc")
+
+    assert fake_qdrant.offsets == [None, "page-2"]
+    assert result[0]["source"] == "CGIAR"

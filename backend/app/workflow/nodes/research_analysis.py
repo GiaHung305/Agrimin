@@ -2,30 +2,90 @@
 
 from __future__ import annotations
 
-import re
+import unicodedata
 from collections import defaultdict
-from decimal import Decimal, InvalidOperation
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
 from app.core.config import settings
 from app.retrieval.evidence import evidence_identity, is_traceable_active_evidence
 from app.retrieval.source_authority import supports_high_risk
 from app.workflow.confidence import RELEVANT_DOCUMENT_THRESHOLD
+from app.workflow.measurements import extract_numeric_measurements
 from app.workflow.state import AgentState, EvidenceConflict, ResearchCoverageItem
 
 MAX_RESEARCH_RETRIES = 2
-_NUMBER_WITH_UNIT = re.compile(
-    r"(?<!\w)(\d+(?:[.,]\d+)?)\s*(ml|l|mg|g|kg|ppm|%)(?!\w)",
-    re.IGNORECASE,
+_TIME_SENSITIVE_QUESTION_PHRASES = (
+    "hien nay",
+    "moi nhat",
+    "nam nay",
+    "gan day",
+    "hom nay",
+    "quy dinh",
+    "danh muc thuoc",
+    "du bao",
+    "thoi tiet",
 )
 
 
-def _normalized_number(value: str) -> str:
-    try:
-        number = Decimal(value.replace(",", ".")).normalize()
-    except InvalidOperation:
-        return value
-    return format(number, "f")
+def _fold_text(value: str) -> str:
+    decomposed = unicodedata.normalize("NFD", value.casefold())
+    without_marks = "".join(
+        character
+        for character in decomposed
+        if unicodedata.category(character) != "Mn"
+    )
+    return " ".join(without_marks.replace("đ", "d").split())
+
+
+def question_requires_fresh_evidence(question: str) -> bool:
+    folded = _fold_text(question)
+    return any(
+        phrase in folded for phrase in _TIME_SENSITIVE_QUESTION_PHRASES
+    )
+
+
+def _published_datetime(document: dict[str, Any]) -> datetime | None:
+    value = document.get("published_date")
+    if isinstance(value, datetime):
+        parsed = value
+    elif value:
+        try:
+            parsed = datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+        except ValueError:
+            return None
+    else:
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=timezone.utc)
+    return parsed.astimezone(timezone.utc)
+
+
+def assess_freshness(
+    question: str,
+    documents: list[dict[str, Any]],
+    *,
+    now: datetime | None = None,
+) -> tuple[str, str | None]:
+    dates = [
+        published
+        for document in documents
+        if supports_high_risk(document.get("source_type"))
+        and (published := _published_datetime(document)) is not None
+    ]
+    latest = max(dates, default=None)
+    latest_iso = latest.isoformat() if latest else None
+    if not question_requires_fresh_evidence(question):
+        return "not_required", latest_iso
+    if latest is None:
+        return "unknown", None
+    current_time = now or datetime.now(timezone.utc)
+    if current_time.tzinfo is None:
+        current_time = current_time.replace(tzinfo=timezone.utc)
+    cutoff = current_time.astimezone(timezone.utc) - timedelta(
+        days=settings.research_freshness_max_age_days
+    )
+    return ("current" if latest >= cutoff else "stale"), latest_iso
 
 
 def _matches_question(document: dict[str, Any], question: str) -> bool:
@@ -78,14 +138,21 @@ def assess_coverage(state: AgentState) -> list[ResearchCoverageItem]:
         authoritative = any(
             supports_high_risk(document.get("source_type")) for document in relevant
         )
+        freshness, latest_published_date = assess_freshness(question, relevant)
         coverage.append({
             "question": question,
-            "covered": bool(relevant) and (authoritative or not require_authority),
+            "covered": (
+                bool(relevant)
+                and (authoritative or not require_authority)
+                and freshness not in {"stale", "unknown"}
+            ),
             "best_score": max(
                 (float(document.get("rerank_score") or 0.0) for document in relevant),
                 default=0.0,
             ),
             "authoritative": authoritative,
+            "freshness": freshness,
+            "latest_published_date": latest_published_date,
             "evidence_ids": [evidence_identity(document) for document in relevant],
         })
     return coverage
@@ -102,11 +169,9 @@ def detect_numeric_conflicts(state: AgentState) -> list[EvidenceConflict]:
         for document in documents:
             document_key = str(document.get("document_id") or evidence_identity(document))
             evidence_key = evidence_identity(document)
-            for raw_value, raw_unit in _NUMBER_WITH_UNIT.findall(
+            for value, unit in extract_numeric_measurements(
                 str(document.get("content") or "")
             ):
-                unit = raw_unit.casefold()
-                value = _normalized_number(raw_value)
                 claims[unit][value].add(evidence_key)
                 source_documents[unit].add(document_key)
 

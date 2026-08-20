@@ -57,7 +57,9 @@ async def test_deep_research_populates_verifiable_citations(monkeypatch):
 
 
 @pytest.mark.asyncio
-async def test_deep_research_degrades_without_leaking_provider_error(monkeypatch):
+async def test_deep_research_degrades_without_leaking_provider_error(
+    monkeypatch, caplog
+):
     async def unavailable(prompt):
         raise RuntimeError("provider returned user content")
 
@@ -65,6 +67,7 @@ async def test_deep_research_degrades_without_leaking_provider_error(monkeypatch
     state = {
         "question": "Nghiên cứu sâu",
         "context": {"known_facts": []},
+        "plan": {"need_rag": True, "need_deep_research": True},
         "retrieved_docs": [],
         "tool_results": {},
         "citations": [],
@@ -74,6 +77,9 @@ async def test_deep_research_degrades_without_leaking_provider_error(monkeypatch
 
     assert result["context"]["deep_research_used"] is False
     assert result["context"]["research_error"] == "unavailable"
+    assert result["context"]["require_citation"] is True
+    assert "provider returned user content" not in caplog.text
+    assert caplog.records[-1].error_type == "RuntimeError"
 
 
 @pytest.mark.asyncio

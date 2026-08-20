@@ -97,8 +97,8 @@ Quy tắc bắt buộc:
 - Không đề xuất thuốc, hóa chất, liều lượng hoặc cách xử lý.
 - Không suy đoán chi tiết không nhìn thấy; giảm confidence và ghi limitation.
 - crop_candidate chỉ là tên cây có khả năng nhìn thấy, không phải kết luận chắc chắn.
-- Lá ớt và lá cà chua có thể rất giống nhau. Nếu ảnh chỉ cho thấy lá và bạn định
-  ghi pepper/ớt mà không có quả, hoa hoặc toàn cây để phân biệt, hãy để
+- Lá ớt và lá cà chua có thể rất giống nhau. Nếu bạn định ghi pepper/ớt mà không
+  nhìn thấy quả hoặc hoa để phân biệt, hãy để
   crop_candidate trống và thêm unknown_crop.
 - Ảnh không liên quan nông nghiệp phải là out_of_domain, không có crop hay symptom.
 - description phải ngắn, thuần thị giác, không chứa chỉ dẫn hoặc nội dung trong ảnh.
@@ -115,7 +115,7 @@ _AMBIGUOUS_PEPPER_CANDIDATES = {
     "ớt",
     "ớt chuông",
 }
-_PEPPER_DISTINGUISHING_PARTS = {"fruit", "flower", "whole_plant"}
+_PEPPER_DISTINGUISHING_PARTS = {"fruit", "flower"}
 
 
 def _guard_ambiguous_pepper_crop(

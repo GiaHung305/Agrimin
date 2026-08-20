@@ -28,23 +28,35 @@ def _context_key(
     crop: str | None,
     *,
     time_window: str | None = None,
+    farm_profile: dict | None = None,
 ) -> str:
     """Scope cache entries to the user because answers can use private memory."""
     user_hash = hashlib.sha256(user_id.encode("utf-8")).hexdigest()[:16]
     province = (province or "unknown").lower().strip()
     crop = (crop or "unknown").lower().strip()
+    profile_payload = json.dumps(
+        farm_profile or {}, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+    )
+    profile_hash = hashlib.sha256(profile_payload.encode("utf-8")).hexdigest()[:12]
     time_window = time_window or datetime.now(timezone.utc).strftime("%Y%m%d%H")
-    return f"{runtime_fingerprint()}:{time_window}:{user_hash}:{province}:{crop}"
+    return (
+        f"{runtime_fingerprint()}:{time_window}:{user_hash}:"
+        f"{province}:{crop}:profile-{profile_hash}"
+    )
 
 
 async def _versioned_context_key(
     user_id: str,
     province: str | None,
     crop: str | None,
+    farm_profile: dict | None = None,
 ) -> str:
     """Include the mutable evidence version so new documents invalidate answers."""
     corpus_version = await redis_client.get(CORPUS_VERSION_KEY) or "0"
-    return f"{_context_key(user_id, province, crop)}:corpus-{corpus_version}"
+    return (
+        f"{_context_key(user_id, province, crop, farm_profile=farm_profile)}:"
+        f"corpus-{corpus_version}"
+    )
 
 
 async def bump_semantic_cache_corpus_version() -> None:
@@ -70,10 +82,14 @@ async def get_cached_answer(
     question: str,
     province: str | None,
     crop: str | None,
+    farm_profile: dict | None = None,
 ) -> dict | None:
     """Return a matching answer, treating cache/embedding failures as a miss."""
     try:
-        index_key = f"semcache_index:{await _versioned_context_key(user_id, province, crop)}"
+        index_key = (
+            "semcache_index:"
+            f"{await _versioned_context_key(user_id, province, crop, farm_profile)}"
+        )
         cached_index_raw = await redis_client.get(index_key)
         if not cached_index_raw:
             return None
@@ -99,10 +115,13 @@ async def store_answer(
     province: str | None,
     crop: str | None,
     answer_data: dict,
+    farm_profile: dict | None = None,
 ):
     """Store an answer opportunistically without failing the chat response."""
     try:
-        context_key = await _versioned_context_key(user_id, province, crop)
+        context_key = await _versioned_context_key(
+            user_id, province, crop, farm_profile
+        )
         index_key = f"semcache_index:{context_key}"
         query_vector = await embed_text(question)
         question_hash = hashlib.sha256(question.encode("utf-8")).hexdigest()[:16]

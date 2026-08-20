@@ -68,6 +68,22 @@ async def test_retrieve_runs_rag_and_weather_concurrently(monkeypatch):
     assert result["tool_results"]["weather"]["forecast"] == "sunny"
 
 
+@pytest.mark.asyncio
+async def test_optional_weather_failure_does_not_log_provider_details(
+    monkeypatch, caplog
+):
+    async def failing_geocode(_province):
+        raise RuntimeError("weather URL contains sensitive query")
+
+    monkeypatch.setattr(retrieve, "geocode_province_via_mcp", failing_geocode)
+
+    result = await retrieve._retrieve_weather(True, "Đồng Nai")
+
+    assert result is None
+    assert "weather URL contains sensitive query" not in caplog.text
+    assert caplog.records[-1].error_type == "RuntimeError"
+
+
 def test_retry_query_is_expanded_and_keeps_original_evidence_scope():
     state = {
         "question": "Câu hỏi gốc",
@@ -82,3 +98,56 @@ def test_retry_query_is_expanded_and_keeps_original_evidence_scope():
 
     assert queries == ["Liều lượng an toàn? nhãn và hướng dẫn chính thức Việt Nam"]
     assert state["context"]["research_retry_bases"][queries[0]] == "Liều lượng an toàn?"
+
+
+def test_first_pass_nutrition_query_adds_balanced_decision_criteria():
+    state = {
+        "question": "Câu hỏi gốc",
+        "plan": {"need_rag": True},
+        "research_questions": [
+            "Canh tác lúa giảm phát thải nên quản lý dinh dưỡng theo nguyên tắc nào?"
+        ],
+        "retry_count": 0,
+        "context": {},
+    }
+
+    queries = retrieve._research_queries(state)
+
+    assert "bón phân cân đối theo nhu cầu cây và phân tích đất" in queries[0]
+    assert state["context"]["research_retry_bases"][queries[0]] == (
+        state["research_questions"][0]
+    )
+
+
+def test_visual_crop_conflict_anchors_retrieval_to_image_question():
+    state = {
+        "question": "Sắp thu hoạch được chưa?",
+        "plan": {"need_rag": True},
+        "research_questions": [
+            "Cà chua trồng ngày 21/08/2026 đã thu hoạch được chưa?"
+        ],
+        "retry_count": 0,
+        "context": {
+            "plot_seasons": [
+                {"crop": "Cà chua", "status": "planned"}
+            ]
+        },
+        "visual_observations": [
+            {
+                "image_id": "0123456789abcdef",
+                "relevance": "agriculture_plant",
+                "crop_candidate": "xà lách",
+                "plant_part": "whole_plant",
+                "confidence": 0.9,
+            }
+        ],
+    }
+
+    queries = retrieve._research_queries(state)
+
+    assert len(queries) == 1
+    assert queries[0].startswith("Sắp thu hoạch được chưa?")
+    assert "xà lách" in queries[0]
+    assert "Cà chua" not in queries[0]
+    assert state["research_questions"] == ["Sắp thu hoạch được chưa?"]
+    assert state["context"]["visual_crop_context"]["conflict"] is True

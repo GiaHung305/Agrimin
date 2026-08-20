@@ -4,10 +4,13 @@ from __future__ import annotations
 
 import asyncio
 from collections.abc import AsyncIterator
+from dataclasses import dataclass
+from threading import Lock
+from time import monotonic
 from typing import Any
 
 from google import genai
-from google.genai.errors import ClientError
+from google.genai.errors import ClientError, ServerError
 
 from app.core.config import settings
 from app.core.model_registry import ModelRole, model_name
@@ -15,7 +18,75 @@ from app.core.retry_utils import gemini_retry
 
 
 class ModelProviderUnavailable(RuntimeError):
-    """A provider timeout that callers may translate to a stable fallback."""
+    """A provider failure that callers may translate to a stable fallback."""
+
+
+@dataclass
+class _CircuitState:
+    failures: int = 0
+    opened_at: float | None = None
+    probe_in_progress: bool = False
+
+
+_circuit_states: dict[ModelRole, _CircuitState] = {}
+_circuit_lock = Lock()
+
+
+def _circuit_threshold() -> int:
+    return max(int(settings.model_circuit_failure_threshold), 0)
+
+
+def _before_provider_call(role: ModelRole) -> None:
+    """Fail fast while a role-specific provider circuit is open."""
+    if _circuit_threshold() == 0:
+        return
+    now = monotonic()
+    with _circuit_lock:
+        state = _circuit_states.setdefault(role, _CircuitState())
+        if state.opened_at is None:
+            return
+        cooldown = max(float(settings.model_circuit_cooldown_seconds), 0.0)
+        if now - state.opened_at < cooldown or state.probe_in_progress:
+            raise ModelProviderUnavailable(
+                f"{role.value} model circuit is temporarily open"
+            )
+        state.probe_in_progress = True
+
+
+def _record_provider_failure(role: ModelRole) -> None:
+    threshold = _circuit_threshold()
+    if threshold == 0:
+        return
+    now = monotonic()
+    with _circuit_lock:
+        state = _circuit_states.setdefault(role, _CircuitState())
+        state.probe_in_progress = False
+        if state.opened_at is not None:
+            state.failures = threshold
+            state.opened_at = now
+            return
+        state.failures += 1
+        if state.failures >= threshold:
+            state.opened_at = now
+
+
+def _record_provider_success(role: ModelRole) -> None:
+    with _circuit_lock:
+        _circuit_states.pop(role, None)
+
+
+def _release_provider_probe(role: ModelRole) -> None:
+    """Release a half-open probe after a non-provider exception/cancellation."""
+    with _circuit_lock:
+        state = _circuit_states.get(role)
+        if state is not None:
+            state.probe_in_progress = False
+
+
+def _reset_circuit_breakers() -> None:
+    """Clear process-local state for deterministic tests and lifecycle resets."""
+    with _circuit_lock:
+        _circuit_states.clear()
 
 
 client: genai.Client | None = None
@@ -33,7 +104,7 @@ def _get_client() -> genai.Client:
 
 
 @gemini_retry
-async def generate_content(
+async def _generate_content_with_retry(
     role: ModelRole,
     contents: Any,
     *,
@@ -56,6 +127,27 @@ async def generate_content(
         ) from exc
 
 
+async def generate_content(
+    role: ModelRole,
+    contents: Any,
+    *,
+    config: Any | None = None,
+) -> Any:
+    _before_provider_call(role)
+    try:
+        response = await _generate_content_with_retry(
+            role, contents, config=config
+        )
+    except (ModelProviderUnavailable, ServerError):
+        _record_provider_failure(role)
+        raise
+    except BaseException:
+        _release_provider_probe(role)
+        raise
+    _record_provider_success(role)
+    return response
+
+
 @gemini_retry
 async def _open_stream(role: ModelRole, contents: str) -> Any:
     try:
@@ -74,6 +166,7 @@ async def _open_stream(role: ModelRole, contents: str) -> Any:
 
 async def stream_content(role: ModelRole, contents: str) -> AsyncIterator[Any]:
     """Stream chunks while applying a timeout to connect and every read."""
+    _before_provider_call(role)
     try:
         stream = await _open_stream(role, contents)
         iterator = stream.__aiter__()
@@ -85,8 +178,17 @@ async def stream_content(role: ModelRole, contents: str) -> AsyncIterator[Any]:
             except StopAsyncIteration:
                 break
     except TimeoutError as exc:
+        _record_provider_failure(role)
         raise ModelProviderUnavailable(f"{role.value} model stream timed out") from exc
     except ClientError as exc:
+        _record_provider_failure(role)
         raise ModelProviderUnavailable(
             f"{role.value} model stream was rejected by provider"
         ) from exc
+    except (ModelProviderUnavailable, ServerError):
+        _record_provider_failure(role)
+        raise
+    except BaseException:
+        _release_provider_probe(role)
+        raise
+    _record_provider_success(role)

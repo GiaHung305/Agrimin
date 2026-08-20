@@ -1,16 +1,30 @@
 import os
 import sys
+import json
 
 import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from eval.run_retrieval_eval import (
+    DEFAULT_BASELINE,
+    DEFAULT_DATASET,
     evaluate,
     evaluate_promotion_gate,
     is_relevant,
     retrieval_metrics,
 )
+
+
+def test_default_retrieval_gate_uses_real_production_sources():
+    dataset = json.loads(DEFAULT_DATASET.read_text(encoding="utf-8"))
+    baseline = json.loads(DEFAULT_BASELINE.read_text(encoding="utf-8"))
+    serialized = json.dumps(dataset, ensure_ascii=False).casefold()
+
+    assert dataset["version"] == baseline["dataset_version"]
+    assert "tai lieu mau" not in serialized
+    assert "tài liệu mẫu" not in serialized
+    assert "pdf mau" not in serialized
 
 
 def test_retrieval_metrics_reward_early_relevant_result():

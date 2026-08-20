@@ -19,13 +19,26 @@ from google.genai.errors import ServerError
 from app.core.db import get_db
 from app.core.auth import get_current_user
 from app.workflow.graph import build_graph
-from app.repository.models import MemoryFact, Message, User, Conversation
+from app.workflow.nodes.pre_guardrail import (
+    explicit_underspecified_dosage_request,
+)
+from app.workflow.nodes.action_proposal import detect_action_intent
+from app.repository.models import (
+    Conversation,
+    CropSeason,
+    FarmPlot,
+    FarmProfile,
+    MemoryFact,
+    Message,
+    User,
+)
 from app.services.semantic_cache import (
     get_cached_answer,
     is_realtime_sensitive_question,
     store_answer,
 )
 from app.services.model_gateway import ModelProviderUnavailable
+from app.services.farm_monitoring import local_now_naive
 from app.core.model_registry import runtime_versions
 from app.core.langfuse_client import get_langfuse_handler
 from app.core.security_checks import contains_prompt_injection
@@ -95,7 +108,12 @@ async def ensure_user_and_conversation(db: AsyncSession, user_id: str, email: st
         await db.flush()
 
     if conversation_id:
-        result = await db.execute(select(Conversation).where(Conversation.id == conversation_id))
+        result = await db.execute(
+            select(Conversation).where(
+                Conversation.id == conversation_id,
+                Conversation.user_id == user_id,
+            )
+        )
         conv = result.scalar_one_or_none()
         if conv:
             if str(conv.user_id) == str(user_id):
@@ -123,6 +141,8 @@ async def _load_known_facts(db: AsyncSession, user_id: str):
     for raw in known_facts_raw:
         try:
             parsed = json.loads(raw)
+            if not isinstance(parsed, dict):
+                continue
             known_facts_display.append(parsed)
             if parsed.get("province"):
                 known_province = parsed["province"]
@@ -132,6 +152,114 @@ async def _load_known_facts(db: AsyncSession, user_id: str):
             continue
 
     return known_facts_display, known_province, known_crop
+
+
+async def _load_farm_profile(db: AsyncSession, user_id: str) -> dict | None:
+    """Load the current owned farm profile used as authoritative chat context."""
+    result = await db.execute(
+        select(FarmProfile).where(FarmProfile.user_id == user_id)
+    )
+    profile = result.scalar_one_or_none()
+    if profile is None:
+        return None
+    return {
+        "name": profile.name,
+        "province": profile.province,
+        "area_ha": profile.area_ha,
+        "farming_style": profile.farming_style,
+    }
+
+
+async def _load_plot_seasons(db: AsyncSession, user_id: str) -> list[dict]:
+    """Load owned active/planned seasons together with their active plots."""
+    result = await db.execute(
+        select(FarmPlot, CropSeason)
+        .join(CropSeason, CropSeason.plot_id == FarmPlot.id)
+        .where(
+            FarmPlot.user_id == user_id,
+            CropSeason.user_id == user_id,
+            FarmPlot.status == "active",
+            CropSeason.status.in_(("active", "planned")),
+        )
+        .order_by(FarmPlot.created_at.asc(), CropSeason.created_at.desc())
+    )
+    today = local_now_naive().date()
+    return [
+        _serialize_plot_season(plot, season, today=today)
+        for plot, season in result.all()
+    ]
+
+
+def _serialize_plot_season(plot, season, *, today) -> dict:
+    """Build truthful chat context without silently rewriting stored data."""
+    recorded_status = season.status
+    starts_in_future = bool(season.planted_on and season.planted_on > today)
+    effective_status = (
+        "planned"
+        if recorded_status == "active" and starts_in_future
+        else recorded_status
+    )
+    return {
+        "plot_id": str(plot.id),
+        "plot_name": plot.name,
+        "plot_area_ha": plot.area_ha,
+        "location_note": plot.location_note,
+        "season_id": str(season.id),
+        "crop": season.crop,
+        "variety": season.variety,
+        "growth_stage": season.growth_stage,
+        "planted_on": season.planted_on.isoformat()
+        if season.planted_on
+        else None,
+        "expected_harvest_on": season.expected_harvest_on.isoformat()
+        if season.expected_harvest_on
+        else None,
+        "status": effective_status,
+        "recorded_status": recorded_status,
+        "data_warning": (
+            "active_season_starts_in_future"
+            if effective_status != recorded_status
+            else None
+        ),
+    }
+
+
+def _apply_farm_profile_precedence(
+    known_facts: list[dict],
+    farm_profile: dict | None,
+    plot_seasons: list[dict] | None = None,
+    memory_province: str | None = None,
+) -> tuple[list[dict], str | None, str | None]:
+    """Prefer profile location and actual active seasons over semantic memory."""
+    profile = farm_profile or {}
+    authoritative_fields = {
+        key for key, value in profile.items() if value is not None and value != ""
+    }
+    authoritative_fields.update(
+        {
+            "crop",
+            "variety",
+            "growth_stage",
+            "planted_on",
+            "expected_harvest_on",
+        }
+    )
+    filtered_facts = []
+    for fact in known_facts:
+        filtered = {
+            key: value
+            for key, value in fact.items()
+            if key not in authoritative_fields
+        }
+        if filtered:
+            filtered_facts.append(filtered)
+    active_crops = {
+        str(season.get("crop")).strip()
+        for season in (plot_seasons or [])
+        if season.get("status") == "active" and season.get("crop")
+    }
+    current_crop = next(iter(active_crops)) if len(active_crops) == 1 else None
+    return filtered_facts, profile.get("province") or memory_province, current_crop
 
 
 def _new_agent_state(
@@ -145,6 +273,8 @@ def _new_agent_state(
     image_observations: list[dict] | None = None,
     visual_observations: list[dict] | None = None,
     vision_error: str | None = None,
+    farm_profile: dict | None = None,
+    plot_seasons: list[dict] | None = None,
 ) -> dict:
     return {
         "user_id": user_id,
@@ -154,6 +284,8 @@ def _new_agent_state(
         "visual_observations": visual_observations or [],
         "context": {
             "known_facts": known_facts,
+            "farm_profile": farm_profile,
+            "plot_seasons": plot_seasons or [],
             "province": known_province,
             "conversation_history": conversation_history,
             "request_deep_research": deep_research,
@@ -197,6 +329,8 @@ def _should_bypass_cache(req: ChatRequest, conversation_history: list[dict]) -> 
         or req.deep_research
         or bool(req.images)
         or is_realtime_sensitive_question(req.question)
+        or explicit_underspecified_dosage_request(req.question)
+        or detect_action_intent(req.question) != "none"
     )
 
 
@@ -213,15 +347,24 @@ async def _prepare_chat(
     conversation_id = await ensure_user_and_conversation(
         db, user_id, current_user["email"], req.conversation_id
     )
-    known_facts, known_province, known_crop = await _load_known_facts(db, user_id)
+    known_facts, memory_province, _memory_crop = await _load_known_facts(db, user_id)
+    farm_profile = await _load_farm_profile(db, user_id)
+    plot_seasons = await _load_plot_seasons(db, user_id)
+    known_facts, known_province, known_crop = _apply_farm_profile_precedence(
+        known_facts, farm_profile, plot_seasons, memory_province
+    )
     conversation_history = await _load_conversation_history(db, conversation_id)
     db.add(Message(conversation_id=conversation_id, role="user", content=req.question))
     await db.commit()
     # A cached answer is valid only for a new turn. Follow-up questions depend
     # on previous conversation context and must run through the graph.
     bypass_cache = _should_bypass_cache(req, conversation_history)
+    farm_context = {
+        "farm_profile": farm_profile,
+        "plot_seasons": plot_seasons,
+    }
     cached_response = None if bypass_cache else await get_cached_answer(
-        user_id, req.question, known_province, known_crop
+        user_id, req.question, known_province, known_crop, farm_context
     )
     if cached_response:
         cached_response["conversation_id"] = conversation_id
@@ -244,6 +387,8 @@ async def _prepare_chat(
             image_observations,
             visual_observations,
             vision_error,
+            farm_profile,
+            plot_seasons,
         ),
         cached_response=cached_response,
     )
@@ -339,6 +484,14 @@ async def _cache_response_if_safe(req: ChatRequest, prepared: PreparedChat, resp
             prepared.known_province,
             prepared.known_crop,
             response_data,
+            {
+                "farm_profile": prepared.initial_state.get("context", {}).get(
+                    "farm_profile"
+                ),
+                "plot_seasons": prepared.initial_state.get("context", {}).get(
+                    "plot_seasons", []
+                ),
+            },
         )
 
 
@@ -482,14 +635,27 @@ async def _prepare_visual_input(
     except TimeoutError:
         logger.warning("Vision analyzer timed out")
         return PreparedVisualInput(image_observations, [], "timeout")
+    except ModelProviderUnavailable as exc:
+        vision_error = "timeout" if "timed out" in str(exc).casefold() else "unavailable"
+        logger.warning(
+            "Vision analyzer provider unavailable",
+            extra={"vision_error": vision_error},
+        )
+        return PreparedVisualInput(image_observations, [], vision_error)
     except VisionAnalyzerUnavailable:
         logger.warning("Vision analyzer is unavailable")
         return PreparedVisualInput(image_observations, [], "unavailable")
-    except (ValidationError, ValueError):
-        logger.warning("Vision analyzer returned invalid structured output", exc_info=True)
+    except (ValidationError, ValueError) as exc:
+        logger.warning(
+            "Vision analyzer returned invalid structured output",
+            extra={"error_type": type(exc).__name__},
+        )
         return PreparedVisualInput(image_observations, [], "invalid_output")
-    except Exception:
-        logger.warning("Optional vision analyzer failed", exc_info=True)
+    except Exception as exc:
+        logger.warning(
+            "Optional vision analyzer failed",
+            extra={"error_type": type(exc).__name__},
+        )
         return PreparedVisualInput(image_observations, [], "unavailable")
     finally:
         # The graph, cache, trace and checkpointer must never receive raw bytes.

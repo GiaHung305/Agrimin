@@ -1,0 +1,42 @@
+{
+  "version": "crop-data-expansion-batch-17-v1",
+  "documents": 3,
+  "sources": 1,
+  "ready": 3,
+  "already_active": 0,
+  "replace_ready": 0,
+  "ingested": 3,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — quản lý đất",
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "crop_keys": [],
+      "characters": 22384,
+      "content_sha256": "650239405d4834ab5b594a94f6cd7823f5e769c88020790c44ec404b02581d96",
+      "source_sha256": "710bd64d7580aea024e80f2a153ab19946b234d952a8d83fea781a85ca4b2b9b",
+      "status": "ingested",
+      "document_id": "d2e2ede1-f951-4c0c-9b50-f3286ce5e00f"
+    },
+    {
+      "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — giữ nước",
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "crop_keys": [],
+      "characters": 9777,
+      "content_sha256": "2b92546303cd95dfe41ba98f91215f36dd28766ab6b1a6f7e4eb9aae63609460",
+      "source_sha256": "710bd64d7580aea024e80f2a153ab19946b234d952a8d83fea781a85ca4b2b9b",
+      "status": "ingested",
+      "document_id": "553ad149-d40f-4f55-8b44-2c94ef32d34b"
+    },
+    {
+      "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — quản lý dịch hại",
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "crop_keys": [],
+      "characters": 6571,
+      "content_sha256": "be918d5bb76d6b0fce834a719bb4c8e5535e61da0133d43bca4f971185fec825",
+      "source_sha256": "710bd64d7580aea024e80f2a153ab19946b234d952a8d83fea781a85ca4b2b9b",
+      "status": "ingested",
+      "document_id": "9646ef9c-5380-4787-91a8-fd31fb930268"
+    }
+  ]
+}

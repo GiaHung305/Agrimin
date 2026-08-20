@@ -28,7 +28,10 @@ from app.core.db import AsyncSessionLocal
 from app.repository.models import Document
 from app.retrieval.source_authority import SourceType, normalize_source_type
 from app.services.farm_monitoring import POLICIES
-from app.services.ingest_service import ingest_document
+from app.services.ingest_service import (
+    ingest_document,
+    update_document_published_date,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -242,6 +245,17 @@ def load_manifest(path: Path = DEFAULT_MANIFEST) -> dict[str, Any]:
                 for exclusion in exclusions
             ):
                 raise ValueError("crop_batch_exclude_marker_ranges_invalid")
+        elif item["format"] == "text_markers":
+            if not item.get("start_marker") or not item.get("end_marker"):
+                raise ValueError("crop_batch_text_markers_required")
+            exclusions = item.get("exclude_marker_ranges", [])
+            if not isinstance(exclusions, list) or any(
+                not isinstance(exclusion, dict)
+                or not exclusion.get("start_marker")
+                or not exclusion.get("end_marker")
+                for exclusion in exclusions
+            ):
+                raise ValueError("crop_batch_exclude_marker_ranges_invalid")
         else:
             raise ValueError(f"crop_batch_format_unsupported:{item['format']}")
         forbidden_terms = item.get("forbidden_terms", [])
@@ -333,6 +347,14 @@ def extract_html_body(file_bytes: bytes) -> str:
     return text
 
 
+def extract_plain_text(file_bytes: bytes) -> str:
+    """Decode an authoritative text rendition before audited marker slicing."""
+    text = _clean_text(file_bytes.decode("utf-8", errors="replace"))
+    if not text:
+        raise ValueError("crop_batch_plain_text_missing")
+    return text
+
+
 def validate_content(entry: dict[str, Any], content: str) -> None:
     if len(content) < int(entry["min_chars"]):
         raise ValueError(f"crop_batch_content_too_short:{entry['title']}")
@@ -420,6 +442,8 @@ def prepare_documents(
             )
         elif entry["format"] == "html_markers":
             content = extract_html_body(source_bytes)
+        elif entry["format"] == "text_markers":
+            content = extract_plain_text(source_bytes)
         else:
             content = extract_dnn_voice(source_bytes)
         content = slice_markers(
@@ -490,6 +514,11 @@ async def ingest_batch(
         for entry in prepared:
             current = existing.get(entry["title"])
             expected_version = entry.get("version", manifest["version"])
+            published_date = (
+                parse_database_datetime(entry["published_date"])
+                if entry.get("published_date")
+                else None
+            )
             replace = bool(
                 current
                 and entry.get("replace_active")
@@ -520,6 +549,7 @@ async def ingest_batch(
                     source_type=entry["source_type"],
                     author=entry["author"],
                     version=expected_version,
+                    published_date=published_date,
                 )
                 item["status"] = "replaced" if replace else "ingested"
                 item["document_id"] = str(document.id)
@@ -529,12 +559,12 @@ async def ingest_batch(
                     summary["ingested"] += 1
             elif current:
                 item["document_id"] = str(current.id)
-            if apply and entry.get("published_date"):
+            if apply and published_date:
                 persisted = document if (not current or replace) else current
-                published_date = parse_database_datetime(entry["published_date"])
                 if persisted.published_date != published_date:
-                    persisted.published_date = published_date
-                    await db.commit()
+                    await update_document_published_date(
+                        db, persisted, published_date
+                    )
             summary["items"].append(item)
 
     report_path.write_text(

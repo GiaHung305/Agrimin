@@ -1,3 +1,4 @@
+from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -23,13 +24,17 @@ class Settings(BaseSettings):
     model_reflection: str = "gemini-3.1-flash-lite"
     model_generation: str = "gemini-3.5-flash"
     model_memory: str = "gemini-3.1-flash-lite"
-    model_vision: str = "gemini-3.5-flash"
+    # Selected from the last accepted real-image baseline. A changed safety or
+    # prompt fingerprint still needs its own full report before global rollout.
+    model_vision: str = "gemini-3.1-flash-lite"
     model_request_timeout_seconds: float = 45.0
+    model_circuit_failure_threshold: int = 3
+    model_circuit_cooldown_seconds: float = 60.0
     ai_service_request_timeout_seconds: float = 60.0
-    ai_policy_version: str = "safety-v3"
-    prompt_bundle_version: str = "prompts-v3"
+    ai_policy_version: str = "safety-v7"
+    prompt_bundle_version: str = "prompts-v7"
     evidence_schema_version: str = "evidence-v2"
-    knowledge_base_version: str = "kb-v1"
+    knowledge_base_version: str = "kb-v3"
     # Deep Research uses Gemini Google Search grounding. It is opt-in per chat
     # request because each search query can incur a provider charge.
     deep_research_enabled: bool = False
@@ -45,16 +50,18 @@ class Settings(BaseSettings):
     eval_user_email: str = ""
     eval_user_password: str = ""
     eval_api_url: str = "http://localhost:8000/api/v1/chat/stream"
-    eval_dataset_version: str = "v1"
+    eval_dataset_version: str = "v2"
     eval_judge_model: str = "gemini-3.1-flash-lite"
     eval_request_delay_seconds: float = 7.0
     mcp_weather_url: str = "http://localhost:8002/mcp"
     mcp_request_timeout_seconds: float = 10.0
     firebase_credentials_path: str = ""
+    assistant_worker_poll_seconds: int = Field(default=10, ge=5, le=300)
     # Rebuilding BM25 requires loading and tokenising every active chunk. Keep
     # the in-process index briefly, and invalidate it immediately on writes.
     bm25_index_ttl_seconds: int = 300
     rerank_min_confidence: float = 0.10
+    research_freshness_max_age_days: int = 1826
     retrieval_excluded_sources: str = "test,mock_source"
     rrf_dense_weight: float = 1.0
     rrf_sparse_weight: float = 1.15

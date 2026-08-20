@@ -102,15 +102,19 @@ flutter run
 
 ## Trạng thái hiện tại
 
-Dự án hiện đang ở mức MVP với các thành phần cốt lõi đã hoạt động:
-- API chat
-- workflow agent
-- retrieval đa tầng
-- vector search bằng Qdrant
-- caching semantic bằng Redis
-- memory người dùng
-- auth và document ingestion
-- frontend cơ bản
+Dự án đang ở mức release candidate cuối Phase 4: chat SSE, LangGraph, hybrid
+RAG, guardrail, memory, Vision theo allowlist và Farm Agent đều đã tích hợp.
+Challenger fingerprint `cb3562e84674bbe8` (`safety-v7/prompts-v7/kb-v3`, text
+role dùng `gemini-3.5-flash-lite`) đã qua benchmark production-workflow 20 câu,
+golden v2 và Vision 24 ảnh. Backend champion dùng model khác nên giữ fingerprint
+và report riêng; không được gán report challenger cho champion. Rollout rộng vẫn
+thực hiện có kiểm soát; Vision toàn cục không tự bật sau benchmark. Xem ma trận bằng chứng tại
+[`docs/phase-1-4-release-review.md`](docs/phase-1-4-release-review.md).
+
+Gateway model có timeout, retry 5xx có giới hạn và circuit breaker riêng theo
+vai trò model. Mặc định ba request lỗi liên tiếp sẽ mở circuit trong 60 giây để
+không tiếp tục gọi provider khi đang lỗi hoặc hết quota; cấu hình bằng
+`MODEL_CIRCUIT_FAILURE_THRESHOLD` và `MODEL_CIRCUIT_COOLDOWN_SECONDS`.
 
 ## Ghi chú
 
@@ -125,8 +129,9 @@ fine-tune MobileNetV3-Small và export ONNX. Nó không bật vision runtime và
 
 Backend có adapter Gemini Flash đa cây phía sau `VISION_ANALYSIS_ENABLED=false`.
 Adapter chỉ tạo quan sát thị giác typed để mở rộng truy vấn RAG; nó không tự chẩn
-đoán hoặc đưa liều lượng. Phase 3 đã vượt benchmark ảnh thật v3 bằng challenger
-`gemini-3.1-flash-lite`; rollout toàn cục vẫn default-off và chỉ model đã được đánh
-giá mới được promotion.
+đoán hoặc đưa liều lượng. `gemini-3.1-flash-lite` đã vượt baseline ảnh thật
+`safety-v3/prompts-v3`; challenger `safety-v7/prompts-v7/kb-v3` cũng đã đạt
+promotion gate đủ 24 ảnh, không timeout, với grounded/citation/guardrail và safe
+answer đều 100%. Rollout toàn cục vẫn default-off để triển khai theo đợt.
 Trong giai đoạn manual QA, điền email test vào `VISION_TEST_USER_EMAILS` để thử
 qua Flutter trong khi global flag vẫn tắt.

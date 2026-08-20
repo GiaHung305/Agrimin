@@ -6,12 +6,13 @@ import re
 import unicodedata
 
 from google.genai import types
+from google.genai.errors import ServerError
 from pydantic import BaseModel, ConfigDict, ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.model_registry import ModelRole
 from app.repository.models import MemoryFact
-from app.services.model_gateway import generate_content
+from app.services.model_gateway import ModelProviderUnavailable, generate_content
 from app.workflow.state import AgentState
 
 logger = logging.getLogger(__name__)
@@ -52,6 +53,13 @@ def _may_contain_user_owned_fact(question: str) -> bool:
 async def memory_extract_node(state: AgentState, db: AsyncSession) -> AgentState:
     if state.get("guardrail_status") != "pass":
         return state
+    if (
+        state.get("context", {})
+        .get("action_request", {})
+        .get("intent", "none")
+        != "none"
+    ):
+        return state
     if not _may_contain_user_owned_fact(state.get("question", "")):
         return state
 
@@ -64,6 +72,9 @@ Câu hỏi: {state['question']}"""
         extraction = await _call_gemini(prompt)
     except ValidationError:
         logger.warning("Memory extractor returned invalid structured output; skipping write")
+        return state
+    except (ModelProviderUnavailable, ServerError):
+        logger.warning("Optional memory extractor is unavailable; skipping write")
         return state
 
     if extraction.has_personal_info:

@@ -16,6 +16,7 @@ from eval.ingest_crop_data_batch import (
     extract_dnn_voice,
     extract_html_body,
     extract_html_element,
+    extract_plain_text,
     exclude_marker_ranges,
     fetch_sources,
     load_manifest,
@@ -41,6 +42,7 @@ BATCH_13_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_13_v1.json"
 BATCH_14_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_14_v1.json"
 BATCH_15_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_15_v1.json"
 BATCH_16_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_16_v1.json"
+BATCH_17_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_17_v1.json"
 
 
 def test_batch_manifest_covers_eleven_policy_crops() -> None:
@@ -381,6 +383,16 @@ def test_sixteenth_batch_closes_the_final_nine_crop_source_gaps() -> None:
     assert all(document.get("forbidden_terms") for document in manifest["documents"])
 
 
+def test_seventeenth_batch_deepens_agroecology_soil_water_and_ipm() -> None:
+    manifest = load_manifest(BATCH_17_PATH)
+
+    assert manifest["version"] == "crop-data-expansion-batch-17-v1"
+    assert len(manifest["documents"]) == 3
+    assert all(document["format"] == "text_markers" for document in manifest["documents"])
+    assert all(document["source_type"] == "international_organization" for document in manifest["documents"])
+    assert all(document["crop_keys"] == [] for document in manifest["documents"])
+
+
 def test_html_extractor_reads_only_selected_element() -> None:
     content = extract_html_element(
         b'<nav>noise</nav><div id="article"><h1>Rau cai</h1>'
@@ -424,6 +436,12 @@ def test_html_body_extractor_ignores_executable_and_style_content() -> None:
     assert "Ky thuat an toan" in content
     assert "secret" not in content
     assert "hidden" not in content
+
+
+def test_plain_text_extractor_normalizes_lines_for_marker_slicing() -> None:
+    content = extract_plain_text(b"  START  \r\nsoil   water\r\nEND  ")
+
+    assert slice_markers(content, "START", "END") == "START\nsoil water"
 
 
 def test_content_validation_rejects_missing_crop_term() -> None:

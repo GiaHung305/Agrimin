@@ -6,7 +6,7 @@
     "recall_at_k": 1.0,
     "mrr": 1.0,
     "ndcg_at_k": 1.0,
-    "mean_latency_ms": 10424.773125
+    "mean_latency_ms": 4715.895625
   },
   "promotion_thresholds": {
     "minimum_recall_at_1": 0.90,
@@ -15,5 +15,5 @@
     "minimum_ndcg_at_k": 0.90,
     "maximum_mean_latency_ms": 30000.0
   },
-  "environment_note": "Crop-production-only benchmark on Docker Desktop; BGE-M3 embedding service with CPU cross-encoder reranking. Run with top_k=3 against agriculture_benchmark_v2.json."
+  "environment_note": "Accepted 2026-08-17 on Docker Desktop; 16 production-source cases, BGE-M3 embedding service on GPU and CPU cross-encoder reranking. Run with top_k=3 against agriculture_benchmark_v2.json."
 }

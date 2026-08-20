@@ -26,19 +26,39 @@ Manifest phiên bản hóa nằm tại
 `backend/eval/vision_benchmark_v2.json`. Ngưỡng được tính riêng theo nhóm; chỉ khi
 đủ toàn bộ mẫu và mọi ngưỡng đều đạt thì `promotion_pass` mới là `true`.
 
-## Baseline Phase 3 đã chấp nhận
+## Fingerprint Phase 3 hiện tại đã chấp nhận
 
-Lần chạy ngày 2026-08-12 với `gemini-3.1-flash-lite`, policy `safety-v3` và prompt
-bundle `prompts-v3` đạt `promotion_pass=true` trên 24/24 ảnh:
+Report ngày 2026-08-20 của fingerprint `cb3562e84674bbe8`
+(`safety-v7/prompts-v7/kb-v3`) dùng Vision `gemini-3.1-flash-lite` và generation
+`gemini-3.5-flash-lite` đã đạt `promotion_pass=true` đủ 24/24 ảnh:
+
+- provider analysis, ảnh tối/mờ và OOD đều 100%; timeout 0%;
+- cây khỏe đúng phạm vi cà chua 83,3% (5/6), đạt ngưỡng 75%;
+- quan sát nhóm dễ nhầm 80% (8/10), đạt ngưỡng 80%;
+- grounded answer, citation truy vết, plant guardrail và safe answer đều 100%;
+- p95 end-to-end 42,968 giây, dưới giới hạn 120 giây.
+
+Report cục bộ là
+`vision_training/artifacts/gemini_vision_v1/phase3-production-safety-v7-prompts-v7-kbv3_2026-08-20.json`
+và bị Git ignore vì là artefact runtime. Global Vision vẫn default-off; kết quả
+cho phép rollout kiểm soát, không tự thay đổi cấu hình production.
+
+## Baseline lịch sử
+
+Report hợp nhất ngày 2026-08-13 với `gemini-3.1-flash-lite`, policy
+`safety-v3` và prompt bundle `prompts-v3` đạt `promotion_pass=true` trên 24/24 ảnh.
+Đây là baseline lịch sử; mọi thay đổi safety/prompt phải tạo fingerprint mới và
+chạy lại đủ bộ trước khi promotion:
 
 - provider analysis 100%; cây khỏe đúng phạm vi cà chua 83,3% (5/6);
 - bệnh dễ nhầm 100%; ảnh tối/mờ 100%; OOD 100%;
 - grounded answer, citation bắt buộc, guardrail và safe answer look-alike đều 100%;
-- timeout 0%; p95 end-to-end 52,603 giây;
-- còn một lỗi quan sát được: một ảnh cà chua khỏe bị nhận thành `pepper`.
+- timeout 0%; p95 end-to-end 44,389 giây;
+- ca từng bị nhận thành `pepper` nay trả `unknown_crop` thay vì đoán sai; do đó
+  healthy crop scope vẫn là 83,3% nhưng không còn confusion sang cây khác.
 
 Report cục bộ nằm tại
-`vision_training/artifacts/gemini_vision_v1/phase3-final-3.1-flash-lite-v3_2026-08-12.json`
+`vision_training/artifacts/gemini_vision_v1/phase3-vision-crop-guard-pass_2026-08-13.json`
 và bị Git ignore vì là artefact runtime. Kết quả này chấp nhận Phase 3 cho model đã
 đánh giá, không tự động bật `VISION_ANALYSIS_ENABLED` cho toàn bộ người dùng và
 không áp dụng cho model khác.
@@ -108,8 +128,22 @@ dùng `--case-limit` để smoke test, nhưng báo cáo giới hạn luôn có b
 Nếu provider timeout hoặc quota hết giữa chừng, dùng `--resume-from` để giữ kết quả
 đã có và chỉ chạy lại case thiếu/fail. Có thể truyền `--case-id` nhiều lần để rerun
 đúng các lỗi hạ tầng; không dùng cơ chế này để lặp lại lỗi accuracy cho đến khi pass.
+`--output` là bắt buộc và runner ghi report nguyên tử sau từng batch. Vì vậy Ctrl+C,
+timeout tiến trình hoặc quota hết vẫn giữ mọi batch đã hoàn tất; file `.tmp` không
+bao giờ được dùng làm resume source. Nếu output đã tồn tại, runner từ chối ghi đè
+trừ khi chỉ rõ `--resume-from`.
 Runner tự loại ảnh PlantDoc không qua deterministic quality gate khỏi nhóm accuracy
 và chọn mẫu held-out hợp lệ kế tiếp trong cùng lớp.
+
+Ví dụ tiếp tục đúng report sau khi dừng:
+
+```powershell
+docker compose -f docker-compose.yml -f docker-compose.eval.yml run --rm backend `
+  python -m eval.run_vision_eval `
+  --output /vision_training/artifacts/gemini_vision_v1/field_safety_v5.json `
+  --resume-from /vision_training/artifacts/gemini_vision_v1/field_safety_v5.json `
+  --allow-provider-calls
+```
 
 Mỗi case ghi `request_latency_seconds`, `timed_out`, `crop_scope_correct`, model thực
 tế trong trace, số citation và số citation truy vết được. Một câu trả lời cây trồng

@@ -129,7 +129,9 @@ def test_rerank_candidates_include_dense_and_sparse_leaders():
 
     selected = hybrid_module._select_rerank_candidates(fused, dense, sparse)
 
-    assert [item["document_id"] for item in selected] == ["fusion", "dense", "sparse"]
+    assert [item["document_id"] for item in selected] == [
+        "fusion", "dense", "sparse", "other",
+    ]
 
 
 def test_rerank_candidates_reserve_room_for_explicit_crop_title():
@@ -153,7 +155,7 @@ def test_rerank_candidates_reserve_room_for_explicit_crop_title():
     )
 
     assert [item["document_id"] for item in selected] == [
-        "fusion", "old-crop", "harvest",
+        "fusion", "old-crop", "harvest", "dense",
     ]
 
 
@@ -165,6 +167,65 @@ def test_crop_intent_distinguishes_positive_crop_from_negated_crop():
     assert "parsley" in positive
     assert "coriander" in negative
     assert "coriander" not in positive
+
+
+def test_visual_crop_filter_removes_documents_for_other_named_crops():
+    documents = [
+        {"document_id": "lettuce", "title": "Xà lách - nhận biết độ thu hoạch"},
+        {"document_id": "artichoke", "title": "Quy trình thu hoạch atisô"},
+        {"document_id": "chili", "title": "Ớt - độ chín khi thu hoạch"},
+        {"document_id": "watercress", "title": "Xà lách xoong - cách thu hái"},
+        {"document_id": "generic", "title": "Nguyên tắc thu hoạch rau ăn lá"},
+    ]
+
+    filtered = hybrid_module.filter_conflicting_crop_evidence(
+        "Sắp thu hoạch chưa? Quan sát thị giác: xà lách", documents
+    )
+
+    assert [item["document_id"] for item in filtered] == ["lettuce", "generic"]
+
+
+def test_longer_crop_name_does_not_also_match_shorter_crop_name():
+    assert hybrid_module.crop_keys_for_text("xà lách xoong") == {"watercress"}
+
+
+@pytest.mark.asyncio
+async def test_visual_hybrid_search_does_not_return_other_crop_titles(monkeypatch):
+    results = [
+        {
+            "document_id": "artichoke", "chunk_id": "1",
+            "title": "Quy trình thu hoạch atisô", "content": "atisô",
+        },
+        {
+            "document_id": "lettuce", "chunk_id": "2",
+            "title": "Xà lách - nhận biết độ thu hoạch", "content": "xà lách",
+        },
+        {
+            "document_id": "chili", "chunk_id": "3",
+            "title": "Ớt - độ chín khi thu hoạch", "content": "ớt",
+        },
+    ]
+    monkeypatch.setattr(
+        hybrid_module,
+        "dense_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=results),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=results),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "rerank",
+        lambda *args: asyncio.sleep(0, result=[0.98, 0.90, 0.95]),
+    )
+
+    ranked = await hybrid_module.hybrid_search(
+        "Sắp thu hoạch chưa? Quan sát thị giác: xà lách"
+    )
+
+    assert [item["document_id"] for item in ranked] == ["lettuce"]
 
 
 def test_topic_intent_distinguishes_nutrition_from_moisture_for_same_crop():

@@ -18,9 +18,30 @@ if config.config_file_name is not None:
 
 target_metadata = Base.metadata
 
+_EXTERNALLY_MANAGED_TABLES = {
+    "checkpoint_blobs",
+    "checkpoint_migrations",
+    "checkpoint_writes",
+    "checkpoints",
+}
+
+
+def include_object(object_, name, type_, reflected, compare_to):
+    """Keep LangGraph's own checkpoint schema outside Alembic ownership."""
+    table_name = getattr(getattr(object_, "table", None), "name", None)
+    if type_ == "table" and name in _EXTERNALLY_MANAGED_TABLES:
+        return False
+    if table_name in _EXTERNALLY_MANAGED_TABLES:
+        return False
+    return True
+
 
 def do_run_migrations(connection):
-    context.configure(connection=connection, target_metadata=target_metadata)
+    context.configure(
+        connection=connection,
+        target_metadata=target_metadata,
+        include_object=include_object,
+    )
     with context.begin_transaction():
         context.run_migrations()
 
@@ -37,5 +58,4 @@ async def run_migrations_online():
 
 
 asyncio.run(run_migrations_online())
-
 

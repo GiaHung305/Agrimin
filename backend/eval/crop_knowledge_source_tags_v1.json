@@ -73,6 +73,16 @@
       "count_for_coverage": true
     },
     {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-loai-benh-hai-tren-cay-ca-chua-va-bien-phap-phong-tru-ky-1-17784.html",
+      "source_type": "extension",
+      "crop_keys": ["tomato"],
+      "crop_groups": [],
+      "topics": ["pest_disease_ipm", "soil_water"],
+      "stages": ["development", "mid_season", "late_season"],
+      "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
       "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-xen-cay-sau-rieng-trong-vuon-ca-phe-voi-17952.html",
       "source_type": "extension",
       "crop_keys": ["durian", "coffee"],
@@ -292,6 +302,16 @@
       "topics": ["soil_water", "pest_disease_ipm", "climate_resilience"],
       "stages": ["all"],
       "regions": ["national"],
+      "count_for_coverage": true
+    },
+    {
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "source_type": "international_organization",
+      "crop_keys": [],
+      "crop_groups": ["all_crops"],
+      "topics": ["soil_water", "pest_disease_ipm", "climate_resilience"],
+      "stages": ["all"],
+      "regions": [],
       "count_for_coverage": true
     },
     {

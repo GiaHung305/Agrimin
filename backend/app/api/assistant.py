@@ -3,7 +3,7 @@ from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, Field
-from sqlalchemy import select
+from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.auth import get_current_user
@@ -31,10 +31,18 @@ from app.services.farm_monitoring import (
 router = APIRouter(prefix="/assistant", tags=["assistant"])
 
 
+def _utc_timestamp(value: datetime | None) -> datetime | None:
+    """Serialize legacy naive database timestamps explicitly as UTC."""
+    if value is None:
+        return None
+    if value.tzinfo is None:
+        return value.replace(tzinfo=timezone.utc)
+    return value.astimezone(timezone.utc)
+
+
 class FarmProfileRequest(BaseModel):
     name: str = Field(default="Nông trại của tôi", max_length=255)
     province: str | None = Field(default=None, max_length=100)
-    crop: str | None = Field(default=None, max_length=100)
     area_ha: float | None = Field(default=None, ge=0)
     farming_style: str | None = Field(default=None, max_length=255)
 
@@ -105,7 +113,10 @@ class CropSeasonUpdateRequest(BaseModel):
 
 
 def _profile_payload(profile: FarmProfile) -> dict:
-    return {key: getattr(profile, key) for key in ("id", "name", "province", "crop", "area_ha", "farming_style")}
+    return {
+        key: getattr(profile, key)
+        for key in ("id", "name", "province", "area_ha", "farming_style")
+    }
 
 
 def _prediction_payload(prediction: FarmRiskPrediction | None) -> dict | None:
@@ -627,6 +638,22 @@ async def list_tasks(db: AsyncSession = Depends(get_db), current_user: dict = De
     return [{"id": str(task.id), "title": task.title, "description": task.description, "due_at": task.due_at, "status": task.status} for task in tasks]
 
 
+@router.get("/tasks/open-count")
+async def open_task_count(
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    count = (
+        await db.execute(
+            select(func.count(FarmTask.id)).where(
+                FarmTask.user_id == current_user["id"],
+                FarmTask.status == "open",
+            )
+        )
+    ).scalar_one()
+    return {"count": count}
+
+
 @router.patch("/tasks/{task_id}")
 async def update_task(task_id: str, req: TaskUpdateRequest, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
     task = (await db.execute(select(FarmTask).where(FarmTask.id == task_id, FarmTask.user_id == current_user["id"]))).scalar_one_or_none()
@@ -893,8 +920,8 @@ async def list_notifications(db: AsyncSession = Depends(get_db), current_user: d
             "kind": item.kind,
             "title": item.title,
             "body": item.body,
-            "created_at": item.created_at,
-            "read_at": item.read_at,
+            "created_at": _utc_timestamp(item.created_at),
+            "read_at": _utc_timestamp(item.read_at),
             "recommendation": (
                 {
                     "id": str(recommendation.id),
@@ -909,6 +936,39 @@ async def list_notifications(db: AsyncSession = Depends(get_db), current_user: d
         }
         for item in notifications
     ]
+
+
+@router.get("/notifications/unread-count")
+async def unread_notification_count(
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    count = (
+        await db.execute(
+            select(func.count(Notification.id)).where(
+                Notification.user_id == current_user["id"],
+                Notification.read_at.is_(None),
+            )
+        )
+    ).scalar_one()
+    return {"count": count}
+
+
+@router.post("/notifications/read-all")
+async def mark_all_notifications_read(
+    db: AsyncSession = Depends(get_db),
+    current_user: dict = Depends(get_current_user),
+):
+    result = await db.execute(
+        update(Notification)
+        .where(
+            Notification.user_id == current_user["id"],
+            Notification.read_at.is_(None),
+        )
+        .values(read_at=datetime.now(timezone.utc).replace(tzinfo=None))
+    )
+    await db.commit()
+    return {"status": "read", "updated": result.rowcount or 0}
 
 
 @router.post("/device-tokens")
@@ -937,6 +997,16 @@ async def revoke_device_token(token: str, db: AsyncSession = Depends(get_db), cu
 
 @router.post("/actions/{action_id}/confirm")
 async def confirm_action(action_id: str, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
+    recommendation = (
+        await db.execute(
+            select(FarmRecommendation)
+            .where(
+                FarmRecommendation.pending_action_id == action_id,
+                FarmRecommendation.user_id == current_user["id"],
+            )
+            .with_for_update()
+        )
+    ).scalar_one_or_none()
     action = (
         await db.execute(
             select(PendingAction)
@@ -949,14 +1019,6 @@ async def confirm_action(action_id: str, db: AsyncSession = Depends(get_db), cur
     ).scalar_one_or_none()
     if action is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pending action not found")
-    recommendation = (
-        await db.execute(
-            select(FarmRecommendation).where(
-                FarmRecommendation.pending_action_id == action.id,
-                FarmRecommendation.user_id == current_user["id"],
-            )
-        )
-    ).scalar_one_or_none()
     if action.status == "confirmed":
         return {
             "status": "confirmed",
@@ -992,18 +1054,29 @@ async def confirm_action(action_id: str, db: AsyncSession = Depends(get_db), cur
 
 @router.post("/actions/{action_id}/cancel")
 async def cancel_action(action_id: str, db: AsyncSession = Depends(get_db), current_user: dict = Depends(get_current_user)):
-    action = (await db.execute(select(PendingAction).where(PendingAction.id == action_id, PendingAction.user_id == current_user["id"]))).scalar_one_or_none()
+    recommendation = (
+        await db.execute(
+            select(FarmRecommendation)
+            .where(
+                FarmRecommendation.pending_action_id == action_id,
+                FarmRecommendation.user_id == current_user["id"],
+            )
+            .with_for_update()
+        )
+    ).scalar_one_or_none()
+    action = (
+        await db.execute(
+            select(PendingAction)
+            .where(
+                PendingAction.id == action_id,
+                PendingAction.user_id == current_user["id"],
+            )
+            .with_for_update()
+        )
+    ).scalar_one_or_none()
     if action is None or action.status != "pending":
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Pending action not found")
     action.status = "cancelled"
-    recommendation = (
-        await db.execute(
-            select(FarmRecommendation).where(
-                FarmRecommendation.pending_action_id == action.id,
-                FarmRecommendation.user_id == current_user["id"],
-            )
-        )
-    ).scalar_one_or_none()
     if recommendation is not None:
         recommendation.status = "dismissed"
         recommendation.resolved_at = local_now_naive()

@@ -5,7 +5,18 @@ import '../services/api_service.dart';
 import '../theme/app_theme.dart';
 
 class NotificationsScreen extends StatefulWidget {
-  const NotificationsScreen({super.key});
+  const NotificationsScreen({
+    super.key,
+    this.isActive = true,
+    this.refreshToken = 0,
+    this.onTaskChanged,
+    this.onUnreadChanged,
+  });
+
+  final bool isActive;
+  final int refreshToken;
+  final VoidCallback? onTaskChanged;
+  final ValueChanged<bool>? onUnreadChanged;
 
   @override
   State<NotificationsScreen> createState() => _NotificationsScreenState();
@@ -19,21 +30,42 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   @override
   void initState() {
     super.initState();
-    _load();
+    _load(markAsRead: widget.isActive);
   }
 
-  Future<void> _load() async {
+  @override
+  void didUpdateWidget(covariant NotificationsScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.refreshToken != widget.refreshToken ||
+        (!oldWidget.isActive && widget.isActive)) {
+      _load(markAsRead: widget.isActive);
+    }
+  }
+
+  Future<void> _load({bool markAsRead = false}) async {
     setState(() {
       _loading = true;
       _error = null;
     });
     try {
       final notifications = await ApiService.getNotifications();
+      var hasUnread = notifications.any(
+        (notification) => notification.readAt == null,
+      );
+      if (hasUnread && markAsRead) {
+        try {
+          await ApiService.markAllNotificationsRead();
+          hasUnread = false;
+        } catch (_) {
+          // The list remains usable; keep the badge until marking succeeds.
+        }
+      }
       if (!mounted) return;
       setState(() {
         _notifications = notifications;
         _loading = false;
       });
+      widget.onUnreadChanged?.call(hasUnread);
     } catch (_) {
       if (!mounted) return;
       setState(() {
@@ -49,7 +81,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
       title: const Text('Thông báo'),
       actions: [
         IconButton(
-          onPressed: _loading ? null : _load,
+          onPressed: _loading ? null : () => _load(markAsRead: widget.isActive),
           tooltip: 'Làm mới',
           icon: const Icon(Icons.refresh_rounded),
         ),
@@ -59,9 +91,12 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
     body: _loading
         ? const Center(child: CircularProgressIndicator())
         : _error != null
-        ? _NotificationError(message: _error!, onRetry: _load)
+        ? _NotificationError(
+            message: _error!,
+            onRetry: () => _load(markAsRead: widget.isActive),
+          )
         : RefreshIndicator(
-            onRefresh: _load,
+            onRefresh: () => _load(markAsRead: widget.isActive),
             child: _notifications.isEmpty
                 ? const _NotificationEmpty()
                 : ListView.separated(
@@ -80,7 +115,8 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
                             recommendation.pendingActionId,
                             confirmed,
                           );
-                          await _load();
+                          if (confirmed) widget.onTaskChanged?.call();
+                          await _load(markAsRead: widget.isActive);
                         },
                       );
                     },

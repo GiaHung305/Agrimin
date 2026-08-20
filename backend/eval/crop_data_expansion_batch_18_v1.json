@@ -1,0 +1,32 @@
+{
+  "version": "crop-data-expansion-batch-18-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn"
+  ],
+  "documents": [
+    {
+      "title": "Khuyến nông Việt Nam - nhận biết sương mai cà chua và quản lý canh tác",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-loai-benh-hai-tren-cay-ca-chua-va-bien-phap-phong-tru-ky-1-17784.html",
+      "source_type": "extension",
+      "author": "Viện Bảo vệ thực vật; Trung tâm Khuyến nông Quốc gia",
+      "format": "html_markers",
+      "start_marker": "Cây cà chua có tên khoa học",
+      "end_marker": "Biện pháp hóa học:",
+      "content_prefix": "Tên cây và phạm vi: cà chua, tomato, Solanum lycopersicum (tên cũ Lycopersicum esculentum); không áp triệu chứng này cho khoai tây hoặc cây khác họ Cà. Lát nguồn chính thống dùng để đối chiếu các dấu hiệu nhìn thấy của sương mai/mốc lá, điều kiện ẩm và biện pháp canh tác. Không kết luận bệnh chỉ từ một ảnh; cần kiểm tra cả hai mặt lá, thân, quả, diễn biến thời tiết và ruộng. Phần thuốc hóa học và liều lượng bị loại khỏi lát bằng chứng này.",
+      "crop_keys": ["tomato"],
+      "required_terms": [
+        "Bệnh sương mai cà chua",
+        "Phytopthora infestans",
+        "mốc trắng",
+        "mưa nhiều ẩm độ cao",
+        "Vệ sinh đồng ruộng"
+      ],
+      "forbidden_terms": [
+        "Ridomil",
+        "Mancozeb",
+        "Fosetyl"
+      ],
+      "min_chars": 1800
+    }
+  ]
+}

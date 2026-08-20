@@ -35,6 +35,22 @@ def route_after_research_analysis(state: AgentState) -> str:
     return "generate"
 
 
+def route_after_pre_guardrail(state: AgentState) -> str:
+    return (
+        "fallback"
+        if state.get("context", {}).get("pre_guardrail_stop", False)
+        else "retrieve"
+    )
+
+
+def route_after_early_guardrail(state: AgentState) -> str:
+    return (
+        "fallback"
+        if state.get("context", {}).get("pre_guardrail_stop", False)
+        else "planner"
+    )
+
+
 def route_after_deep_research(state: AgentState) -> str:
     return (
         "reflection"
@@ -52,6 +68,7 @@ def build_graph(db: AsyncSession):
 
     workflow.add_node("planner", planner_node)
     workflow.add_node("image_quality_guard", image_quality_guard_node)
+    workflow.add_node("early_guardrail", pre_guardrail_node)
     workflow.add_node("pre_guardrail", pre_guardrail_node)
     workflow.add_node("objective_visual_summary", objective_visual_summary_node)
     workflow.add_node("retrieve", retrieve_node)
@@ -70,14 +87,23 @@ def build_graph(db: AsyncSession):
         "image_quality_guard",
         route_after_image_quality,
         {
-            "continue": "planner",
+            "continue": "early_guardrail",
             "summarize": "objective_visual_summary",
             "stop": END,
         },
     )
     workflow.add_edge("objective_visual_summary", "post_guardrail")
+    workflow.add_conditional_edges(
+        "early_guardrail",
+        route_after_early_guardrail,
+        {"fallback": "fallback", "planner": "planner"},
+    )
     workflow.add_edge("planner", "pre_guardrail")
-    workflow.add_edge("pre_guardrail", "retrieve")
+    workflow.add_conditional_edges(
+        "pre_guardrail",
+        route_after_pre_guardrail,
+        {"fallback": "fallback", "retrieve": "retrieve"},
+    )
     workflow.add_edge("retrieve", "research_analysis")
     workflow.add_conditional_edges(
         "research_analysis",

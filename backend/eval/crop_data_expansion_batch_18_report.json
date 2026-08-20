@@ -1,0 +1,24 @@
+{
+  "version": "crop-data-expansion-batch-18-v1",
+  "documents": 1,
+  "sources": 1,
+  "ready": 1,
+  "already_active": 0,
+  "replace_ready": 0,
+  "ingested": 1,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Khuyến nông Việt Nam - nhận biết sương mai cà chua và quản lý canh tác",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-loai-benh-hai-tren-cay-ca-chua-va-bien-phap-phong-tru-ky-1-17784.html",
+      "crop_keys": [
+        "tomato"
+      ],
+      "characters": 3286,
+      "content_sha256": "f9932bfc99837182ae2a6151a2ef6b54b2b584671d3fe9b8c862890af19da583",
+      "source_sha256": "4c073052e5198f29e80f7e631f8ec547d24406bd863518b138f4b64596cd064d",
+      "status": "ingested",
+      "document_id": "00695950-4b4f-43cc-90fd-42f3efe60058"
+    }
+  ]
+}

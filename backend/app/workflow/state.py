@@ -6,6 +6,8 @@ class ResearchCoverageItem(TypedDict):
     covered: bool
     best_score: float
     authoritative: bool
+    freshness: Literal["not_required", "current", "stale", "unknown"]
+    latest_published_date: Optional[str]
     evidence_ids: list[str]
 
 

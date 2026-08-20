@@ -34,6 +34,9 @@ class Conversation(Base):
 
 class Message(Base):
     __tablename__ = "messages"
+    __table_args__ = (
+        Index("ix_messages_conversation_created", "conversation_id", "created_at"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     conversation_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("conversations.id"))
@@ -51,10 +54,9 @@ class FarmProfile(Base):
     __tablename__ = "farm_profiles"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), unique=True, index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), unique=True)
     name: Mapped[str] = mapped_column(String(255), default="Nông trại của tôi")
     province: Mapped[str] = mapped_column(String(100), nullable=True)
-    crop: Mapped[str] = mapped_column(String(100), nullable=True)
     area_ha: Mapped[float] = mapped_column(Float, nullable=True)
     farming_style: Mapped[str] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
@@ -63,25 +65,32 @@ class FarmProfile(Base):
 
 class FarmTask(Base):
     __tablename__ = "farm_tasks"
+    __table_args__ = (
+        Index("ix_farm_tasks_user_due", "user_id", "status", "due_at"),
+        Index("ix_farm_tasks_status_due", "status", "due_at"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     title: Mapped[str] = mapped_column(String(255))
     description: Mapped[str] = mapped_column(Text, nullable=True)
-    due_at: Mapped[datetime] = mapped_column(DateTime, nullable=True, index=True)
-    status: Mapped[str] = mapped_column(String(20), default="open", index=True)
+    due_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
+    status: Mapped[str] = mapped_column(String(20), default="open")
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
     completed_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
 
 class FarmLog(Base):
     __tablename__ = "farm_logs"
+    __table_args__ = (
+        Index("ix_farm_logs_owner_logged", "user_id", "logged_at"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     title: Mapped[str] = mapped_column(String(255))
     content: Mapped[str] = mapped_column(Text)
-    logged_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, index=True)
+    logged_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class FarmPlot(Base):
@@ -220,22 +229,29 @@ class FarmRecommendation(Base):
 
 class PendingAction(Base):
     __tablename__ = "pending_actions"
+    __table_args__ = (
+        Index("ix_pending_actions_owner_status", "user_id", "status"),
+        Index("ix_pending_actions_status_expiry", "status", "expires_at"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     conversation_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("conversations.id"), nullable=True)
-    action_type: Mapped[str] = mapped_column(String(40), index=True)
+    action_type: Mapped[str] = mapped_column(String(40))
     payload: Mapped[dict] = mapped_column(JSON)
-    status: Mapped[str] = mapped_column(String(20), default="pending", index=True)
-    expires_at: Mapped[datetime] = mapped_column(DateTime, index=True)
+    status: Mapped[str] = mapped_column(String(20), default="pending")
+    expires_at: Mapped[datetime] = mapped_column(DateTime)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
 
 class DeviceToken(Base):
     __tablename__ = "device_tokens"
+    __table_args__ = (
+        Index("ix_device_tokens_owner_active", "user_id", "active"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     token: Mapped[str] = mapped_column(String(512), unique=True)
     platform: Mapped[str] = mapped_column(String(30))
     active: Mapped[bool] = mapped_column(Boolean, default=True)
@@ -244,9 +260,12 @@ class DeviceToken(Base):
 
 class Notification(Base):
     __tablename__ = "notifications"
+    __table_args__ = (
+        Index("ix_notifications_owner_created", "user_id", "created_at"),
+    )
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
-    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"), index=True)
+    user_id: Mapped[uuid.UUID] = mapped_column(ForeignKey("users.id"))
     kind: Mapped[str] = mapped_column(String(40))
     title: Mapped[str] = mapped_column(String(255))
     body: Mapped[str] = mapped_column(Text)

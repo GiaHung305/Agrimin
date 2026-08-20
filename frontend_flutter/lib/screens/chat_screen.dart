@@ -8,6 +8,7 @@ import '../services/push_notification_service.dart';
 import '../theme/app_theme.dart';
 import '../widgets/chat_input.dart';
 import '../widgets/message_bubble.dart';
+import '../widgets/status_badge_icon.dart';
 import 'admin_screen.dart';
 import 'farm_profile_screen.dart';
 import 'login_screen.dart';
@@ -15,7 +16,16 @@ import 'notifications_screen.dart';
 import 'tasks_screen.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({
+    super.key,
+    this.onTaskChanged,
+    this.hasUnreadNotifications = false,
+    this.onNotificationsTap,
+  });
+
+  final VoidCallback? onTaskChanged;
+  final bool hasUnreadNotifications;
+  final VoidCallback? onNotificationsTap;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -52,9 +62,30 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _resolveAction(String actionId, bool confirmed) async {
+    final messageIndex = _messages.indexWhere((message) {
+      final response = message['response'] as ChatResponse?;
+      return response?.pendingAction?['id'] == actionId;
+    });
+    final response = messageIndex >= 0
+        ? _messages[messageIndex]['response'] as ChatResponse?
+        : null;
+    final actionType = response?.pendingAction?['type']?.toString();
     try {
       await ApiService.resolveAssistantAction(actionId, confirmed);
       if (mounted) {
+        setState(() {
+          if (messageIndex >= 0) {
+            final current =
+                _messages[messageIndex]['response'] as ChatResponse?;
+            if (current?.pendingAction?['id'] == actionId) {
+              _messages[messageIndex]['response'] = current!
+                  .withoutPendingAction();
+            }
+          }
+        });
+        if (confirmed && actionType == 'create_task') {
+          widget.onTaskChanged?.call();
+        }
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -221,11 +252,26 @@ class _ChatScreenState extends State<ChatScreen> {
         actions: [
           IconButton(
             tooltip: 'Thông báo',
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const NotificationsScreen()),
+            onPressed: () {
+              if (widget.onNotificationsTap != null) {
+                widget.onNotificationsTap!();
+                return;
+              }
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => const NotificationsScreen(isActive: true),
+                ),
+              );
+            },
+            icon: StatusBadgeIcon(
+              icon: Icons.notifications_none_rounded,
+              selectedIcon: Icons.notifications_rounded,
+              showBadge: widget.hasUnreadNotifications,
+              activeSemanticsLabel: 'Có thông báo mới chưa đọc',
+              inactiveSemanticsLabel: 'Không có thông báo mới',
+              badgeKey: const Key('chat-unread-notification-badge'),
             ),
-            icon: const Icon(Icons.notifications_none_rounded),
           ),
           Container(
             margin: const EdgeInsets.only(right: 8),

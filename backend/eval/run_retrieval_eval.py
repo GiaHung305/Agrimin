@@ -18,8 +18,10 @@ from app.core.config import settings
 from app.retrieval.hybrid_search import hybrid_search
 
 
-DEFAULT_DATASET = Path(__file__).with_name("retrieval_dataset_v2.json")
-DEFAULT_BASELINE = Path(__file__).with_name("retrieval_baseline_v2.json")
+DEFAULT_DATASET = Path(__file__).with_name("agriculture_benchmark_v2.json")
+DEFAULT_BASELINE = Path(__file__).with_name(
+    "retrieval_baseline_agriculture_v1.json"
+)
 
 
 def _normalized(value: Any) -> str:
@@ -110,6 +112,7 @@ async def evaluate(dataset_path: Path, top_k: int) -> dict[str, Any]:
                         "chunk_id": result.get("chunk_id"),
                         "title": result.get("title"),
                         "source": result.get("source"),
+                        "published_date": result.get("published_date"),
                         "ranking_strategy": result.get("ranking_strategy"),
                         "fusion_score": result.get("fusion_score"),
                         "rerank_score": result.get("rerank_score"),
@@ -141,8 +144,9 @@ async def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", type=Path, default=DEFAULT_DATASET)
     parser.add_argument("--baseline", type=Path, default=DEFAULT_BASELINE)
-    parser.add_argument("--top-k", type=int, default=5)
+    parser.add_argument("--top-k", type=int, default=3)
     parser.add_argument("--output", type=Path)
+    parser.add_argument("--summary-only", action="store_true")
     args = parser.parse_args()
     result = await evaluate(args.dataset, args.top_k)
     baseline = json.loads(args.baseline.read_text(encoding="utf-8"))
@@ -153,7 +157,18 @@ async def main() -> None:
         args.output.write_text(
             json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8"
         )
-    print(json.dumps(result, ensure_ascii=False, indent=2))
+    printable = (
+        {
+            "dataset_version": result["dataset_version"],
+            "knowledge_base_version": result["knowledge_base_version"],
+            "top_k": result["top_k"],
+            "aggregate": result["aggregate"],
+            "gate": result["gate"],
+        }
+        if args.summary_only
+        else result
+    )
+    print(json.dumps(printable, ensure_ascii=False, indent=2))
     if not result["gate"]["passed"]:
         raise SystemExit(1)
 

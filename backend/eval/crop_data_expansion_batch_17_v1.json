@@ -1,0 +1,57 @@
+{
+  "version": "crop-data-expansion-batch-17-v1",
+  "allowed_domains": ["cgspace.cgiar.org"],
+  "documents": [
+    {
+      "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — quản lý đất",
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "source_type": "international_organization",
+      "author": "CGIAR Initiative on Agroecology",
+      "published_date": "2024-07-01T00:00:00+00:00",
+      "format": "text_markers",
+      "start_marker": "2.1 COMPOST MANURE",
+      "end_marker": "3.1 MULCHING",
+      "content_prefix": "Phạm vi nguồn: thử nghiệm nông sinh thái tại Kiambu và Makueni, Kenya; cần thử nghiệm và hiệu chỉnh trước khi áp dụng ở Việt Nam. Nhóm quản lý đất tập trung tăng chất hữu cơ bằng phân compost và phân chuồng ủ, phối hợp vật liệu khô, vật liệu xanh, phân động vật và đất mặt sạch. Không dùng vật liệu cây bị bệnh hoặc nguồn hữu cơ không rõ an toàn.",
+      "crop_keys": [],
+      "required_terms": ["quản lý đất", "chất hữu cơ", "COMPOST MANURE", "organic material", "animal manure"],
+      "forbidden_terms": ["application rate", "spray schedule"],
+      "min_chars": 5000
+    },
+    {
+      "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — giữ nước",
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "source_type": "international_organization",
+      "author": "CGIAR Initiative on Agroecology",
+      "published_date": "2024-07-01T00:00:00+00:00",
+      "format": "text_markers",
+      "start_marker": "3.1 MULCHING",
+      "end_marker": "4.1 BASIC TECHNIQUES AND TECHNICAL SKILLS",
+      "content_prefix": "Phạm vi nguồn: thử nghiệm nông sinh thái tại Kenya; cần hiệu chỉnh theo đất, mưa, giống và điều kiện Việt Nam. Nhóm quản lý nước dùng che phủ đất và ruộng bậc thang để giữ nước, giảm bốc hơi, tăng thấm, giảm dòng chảy mặt và nâng hiệu quả sử dụng nước. Theo dõi ẩm đất dưới lớp che phủ để điều chỉnh tưới tiết kiệm nước, không sao chép nguyên độ dày hay bố trí thí nghiệm sang mọi ruộng.",
+      "crop_keys": [],
+      "required_terms": ["giữ nước", "tiết kiệm nước", "MULCHING", "conserve soil moisture", "Terraces"],
+      "forbidden_terms": ["application rate", "spray schedule", "pesticide dose"],
+      "min_chars": 3500
+    },
+    {
+      "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — quản lý dịch hại",
+      "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+      "source_type": "international_organization",
+      "author": "CGIAR Initiative on Agroecology",
+      "published_date": "2024-07-01T00:00:00+00:00",
+      "format": "text_markers",
+      "start_marker": "4.1 BASIC TECHNIQUES AND TECHNICAL SKILLS",
+      "end_marker": "4.2 PROCEDURE FOR PREPARING",
+      "exclude_marker_ranges": [
+        {
+          "start_marker": "{ Chemical methods:",
+          "end_marker": "{ Biological control methods:"
+        }
+      ],
+      "content_prefix": "Phạm vi nguồn: các thực hành IPM nông sinh thái được đồng thiết kế tại Kenya; cần đối chiếu dịch hại và hệ sinh thái địa phương trước khi áp dụng. Nhóm IPM kết hợp đa dạng biện pháp canh tác, vật lý và sinh học; ưu tiên luân canh, cây xua đuổi-cây bẫy, vệ sinh, rào-bẫy và bảo tồn thiên địch. Phần phương pháp hóa học đã bị loại khỏi lát dữ liệu này; không tự suy ra thuốc, nồng độ, liều hoặc công thức pha.",
+      "crop_keys": [],
+      "required_terms": ["IPM", "đa dạng", "thiên địch", "crop rotation", "Biological control methods"],
+      "forbidden_terms": ["{ Chemical methods:", "application rate", "mixing ratio", "dosage"],
+      "min_chars": 2500
+    }
+  ]
+}

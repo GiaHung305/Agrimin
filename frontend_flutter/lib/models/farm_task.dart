@@ -14,10 +14,25 @@ class FarmTask {
   });
 
   factory FarmTask.fromJson(Map<String, dynamic> json) => FarmTask(
-        id: json['id'] as String,
-        title: json['title'] as String,
-        description: json['description'] as String?,
-        dueAt: json['due_at'] == null ? null : DateTime.parse(json['due_at'] as String).toLocal(),
-        status: json['status'] as String,
-      );
+    id: json['id'] as String,
+    title: json['title'] as String,
+    description: json['description'] as String?,
+    dueAt: json['due_at'] == null
+        ? null
+        : DateTime.parse(json['due_at'] as String).toLocal(),
+    status: json['status'] as String,
+  );
+
+  FarmTask copyWith({
+    String? title,
+    String? description,
+    DateTime? dueAt,
+    String? status,
+  }) => FarmTask(
+    id: id,
+    title: title ?? this.title,
+    description: description ?? this.description,
+    dueAt: dueAt ?? this.dueAt,
+    status: status ?? this.status,
+  );
 }

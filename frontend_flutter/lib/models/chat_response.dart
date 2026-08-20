@@ -67,6 +67,17 @@ class ChatResponse {
           : null,
     );
   }
+
+  ChatResponse withoutPendingAction() => ChatResponse(
+    answer: answer,
+    citations: citations,
+    confidence: confidence,
+    riskLevel: riskLevel,
+    guardrailStatus: guardrailStatus,
+    trace: trace,
+    conversationId: conversationId,
+    pendingAction: null,
+  );
 }
 
 class ResearchCitation {

@@ -19,7 +19,6 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
   final _formKey = GlobalKey<FormState>();
   final _name = TextEditingController(text: 'Nông trại của tôi');
   final _province = TextEditingController();
-  final _crop = TextEditingController();
   final _area = TextEditingController();
   final _style = TextEditingController();
   bool _loading = true;
@@ -36,7 +35,6 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
   void dispose() {
     _name.dispose();
     _province.dispose();
-    _crop.dispose();
     _area.dispose();
     _style.dispose();
     super.dispose();
@@ -65,7 +63,6 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
   void _fill(FarmProfile profile) {
     _name.text = profile.name;
     _province.text = profile.province ?? '';
-    _crop.text = profile.crop ?? '';
     _area.text = profile.areaHa?.toString() ?? '';
     _style.text = profile.farmingStyle ?? '';
   }
@@ -90,7 +87,6 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
       await ApiService.saveFarmProfile(
         name: _name.text.trim(),
         province: _optional(_province),
-        crop: _optional(_crop),
         areaHa: area,
         farmingStyle: _optional(_style),
       );
@@ -181,22 +177,12 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
                     const _SectionLabel('Canh tác'),
                     const SizedBox(height: 10),
                     TextFormField(
-                      controller: _crop,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Cây trồng chính',
-                        hintText: 'Ví dụ: Sầu riêng, lúa, cà phê',
-                        prefixIcon: Icon(Icons.eco_outlined),
-                      ),
-                    ),
-                    const SizedBox(height: 13),
-                    TextFormField(
                       controller: _area,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
                       ),
                       decoration: const InputDecoration(
-                        labelText: 'Diện tích (ha)',
+                        labelText: 'Tổng diện tích nông trại (ha)',
                         hintText: 'Ví dụ: 2.5',
                         prefixIcon: Icon(Icons.square_foot_outlined),
                       ),

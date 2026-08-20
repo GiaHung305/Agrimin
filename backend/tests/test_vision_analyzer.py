@@ -157,12 +157,30 @@ async def test_leaf_only_pepper_is_downgraded_to_unknown_crop(monkeypatch):
     assert "unknown_crop" in observation.limitations
 
 
-def test_pepper_with_visible_whole_plant_is_not_downgraded():
+def test_pepper_whole_plant_without_reproductive_evidence_is_downgraded():
     observation = vision_analyzer.VisualObservation.model_validate({
         "image_id": "0123456789abcdef",
         "relevance": "agriculture_plant",
         "crop_candidate": "pepper",
         "plant_part": "whole_plant",
+        "visible_symptoms": [],
+        "limitations": ["single_view"],
+        "confidence": 0.9,
+    })
+
+    guarded = vision_analyzer._guard_ambiguous_pepper_crop(observation)
+
+    assert guarded.crop_candidate is None
+    assert guarded.confidence == pytest.approx(0.9)
+    assert "unknown_crop" in guarded.limitations
+
+
+def test_pepper_with_visible_fruit_is_not_downgraded():
+    observation = vision_analyzer.VisualObservation.model_validate({
+        "image_id": "0123456789abcdef",
+        "relevance": "agriculture_plant",
+        "crop_candidate": "pepper",
+        "plant_part": "fruit",
         "visible_symptoms": [],
         "limitations": ["single_view"],
         "confidence": 0.9,

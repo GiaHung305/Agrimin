@@ -5,6 +5,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 
+from app.services.model_gateway import ModelProviderUnavailable
 from app.workflow.nodes import memory_extract
 
 
@@ -70,5 +71,28 @@ async def test_memory_extraction_skips_question_without_user_owned_fact(monkeypa
 
     await memory_extract.memory_extract_node(state, db)
 
+    assert not db.added
+    assert not db.committed
+
+
+@pytest.mark.asyncio
+async def test_memory_extraction_provider_failure_does_not_break_approved_answer(
+    monkeypatch,
+):
+    async def unavailable(_prompt):
+        raise ModelProviderUnavailable("provider unavailable")
+
+    monkeypatch.setattr(memory_extract, "_call_gemini", unavailable)
+    db = FakeSession()
+    state = {
+        "guardrail_status": "pass",
+        "question": "Tôi trồng cà phê ở Đắk Lắk.",
+        "user_id": "00000000-0000-0000-0000-000000000001",
+        "confidence": 0.8,
+    }
+
+    result = await memory_extract.memory_extract_node(state, db)
+
+    assert result is state
     assert not db.added
     assert not db.committed

@@ -4,30 +4,24 @@ from app.retrieval.evidence import is_traceable_active_evidence
 from app.retrieval.source_authority import supports_high_risk, supports_numeric_dosage
 from app.workflow.state import AgentState
 from app.workflow.confidence import compute_confidence, RELEVANT_DOCUMENT_THRESHOLD
+from app.workflow.measurements import extract_numeric_measurements
 from app.workflow.nodes.research_analysis import supports_research_coverage
 
 # Ngưỡng này cần tinh chỉnh sau bằng Golden Dataset (Sprint 6.3).
 RELEVANCE_THRESHOLD = RELEVANT_DOCUMENT_THRESHOLD
 
-_DOSAGE_PATTERN = re.compile(
-    r"(?<!\w)(\d+(?:[.,]\d+)?)\s*(ml|l|mg|g|kg|ppm|%)(?!\w)",
+_CITATION_MARKER_PATTERN = re.compile(r"\[E(\d+)\]", re.IGNORECASE)
+_VISUAL_UNCERTAINTY_PATTERN = re.compile(
+    r"\b(có thể|giả thuyết|chưa đủ|không (?:thể )?kết luận|"
+    r"cần (?:thêm|bổ sung|quan sát))\b",
     re.IGNORECASE,
 )
-_CITATION_MARKER_PATTERN = re.compile(r"\[E(\d+)\]", re.IGNORECASE)
-
-
-def _dosage_claims(text: str | None) -> set[tuple[str, str]]:
-    claims: set[tuple[str, str]] = set()
-    for value, unit in _DOSAGE_PATTERN.findall(text or ""):
-        normalized_value = value.replace(",", ".").lstrip("0") or "0"
-        claims.add((normalized_value, unit.lower()))
-    return claims
 
 
 def _has_supported_dosage(
     state: AgentState, cited_documents: list[dict]
 ) -> bool:
-    answer_claims = _dosage_claims(state.get("draft_answer"))
+    answer_claims = extract_numeric_measurements(state.get("draft_answer"))
     if not answer_claims:
         return True
 
@@ -39,7 +33,9 @@ def _has_supported_dosage(
             continue
         if float(evidence.get("rerank_score") or 0) < RELEVANCE_THRESHOLD:
             continue
-        supported_claims.update(_dosage_claims(evidence.get("content")))
+        supported_claims.update(
+            extract_numeric_measurements(evidence.get("content"))
+        )
     return answer_claims.issubset(supported_claims)
 
 
@@ -97,6 +93,23 @@ async def post_guardrail_node(state: AgentState) -> AgentState:
         state["context"]["guardrail_reason"] = "unsupported_numeric_dosage"
         return state
 
+    if (
+        state.get("risk_level") == "low"
+        and state.get("context", {}).get("deterministic_action_response")
+    ):
+        state["confidence"] = 1.0
+        state["guardrail_status"] = "pass"
+        return state
+
+    if (
+        state.get("visual_observations")
+        and not _VISUAL_UNCERTAINTY_PATTERN.search(state.get("draft_answer") or "")
+    ):
+        state["draft_answer"] += (
+            "\n\nẢnh chỉ hỗ trợ giả thuyết, chưa đủ để kết luận bệnh; cần thêm "
+            "ảnh hai mặt lá và thông tin diễn biến ngoài ruộng."
+        )
+
     state["confidence"] = compute_confidence(
         rerank_scores=[
             float(document.get("rerank_score") or 0.0)
@@ -114,7 +127,10 @@ async def post_guardrail_node(state: AgentState) -> AgentState:
     )
 
     if state["confidence"] < 0.70:
-        state["draft_answer"] += "\n\n(Lưu ý: tôi chưa hoàn toàn chắc chắn, bạn nên hỏi thêm cán bộ khuyến nông.)"
+        state["draft_answer"] += (
+            "\n\n(Lưu ý: mình chưa hoàn toàn chắc chắn; bạn nên kiểm tra thêm "
+            "với cán bộ khuyến nông.)"
+        )
 
     state["guardrail_status"] = "pass"
     return state

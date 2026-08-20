@@ -26,6 +26,7 @@ async def dense_search(query: str, top_k: int = 10) -> list[dict]:
             "source": r.payload.get("source"),
             "source_type": r.payload.get("source_type"),
             "version": r.payload.get("version"),
+            "published_date": r.payload.get("published_date"),
             "document_id": r.payload.get("document_id"),
             "chunk_id": r.payload.get("chunk_id") or str(r.id),
             "chunk_index": r.payload.get("chunk_index"),

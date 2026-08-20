@@ -140,7 +140,6 @@ class ApiService {
   static Future<FarmProfile> saveFarmProfile({
     required String name,
     String? province,
-    String? crop,
     double? areaHa,
     String? farmingStyle,
   }) async {
@@ -154,7 +153,6 @@ class ApiService {
       body: jsonEncode({
         'name': name,
         'province': province,
-        'crop': crop,
         'area_ha': areaHa,
         'farming_style': farmingStyle,
       }),
@@ -182,6 +180,30 @@ class ApiService {
         .toList();
   }
 
+  static Future<int> getUnreadNotificationCount() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/notifications/unread-count"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể tải số thông báo chưa đọc');
+    }
+    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    return (data['count'] as num?)?.toInt() ?? 0;
+  }
+
+  static Future<void> markAllNotificationsRead() async {
+    final token = await AuthService.getToken();
+    final response = await http.post(
+      Uri.parse("$baseUrl/assistant/notifications/read-all"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể đánh dấu thông báo đã đọc');
+    }
+  }
+
   static Future<List<FarmTask>> getTasks() async {
     final token = await AuthService.getToken();
     final response = await http.get(
@@ -195,6 +217,19 @@ class ApiService {
     return data
         .map((item) => FarmTask.fromJson(item as Map<String, dynamic>))
         .toList();
+  }
+
+  static Future<int> getOpenTaskCount() async {
+    final token = await AuthService.getToken();
+    final response = await http.get(
+      Uri.parse("$baseUrl/assistant/tasks/open-count"),
+      headers: {"Authorization": "Bearer $token"},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Không thể tải số công việc đang mở');
+    }
+    final data = jsonDecode(utf8.decode(response.bodyBytes));
+    return (data['count'] as num?)?.toInt() ?? 0;
   }
 
   static Future<FarmTask> updateTask(

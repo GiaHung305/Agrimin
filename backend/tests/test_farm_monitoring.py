@@ -340,6 +340,21 @@ async def test_create_schedule_requires_explicit_consent():
     db.execute.assert_not_awaited()
 
 
+def test_farm_profile_payload_does_not_duplicate_crop_from_seasons():
+    profile = SimpleNamespace(
+        id=uuid.uuid4(),
+        name="Nông trại của tôi",
+        province="Lâm Đồng",
+        area_ha=1.0,
+        farming_style="Normal",
+    )
+
+    payload = assistant._profile_payload(profile)
+
+    assert "crop" not in payload
+    assert payload["province"] == "Lâm Đồng"
+
+
 @pytest.mark.asyncio
 async def test_create_schedule_copies_owned_farm_context():
     profile = SimpleNamespace(
@@ -935,6 +950,46 @@ async def test_worker_persists_observation_prediction_recommendation_and_notice(
 
 
 @pytest.mark.asyncio
+async def test_schedule_failure_rolls_back_its_savepoint_and_retries_later(
+    monkeypatch, caplog
+):
+    class Savepoint:
+        rolled_back = False
+
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, exc_type, _exc, _traceback):
+            self.rolled_back = exc_type is not None
+            return False
+
+    savepoint = Savepoint()
+    session = SimpleNamespace(begin_nested=lambda: savepoint)
+    schedule = SimpleNamespace(
+        id=uuid.uuid4(),
+        last_error_code=None,
+        next_run_at=None,
+    )
+    now = datetime(2026, 8, 17, 8, 0)
+
+    async def fail_after_flush(_session, _schedule, _now):
+        raise RuntimeError("weather provider failed")
+
+    monkeypatch.setattr(worker, "_run_monitoring_schedule", fail_after_flush)
+
+    completed = await worker._run_monitoring_schedule_isolated(
+        session, schedule, now
+    )
+
+    assert completed is False
+    assert savepoint.rolled_back is True
+    assert schedule.last_error_code == "weather_monitoring_unavailable"
+    assert schedule.next_run_at == now + timedelta(minutes=15)
+    assert "weather provider failed" not in caplog.text
+    assert caplog.records[-1].error_type == "RuntimeError"
+
+
+@pytest.mark.asyncio
 async def test_notify_reuses_existing_dedupe_record(monkeypatch):
     existing = SimpleNamespace(id=uuid.uuid4())
     session = SimpleNamespace(
@@ -1142,8 +1197,108 @@ async def test_notification_exposes_owned_pending_recommendation():
     assert response[0]["recommendation"]["pending_action_id"] == str(
         recommendation.pending_action_id
     )
+    assert response[0]["created_at"].tzinfo == timezone.utc
+    assert response[0]["created_at"].hour == 8
+    assert response[0]["read_at"] is None
     statements = [str(call.args[0]) for call in db.execute.await_args_list]
     assert all("user_id" in statement for statement in statements)
+
+
+@pytest.mark.asyncio
+async def test_mark_all_notifications_read_is_scoped_to_current_user():
+    result = SimpleNamespace(rowcount=2)
+    db = SimpleNamespace(
+        execute=AsyncMock(return_value=result),
+        commit=AsyncMock(),
+    )
+
+    response = await assistant.mark_all_notifications_read(
+        db=db,
+        current_user={"id": "user-a"},
+    )
+
+    assert response == {"status": "read", "updated": 2}
+    statement = str(db.execute.await_args.args[0])
+    assert "notifications.user_id" in statement
+    assert "notifications.read_at IS NULL" in statement
+    db.commit.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_unread_notification_count_is_scoped_to_current_user():
+    count_result = SimpleNamespace(scalar_one=lambda: 3)
+    db = SimpleNamespace(execute=AsyncMock(return_value=count_result))
+
+    response = await assistant.unread_notification_count(
+        db=db,
+        current_user={"id": "user-a"},
+    )
+
+    assert response == {"count": 3}
+    statement = str(db.execute.await_args.args[0])
+    assert "notifications.user_id" in statement
+    assert "notifications.read_at IS NULL" in statement
+
+
+@pytest.mark.asyncio
+async def test_open_task_count_is_scoped_to_current_user():
+    count_result = SimpleNamespace(scalar_one=lambda: 4)
+    db = SimpleNamespace(execute=AsyncMock(return_value=count_result))
+
+    response = await assistant.open_task_count(
+        db=db,
+        current_user={"id": "user-a"},
+    )
+
+    assert response == {"count": 4}
+    statement = str(db.execute.await_args.args[0])
+    assert "farm_tasks.user_id" in statement
+    assert "farm_tasks.status" in statement
+
+
+@pytest.mark.asyncio
+async def test_due_task_notification_does_not_complete_task(monkeypatch):
+    now = datetime(2026, 8, 20, 18, 0)
+    task = SimpleNamespace(
+        id=uuid.uuid4(),
+        user_id=uuid.uuid4(),
+        title="Tưới cà chua",
+        due_at=now,
+        status="open",
+    )
+    added = []
+
+    async def flush():
+        for record in added:
+            if getattr(record, "id", None) is None:
+                record.id = uuid.uuid4()
+
+    session = SimpleNamespace(
+        execute=AsyncMock(
+            side_effect=[
+                ScalarsResult([task]),
+                ScalarResult(None),
+                ScalarsResult([]),
+            ]
+        ),
+        add=Mock(side_effect=added.append),
+        flush=AsyncMock(side_effect=flush),
+        commit=AsyncMock(),
+    )
+    monkeypatch.setattr(worker, "local_now_naive", lambda: now)
+    monkeypatch.setattr(
+        worker,
+        "AsyncSessionLocal",
+        lambda: AsyncSessionContext(session),
+    )
+
+    await worker.process_due_tasks_once()
+
+    notice = next(item for item in added if isinstance(item, Notification))
+    assert notice.kind == "task_due"
+    assert notice.body == task.title
+    assert task.status == "open"
+    session.commit.assert_awaited_once()
 
 
 @pytest.mark.asyncio
@@ -1179,7 +1334,7 @@ async def test_confirm_recommendation_creates_task_once_and_audits_acceptance():
 
     db = SimpleNamespace(
         execute=AsyncMock(
-            side_effect=[ScalarResult(action), ScalarResult(recommendation)]
+            side_effect=[ScalarResult(recommendation), ScalarResult(action)]
         ),
         add=Mock(side_effect=add),
         flush=AsyncMock(side_effect=flush),
@@ -1196,6 +1351,8 @@ async def test_confirm_recommendation_creates_task_once_and_audits_acceptance():
     assert recommendation.task_id == task.id
     assert response["record_id"] == str(task.id)
     db.commit.assert_awaited_once()
+    assert "FOR UPDATE" in str(db.execute.await_args_list[0].args[0])
+    assert "FOR UPDATE" in str(db.execute.await_args_list[1].args[0])
 
 
 @pytest.mark.asyncio
@@ -1206,7 +1363,7 @@ async def test_cancel_recommendation_does_not_create_task():
     )
     db = SimpleNamespace(
         execute=AsyncMock(
-            side_effect=[ScalarResult(action), ScalarResult(recommendation)]
+            side_effect=[ScalarResult(recommendation), ScalarResult(action)]
         ),
         commit=AsyncMock(),
     )
@@ -1219,6 +1376,8 @@ async def test_cancel_recommendation_does_not_create_task():
     assert action.status == "cancelled"
     assert recommendation.status == "dismissed"
     db.commit.assert_awaited_once()
+    assert "FOR UPDATE" in str(db.execute.await_args_list[0].args[0])
+    assert "FOR UPDATE" in str(db.execute.await_args_list[1].args[0])
 
 
 @pytest.mark.asyncio
@@ -1247,3 +1406,4 @@ async def test_expiry_sweep_audits_recommendation_and_pending_action():
     assert action.status == "expired"
     statement = str(session.execute.await_args_list[1].args[0])
     assert "pending_actions.user_id" in statement
+    assert "FOR UPDATE" in statement

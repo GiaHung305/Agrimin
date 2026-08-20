@@ -1,8 +1,16 @@
+import hashlib
+import logging
 import uuid
 from datetime import datetime
 
-from qdrant_client.models import PointStruct, Filter, FieldCondition, MatchValue
-from sqlalchemy import select
+from qdrant_client.models import (
+    PointStruct,
+    PointIdsList,
+    Filter,
+    FieldCondition,
+    MatchValue,
+)
+from sqlalchemy import select, text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.qdrant_client import qdrant_client
@@ -18,25 +26,91 @@ from app.retrieval.source_authority import (
     normalize_source_type,
 )
 
+logger = logging.getLogger(__name__)
 
-async def deactivate_old_versions(db: AsyncSession, title: str):
+
+def _document_title_lock_key(title: str) -> int:
+    """Map an exact title to PostgreSQL's signed 64-bit advisory-lock key."""
+    digest = hashlib.sha256(title.encode("utf-8")).digest()[:8]
+    return int.from_bytes(digest, byteorder="big", signed=True)
+
+
+async def _lock_document_title(db: AsyncSession, title: str) -> None:
+    """Serialize active-version replacement, including a title's first insert."""
+    await db.execute(
+        text("SELECT pg_advisory_xact_lock(:lock_key)"),
+        {"lock_key": _document_title_lock_key(title)},
+    )
+
+
+async def _active_documents(db: AsyncSession, title: str) -> list[Document]:
     result = await db.execute(
         select(Document).where(Document.title == title, Document.is_active == True)
     )
-    old_docs = result.scalars().all()
+    return list(result.scalars().all())
 
-    for doc in old_docs:
-        doc.is_active = False
-        await qdrant_client.set_payload(
-            collection_name=COLLECTION_NAME,
-            payload={"is_active": False},
-            points=Filter(
-                must=[FieldCondition(key="document_id", match=MatchValue(value=str(doc.id)))]
-            ),
-        )
 
-    await db.commit()
-    invalidate_bm25_index()
+async def _set_document_active(document_id: str, active: bool) -> None:
+    await qdrant_client.set_payload(
+        collection_name=COLLECTION_NAME,
+        payload={"is_active": active},
+        points=Filter(
+            must=[
+                FieldCondition(
+                    key="document_id",
+                    match=MatchValue(value=document_id),
+                )
+            ]
+        ),
+        wait=True,
+    )
+
+
+async def _set_document_published_date(
+    document_id: str, published_date: datetime | None
+) -> None:
+    await qdrant_client.set_payload(
+        collection_name=COLLECTION_NAME,
+        payload={
+            "published_date": (
+                published_date.isoformat() if published_date else None
+            )
+        },
+        points=Filter(
+            must=[
+                FieldCondition(
+                    key="document_id",
+                    match=MatchValue(value=document_id),
+                )
+            ]
+        ),
+        wait=True,
+    )
+
+
+async def _compensate_failed_ingest(
+    point_ids: list[str], old_documents: list[Document]
+) -> None:
+    if point_ids:
+        try:
+            await qdrant_client.delete(
+                collection_name=COLLECTION_NAME,
+                points_selector=PointIdsList(points=point_ids),
+            )
+        except Exception:
+            logger.error(
+                "Failed to delete inactive Qdrant points after ingest error",
+                exc_info=True,
+            )
+    for old_document in old_documents:
+        try:
+            await _set_document_active(str(old_document.id), True)
+        except Exception:
+            logger.error(
+                "Failed to restore prior Qdrant document after ingest error",
+                extra={"document_id": str(old_document.id)},
+                exc_info=True,
+            )
 
 
 async def ingest_document(
@@ -48,29 +122,36 @@ async def ingest_document(
     author: str = None,
     version: str = None,
     file_key: str = None,
+    published_date: datetime | None = None,
 ):
-    await deactivate_old_versions(db, title)
-
     normalized_source_type = normalize_source_type(source_type)
+    chunks = chunk_text(content)
+    if not chunks:
+        raise ValueError("document produced no chunks")
+    embeddings = await embed_batch(chunks)
+    if len(embeddings) != len(chunks):
+        raise RuntimeError("embedding service returned an incomplete batch")
+
+    await _lock_document_title(db, title)
+    old_docs = await _active_documents(db, title)
+    document_id = uuid.uuid4()
     document = Document(
+        id=document_id,
         title=title,
         source=source,
         source_type=normalized_source_type.value,
         author=author,
         version=version,
-        published_date=datetime.utcnow(),
-        is_active=True,
+        published_date=published_date,
+        is_active=False,
         file_key=file_key,
     )
-    db.add(document)
-    await db.flush()
-
-    chunks = chunk_text(content)
-    embeddings = await embed_batch(chunks)
 
     points = []
+    point_ids: list[str] = []
     for i, (chunk_content, embedding) in enumerate(zip(chunks, embeddings)):
         point_id = str(uuid.uuid4())
+        point_ids.append(point_id)
         points.append(
             PointStruct(
                 id=point_id,
@@ -85,23 +166,71 @@ async def ingest_document(
                     "source_type": normalized_source_type.value,
                     "authority_score": authority_score(normalized_source_type),
                     "version": version,
-                    "is_active": True,
+                    "published_date": (
+                        published_date.isoformat() if published_date else None
+                    ),
+                    "is_active": False,
                     "locator": source,
                 },
             )
         )
-        db.add(
-            DocumentChunk(
-                document_id=document.id,
-                qdrant_point_id=point_id,
-                chunk_index=i,
-                content_preview=chunk_content[:200],
+    try:
+        db.add(document)
+        for i, chunk_content in enumerate(chunks):
+            db.add(
+                DocumentChunk(
+                    document_id=document.id,
+                    qdrant_point_id=point_ids[i],
+                    chunk_index=i,
+                    content_preview=chunk_content[:200],
+                )
             )
+        await db.flush()
+        await qdrant_client.upsert(
+            collection_name=COLLECTION_NAME, points=points, wait=True
         )
-
-    await qdrant_client.upsert(collection_name=COLLECTION_NAME, points=points)
-    await db.commit()
+        for old_document in old_docs:
+            await _set_document_active(str(old_document.id), False)
+            old_document.is_active = False
+        await _set_document_active(str(document.id), True)
+        document.is_active = True
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        await _compensate_failed_ingest(point_ids, old_docs)
+        raise
     invalidate_bm25_index()
     await bump_semantic_cache_corpus_version()
 
     return document
+
+
+async def update_document_published_date(
+    db: AsyncSession,
+    document: Document,
+    published_date: datetime | None,
+) -> None:
+    """Keep relational and vector evidence metadata in sync."""
+    previous_published_date = document.published_date
+    qdrant_updated = False
+    try:
+        await _set_document_published_date(str(document.id), published_date)
+        qdrant_updated = True
+        document.published_date = published_date
+        await db.commit()
+    except Exception:
+        await db.rollback()
+        if qdrant_updated:
+            try:
+                await _set_document_published_date(
+                    str(document.id), previous_published_date
+                )
+            except Exception:
+                logger.error(
+                    "Failed to restore Qdrant published date after database error",
+                    extra={"document_id": str(document.id)},
+                    exc_info=True,
+                )
+        raise
+    invalidate_bm25_index()
+    await bump_semantic_cache_corpus_version()

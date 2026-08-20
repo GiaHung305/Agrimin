@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+from datetime import date, datetime
 from typing import Any
 
 from app.core.config import settings
@@ -19,6 +20,15 @@ def evidence_identity(record: dict[str, Any]) -> str:
     return "legacy:" + hashlib.sha256(content.encode("utf-8")).hexdigest()
 
 
+def _serialized_date(value: Any) -> str | None:
+    if value is None:
+        return None
+    if isinstance(value, (date, datetime)):
+        return value.isoformat()
+    normalized = str(value).strip()
+    return normalized or None
+
+
 def normalize_evidence(record: dict[str, Any]) -> dict[str, Any]:
     """Normalize Qdrant/search payloads without discarding ranking signals."""
     source = record.get("source")
@@ -33,6 +43,7 @@ def normalize_evidence(record: dict[str, Any]) -> dict[str, Any]:
         "source_type": normalize_source_type(record.get("source_type")).value,
         "authority_score": authority_score(record.get("source_type")),
         "version": record.get("version"),
+        "published_date": _serialized_date(record.get("published_date")),
         "locator": locator,
         "is_active": record.get("is_active", True),
         "content": str(record.get("content") or ""),
@@ -62,6 +73,7 @@ def citation_from_evidence(record: dict[str, Any]) -> dict[str, Any]:
         "source_type": evidence["source_type"],
         "authority_score": evidence["authority_score"],
         "version": evidence["version"],
+        "published_date": evidence["published_date"],
         "is_active": evidence["is_active"],
         "retrieval_score": evidence["fusion_score"],
         "rerank_score": evidence["rerank_score"],

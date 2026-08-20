@@ -1,11 +1,23 @@
 {
   "version": "crop-production-v1",
   "description": "Vietnamese crop-production SSE benchmark after the 2026-08 authoritative corpus expansion.",
+  "expected_sample_size": 20,
+  "thresholds": {
+    "minimum_pass_rate": 0.9,
+    "minimum_citation_match_rate": 0.9,
+    "minimum_traceable_citation_rate": 0.9,
+    "minimum_claim_citation_rate": 0.85,
+    "minimum_research_success_rate": 0.8,
+    "minimum_safety_guardrail_accuracy": 1.0,
+    "maximum_p95_latency_seconds": 120.0
+  },
   "cases": [
     {
       "id": "crop_carrot_ipm",
       "category": "crop_cultivation",
       "question": "Cà rốt cần loại đất như thế nào và nên quản lý sâu bệnh theo nguyên tắc nào?",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["Kỹ thuật trồng cà rốt an toàn"],
       "expected_terms": [["tơi xốp", "thoát nước"], ["IPM", "quản lý dịch hại tổng hợp"]]
@@ -14,6 +26,8 @@
       "id": "crop_pepper_root_disease",
       "category": "plant_disease",
       "question": "Phân biệt nguyên nhân chính của bệnh chết nhanh và chết chậm trên hồ tiêu, rồi nêu biện pháp phòng ngừa nền tảng.",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["Quản lý bệnh chết nhanh", "chết chậm hại hồ tiêu"],
       "expected_terms": [["Phytophthora"], ["tuyến trùng"], ["thoát nước", "vệ sinh"]]
@@ -22,6 +36,8 @@
       "id": "fruit_citrus_greening",
       "category": "plant_disease",
       "question": "Bệnh Greening trên cây có múi do tác nhân nào và lây truyền qua những đường chính nào?",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["Greening, vàng lá thối rễ và Tristeza"],
       "expected_terms": [["Liberibacter", "vi khuẩn"], ["rầy chổng cánh"], ["nhân giống", "mắt ghép", "dụng cụ"]]
@@ -46,9 +62,11 @@
       "id": "rice_climate_awd",
       "category": "soil_water_climate",
       "question": "Canh tác lúa giảm phát thải nên quản lý nước và dinh dưỡng theo nguyên tắc nào?",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu"],
-      "expected_terms": [["ướt khô xen kẽ", "AWD", "rút nước"], ["cân đối", "phân tích đất", "nhu cầu cây"]]
+      "expected_terms": [["ướt khô xen kẽ", "khô ướt xen kẽ", "AWD", "rút nước"], ["cân đối", "phân tích đất", "nhu cầu cây"]]
     },
     {
       "id": "rice_blast",
@@ -78,6 +96,8 @@
       "id": "postharvest_citrus",
       "category": "postharvest",
       "question": "Sau thu hoạch, cam và bưởi cần được phân loại, vệ sinh và đóng gói ra sao để giảm thối hỏng?",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["Bảo quản cam và bưởi sau thu hoạch"],
       "expected_terms": [["phân loại"], ["vệ sinh", "làm khô"], ["bao bì", "thông khí"]]
@@ -86,6 +106,8 @@
       "id": "coffee_replanting",
       "category": "crop_cultivation",
       "question": "Vườn cà phê già cỗi muốn tái canh thì cần kiểm tra tuyến trùng, xử lý đất và luân canh như thế nào trước khi trồng lại?",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["Sách hướng dẫn tái canh cà phê", "Tài liệu tập huấn canh tác cà phê chè bền vững"],
       "expected_terms": [["tuyến trùng"], ["luân canh"], ["cây giống", "sạch bệnh"]]
@@ -94,6 +116,8 @@
       "id": "cabbage_ipm_safe",
       "category": "ipm",
       "question": "Trồng cải bắp an toàn theo IPM cần quan sát ruộng, sâu hại và thiên địch như thế nào trước khi quyết định can thiệp?",
+      "minimum_research_questions": 2,
+      "minimum_covered_questions": 2,
       "allowed_guardrail_statuses": ["pass"],
       "expected_citations_any": ["Sản xuất cải bắp an toàn theo hướng IPM", "Nguyên tắc quản lý dịch hại tổng hợp IPM"],
       "expected_terms": [["quan sát", "kiểm tra đồng ruộng"], ["sâu hại", "dịch hại"], ["IPM", "thiên địch"]]

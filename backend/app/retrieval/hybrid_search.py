@@ -7,11 +7,11 @@ from app.retrieval.dense_search import dense_search
 from app.retrieval.bm25_search import bm25_search
 from app.retrieval.evidence import evidence_identity
 from app.retrieval.fusion import reciprocal_rank_fusion
-from app.services.farm_monitoring import VEGETABLE_POLICY_SPECS
+from app.services.farm_monitoring import POLICIES, VEGETABLE_POLICY_SPECS
 from app.services.reranker_client import rerank
 
 
-MAX_RERANK_CANDIDATES = 3
+MAX_RERANK_CANDIDATES = 4
 MAX_RERANK_CHARACTERS = 800
 MAX_BM25_CANDIDATES = 50
 NEGATED_CROP_WINDOW_TOKENS = 4
@@ -30,10 +30,15 @@ def _normalize_crop_text(value: str) -> str:
 _CROP_ALIASES = {
     crop_key: {
         _normalize_crop_text(crop_key.replace("_", " ")),
-        _normalize_crop_text(label),
-        *(_normalize_crop_text(alias) for alias in aliases),
+        _normalize_crop_text(policy.crop_label),
+        *(
+            _normalize_crop_text(alias)
+            for alias in VEGETABLE_POLICY_SPECS.get(
+                crop_key, ("", "", ())
+            )[2]
+        ),
     }
-    for crop_key, (label, _, aliases) in VEGETABLE_POLICY_SPECS.items()
+    for crop_key, policy in POLICIES.items()
 }
 
 _TOPIC_ALIASES = {
@@ -78,16 +83,36 @@ def _is_negated_crop(tokens: list[str], crop_position: int) -> bool:
     return False
 
 
+def _maximal_crop_phrase_matches(
+    tokens: list[str],
+) -> list[tuple[str, int, int]]:
+    """Prefer the longest crop alias when crop names overlap."""
+    matches = [
+        (crop_key, position, len(alias.split()))
+        for crop_key, aliases in _CROP_ALIASES.items()
+        for alias in aliases
+        for position in _phrase_positions(tokens, alias)
+    ]
+    return [
+        match
+        for match in matches
+        if not any(
+            other_key != match[0]
+            and other_width > match[2]
+            and other_start <= match[1]
+            and match[1] + match[2] <= other_start + other_width
+            for other_key, other_start, other_width in matches
+        )
+    ]
+
+
 def _query_crop_intent(query: str) -> tuple[set[str], set[str]]:
     tokens = _normalize_crop_text(query).split()
     positive: set[str] = set()
     negative: set[str] = set()
-    for crop_key, aliases in _CROP_ALIASES.items():
-        positions = {
-            position
-            for alias in aliases
-            for position in _phrase_positions(tokens, alias)
-        }
+    matches = _maximal_crop_phrase_matches(tokens)
+    for crop_key in _CROP_ALIASES:
+        positions = {position for key, position, _ in matches if key == crop_key}
         if not positions:
             continue
         if any(not _is_negated_crop(tokens, position) for position in positions):
@@ -98,12 +123,35 @@ def _query_crop_intent(query: str) -> tuple[set[str], set[str]]:
 
 
 def _title_crop_keys(title: str) -> set[str]:
-    padded_title = f" {_normalize_crop_text(title)} "
-    return {
-        crop_key
-        for crop_key, aliases in _CROP_ALIASES.items()
-        if any(f" {alias} " in padded_title for alias in aliases if alias)
-    }
+    tokens = _normalize_crop_text(title).split()
+    return {crop_key for crop_key, _, _ in _maximal_crop_phrase_matches(tokens)}
+
+
+def crop_keys_for_text(value: str) -> set[str]:
+    """Return positive canonical crop keys explicitly named in text."""
+    positive, _ = _query_crop_intent(value)
+    return positive
+
+
+def filter_conflicting_crop_evidence(
+    query: str, documents: list
+) -> list:
+    """Drop evidence whose title explicitly names a different crop.
+
+    Generic multi-crop documents remain eligible. This strict filter is used
+    for image-grounded queries so a visually identified lettuce cannot cite a
+    document specifically about artichoke, chili, or another crop.
+    """
+    query_crops = crop_keys_for_text(query)
+    if not query_crops:
+        return documents
+    filtered = []
+    for item in documents:
+        document = item[0] if isinstance(item, tuple) else item
+        title_crops = _title_crop_keys(str(document.get("title") or ""))
+        if not title_crops or title_crops & query_crops:
+            filtered.append(item)
+    return filtered
 
 
 def _topic_keys(value: str) -> set[str]:
@@ -263,6 +311,9 @@ async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
     ranked, topic_intent_applied = _apply_title_topic_intent(query, ranked)
     if topic_intent_applied:
         strategy = f"{strategy}_topic_intent"
+
+    if "quan sat thi giac" in _normalize_crop_text(query):
+        ranked = filter_conflicting_crop_evidence(query, ranked)
 
     return [
         {**doc, "rerank_score": float(score), "ranking_strategy": strategy}

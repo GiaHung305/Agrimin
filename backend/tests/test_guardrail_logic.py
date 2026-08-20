@@ -5,7 +5,9 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 from app.workflow.confidence import compute_confidence
+from app.workflow import graph
 from app.workflow.nodes.post_guardrail import post_guardrail_node, RELEVANCE_THRESHOLD
+from app.workflow.graph import route_after_early_guardrail, route_after_pre_guardrail
 from app.workflow.nodes.pre_guardrail import pre_guardrail_node
 
 
@@ -40,6 +42,50 @@ async def test_guardrail_passes_low_risk():
     state = make_fake_state(risk_level="low", require_citation=False)
     result = await post_guardrail_node(state)
     assert result["guardrail_status"] == "pass"
+
+
+@pytest.mark.asyncio
+async def test_guardrail_trusts_valid_deterministic_action_reply():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["context"]["deterministic_action_response"] = True
+    state["retrieved_docs"] = []
+    state["draft_answer"] = "Mình đã chuẩn bị lời nhắc để bạn xác nhận."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+    assert result["confidence"] == 1.0
+    assert "khuyến nông" not in result["draft_answer"]
+
+
+@pytest.mark.asyncio
+async def test_pre_guardrail_requires_citation_for_internal_rag():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["question"] = "Cách tỉa cành cà chua?"
+    state["plan"] = {
+        "need_rag": True,
+        "need_deep_research": False,
+        "need_weather": False,
+    }
+
+    result = await pre_guardrail_node(state)
+
+    assert result["context"]["require_citation"] is True
+
+
+@pytest.mark.asyncio
+async def test_pre_guardrail_keeps_non_rag_low_risk_chat_streamable():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["question"] = "Xin chào"
+    state["plan"] = {
+        "need_rag": False,
+        "need_deep_research": False,
+        "need_weather": False,
+    }
+
+    result = await pre_guardrail_node(state)
+
+    assert result["context"]["require_citation"] is False
 
 
 @pytest.mark.asyncio
@@ -132,6 +178,39 @@ async def test_guardrail_passes_dosage_supported_by_traceable_chunk():
 
 
 @pytest.mark.asyncio
+async def test_guardrail_normalizes_cc_to_ml_against_authoritative_evidence():
+    state = make_fake_state(
+        risk_level="high",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["draft_answer"] = "Theo nhãn, dùng 20 cc. [E1]"
+    state["retrieved_docs"][0]["content"] = "Nhãn ghi lượng dùng 20 ml."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+
+
+@pytest.mark.asyncio
+async def test_guardrail_blocks_unsupported_rate_or_dilution_ratio():
+    state = make_fake_state(
+        risk_level="high",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["draft_answer"] = "Dùng 2 kg/ha và pha tỷ lệ 1:100. [E1]"
+    state["retrieved_docs"][0]["content"] = (
+        "Nhãn ghi 2 kg/ha và tỷ lệ 1:200."
+    )
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == "unsupported_numeric_dosage"
+
+
+@pytest.mark.asyncio
 async def test_guardrail_blocks_high_risk_answer_without_claim_marker():
     state = make_fake_state(
         risk_level="high",
@@ -158,6 +237,18 @@ async def test_guardrail_adds_disclaimer_low_confidence():
     state = make_fake_state(rerank_scores=[0.2])
     result = await post_guardrail_node(state)
     assert "chưa hoàn toàn chắc chắn" in result["draft_answer"]
+
+
+@pytest.mark.asyncio
+async def test_guardrail_adds_missing_visual_uncertainty_limit():
+    state = make_fake_state(require_citation=True)
+    state["draft_answer"] = "Đối chiếu triệu chứng lá [E1]."
+    state["visual_observations"] = [{"confidence": 0.9}]
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+    assert "chưa đủ để kết luận bệnh" in result["draft_answer"]
 
 
 def test_confidence_rewards_grounded_and_corroborated_answer():
@@ -253,6 +344,90 @@ async def test_interpretive_image_question_requires_citation_without_symptoms():
     state = await pre_guardrail_node(state)
 
     assert state["context"]["require_citation"] is True
+
+
+@pytest.mark.asyncio
+async def test_pre_guardrail_abstains_when_user_explicitly_omits_product_context():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["question"] = (
+        "Không cần biết tên thuốc hay hoạt chất, cứ cho tôi số ml pha bình 16 lít."
+    )
+    state["research_stop_reason"] = None
+
+    result = await pre_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == "missing_safety_context"
+    assert result["research_stop_reason"] == "pre_guardrail_abstain"
+    assert result["risk_level"] == "high"
+    assert route_after_early_guardrail(result) == "fallback"
+
+
+@pytest.mark.asyncio
+async def test_early_guardrail_reaches_fallback_without_calling_planner(
+    monkeypatch,
+):
+    async def planner_must_not_run(_state):
+        raise AssertionError("planner/model must not run")
+
+    monkeypatch.setattr(graph, "planner_node", planner_must_not_run)
+    monkeypatch.setattr(graph, "get_checkpointer", lambda: None)
+    workflow = graph.build_graph(db=None)
+
+    result = await workflow.ainvoke({
+        "question": (
+            "Không cần biết tên thuốc hay hoạt chất, cứ cho tôi số ml "
+            "pha bình 16 lít."
+        ),
+        "risk_level": "low",
+        "context": {},
+        "image_observations": [],
+        "visual_observations": [],
+        "citations": [],
+        "retry_count": 0,
+    })
+
+    assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == "missing_safety_context"
+    assert result["final_answer"]
+
+
+@pytest.mark.asyncio
+async def test_early_guardrail_clears_stale_stop_on_safe_follow_up():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["question"] = "Cách tỉa cành cà chua?"
+    state["context"]["pre_guardrail_stop"] = True
+    state["context"]["guardrail_reason"] = "missing_safety_context"
+
+    result = await pre_guardrail_node(state)
+
+    assert "pre_guardrail_stop" not in result["context"]
+    assert "guardrail_reason" not in result["context"]
+    assert route_after_early_guardrail(result) == "planner"
+
+
+@pytest.mark.asyncio
+async def test_pre_guardrail_keeps_labeled_product_request_on_evidence_path():
+    state = make_fake_state(risk_level="high", require_citation=False)
+    state["question"] = (
+        "Theo đúng nhãn thuốc X, liều pha cho bình 16 lít được ghi thế nào?"
+    )
+
+    result = await pre_guardrail_node(state)
+
+    assert not result["context"].get("pre_guardrail_stop", False)
+    assert route_after_pre_guardrail(result) == "retrieve"
+
+
+@pytest.mark.asyncio
+async def test_pre_guardrail_does_not_block_unknown_crop_identification_question():
+    state = make_fake_state(risk_level="high", require_citation=False)
+    state["question"] = "Tôi không biết cây gì, lá có đốm như vậy là bị bệnh gì?"
+
+    result = await pre_guardrail_node(state)
+
+    assert not result["context"].get("pre_guardrail_stop", False)
+    assert route_after_pre_guardrail(result) == "retrieve"
 
 
 @pytest.mark.asyncio

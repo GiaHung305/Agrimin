@@ -28,8 +28,8 @@
     ]
   },
   "inventory": {
-    "active_sources": 123,
-    "classified_active_sources": 123,
+    "active_sources": 125,
+    "classified_active_sources": 125,
     "unclassified_active_sources": [],
     "registered_sources_not_active": [],
     "source_type_mismatches": []
@@ -53,7 +53,7 @@
       "label": "rau dền",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -96,7 +96,7 @@
       "label": "atisô",
       "mode": "stem_flower_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -139,7 +139,7 @@
       "label": "măng tây",
       "mode": "stem_flower_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -183,7 +183,7 @@
       "label": "chuối",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -225,7 +225,7 @@
       "label": "húng quế",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -269,7 +269,7 @@
       "label": "củ dền",
       "mode": "root_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -312,7 +312,7 @@
       "label": "ớt chuông",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -354,7 +354,7 @@
       "label": "khổ qua",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -398,7 +398,7 @@
       "label": "cải thìa",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -441,7 +441,7 @@
       "label": "bầu",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -485,7 +485,7 @@
       "label": "bông cải xanh",
       "mode": "brassica_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -528,7 +528,7 @@
       "label": "cải Brussels",
       "mode": "brassica_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -571,7 +571,7 @@
       "label": "bắp cải",
       "mode": "brassica_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -615,7 +615,7 @@
       "label": "cà rốt",
       "mode": "root_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -659,7 +659,7 @@
       "label": "sắn",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -699,7 +699,7 @@
       "label": "bông cải trắng",
       "mode": "brassica_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -742,7 +742,7 @@
       "label": "cần tây",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -785,7 +785,7 @@
       "label": "cải cầu vồng",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -828,7 +828,7 @@
       "label": "su su",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -871,7 +871,7 @@
       "label": "ớt",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -914,7 +914,7 @@
       "label": "cải thảo",
       "mode": "brassica_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -957,7 +957,7 @@
       "label": "hẹ",
       "mode": "allium_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1001,7 +1001,7 @@
       "label": "cải ngọt",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -1045,7 +1045,7 @@
       "label": "cải cúc",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1088,7 +1088,7 @@
       "label": "cây có múi",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -1133,7 +1133,7 @@
       "label": "cà phê",
       "mode": "heat_and_moisture",
       "is_vegetable": false,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 4,
       "topics_covered": [
         "climate_resilience",
@@ -1176,7 +1176,7 @@
       "label": "rau mùi",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1220,7 +1220,7 @@
       "label": "dưa leo",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -1264,7 +1264,7 @@
       "label": "ngò gai",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1307,7 +1307,7 @@
       "label": "thì là",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -1351,7 +1351,7 @@
       "label": "thanh long",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1393,7 +1393,7 @@
       "label": "sầu riêng",
       "mode": "moisture",
       "is_vegetable": false,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -1437,7 +1437,7 @@
       "label": "cà tím",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1480,7 +1480,7 @@
       "label": "diếp cá",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1524,7 +1524,7 @@
       "label": "riềng",
       "mode": "rhizome_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1568,7 +1568,7 @@
       "label": "tỏi",
       "mode": "allium_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1611,7 +1611,7 @@
       "label": "gừng",
       "mode": "rhizome_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1655,7 +1655,7 @@
       "label": "đậu cô ve",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1698,7 +1698,7 @@
       "label": "củ đậu",
       "mode": "root_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1741,7 +1741,7 @@
       "label": "rau đay",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1785,7 +1785,7 @@
       "label": "cải xoăn",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1828,7 +1828,7 @@
       "label": "rau ngót",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -1870,7 +1870,7 @@
       "label": "su hào",
       "mode": "brassica_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1913,7 +1913,7 @@
       "label": "tỏi tây",
       "mode": "allium_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1956,7 +1956,7 @@
       "label": "sả",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -1999,7 +1999,7 @@
       "label": "xà lách",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2042,7 +2042,7 @@
       "label": "củ sen",
       "mode": "root_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2085,7 +2085,7 @@
       "label": "mướp",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2128,7 +2128,7 @@
       "label": "ngô",
       "mode": "heat_and_moisture",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2172,7 +2172,7 @@
       "label": "mồng tơi",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2215,7 +2215,7 @@
       "label": "xoài",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2260,7 +2260,7 @@
       "label": "kinh giới",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2304,7 +2304,7 @@
       "label": "dưa lưới",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2347,7 +2347,7 @@
       "label": "húng lủi",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2391,7 +2391,7 @@
       "label": "đậu xanh",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -2434,7 +2434,7 @@
       "label": "cải xanh",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2478,7 +2478,7 @@
       "label": "đậu bắp",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2521,7 +2521,7 @@
       "label": "hành tây",
       "mode": "allium_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2564,7 +2564,7 @@
       "label": "ngò tây",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2608,7 +2608,7 @@
       "label": "đậu Hà Lan",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2650,7 +2650,7 @@
       "label": "đậu phộng",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2692,7 +2692,7 @@
       "label": "rau má",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2736,7 +2736,7 @@
       "label": "hồ tiêu",
       "mode": "moisture",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2779,7 +2779,7 @@
       "label": "tía tô",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2822,7 +2822,7 @@
       "label": "dứa",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2865,7 +2865,7 @@
       "label": "khoai tây",
       "mode": "tuber_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2908,7 +2908,7 @@
       "label": "bí đỏ",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2951,7 +2951,7 @@
       "label": "rau sam",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -2994,7 +2994,7 @@
       "label": "củ cải trắng",
       "mode": "root_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3037,7 +3037,7 @@
       "label": "lúa",
       "mode": "rice",
       "is_vegetable": false,
-      "evidence_sources": 11,
+      "evidence_sources": 12,
       "crop_specific_sources": 7,
       "topics_covered": [
         "climate_resilience",
@@ -3080,7 +3080,7 @@
       "label": "hành tím",
       "mode": "allium_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3123,7 +3123,7 @@
       "label": "đậu nành",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3166,7 +3166,7 @@
       "label": "cải bó xôi",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3209,7 +3209,7 @@
       "label": "hành lá",
       "mode": "allium_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3252,7 +3252,7 @@
       "label": "ngô ngọt",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3295,7 +3295,7 @@
       "label": "khoai lang",
       "mode": "tuber_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3338,7 +3338,7 @@
       "label": "khoai môn",
       "mode": "tuber_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3382,7 +3382,7 @@
       "label": "dọc mùng",
       "mode": "stem_flower_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3425,8 +3425,8 @@
       "label": "cà chua",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 6,
-      "crop_specific_sources": 2,
+      "evidence_sources": 8,
+      "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
         "cultivation",
@@ -3439,11 +3439,11 @@
       "topic_gaps": [],
       "stage_specific_covered": [
         "development",
+        "late_season",
         "mid_season"
       ],
       "stage_specific_gaps": [
-        "initial",
-        "late_season"
+        "initial"
       ],
       "region_specific_covered": [
         "northern_mountains",
@@ -3468,7 +3468,7 @@
       "label": "nghệ",
       "mode": "rhizome_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3512,7 +3512,7 @@
       "label": "củ cải tròn",
       "mode": "root_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3555,7 +3555,7 @@
       "label": "rau răm",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3599,7 +3599,7 @@
       "label": "rau muống",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 6,
+      "evidence_sources": 7,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3643,7 +3643,7 @@
       "label": "cải xoong",
       "mode": "leafy_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3686,7 +3686,7 @@
       "label": "dưa hấu",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3728,7 +3728,7 @@
       "label": "lá lốt",
       "mode": "herb_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3771,7 +3771,7 @@
       "label": "đậu rồng",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3814,7 +3814,7 @@
       "label": "bí đao",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3857,7 +3857,7 @@
       "label": "khoai từ",
       "mode": "tuber_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -3901,7 +3901,7 @@
       "label": "đậu đũa",
       "mode": "legume_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
+      "evidence_sources": 9,
       "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
@@ -3944,7 +3944,7 @@
       "label": "bí ngòi",
       "mode": "cucurbit_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 7,
+      "evidence_sources": 8,
       "crop_specific_sources": 2,
       "topics_covered": [
         "climate_resilience",
@@ -5629,11 +5629,10 @@
       "priority": "P2",
       "crop_key": "tomato",
       "crop_label": "cà chua",
-      "crop_specific_sources": 2,
+      "crop_specific_sources": 3,
       "topic_gaps": [],
       "stage_gaps": [
-        "initial",
-        "late_season"
+        "initial"
       ],
       "region_gaps": [
         "north_central_coast",

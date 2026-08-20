@@ -4,6 +4,7 @@ from datetime import datetime, time, timedelta, timezone
 
 from sqlalchemy import select
 
+from app.core.config import settings
 from app.core.db import AsyncSessionLocal
 from app.repository.models import (
     CropSeason,
@@ -131,12 +132,14 @@ async def process_push_deliveries_once() -> None:
                 continue
             try:
                 delivered = await send_push(device.token, notice.title, notice.body)
-            except Exception:
+            except Exception as exc:
                 delivered = False
                 logger.warning(
                     "Push delivery attempt raised an exception",
-                    extra={"delivery_id": str(delivery.id)},
-                    exc_info=True,
+                    extra={
+                        "delivery_id": str(delivery.id),
+                        "error_type": type(exc).__name__,
+                    },
                 )
             if delivered:
                 delivery.status = "delivered"
@@ -170,11 +173,13 @@ async def _expire_recommendations(session, now) -> int:
             continue
         action = (
             await session.execute(
-                select(PendingAction).where(
+                select(PendingAction)
+                .where(
                     PendingAction.id == recommendation.pending_action_id,
                     PendingAction.user_id == recommendation.user_id,
                     PendingAction.status == "pending",
                 )
+                .with_for_update()
             )
         ).scalar_one_or_none()
         if action is not None:
@@ -353,13 +358,55 @@ async def _run_monitoring_schedule(session, schedule, now) -> None:
     schedule.last_error_code = None
 
 
-async def run_reminders_once():
+async def _run_monitoring_schedule_isolated(session, schedule, now) -> bool:
+    """Run one farm schedule atomically without poisoning the whole cycle."""
+    try:
+        async with session.begin_nested():
+            await _run_monitoring_schedule(session, schedule, now)
+        return True
+    except Exception as exc:
+        # The savepoint rolls back any observation/prediction/recommendation
+        # flushed before the failure. Retry only this schedule later.
+        schedule.last_error_code = "weather_monitoring_unavailable"
+        schedule.next_run_at = now + timedelta(minutes=15)
+        logger.warning(
+            "Farm monitoring schedule failed",
+            extra={
+                "schedule_id": str(schedule.id),
+                "error_type": type(exc).__name__,
+            },
+        )
+        return False
+
+
+async def process_due_tasks_once() -> None:
+    now = local_now_naive()
+    async with AsyncSessionLocal() as session:
+        tasks = (
+            await session.execute(
+                select(FarmTask)
+                .where(FarmTask.status == "open", FarmTask.due_at <= now)
+                .order_by(FarmTask.due_at.asc())
+                .limit(100)
+                .with_for_update(skip_locked=True)
+            )
+        ).scalars().all()
+        for task in tasks:
+            await _notify(
+                session,
+                task.user_id,
+                "task_due",
+                "Việc cần làm",
+                task.title,
+                f"task:{task.id}:due",
+            )
+        await session.commit()
+
+
+async def process_monitoring_schedules_once() -> None:
     now = local_now_naive()
     async with AsyncSessionLocal() as session:
         await _expire_recommendations(session, now)
-        tasks = (await session.execute(select(FarmTask).where(FarmTask.status == "open", FarmTask.due_at <= now))).scalars().all()
-        for task in tasks:
-            await _notify(session, task.user_id, "task_due", "Việc cần làm", task.title, f"task:{task.id}:due")
         schedules = (
             await session.execute(
                 select(FarmMonitoringSchedule)
@@ -378,32 +425,40 @@ async def run_reminders_once():
             )
         ).scalars().all()
         for schedule in schedules:
-            try:
-                await _run_monitoring_schedule(session, schedule, now)
-            except Exception:
-                # Weather is optional. Retry the schedule later without
-                # starving due-task reminders or other farms.
-                schedule.last_error_code = "weather_monitoring_unavailable"
-                schedule.next_run_at = now + timedelta(minutes=15)
-                logger.warning(
-                    "Farm monitoring schedule failed",
-                    extra={"schedule_id": str(schedule.id)},
-                    exc_info=True,
-                )
+            await _run_monitoring_schedule_isolated(session, schedule, now)
         await session.commit()
 
 
-async def main():
+async def run_reminders_once() -> None:
+    """Run one complete pass for diagnostics and backwards compatibility."""
+    await process_due_tasks_once()
+    await process_monitoring_schedules_once()
+
+
+async def _run_periodically(operation, error_message: str) -> None:
     while True:
         try:
-            await run_reminders_once()
+            await operation()
         except Exception:
-            logger.exception("Assistant reminder cycle failed")
-        try:
-            await process_push_deliveries_once()
-        except Exception:
-            logger.exception("Push delivery cycle failed")
-        await asyncio.sleep(15 * 60)
+            logger.exception(error_message)
+        await asyncio.sleep(settings.assistant_worker_poll_seconds)
+
+
+async def main():
+    await asyncio.gather(
+        _run_periodically(
+            process_due_tasks_once,
+            "Task reminder cycle failed",
+        ),
+        _run_periodically(
+            process_monitoring_schedules_once,
+            "Farm monitoring cycle failed",
+        ),
+        _run_periodically(
+            process_push_deliveries_once,
+            "Push delivery cycle failed",
+        ),
+    )
 
 
 if __name__ == "__main__":

@@ -32,6 +32,19 @@ class _ChatInputState extends State<ChatInput> {
   bool _deepResearch = false;
 
   @override
+  void didUpdateWidget(covariant ChatInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Disabling TextField during an SSE request makes Flutter Web drop focus.
+    // Restore it when the request finishes so the next prompt can be typed
+    // without refreshing the page.
+    if (oldWidget.isLoading && !widget.isLoading) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _focusNode.requestFocus();
+      });
+    }
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
@@ -189,7 +202,12 @@ class _ChatInputState extends State<ChatInput> {
                     maxLines: 4,
                     textCapitalization: TextCapitalization.sentences,
                     onSubmitted: (_) => _handleSend(),
-                    enabled: !widget.isLoading,
+                    // Keep the field enabled on Flutter Web. Toggling
+                    // TextField.enabled around an SSE request can leave the
+                    // browser text input connection unusable after the first
+                    // message. Sending is still guarded in _handleSend.
+                    enabled: true,
+                    onTap: () => FocusScope.of(context).requestFocus(_focusNode),
                     decoration: const InputDecoration(
                       hintText: 'Hỏi hoặc gửi ảnh cây trồng…',
                       prefixIcon: Icon(

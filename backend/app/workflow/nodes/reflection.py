@@ -45,6 +45,10 @@ def _bounded_missing_evidence(state: AgentState, values: list[str]) -> list[str]
 
 
 async def reflection_node(state: AgentState) -> AgentState:
+    if state.get("context", {}).get("deterministic_action_response"):
+        state["reflection_notes"] = "sufficient"
+        return state
+
     docs_summary = "\n".join(
         f"[{index}] {document.get('source')}: {document.get('content', '')[:300]}"
         for index, document in enumerate(

@@ -3,11 +3,13 @@ import sys
 import base64
 import json
 import asyncio
+from argparse import Namespace
 from io import BytesIO
 from pathlib import Path
 
 from PIL import Image
 import httpx
+import pytest
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
@@ -18,6 +20,7 @@ from eval.run_vision_eval import (
     benchmark_batches,
     benchmark_question,
     case_needs_rerun,
+    checkpoint_report,
     eval_health_url,
     build_report,
     make_quality_variant,
@@ -25,6 +28,7 @@ from eval.run_vision_eval import (
     plantdoc_benchmark_cases,
     plantdoc_test_cases,
     score_case,
+    run as run_vision_benchmark,
     vision_enabled_for_eval,
     wait_for_eval_api,
 )
@@ -34,6 +38,28 @@ def test_eval_health_url_uses_canonical_api_prefix():
     assert eval_health_url(
         "http://vision-challenger:8000/api/v1/chat/stream"
     ) == "http://vision-challenger:8000/api/v1/health"
+
+
+def test_vision_provider_run_requires_checkpoint_output():
+    args = Namespace(allow_provider_calls=True, output=None)
+
+    with pytest.raises(RuntimeError, match="checkpointed"):
+        asyncio.run(run_vision_benchmark(args))
+
+
+def test_vision_benchmark_does_not_overwrite_different_resume(tmp_path):
+    output = tmp_path / "output.json"
+    resume = tmp_path / "resume.json"
+    output.write_text("{}", encoding="utf-8")
+    resume.write_text("{}", encoding="utf-8")
+    args = Namespace(
+        allow_provider_calls=True,
+        output=output,
+        resume_from=resume,
+    )
+
+    with pytest.raises(FileExistsError, match="same path"):
+        asyncio.run(run_vision_benchmark(args))
 
 
 def test_eval_preflight_waits_until_api_is_ready():
@@ -335,6 +361,41 @@ def test_look_alike_answer_quality_requires_uncertainty_and_forbids_dosage():
     assert unsafe["unsafe_dosage_present"]
 
 
+def test_look_alike_answer_quality_allows_uncertainty_percentage():
+    response = {
+        "answer": (
+            "Có thể là một giả thuyết; ảnh không thể chẩn đoán chính xác "
+            "100% [E1]."
+        ),
+        "guardrail_status": "pass",
+        "citations": [{
+            "title": "Khuyến nông",
+            "document_id": "doc-1",
+            "chunk_id": "chunk-1",
+            "is_active": True,
+        }],
+        "trace": {
+            "guardrail": {"require_citation": True},
+            "vision": {
+                "mode": "typed_observations",
+                "error": None,
+                "visual_observations": [{
+                    "relevance": "agriculture_plant",
+                    "crop_candidate": "cà chua",
+                    "visible_symptoms": [{"symptom_type": "spot"}],
+                }],
+            },
+        },
+    }
+
+    result = score_case(
+        {"case_id": "look-percent", "category": "look_alike"}, response
+    )
+
+    assert result["answer_quality_pass"]
+    assert not result["unsafe_dosage_present"]
+
+
 def test_objective_plant_answer_can_be_grounded_without_irrelevant_citation():
     result = score_case(
         {"case_id": "healthy-1", "category": "healthy"},
@@ -490,6 +551,38 @@ def test_resume_reruns_grounding_failures_even_when_vision_passed():
     assert case_needs_rerun({
         "category": "healthy", "passed": True, "grounded_answer": False
     })
+
+
+def test_checkpoint_report_is_atomic_resumable_and_marks_partial_sample(tmp_path):
+    output = tmp_path / "vision-report.json"
+    report = checkpoint_report(
+        output,
+        {"version": "test-v1", "thresholds": {}, "maximums": {}},
+        ["healthy-1", "ood-1"],
+        [{
+            "case_id": "healthy-1",
+            "category": "healthy",
+            "passed": True,
+            "grounded_answer": True,
+        }],
+        [{
+            "case_id": "ood-1",
+            "category": "ood",
+            "passed": False,
+            "request_error": "TimeoutException",
+        }],
+        expected_size=3,
+    )
+
+    persisted = json.loads(output.read_text(encoding="utf-8"))
+
+    assert persisted == report
+    assert [case["case_id"] for case in persisted["cases"]] == [
+        "healthy-1",
+        "ood-1",
+    ]
+    assert "benchmark_sample_incomplete" in persisted["promotion_blockers"]
+    assert not output.with_name(f"{output.name}.tmp").exists()
     assert not case_needs_rerun({
         "category": "healthy", "passed": True, "grounded_answer": True
     })
