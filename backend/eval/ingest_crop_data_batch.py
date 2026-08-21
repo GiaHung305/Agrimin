@@ -25,7 +25,7 @@ from sqlalchemy import select
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import AsyncSessionLocal
-from app.repository.models import Document
+from app.persistence.models import Document
 from app.retrieval.source_authority import SourceType, normalize_source_type
 from app.services.farm_monitoring import POLICIES
 from app.services.ingest_service import (

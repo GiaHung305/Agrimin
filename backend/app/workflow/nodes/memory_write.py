@@ -1,7 +1,7 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.workflow.state import AgentState
-from app.repository.models import Message
+from app.persistence.models import Message
 
 
 async def memory_write_node(state: AgentState, db: AsyncSession) -> AgentState:

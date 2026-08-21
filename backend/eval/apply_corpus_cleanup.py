@@ -19,7 +19,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import AsyncSessionLocal
 from app.core.qdrant_client import qdrant_client
-from app.repository.models import Document
+from app.persistence.models import Document
 from app.retrieval.bm25_search import invalidate_bm25_index
 from app.retrieval.qdrant_setup import COLLECTION_NAME
 from app.services.semantic_cache import bump_semantic_cache_corpus_version

@@ -19,7 +19,7 @@ from app.retrieval.bm25_search import invalidate_bm25_index
 from app.retrieval.chunking import chunk_text
 from app.services.embedding_client import embed_batch
 from app.services.semantic_cache import bump_semantic_cache_corpus_version
-from app.repository.models import Document, DocumentChunk
+from app.persistence.models import Document, DocumentChunk
 from app.retrieval.source_authority import (
     SourceType,
     authority_score,

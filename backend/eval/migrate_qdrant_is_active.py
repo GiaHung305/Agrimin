@@ -10,7 +10,7 @@ from sqlalchemy import select
 from app.core.db import AsyncSessionLocal
 from app.core.qdrant_client import qdrant_client
 from app.retrieval.qdrant_setup import COLLECTION_NAME
-from app.repository.models import Document
+from app.persistence.models import Document
 
 
 async def migrate():

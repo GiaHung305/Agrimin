@@ -17,7 +17,7 @@ from sqlalchemy import func, select
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import AsyncSessionLocal
-from app.repository.models import Document
+from app.persistence.models import Document
 from app.services.farm_monitoring import POLICIES, SUPPORTED_VEGETABLE_POLICY_KEYS
 
 

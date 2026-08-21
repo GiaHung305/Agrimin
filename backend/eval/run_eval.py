@@ -20,7 +20,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from app.core.config import settings
 from app.core.model_registry import ModelRole, model_name, runtime_fingerprint
 from app.core.db import AsyncSessionLocal
-from app.repository.models import EvalRun, GoldenDataset
+from app.persistence.models import EvalRun, GoldenDataset
 from app.services.model_gateway import ModelProviderUnavailable, generate_content
 
 

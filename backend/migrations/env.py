@@ -8,7 +8,7 @@ from alembic import context
 
 from app.core.config import settings
 from app.core.db import Base
-from app.repository import models  # noqa: F401 -- import để Base biết hết các bảng
+from app.persistence import models  # noqa: F401 -- import để Base biết hết các bảng
 
 config = context.config
 config.set_main_option("sqlalchemy.url", settings.database_url)
@@ -58,4 +58,3 @@ async def run_migrations_online():
 
 
 asyncio.run(run_migrations_online())
-

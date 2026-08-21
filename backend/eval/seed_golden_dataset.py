@@ -10,7 +10,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import AsyncSessionLocal
 from app.core.config import settings
-from app.repository.models import GoldenDataset
+from app.persistence.models import GoldenDataset
 
 
 DATASET_PATHS = {

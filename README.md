@@ -1,6 +1,11 @@
 # AgriMind
 
-AgriMind là một hệ thống AI hỏi đáp cho lĩnh vực nông nghiệp, kết hợp FastAPI, LangGraph, RAG, Qdrant, Redis, PostgreSQL, và Flutter.
+AgriMind là nền tảng trợ lý và vận hành nông nghiệp, kết hợp FastAPI,
+LangGraph, hybrid RAG, Qdrant, Redis, PostgreSQL và Flutter.
+
+Đọc bản đồ đầy đủ tại
+[`docs/architecture/system-overview.md`](docs/architecture/system-overview.md)
+hoặc bắt đầu từ [`docs/README.md`](docs/README.md).
 
 ## Mục tiêu
 
@@ -44,22 +49,27 @@ flowchart TD
 ```text
 backend/
   app/
-    api/
-    core/
-    repository/
-    retrieval/
-    services/
-    tools/
-    workflow/
+    api/routes/         # FastAPI routes
+    core/               # cấu hình, auth, DB và external clients
+    persistence/        # SQLAlchemy entities
+    retrieval/          # dense/BM25/fusion/rerank
+    multimodal/         # image contract và validation
+    services/           # application services
+    tools/              # MCP/weather clients
+    workflow/           # LangGraph state và nodes
+    workers/            # công việc nền
+  eval/                 # benchmark và dataset offline
+  migrations/
   tests/
-
-embedding-service/
-
-frontend_flutter/
-
-vision_training/       # pipeline fine-tune offline; không nằm trong runtime production
-
-docker-compose.yml
+embedding-service/      # BGE-M3 + reranker
+frontend_flutter/lib/
+  app/                  # bootstrap, auth gate, navigation
+  data/                 # DTO và API services
+  design_system/        # tokens, Material theme, shared components
+  features/             # UI theo từng tính năng
+vision_training/        # fine-tune/eval offline; không thuộc runtime production
+docs/                   # architecture, design-system, quality, reviews
+docker-compose*.yml
 ```
 
 ## Chạy hệ thống bằng Docker
@@ -109,7 +119,7 @@ role dùng `gemini-3.5-flash-lite`) đã qua benchmark production-workflow 20 c�
 golden v2 và Vision 24 ảnh. Backend champion dùng model khác nên giữ fingerprint
 và report riêng; không được gán report challenger cho champion. Rollout rộng vẫn
 thực hiện có kiểm soát; Vision toàn cục không tự bật sau benchmark. Xem ma trận bằng chứng tại
-[`docs/phase-1-4-release-review.md`](docs/phase-1-4-release-review.md).
+[`docs/reviews/phase-1-4-release-review.md`](docs/reviews/phase-1-4-release-review.md).
 
 Gateway model có timeout, retry 5xx có giới hạn và circuit breaker riêng theo
 vai trò model. Mặc định ba request lỗi liên tiếp sẽ mở circuit trong 60 giây để

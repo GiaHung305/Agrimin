@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.repository.models import PendingAction
+from app.persistence.models import PendingAction
 from app.workflow.state import AgentState
 
 

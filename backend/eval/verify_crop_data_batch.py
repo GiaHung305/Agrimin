@@ -16,7 +16,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import AsyncSessionLocal
 from app.core.qdrant_client import qdrant_client
-from app.repository.models import Document, DocumentChunk
+from app.persistence.models import Document, DocumentChunk
 from app.retrieval.qdrant_setup import COLLECTION_NAME
 from eval.ingest_crop_data_batch import DEFAULT_MANIFEST, load_manifest
 

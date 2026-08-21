@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import pytest
 from pydantic import ValidationError
 
-from app.api import documents
+from app.api.routes import documents
 from app.retrieval.source_authority import SourceType
 
 

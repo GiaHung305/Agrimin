@@ -3,7 +3,7 @@ import sys
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from app.api.chat import _approved_answer_chunks
+from app.api.routes.chat import _approved_answer_chunks
 
 
 def test_approved_answer_chunks_preserve_matching_generation():

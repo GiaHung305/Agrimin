@@ -5,7 +5,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 
-from app.api import chat
+from app.api.routes import chat
 
 
 def test_only_stream_chat_route_is_exposed():

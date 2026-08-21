@@ -1,17 +1,43 @@
-# frontend_flutter
+# AgriMind Flutter
 
-A new Flutter project.
+Ứng dụng production cho chat SSE, công việc, thông báo và quản lý nông trại.
 
-## Getting Started
+## Cấu trúc `lib/`
 
-This project is a starting point for a Flutter application.
+```text
+app/              # AgriMindApp, AppGate và HomeShell
+data/
+  models/         # DTO ánh xạ API
+  services/       # auth, REST/SSE và push notification
+design_system/
+  foundations/    # color, spacing và radius tokens
+  theme/          # Material 3 ThemeData
+  components/     # component dùng chung xuyên feature
+features/
+  admin/
+  assistant/
+  auth/
+  farm/
+  notifications/
+  tasks/
+```
 
-A few resources to get you started if this is your first Flutter project:
+Feature UI import public design system qua:
 
-- [Learn Flutter](https://docs.flutter.dev/get-started/learn-flutter)
-- [Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Flutter learning resources](https://docs.flutter.dev/reference/learning-resources)
+```dart
+import 'package:frontend_flutter/design_system/design_system.dart';
+```
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+Không tạo thêm luồng chat ngoài `ApiService.sendMessageStream`, vì
+`POST /api/v1/chat/stream` là workflow production duy nhất.
+
+## Kiểm tra
+
+```powershell
+flutter analyze lib
+flutter test
+flutter build apk --debug
+```
+
+Chi tiết token và quy tắc component nằm tại
+[`../docs/design-system/flutter-design-system.md`](../docs/design-system/flutter-design-system.md).

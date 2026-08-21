@@ -11,7 +11,7 @@ from fastapi import HTTPException
 from PIL import Image, ImageDraw
 from pydantic import ValidationError
 
-from app.api import chat
+from app.api.routes import chat
 from app.multimodal.contracts import VisualAnalysisResult
 from app.multimodal.vision_analyzer import VisionAnalyzerUnavailable
 from app.workflow import graph as graph_module

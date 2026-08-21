@@ -91,7 +91,7 @@ services:
     volumes:
       - ./backend:/app
       - ./backend/secrets:/firebase:ro
-    command: python -m app.worker
+    command: python -m app.workers.assistant_worker
 
   embedding-service:
     build:

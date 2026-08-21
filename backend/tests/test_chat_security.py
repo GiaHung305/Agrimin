@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
 
-from app.api.chat import (
+from app.api.routes.chat import (
     ChatRequest,
     _apply_farm_profile_precedence,
     _new_agent_state,

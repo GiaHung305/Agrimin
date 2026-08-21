@@ -9,8 +9,8 @@ from google.genai.errors import ServerError
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-from app.api import chat
-from app.api.chat import _provider_unavailable_response
+from app.api.routes import chat
+from app.api.routes.chat import _provider_unavailable_response
 
 
 def test_provider_unavailable_response_is_stable_and_safe():

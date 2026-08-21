@@ -4,7 +4,7 @@ import sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.core.db import Base
-from app.repository import models  # noqa: F401
+from app.persistence import models  # noqa: F401
 
 
 def test_operational_indexes_are_declared_in_orm_metadata():

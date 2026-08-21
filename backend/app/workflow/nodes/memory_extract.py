@@ -11,7 +11,7 @@ from pydantic import BaseModel, ConfigDict, ValidationError
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.model_registry import ModelRole
-from app.repository.models import MemoryFact
+from app.persistence.models import MemoryFact
 from app.services.model_gateway import ModelProviderUnavailable, generate_content
 from app.workflow.state import AgentState
 

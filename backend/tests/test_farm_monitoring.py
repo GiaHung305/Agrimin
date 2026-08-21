@@ -10,8 +10,8 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import pytest
 from fastapi import HTTPException
 
-from app.api import assistant
-from app.repository.models import (
+from app.api.routes import assistant
+from app.persistence.models import (
     FarmMonitoringSchedule,
     FarmRecommendation,
     FarmRiskPrediction,
@@ -41,7 +41,7 @@ from app.services.vietnam_regions import (
     VIETNAM_PROVINCE_GEOCODE_QUERIES,
     province_geocode_fallback,
 )
-from app import worker
+from app.workers import assistant_worker as worker
 
 
 class ScalarResult:

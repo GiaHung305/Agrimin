@@ -8,7 +8,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 import pytest
 from fastapi import HTTPException
 
-from app.api.chat import _load_plot_seasons, ensure_user_and_conversation
+from app.api.routes.chat import _load_plot_seasons, ensure_user_and_conversation
 from app.core import auth
 from app.services.semantic_cache import _context_key
 
