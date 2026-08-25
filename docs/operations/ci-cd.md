@@ -17,6 +17,11 @@ cầu năm status check tương ứng: `Backend tests`, `Migration integrity`,
 `Secret scanning`, `Flutter analyze, test and build` và
 `Container configuration`.
 
+Các workflow pin Flutter `3.44.8` (Dart `3.12.2`) để `pubspec.lock` dùng cùng
+các dependency do SDK quản lý trên máy phát triển, quality gate và release. Khi
+nâng Flutter, phải cập nhật cả hai workflow và tạo lại lockfile trong cùng một
+commit.
+
 `backend/requirements.txt` là tập ràng buộc để chủ động nâng cấp dependency;
 `backend/requirements.lock` là bộ phiên bản Linux/Python 3.12 đã kiểm thử mà CI
 và Docker bắt buộc cài. Chỉ cập nhật lockfile sau khi build image, chạy
