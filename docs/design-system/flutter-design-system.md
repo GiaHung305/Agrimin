@@ -90,7 +90,8 @@ animation timing gần giống nhau ở từng màn hình.
 `test/goldens/design_system_light.png` và `design_system_dark.png` được kiểm tra
 bởi `design_system_golden_test.dart` trong mỗi lần chạy `flutter test`. Chỉ cập
 nhật golden bằng `--update-goldens` sau khi đã kiểm tra thay đổi hình ảnh có chủ
-đích.
+đích. Comparator cho phép sai khác tối đa 1% để hấp thụ anti-aliasing/font raster
+khác nhau giữa Windows và Linux nhưng vẫn chặn thay đổi bố cục hoặc màu đáng kể.
 
 ## Quy tắc component
 
