@@ -39,5 +39,11 @@ flutter test
 flutter build apk --debug
 ```
 
+Artefact production không dùng các giá trị local mặc định. Release CI truyền
+`API_BASE_URL`, `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` và
+`AUTH_REDIRECT_URL` qua `--dart-define`, đồng thời ký APK bằng keystore của
+GitHub Environment `production`. Xem
+[`../docs/operations/ci-cd.md`](../docs/operations/ci-cd.md).
+
 Chi tiết token và quy tắc component nằm tại
 [`../docs/design-system/flutter-design-system.md`](../docs/design-system/flutter-design-system.md).

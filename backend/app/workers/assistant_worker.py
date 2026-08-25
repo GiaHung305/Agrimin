@@ -1,8 +1,9 @@
 import asyncio
 import logging
+import signal
 from datetime import datetime, time, timedelta, timezone
 
-from sqlalchemy import select
+from sqlalchemy import select, text
 
 from app.core.config import settings
 from app.core.db import AsyncSessionLocal
@@ -17,7 +18,9 @@ from app.persistence.models import (
     FarmWeatherObservation,
     Notification,
     NotificationDelivery,
+    NotificationDeliveryAttempt,
     PendingAction,
+    WorkerFailure,
 )
 from app.services.farm_monitoring import (
     build_recommendation_body,
@@ -30,9 +33,21 @@ from app.services.farm_monitoring import (
 )
 from app.services.push_service import send_push
 from app.tools.mcp_weather_client import geocode_province_via_mcp, get_weather_via_mcp
+from app.workers.health import record_heartbeat
 
 logger = logging.getLogger(__name__)
 MAX_PUSH_ATTEMPTS = 5
+_heartbeat_warning_emitted = False
+CYCLE_LOCK_IDS = {
+    "task_reminders": 4_710_001,
+    "farm_monitoring": 4_710_002,
+    "push_deliveries": 4_710_003,
+}
+
+
+def utc_now_naive() -> datetime:
+    """UTC timestamp for persisted operational delivery history."""
+    return datetime.now(timezone.utc).replace(tzinfo=None)
 
 
 async def _notify(
@@ -58,7 +73,7 @@ async def _notify(
         title=title,
         body=body,
         dedupe_key=dedupe_key,
-        delivered_at=local_now_naive(),
+        delivered_at=utc_now_naive(),
     )
     session.add(notice)
     await session.flush()
@@ -79,7 +94,7 @@ async def _notify(
                 delivery_key=f"{notice.id}:{device.id}",
                 status="pending",
                 attempt_count=0,
-                next_attempt_at=local_now_naive(),
+                next_attempt_at=utc_now_naive(),
             )
             session.add(delivery)
     return notice, True
@@ -91,7 +106,7 @@ def _push_retry_at(now, attempt_count: int):
 
 
 async def process_push_deliveries_once() -> None:
-    now = local_now_naive()
+    now = utc_now_naive()
     async with AsyncSessionLocal() as session:
         deliveries = (
             await session.execute(
@@ -129,29 +144,38 @@ async def process_push_deliveries_once() -> None:
             if notice is None or device is None:
                 delivery.status = "cancelled"
                 delivery.last_error_code = "delivery_target_unavailable"
-                continue
-            try:
-                delivered = await send_push(device.token, notice.title, notice.body)
-            except Exception as exc:
-                delivered = False
-                logger.warning(
-                    "Push delivery attempt raised an exception",
-                    extra={
-                        "delivery_id": str(delivery.id),
-                        "error_type": type(exc).__name__,
-                    },
-                )
-            if delivered:
-                delivery.status = "delivered"
-                delivery.delivered_at = now
-                delivery.last_error_code = None
-            elif delivery.attempt_count >= MAX_PUSH_ATTEMPTS:
-                delivery.status = "failed"
-                delivery.last_error_code = "push_delivery_failed"
             else:
-                delivery.status = "retry"
-                delivery.next_attempt_at = _push_retry_at(now, delivery.attempt_count)
-                delivery.last_error_code = "push_delivery_failed"
+                try:
+                    delivered = await send_push(device.token, notice.title, notice.body)
+                except Exception as exc:
+                    delivered = False
+                    logger.warning(
+                        "Push delivery attempt raised an exception",
+                        extra={
+                            "delivery_id": str(delivery.id),
+                            "error_type": type(exc).__name__,
+                        },
+                    )
+                if delivered:
+                    delivery.status = "delivered"
+                    delivery.delivered_at = now
+                    delivery.last_error_code = None
+                elif delivery.attempt_count >= MAX_PUSH_ATTEMPTS:
+                    delivery.status = "failed"
+                    delivery.last_error_code = "push_delivery_failed"
+                else:
+                    delivery.status = "retry"
+                    delivery.next_attempt_at = _push_retry_at(now, delivery.attempt_count)
+                    delivery.last_error_code = "push_delivery_failed"
+            session.add(
+                NotificationDeliveryAttempt(
+                    delivery_id=delivery.id,
+                    attempt_number=delivery.attempt_count,
+                    status=delivery.status,
+                    error_code=delivery.last_error_code,
+                    created_at=now,
+                )
+            )
         await session.commit()
 
 
@@ -435,28 +459,169 @@ async def run_reminders_once() -> None:
     await process_monitoring_schedules_once()
 
 
-async def _run_periodically(operation, error_message: str) -> None:
-    while True:
+def _cycle_delay(consecutive_failures: int) -> int:
+    if consecutive_failures <= 0:
+        return settings.assistant_worker_poll_seconds
+    return min(
+        settings.assistant_worker_poll_seconds * (2 ** (consecutive_failures - 1)),
+        settings.assistant_worker_max_backoff_seconds,
+    )
+
+
+async def _safe_record_heartbeat(
+    cycle_name: str,
+    status: str,
+    *,
+    consecutive_failures: int = 0,
+    error_code: str | None = None,
+) -> None:
+    global _heartbeat_warning_emitted
+    try:
+        await record_heartbeat(
+            cycle_name,
+            status,
+            consecutive_failures=consecutive_failures,
+            error_code=error_code,
+        )
+        _heartbeat_warning_emitted = False
+    except Exception:
+        if not _heartbeat_warning_emitted:
+            logger.warning("Worker heartbeat unavailable", exc_info=True)
+            _heartbeat_warning_emitted = True
+
+
+async def _safe_record_failure(
+    cycle_name: str,
+    error_code: str,
+    consecutive_failures: int,
+) -> None:
+    try:
+        async with AsyncSessionLocal() as session:
+            session.add(
+                WorkerFailure(
+                    cycle_name=cycle_name,
+                    error_code=error_code[:120],
+                    consecutive_failures=consecutive_failures,
+                )
+            )
+            await session.commit()
+    except Exception:
+        logger.warning(
+            "Could not persist worker failure history",
+            extra={"cycle": cycle_name, "error_code": error_code},
+        )
+
+
+async def _run_with_cycle_lock(operation, cycle_name: str) -> None:
+    """Run at most one instance of a cycle across all worker replicas."""
+    lock_id = CYCLE_LOCK_IDS[cycle_name]
+    async with AsyncSessionLocal() as lock_session:
+        acquired = (
+            await lock_session.execute(
+                text("SELECT pg_try_advisory_lock(:lock_id)"),
+                {"lock_id": lock_id},
+            )
+        ).scalar_one()
+        if not acquired:
+            return
         try:
             await operation()
-        except Exception:
+        finally:
+            await lock_session.execute(
+                text("SELECT pg_advisory_unlock(:lock_id)"),
+                {"lock_id": lock_id},
+            )
+
+
+async def _wait_for_next_cycle(stop_event: asyncio.Event, delay: int) -> None:
+    try:
+        await asyncio.wait_for(stop_event.wait(), timeout=delay)
+    except TimeoutError:
+        pass
+
+
+async def _run_periodically(
+    operation,
+    cycle_name: str,
+    error_message: str,
+    stop_event: asyncio.Event,
+) -> None:
+    consecutive_failures = 0
+    while not stop_event.is_set():
+        await _safe_record_heartbeat(
+            cycle_name,
+            "running",
+            consecutive_failures=consecutive_failures,
+        )
+        try:
+            await asyncio.wait_for(
+                operation(),
+                timeout=settings.assistant_worker_operation_timeout_seconds,
+            )
+        except asyncio.CancelledError:
+            raise
+        except Exception as exc:
+            consecutive_failures += 1
             logger.exception(error_message)
-        await asyncio.sleep(settings.assistant_worker_poll_seconds)
+            await _safe_record_failure(
+                cycle_name,
+                type(exc).__name__,
+                consecutive_failures,
+            )
+            await _safe_record_heartbeat(
+                cycle_name,
+                "failed",
+                consecutive_failures=consecutive_failures,
+                error_code=type(exc).__name__,
+            )
+        else:
+            consecutive_failures = 0
+            await _safe_record_heartbeat(cycle_name, "ok")
+        await _wait_for_next_cycle(
+            stop_event,
+            _cycle_delay(consecutive_failures),
+        )
+
+
+def _install_shutdown_handlers(stop_event: asyncio.Event) -> None:
+    loop = asyncio.get_running_loop()
+    for signal_name in (signal.SIGINT, signal.SIGTERM):
+        try:
+            loop.add_signal_handler(signal_name, stop_event.set)
+        except NotImplementedError:
+            signal.signal(
+                signal_name,
+                lambda *_: loop.call_soon_threadsafe(stop_event.set),
+            )
 
 
 async def main():
+    stop_event = asyncio.Event()
+    _install_shutdown_handlers(stop_event)
     await asyncio.gather(
         _run_periodically(
-            process_due_tasks_once,
+            lambda: _run_with_cycle_lock(process_due_tasks_once, "task_reminders"),
+            "task_reminders",
             "Task reminder cycle failed",
+            stop_event,
         ),
         _run_periodically(
-            process_monitoring_schedules_once,
+            lambda: _run_with_cycle_lock(
+                process_monitoring_schedules_once,
+                "farm_monitoring",
+            ),
+            "farm_monitoring",
             "Farm monitoring cycle failed",
+            stop_event,
         ),
         _run_periodically(
-            process_push_deliveries_once,
+            lambda: _run_with_cycle_lock(
+                process_push_deliveries_once,
+                "push_deliveries",
+            ),
+            "push_deliveries",
             "Push delivery cycle failed",
+            stop_event,
         ),
     )
 

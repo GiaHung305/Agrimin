@@ -297,6 +297,37 @@ class NotificationDelivery(Base):
     updated_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
 
+class NotificationDeliveryAttempt(Base):
+    __tablename__ = "notification_delivery_attempts"
+    __table_args__ = (
+        Index("ix_notification_attempt_delivery_created", "delivery_id", "created_at"),
+        Index("ix_notification_attempt_status_created", "status", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    delivery_id: Mapped[uuid.UUID] = mapped_column(
+        ForeignKey("notification_deliveries.id", ondelete="CASCADE"), index=True
+    )
+    attempt_number: Mapped[int] = mapped_column(Integer)
+    status: Mapped[str] = mapped_column(String(20))
+    error_code: Mapped[str] = mapped_column(String(80), nullable=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class WorkerFailure(Base):
+    __tablename__ = "worker_failures"
+    __table_args__ = (
+        Index("ix_worker_failures_cycle_created", "cycle_name", "created_at"),
+    )
+
+    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
+    worker_name: Mapped[str] = mapped_column(String(50), default="assistant")
+    cycle_name: Mapped[str] = mapped_column(String(50))
+    error_code: Mapped[str] = mapped_column(String(120))
+    consecutive_failures: Mapped[int] = mapped_column(Integer, default=1)
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class Document(Base):
     __tablename__ = "documents"
 

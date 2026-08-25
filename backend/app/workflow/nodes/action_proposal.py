@@ -16,7 +16,8 @@ _LOCAL_TZ = ZoneInfo("Asia/Ho_Chi_Minh")
 _TASK_PATTERNS = (
     re.compile(r"\b(?:nhac|bao)\s+(?:toi|minh|em|anh|chi)\b"),
     re.compile(
-        r"\b(?:tao|dat|len|lap|them|ghi)\s+(?:mot\s+)?"
+        r"\b(?:tao|dat|len|lap|them|ghi)\s+"
+        r"(?:(?:giup toi|giup minh)\s+)?(?:mot\s+)?"
         r"(?:lich|viec|cong viec|lich nhac)\b"
     ),
     re.compile(r"\b(?:hen gio|hen lich|dat loi nhac|tao loi nhac)\b"),
@@ -201,13 +202,25 @@ def _previous_task_request(history: list[dict]) -> str | None:
 
 
 def _task_title(question: str) -> str:
+    quoted_title = re.search(
+        r"\b(?:tên|ten)\s*(?:(?:là|la)\s*)?[:=-]?\s*"
+        r"[\"'“”‘’]([^\"'“”‘’]{1,160})[\"'“”‘’]",
+        question,
+        flags=re.IGNORECASE,
+    )
+    if quoted_title:
+        value = " ".join(quoted_title.group(1).strip(" ,.-").split())
+        if value:
+            return value[0].upper() + value[1:]
+
     value = re.sub(
         r"^\s*(?:(?:bạn|ban)\s+ơi\s*)?"
         r"(?:(?:hãy|hay|vui lòng|vui long|làm ơn|lam on|giúp tôi|giup toi)\s*)?"
         r"(?:(?:nhắc|nhac|báo|bao)\s+(?:tôi|toi|mình|minh)\s*|"
         r"(?:tạo|tao|đặt|dat|lên|len|lập|lap|thêm|them)\s+"
+        r"(?:(?:giúp tôi|giup toi|giúp mình|giup minh)\s+)?"
         r"(?:một\s+|mot\s+)?(?:lịch nhắc|lich nhac|lịch|lich|việc|viec|"
-        r"công việc|cong viec)\s*)",
+        r"công việc|cong viec)\s*(?:(?:tên|ten)\s*)?)",
         "",
         question,
         flags=re.IGNORECASE,

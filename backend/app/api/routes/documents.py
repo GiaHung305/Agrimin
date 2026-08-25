@@ -7,7 +7,7 @@ from qdrant_client.models import FieldCondition, Filter, FilterSelector, MatchVa
 from sqlalchemy import delete, select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.core.auth import require_admin
+from app.core.auth import Permission, require_permission
 from app.core.config import settings
 from app.core.db import get_db
 from app.core.qdrant_client import qdrant_client
@@ -22,6 +22,7 @@ from app.retrieval.source_authority import SourceType, authority_score
 
 router = APIRouter(tags=["documents"])
 logger = logging.getLogger(__name__)
+require_document_manager = require_permission(Permission.DOCUMENT_MANAGE)
 
 
 def _new_storage_key(suffix: str) -> str:
@@ -116,7 +117,7 @@ class SourceTypeUpdate(BaseModel):
 async def ingest(
     req: IngestRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_admin),
+    current_user: dict = Depends(require_document_manager),
 ):
     file_key = _new_storage_key(".txt")
     await upload_file(req.content.encode("utf-8"), file_key, content_type="text/plain")
@@ -147,7 +148,7 @@ async def upload_document(
     author: str | None = Form(None, max_length=255),
     version: str | None = Form(None, max_length=50),
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_admin),
+    current_user: dict = Depends(require_document_manager),
 ):
     if not file.filename or not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, detail="Only PDF files are supported")
@@ -196,7 +197,7 @@ async def upload_document(
 @router.get("/documents")
 async def list_documents(
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_admin),
+    current_user: dict = Depends(require_document_manager),
 ):
     result = await db.execute(select(Document).order_by(Document.ingested_at.desc()))
     docs = result.scalars().all()
@@ -225,7 +226,7 @@ async def list_documents(
 async def deactivate_document(
     document_id: str,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_admin),
+    current_user: dict = Depends(require_document_manager),
 ):
     result = await db.execute(select(Document).where(Document.id == document_id))
     document = result.scalar_one_or_none()
@@ -240,7 +241,7 @@ async def deactivate_document(
 async def purge_document(
     document_id: str,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_admin),
+    current_user: dict = Depends(require_document_manager),
 ):
     """Permanently purge one document from storage, retrieval, and Postgres."""
     result = await db.execute(select(Document).where(Document.id == document_id))
@@ -285,7 +286,7 @@ async def update_document_source_type(
     document_id: str,
     req: SourceTypeUpdate,
     db: AsyncSession = Depends(get_db),
-    current_user: dict = Depends(require_admin),
+    current_user: dict = Depends(require_document_manager),
 ):
     result = await db.execute(select(Document).where(Document.id == document_id))
     document = result.scalar_one_or_none()

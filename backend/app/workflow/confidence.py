@@ -12,6 +12,7 @@ def compute_confidence(
     weather_available: bool = False,
     research_source_count: int = 0,
     visual_confidences: Sequence[float] = (),
+    trusted_context_count: int = 0,
 ) -> float:
     """Estimate answer confidence from observable evidence signals.
 
@@ -23,7 +24,13 @@ def compute_confidence(
     visual_scores = [
         min(1.0, max(0.0, float(score))) for score in visual_confidences
     ]
-    if not scores and research_source_count <= 0 and not visual_scores:
+    trusted_records = max(int(trusted_context_count), 0)
+    if (
+        not scores
+        and research_source_count <= 0
+        and not visual_scores
+        and trusted_records <= 0
+    ):
         return 0.0
 
     top_relevance = max(scores, default=0.0)
@@ -38,6 +45,12 @@ def compute_confidence(
     # Grounded web results are independent evidence for the opt-in research
     # path, but are capped so they cannot by themselves overstate certainty.
     confidence += 0.45 * min(max(research_source_count, 0) / 3, 1.0)
+
+    # User-owned farm/season records are authoritative for direct facts such as
+    # crop, growth stage and saved dates. They support those facts only when the
+    # typed planner says the answer uses farm context; callers pass zero for
+    # unrelated questions.
+    confidence += 0.65 * min(trusted_records, 1)
 
     # Typed vision observations can support an objective description, but not
     # a diagnosis. Keep their contribution below the standalone certainty bar.

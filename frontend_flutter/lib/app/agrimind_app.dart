@@ -13,6 +13,8 @@ class AgriMindApp extends StatelessWidget {
       title: 'AgriMind AI',
       debugShowCheckedModeBanner: false,
       theme: buildAppTheme(),
+      darkTheme: buildAppDarkTheme(),
+      themeMode: ThemeMode.system,
       home: const AppGate(),
     );
   }

@@ -69,7 +69,9 @@ frontend_flutter/lib/
   features/             # UI theo từng tính năng
 vision_training/        # fine-tune/eval offline; không thuộc runtime production
 docs/                   # architecture, design-system, quality, reviews
-docker-compose*.yml
+compose.yaml             # runtime chính
+compose.gpu.yaml         # overlay GPU cho embedding
+compose.eval.yaml        # benchmark/challenger offline
 ```
 
 ## Chạy hệ thống bằng Docker

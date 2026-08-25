@@ -31,8 +31,8 @@ class Settings(BaseSettings):
     model_circuit_failure_threshold: int = 3
     model_circuit_cooldown_seconds: float = 60.0
     ai_service_request_timeout_seconds: float = 60.0
-    ai_policy_version: str = "safety-v7"
-    prompt_bundle_version: str = "prompts-v7"
+    ai_policy_version: str = "safety-v8"
+    prompt_bundle_version: str = "prompts-v8"
     evidence_schema_version: str = "evidence-v2"
     knowledge_base_version: str = "kb-v3"
     # Deep Research uses Gemini Google Search grounding. It is opt-in per chat
@@ -47,16 +47,29 @@ class Settings(BaseSettings):
     supabase_bucket_name: str = "agrimind-documents"
     supabase_publishable_key: str = ""
     supabase_jwks_url: str = ""
+    supabase_jwks_cache_seconds: int = Field(default=3600, ge=60, le=86400)
     eval_user_email: str = ""
     eval_user_password: str = ""
     eval_api_url: str = "http://localhost:8000/api/v1/chat/stream"
     eval_dataset_version: str = "v2"
     eval_judge_model: str = "gemini-3.1-flash-lite"
     eval_request_delay_seconds: float = 7.0
+    # A multi-hop production request can legitimately run several bounded
+    # planner/retrieval/reflection/model calls before SSE completion.
+    eval_http_timeout_seconds: float = Field(default=180.0, ge=90.0, le=600.0)
     mcp_weather_url: str = "http://localhost:8002/mcp"
     mcp_request_timeout_seconds: float = 10.0
     firebase_credentials_path: str = ""
     assistant_worker_poll_seconds: int = Field(default=10, ge=5, le=300)
+    assistant_worker_operation_timeout_seconds: int = Field(
+        default=120, ge=10, le=900
+    )
+    assistant_worker_max_backoff_seconds: int = Field(
+        default=120, ge=10, le=900
+    )
+    assistant_worker_heartbeat_ttl_seconds: int = Field(
+        default=180, ge=30, le=1800
+    )
     # Rebuilding BM25 requires loading and tokenising every active chunk. Keep
     # the in-process index briefly, and invalidate it immediately on writes.
     bm25_index_ttl_seconds: int = 300

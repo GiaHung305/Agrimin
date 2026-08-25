@@ -107,6 +107,30 @@ async def test_planner_uses_typed_decision(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_planner_marks_saved_season_context_for_stage_and_harvest(monkeypatch):
+    async def decide(prompt):
+        return planner.PlannerDecision(
+            need_rag=False,
+            need_weather=False,
+            need_deep_research=False,
+            risk_level="low",
+            uses_farm_context=False,
+        )
+
+    monkeypatch.setattr(planner, "_call_gemini", decide)
+    state = {
+        "question": "Cây hiện tại đang ở giai đoạn nào và khi nào thu hoạch?",
+        "context": {"plot_seasons": [{"crop": "Cà chua"}]},
+    }
+
+    result = await planner.planner_node(state)
+
+    assert result["plan"]["uses_farm_context"] is True
+    assert result["plan"]["direct_saved_farm_fact"] is True
+    assert result["plan"]["need_rag"] is False
+
+
+@pytest.mark.asyncio
 async def test_planner_skips_retrieval_for_pure_natural_task_request(monkeypatch):
     async def decide(prompt):
         return planner.PlannerDecision(
@@ -246,6 +270,24 @@ async def test_reflection_skips_model_for_deterministic_action_reply(monkeypatch
 
 
 @pytest.mark.asyncio
+async def test_reflection_trusts_direct_owned_farm_fact_without_rag(monkeypatch):
+    async def fail_if_called(prompt):
+        raise AssertionError("Owned structured facts do not need RAG reflection")
+
+    monkeypatch.setattr(reflection, "_call_gemini", fail_if_called)
+    state = {
+        "question": "Mùa vụ hiện tại thu hoạch ngày nào?",
+        "draft_answer": "Ngày dự kiến thu hoạch là 27/11/2026.",
+        "plan": {"direct_saved_farm_fact": True},
+        "context": {"plot_seasons": [{"crop": "Cà chua"}]},
+    }
+
+    result = await reflection.reflection_node(state)
+
+    assert result["reflection_notes"] == "sufficient"
+
+
+@pytest.mark.asyncio
 async def test_model_gateway_translates_timeout_to_stable_error(monkeypatch):
     class SlowModels:
         async def generate_content(self, **kwargs):
@@ -254,8 +296,9 @@ async def test_model_gateway_translates_timeout_to_stable_error(monkeypatch):
     fake_client = SimpleNamespace(aio=SimpleNamespace(models=SlowModels()))
     monkeypatch.setattr(model_gateway, "client", fake_client)
     monkeypatch.setattr(model_gateway.settings, "model_request_timeout_seconds", 0.001)
-    with pytest.raises(model_gateway.ModelProviderUnavailable):
+    with pytest.raises(model_gateway.ModelProviderUnavailable) as error:
         await model_gateway.generate_content(ModelRole.PLANNER, "prompt")
+    assert error.value.reason_code == "request_timeout"
 
 
 @pytest.mark.asyncio
@@ -270,8 +313,9 @@ async def test_model_gateway_translates_provider_quota_error(monkeypatch):
     fake_client = SimpleNamespace(aio=SimpleNamespace(models=QuotaModels()))
     monkeypatch.setattr(model_gateway, "client", fake_client)
 
-    with pytest.raises(model_gateway.ModelProviderUnavailable):
+    with pytest.raises(model_gateway.ModelProviderUnavailable) as error:
         await model_gateway.generate_content(ModelRole.PLANNER, "prompt")
+    assert error.value.reason_code == "client_429"
 
 
 @pytest.mark.asyncio
@@ -341,8 +385,9 @@ async def test_model_gateway_success_resets_consecutive_failure_count(monkeypatc
         model_gateway.settings, "model_circuit_failure_threshold", 2
     )
 
-    with pytest.raises(model_gateway.ModelProviderUnavailable):
+    with pytest.raises(model_gateway.ModelProviderUnavailable) as error:
         await model_gateway.generate_content(ModelRole.PLANNER, "prompt")
+    assert error.value.reason_code == "client_429"
     response = await model_gateway.generate_content(ModelRole.PLANNER, "prompt")
     assert response.text == "ok"
     with pytest.raises(model_gateway.ModelProviderUnavailable):

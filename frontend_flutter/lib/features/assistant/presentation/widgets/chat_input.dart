@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 
@@ -69,22 +71,28 @@ class _ChatInputState extends State<ChatInput> {
 
   Future<void> _pickImages() async {
     if (widget.isLoading || _images.length >= _maxImages) return;
-    final result = await FilePicker.platform.pickFiles(
+    final files = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: const ['jpg', 'jpeg', 'png', 'webp'],
-      allowMultiple: true,
-      withData: true,
     );
-    if (!mounted || result == null) return;
+    if (!mounted || files.isEmpty) return;
 
     final selected = <ChatImageAttachment>[];
-    for (final file in result.files) {
-      final bytes = file.bytes;
+    for (final file in files) {
       final mimeType = _mimeTypeFor(file.name);
-      if (bytes == null || mimeType == null) {
+      if (mimeType == null) {
         _showImageError('Không đọc được ảnh ${file.name}.');
         continue;
       }
+      late final Uint8List bytes;
+      try {
+        bytes = await file.readAsBytes();
+      } catch (_) {
+        if (!mounted) return;
+        _showImageError('Không đọc được ảnh ${file.name}.');
+        continue;
+      }
+      if (!mounted) return;
       if (bytes.length > _maxImageBytes) {
         _showImageError('Ảnh ${file.name} vượt quá giới hạn 4 MB.');
         continue;

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from collections.abc import AsyncIterator
 from dataclasses import dataclass
 from threading import Lock
@@ -16,9 +17,26 @@ from app.core.config import settings
 from app.core.model_registry import ModelRole, model_name
 from app.core.retry_utils import gemini_retry
 
+logger = logging.getLogger(__name__)
+
 
 class ModelProviderUnavailable(RuntimeError):
     """A provider failure that callers may translate to a stable fallback."""
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        reason_code: str = "provider_unavailable",
+    ) -> None:
+        super().__init__(message)
+        self.reason_code = reason_code
+
+
+def _client_error_reason_code(exc: ClientError) -> str:
+    """Return an operational code without logging provider response content."""
+    code = getattr(exc, "code", None)
+    return f"client_{code}" if isinstance(code, int) else "client_rejected"
 
 
 @dataclass
@@ -48,7 +66,8 @@ def _before_provider_call(role: ModelRole) -> None:
         cooldown = max(float(settings.model_circuit_cooldown_seconds), 0.0)
         if now - state.opened_at < cooldown or state.probe_in_progress:
             raise ModelProviderUnavailable(
-                f"{role.value} model circuit is temporarily open"
+                f"{role.value} model circuit is temporarily open",
+                reason_code="circuit_open",
             )
         state.probe_in_progress = True
 
@@ -98,7 +117,10 @@ def _get_client() -> genai.Client:
     if client is not None:
         return client
     if not settings.google_api_key:
-        raise ModelProviderUnavailable("Google API key is not configured")
+        raise ModelProviderUnavailable(
+            "Google API key is not configured",
+            reason_code="api_key_missing",
+        )
     client = genai.Client(api_key=settings.google_api_key)
     return client
 
@@ -120,10 +142,14 @@ async def _generate_content_with_retry(
             timeout=settings.model_request_timeout_seconds,
         )
     except TimeoutError as exc:
-        raise ModelProviderUnavailable(f"{role.value} model request timed out") from exc
+        raise ModelProviderUnavailable(
+            f"{role.value} model request timed out",
+            reason_code="request_timeout",
+        ) from exc
     except ClientError as exc:
         raise ModelProviderUnavailable(
-            f"{role.value} model request was rejected by provider"
+            f"{role.value} model request was rejected by provider",
+            reason_code=_client_error_reason_code(exc),
         ) from exc
 
 
@@ -138,7 +164,13 @@ async def generate_content(
         response = await _generate_content_with_retry(
             role, contents, config=config
         )
-    except (ModelProviderUnavailable, ServerError):
+    except (ModelProviderUnavailable, ServerError) as exc:
+        logger.warning(
+            "Model provider call failed role=%s error=%s reason_code=%s",
+            role.value,
+            type(exc).__name__,
+            getattr(exc, "reason_code", "server_error"),
+        )
         _record_provider_failure(role)
         raise
     except BaseException:
@@ -160,7 +192,8 @@ async def _open_stream(role: ModelRole, contents: str) -> Any:
         )
     except ClientError as exc:
         raise ModelProviderUnavailable(
-            f"{role.value} model stream was rejected by provider"
+            f"{role.value} model stream was rejected by provider",
+            reason_code=_client_error_reason_code(exc),
         ) from exc
 
 
@@ -179,13 +212,23 @@ async def stream_content(role: ModelRole, contents: str) -> AsyncIterator[Any]:
                 break
     except TimeoutError as exc:
         _record_provider_failure(role)
-        raise ModelProviderUnavailable(f"{role.value} model stream timed out") from exc
+        raise ModelProviderUnavailable(
+            f"{role.value} model stream timed out",
+            reason_code="stream_timeout",
+        ) from exc
     except ClientError as exc:
         _record_provider_failure(role)
         raise ModelProviderUnavailable(
-            f"{role.value} model stream was rejected by provider"
+            f"{role.value} model stream was rejected by provider",
+            reason_code=_client_error_reason_code(exc),
         ) from exc
-    except (ModelProviderUnavailable, ServerError):
+    except (ModelProviderUnavailable, ServerError) as exc:
+        logger.warning(
+            "Model provider stream failed role=%s error=%s reason_code=%s",
+            role.value,
+            type(exc).__name__,
+            getattr(exc, "reason_code", "server_error"),
+        )
         _record_provider_failure(role)
         raise
     except BaseException:

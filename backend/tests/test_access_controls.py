@@ -1,5 +1,7 @@
 import os
 import sys
+import asyncio
+import time
 from types import SimpleNamespace
 from unittest.mock import AsyncMock
 
@@ -9,6 +11,7 @@ import pytest
 from fastapi import HTTPException
 
 from app.api.routes.chat import _load_plot_seasons, ensure_user_and_conversation
+from app.api.routes.auth import get_session
 from app.core import auth
 from app.services.semantic_cache import _context_key
 
@@ -134,3 +137,98 @@ async def test_configured_admin_can_manage_documents(monkeypatch):
     current_user = {"id": "admin-id", "email": "ADMIN@example.com"}
 
     assert await auth.require_admin(current_user) == current_user
+
+
+@pytest.mark.asyncio
+async def test_unconfigured_development_user_cannot_manage_documents(monkeypatch):
+    monkeypatch.setattr(auth.settings, "environment", "development")
+    monkeypatch.setattr(auth.settings, "admin_user_ids", "")
+    monkeypatch.setattr(auth.settings, "admin_emails", "")
+
+    with pytest.raises(HTTPException) as error:
+        await auth.require_admin({"id": "user-a", "email": "user@example.com"})
+
+    assert error.value.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_session_endpoint_returns_server_authoritative_permissions(monkeypatch):
+    monkeypatch.setattr(auth.settings, "admin_user_ids", "admin-id")
+    monkeypatch.setattr(auth.settings, "admin_emails", "")
+
+    admin_session = await get_session(
+        current_user={"id": "admin-id", "email": "admin@example.com"}
+    )
+    user_session = await get_session(
+        current_user={"id": "user-id", "email": "user@example.com"}
+    )
+
+    assert admin_session["role"] == "admin"
+    assert "document:manage" in admin_session["permissions"]
+    assert "operations:view" in admin_session["permissions"]
+    assert user_session["role"] == "user"
+    assert "document:manage" not in user_session["permissions"]
+    assert "operations:view" not in user_session["permissions"]
+
+
+@pytest.mark.asyncio
+async def test_regular_user_cannot_view_operations(monkeypatch):
+    monkeypatch.setattr(auth.settings, "admin_user_ids", "admin-id")
+    dependency = auth.require_permission(auth.Permission.OPERATIONS_VIEW)
+
+    with pytest.raises(HTTPException) as error:
+        await dependency({"id": "user-id", "email": "user@example.com"})
+
+    assert error.value.status_code == 403
+
+
+@pytest.mark.asyncio
+async def test_concurrent_jwks_requests_share_one_refresh(monkeypatch):
+    calls = 0
+
+    class Response:
+        def raise_for_status(self):
+            return None
+
+        def json(self):
+            return {"keys": [{"kid": "key-1"}]}
+
+    class Client:
+        async def __aenter__(self):
+            return self
+
+        async def __aexit__(self, *_):
+            return None
+
+        async def get(self, _):
+            nonlocal calls
+            calls += 1
+            await asyncio.sleep(0)
+            return Response()
+
+    monkeypatch.setattr(auth, "_jwks_cache", None)
+    monkeypatch.setattr(auth, "_jwks_cached_at", 0.0)
+    monkeypatch.setattr(auth, "_jwks_lock", asyncio.Lock())
+    monkeypatch.setattr(auth.httpx, "AsyncClient", lambda **_: Client())
+
+    first, second = await asyncio.gather(auth.get_jwks(), auth.get_jwks())
+
+    assert first == second
+    assert calls == 1
+    assert auth._jwks_cached_at <= time.monotonic()
+
+
+@pytest.mark.asyncio
+async def test_jwks_outage_is_not_misreported_as_invalid_user_token(monkeypatch):
+    async def unavailable(*, force_refresh=False):
+        raise auth.httpx.ReadTimeout("temporary JWKS timeout")
+
+    monkeypatch.setattr(auth, "get_jwks", unavailable)
+
+    with pytest.raises(HTTPException) as error:
+        await auth.get_current_user(
+            SimpleNamespace(credentials="token-that-was-not-checked")
+        )
+
+    assert error.value.status_code == 503
+    assert "temporarily unavailable" in error.value.detail

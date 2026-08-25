@@ -11,7 +11,9 @@ from app.workflow.nodes import planner
 
 
 def _grounded_response():
-    chunk = lambda uri, title: SimpleNamespace(web=SimpleNamespace(uri=uri, title=title))
+    def chunk(uri, title):
+        return SimpleNamespace(web=SimpleNamespace(uri=uri, title=title))
+
     metadata = SimpleNamespace(grounding_chunks=[
         chunk("https://example.gov/a", "Cơ quan A"),
         chunk("https://example.gov/a", "Bản sao"),

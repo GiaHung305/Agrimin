@@ -13,6 +13,7 @@ from eval.run_eval import (
     eval_item_needs_rerun,
     evaluation_question_id,
     evaluation_gate,
+    is_provider_unavailable_response,
     merge_eval_results,
     run_eval,
     reusable_response_map,
@@ -76,6 +77,15 @@ def test_golden_resume_only_reruns_missing_or_provider_errors():
     assert eval_item_needs_rerun({"item_id": "one", "error": "ReadTimeout"})
     assert not eval_item_needs_rerun({"item_id": "one", "judge_score": 0.2})
     assert not eval_item_needs_rerun({"item_id": "one", "guardrail_ok": False})
+
+
+def test_provider_fallback_is_checkpointed_as_retryable_not_scored():
+    assert is_provider_unavailable_response({
+        "trace": {"provider": {"status": "temporarily_unavailable"}}
+    })
+    assert not is_provider_unavailable_response({
+        "trace": {"guardrail": {"status": "block"}}
+    })
 
 
 @pytest.mark.asyncio

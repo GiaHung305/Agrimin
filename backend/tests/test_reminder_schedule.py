@@ -156,3 +156,27 @@ def test_action_analysis_removes_conversational_filler_from_title():
         now=now,
     )
     assert action["title"] == "Đi thăm vườn"
+
+
+@pytest.mark.parametrize(
+    ("question", "expected"),
+    [
+        (
+            "Tạo giúp tôi một việc tên 'Kiểm thử realtime Codex' vào lúc "
+            "18:20 hôm nay 23/08/2026.",
+            "Kiểm thử realtime Codex",
+        ),
+        (
+            'Giúp tôi tạo công việc tên “Tưới khu A” lúc 7 giờ ngày mai',
+            "Tưới khu A",
+        ),
+        ("Tạo một việc tên kiểm tra máy bơm lúc 8h sáng mai", "Kiểm tra máy bơm"),
+    ],
+)
+def test_action_analysis_accepts_flexible_named_task_phrasing(question, expected):
+    action = analyze_action_request(
+        question,
+        now=datetime(2026, 8, 23, 10, 0),
+    )
+
+    assert action["title"] == expected

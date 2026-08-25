@@ -182,6 +182,12 @@ def eval_item_needs_rerun(result: dict[str, Any] | None) -> bool:
     return result is None or bool(result.get("error"))
 
 
+def is_provider_unavailable_response(data: dict[str, Any]) -> bool:
+    """Do not score a safe provider fallback as a model-quality regression."""
+    provider = (data.get("trace") or {}).get("provider") or {}
+    return provider.get("status") == "temporarily_unavailable"
+
+
 def summarize_eval_results(
     questions: list[Any], results: list[dict[str, Any]]
 ) -> dict[str, Any]:
@@ -356,7 +362,9 @@ async def run_eval(
     ]
     new_results: list[dict[str, Any]] = []
 
-    async with httpx.AsyncClient(timeout=90.0) as client_http:
+    async with httpx.AsyncClient(
+        timeout=settings.eval_http_timeout_seconds
+    ) as client_http:
         token = (
             None if reused_responses else await get_supabase_token(client_http)
         )
@@ -373,6 +381,10 @@ async def run_eval(
                 else:
                     data = await invoke_production_chat(
                         client_http, str(token), item.question
+                    )
+                if is_provider_unavailable_response(data):
+                    raise ModelProviderUnavailable(
+                        "production chat returned the provider-unavailable fallback"
                     )
                 if item_result["guardrail_test"]:
                     item_result["guardrail_ok"] = (

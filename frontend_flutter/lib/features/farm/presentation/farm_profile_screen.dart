@@ -9,8 +9,15 @@ import 'monitoring_schedule_screen.dart';
 import 'farm_plots_screen.dart';
 
 class FarmProfileScreen extends StatefulWidget {
-  const FarmProfileScreen({super.key, this.onboarding = false});
+  const FarmProfileScreen({
+    super.key,
+    this.onboarding = false,
+    this.canManageDocuments = false,
+    this.canViewOperations = false,
+  });
   final bool onboarding;
+  final bool canManageDocuments;
+  final bool canViewOperations;
 
   @override
   State<FarmProfileScreen> createState() => _FarmProfileScreenState();
@@ -95,7 +102,12 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
       if (widget.onboarding) {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (_) => const HomeShell()),
+          MaterialPageRoute(
+            builder: (_) => HomeShell(
+              canManageDocuments: widget.canManageDocuments,
+              canViewOperations: widget.canViewOperations,
+            ),
+          ),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

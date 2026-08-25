@@ -11,8 +11,8 @@ import pytest
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
-from eval import ingest_crop_data_batch as crop_batch
-from eval.ingest_crop_data_batch import (
+from eval import ingest_crop_data_batch as crop_batch  # noqa: E402
+from eval.ingest_crop_data_batch import (  # noqa: E402
     extract_dnn_voice,
     extract_html_body,
     extract_html_element,

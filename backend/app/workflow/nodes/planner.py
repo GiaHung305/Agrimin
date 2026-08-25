@@ -30,6 +30,7 @@ class PlannerDecision(BaseModel):
     risk_level: Literal["low", "medium", "high"]
     research_questions: list[str] = Field(default_factory=list, max_length=4)
     action_intent: ActionIntent = "none"
+    uses_farm_context: bool = False
 
 
 _HIGH_RISK_PATTERN = re.compile(
@@ -44,6 +45,40 @@ _CONCEPTUAL_FIXED_PACKAGE_PATTERN = re.compile(
     r"(?:gói thuốc|goi thuoc)\s+(?:cố định|co dinh)\s+(?:không|khong)\b",
     re.IGNORECASE,
 )
+_SAVED_SEASON_FACT_PATTERN = re.compile(
+    r"\b(giai đoạn|thu hoạch|xuống giống|ngày trồng|mùa vụ|vụ này|thửa|"
+    r"ruộng|cây hiện tại|cây này|đang trồng)\b",
+    re.IGNORECASE,
+)
+_SAVED_PROFILE_FACT_PATTERN = re.compile(
+    r"\b(nông trại|trang trại|địa điểm|tỉnh|thành phố|diện tích|"
+    r"phương thức canh tác|của tôi|của mình)\b",
+    re.IGNORECASE,
+)
+_DIRECT_SAVED_FACT_PATTERN = re.compile(
+    r"\b(giai đoạn (?:nào|gì)|ngày (?:dự kiến )?thu hoạch|"
+    r"(?:dự kiến )?khi nào thu hoạch|"
+    r"thu hoạch ngày nào|ngày xuống giống|trồng ngày nào|đang trồng (?:cây )?gì|"
+    r"giống (?:nào|gì)|thửa (?:nào|gì)|nông trại (?:ở đâu|tại đâu)|"
+    r"diện tích (?:bao nhiêu|nông trại))\b",
+    re.IGNORECASE,
+)
+
+
+def _question_uses_saved_farm_context(state: AgentState) -> bool:
+    context = state.get("context", {})
+    question = state.get("question", "")
+    return bool(
+        (context.get("plot_seasons") and _SAVED_SEASON_FACT_PATTERN.search(question))
+        or (context.get("farm_profile") and _SAVED_PROFILE_FACT_PATTERN.search(question))
+    )
+
+
+def _is_direct_saved_farm_fact_question(state: AgentState) -> bool:
+    """Return true for facts answered entirely by owned structured records."""
+    return _question_uses_saved_farm_context(state) and bool(
+        _DIRECT_SAVED_FACT_PATTERN.search(state.get("question", ""))
+    )
 
 
 def _safe_fallback_decision(question: str) -> PlannerDecision:
@@ -144,6 +179,9 @@ lấy từ mùa vụ theo từng thửa, không suy ra từ hồ sơ hoặc memo
 phụ thuộc vào các dữ liệu này, phải giữ chúng trong câu hỏi nghiên cứu.
 Hồ sơ nông trại hiện tại: {farm_profile}
 Thửa đất và mùa vụ hiện tại: {plot_seasons}
+Đặt uses_farm_context=true chỉ khi câu trả lời thực sự cần dùng một hoặc nhiều
+giá trị đã lưu ở hai nguồn trên; nếu câu hỏi không phụ thuộc dữ liệu riêng của
+người dùng thì đặt false.
 Nếu status là planned hoặc có data_warning=active_season_starts_in_future, không
 được diễn giải mùa vụ đó là đã xuống giống dù recorded_status từng là active.
 
@@ -177,7 +215,11 @@ Câu hỏi: {state['question']}"""
     )
     state["context"]["action_request"] = action_request
     pure_action = bool(action_request.get("pure_action"))
-    need_rag = False if pure_action else decision.need_rag
+    uses_farm_context = (
+        decision.uses_farm_context or _question_uses_saved_farm_context(state)
+    )
+    direct_saved_fact = _is_direct_saved_farm_fact_question(state)
+    need_rag = False if pure_action or direct_saved_fact else decision.need_rag
     need_weather = False if pure_action else decision.need_weather or fallback.need_weather
     # Retrieval executes these subquestions concurrently. Keep all four
     # planner-supported branches so ordinary compound questions do not lose
@@ -197,6 +239,8 @@ Câu hỏi: {state['question']}"""
         "need_vision": bool(state.get("image_observations")),
         "vision_available": bool(state.get("visual_observations")),
         "action_intent": action_request.get("intent", "none"),
+        "uses_farm_context": uses_farm_context,
+        "direct_saved_farm_fact": direct_saved_fact,
     }
     state["risk_level"] = risk_level
     state["retry_count"] = 0

@@ -12,6 +12,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     python3.12-venv \
     python3.12-dev \
     && curl -sS https://bootstrap.pypa.io/get-pip.py | python3.12 \
+    && apt-get purge -y --auto-remove software-properties-common \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app

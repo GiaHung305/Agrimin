@@ -33,4 +33,11 @@ abstract final class AppColors {
   static const dangerDark = Color(0xFF8E322C);
   static const dangerSurface = Color(0xFFFFF1F0);
   static const softOverlay = Color(0x0D16332A);
+
+  static const darkBackground = Color(0xFF0D1713);
+  static const darkSurface = Color(0xFF15231D);
+  static const darkSurfaceRaised = Color(0xFF1B2C25);
+  static const darkInk = Color(0xFFE5F2EB);
+  static const darkMuted = Color(0xFFA9BDB4);
+  static const darkLine = Color(0xFF30453C);
 }

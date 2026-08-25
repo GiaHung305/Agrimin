@@ -9,8 +9,8 @@ import pytest
 BACKEND_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(BACKEND_ROOT))
 
-from app.services.farm_monitoring import POLICIES
-from eval.build_crop_knowledge_matrix import build_report, load_registry
+from app.services.farm_monitoring import POLICIES  # noqa: E402
+from eval.build_crop_knowledge_matrix import build_report, load_registry  # noqa: E402
 
 
 REGISTRY_PATH = BACKEND_ROOT / "eval" / "crop_knowledge_source_tags_v1.json"

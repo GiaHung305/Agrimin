@@ -124,6 +124,12 @@ async def post_guardrail_node(state: AgentState) -> AgentState:
             float(item.get("confidence") or 0.0)
             for item in state.get("visual_observations", [])
         ],
+        trusted_context_count=(
+            len(state.get("context", {}).get("plot_seasons") or [])
+            + int(bool(state.get("context", {}).get("farm_profile")))
+            if state.get("plan", {}).get("uses_farm_context", False)
+            else 0
+        ),
     )
 
     if state["confidence"] < 0.70:

@@ -430,10 +430,15 @@ def build_benchmark_report(
 def write_report_atomic(output: Path, report: dict[str, Any]) -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     temporary = output.with_name(f"{output.name}.tmp")
-    temporary.write_text(
-        json.dumps(report, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    temporary.replace(output)
+    try:
+        # Stream directly to disk instead of materializing a second full JSON
+        # string. This keeps checkpoint memory bounded on the 8 GB pilot host.
+        with temporary.open("w", encoding="utf-8") as handle:
+            json.dump(report, handle, ensure_ascii=False, indent=2)
+        temporary.replace(output)
+    except BaseException:
+        temporary.unlink(missing_ok=True)
+        raise
 
 
 async def run(

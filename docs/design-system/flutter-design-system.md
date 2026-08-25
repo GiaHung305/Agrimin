@@ -13,12 +13,21 @@ lib/design_system/
 ├── design_system.dart            # public barrel import
 ├── foundations/
 │   ├── app_colors.dart           # màu semantic, không đặt theo màn hình
+│   ├── app_breakpoints.dart      # giới hạn responsive
+│   ├── app_motion.dart           # duration và easing dùng chung
 │   ├── app_radius.dart           # cấp bo góc
 │   ├── app_spacing.dart          # thang khoảng cách
 │   └── app_typography.dart       # phân cấp chữ của sản phẩm
 ├── theme/
 │   └── app_theme.dart            # Material 3 ThemeData
 └── components/
+    ├── app_text_field.dart       # field form chuẩn
+    ├── app_card.dart             # surface tương tác dùng chung
+    ├── app_primary_button.dart   # CTA chính + loading
+    ├── app_status_banner.dart    # banner info/success/warning/error
+    ├── app_state.dart            # loading/empty/error/retry
+    ├── app_feedback.dart         # confirm dialog + snackbar
+    ├── app_responsive_content.dart # giới hạn độ rộng nội dung
     └── status_badge_icon.dart    # badge trạng thái có semantics
 ```
 
@@ -56,6 +65,32 @@ không nên tạo thêm spacing gần giống token hiện có.
 `AppTypography` thiết lập font, độ đậm, letter spacing và line height ở cấp
 `ThemeData`. Màn hình lấy style từ `Theme.of(context).textTheme`; chỉ override
 thuộc tính khi cần thể hiện một cấp thông tin riêng có chủ đích.
+
+### Responsive và motion
+
+`AppBreakpoints` cung cấp giới hạn compact/medium/expanded và độ rộng chuẩn cho
+form, trang nội dung. `AppMotion` cung cấp duration/easing; feature không tự tạo
+animation timing gần giống nhau ở từng màn hình.
+
+## Component dùng chung
+
+- `AppStatusBanner`: bốn cấp info/success/warning/error, luôn có icon và semantics.
+- `AppStateView`: empty/error, hỗ trợ CTA retry thống nhất.
+- `AppResponsiveContent`: giữ nội dung dễ đọc trên Chrome/tablet màn hình rộng.
+- `StatusBadgeIcon`: trạng thái chưa đọc/đang mở có semantic label.
+- `AppTextField`, `AppCard`, `AppPrimaryButton`: form, surface và CTA chuẩn.
+- `AppEmptyState`, `AppErrorState`, `AppLoadingState`: trạng thái trang rõ ràng.
+- `AppStatusBanner`: status info/success/warning/error.
+- `showAppConfirmDialog`, `AppSnackbar`: xác nhận và phản hồi nhất quán.
+
+## Dark mode và visual regression
+
+`AgriMindApp` dùng `ThemeMode.system`, với `buildAppTheme()` và
+`buildAppDarkTheme()` cùng semantic token. Hai baseline ở
+`test/goldens/design_system_light.png` và `design_system_dark.png` được kiểm tra
+bởi `design_system_golden_test.dart` trong mỗi lần chạy `flutter test`. Chỉ cập
+nhật golden bằng `--update-goldens` sau khi đã kiểm tra thay đổi hình ảnh có chủ
+đích.
 
 ## Quy tắc component
 

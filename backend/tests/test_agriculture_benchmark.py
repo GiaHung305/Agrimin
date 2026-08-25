@@ -280,6 +280,29 @@ def test_checkpoint_merges_in_dataset_order_and_writes_atomically(tmp_path):
     assert not output.with_name(f"{output.name}.tmp").exists()
 
 
+def test_checkpoint_failure_keeps_previous_report_and_removes_temp(
+    tmp_path,
+    monkeypatch,
+):
+    output = tmp_path / "agriculture-report.json"
+    output.write_text('{"previous": true}', encoding="utf-8")
+
+    def fail_during_dump(report, handle, **kwargs):
+        handle.write("{")
+        raise MemoryError("simulated checkpoint pressure")
+
+    monkeypatch.setattr(
+        "eval.run_agriculture_benchmark.json.dump",
+        fail_during_dump,
+    )
+
+    with pytest.raises(MemoryError, match="checkpoint pressure"):
+        write_report_atomic(output, {"next": True})
+
+    assert json.loads(output.read_text(encoding="utf-8")) == {"previous": True}
+    assert not output.with_name(f"{output.name}.tmp").exists()
+
+
 def test_promotion_gate_requires_full_sample_and_latency_quality():
     result = {
         "id": "one",

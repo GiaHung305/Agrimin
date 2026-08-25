@@ -6,6 +6,8 @@ import 'package:frontend_flutter/data/models/registration_result.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
 import 'package:frontend_flutter/features/auth/presentation/login_screen.dart';
 import 'package:frontend_flutter/features/auth/presentation/register_screen.dart';
+import 'package:frontend_flutter/features/auth/presentation/forgot_password_screen.dart';
+import 'package:frontend_flutter/features/assistant/presentation/chat_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -34,6 +36,29 @@ void main() {
     await tester.pumpWidget(const AgriMindApp());
 
     expect(find.text('Đang chuẩn bị AgriMind…'), findsOneWidget);
+  });
+
+  testWidgets('truncated chat stream releases the composer for another send', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: ChatScreen(
+          sendMessageStream: (_, _, _, _) => const Stream.empty(),
+        ),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Kiểm tra kết nối');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text('Mình chưa thể kết nối lúc này. Bạn thử lại sau ít phút nhé.'),
+      findsOneWidget,
+    );
+    expect(find.byIcon(Icons.arrow_upward_rounded), findsOneWidget);
   });
 
   testWidgets('notification icon shows a small unread badge', (tester) async {
@@ -88,6 +113,18 @@ void main() {
 
     expect(find.byType(RegisterScreen), findsOneWidget);
     expect(find.text('Tạo tài khoản mới'), findsOneWidget);
+  });
+
+  testWidgets('login opens password recovery', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const LoginScreen()),
+    );
+
+    await tester.tap(find.byKey(const Key('forgot-password-button')));
+    await tester.pumpAndSettle();
+
+    expect(find.byType(ForgotPasswordScreen), findsOneWidget);
+    expect(find.text('Lấy lại mật khẩu'), findsOneWidget);
   });
 
   testWidgets('registration validates fields before calling auth', (
@@ -161,5 +198,59 @@ void main() {
     expect(find.text('Kiểm tra email của bạn'), findsOneWidget);
     expect(find.textContaining('an@example.com'), findsOneWidget);
     expect(find.text('Quay lại đăng nhập'), findsOneWidget);
+  });
+
+  testWidgets('regular users do not see document administration', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const ChatScreen()),
+    );
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tài liệu'), findsNothing);
+  });
+
+  testWidgets('admins see document administration in the menu', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: const ChatScreen(canManageDocuments: true),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tài liệu'), findsOneWidget);
+  });
+
+  testWidgets('regular users do not see operations dashboard', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(theme: buildAppTheme(), home: const ChatScreen()),
+    );
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Vận hành hệ thống'), findsNothing);
+  });
+
+  testWidgets('operations admins see the worker dashboard entry', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: const ChatScreen(canViewOperations: true),
+      ),
+    );
+
+    await tester.tap(find.byTooltip('Menu'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Vận hành hệ thống'), findsOneWidget);
   });
 }

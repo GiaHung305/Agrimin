@@ -33,7 +33,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
   bool _obscurePassword = true;
   bool _obscureConfirmation = true;
   bool _confirmationSent = false;
+  bool _isResending = false;
   String? _error;
+  String? _resendMessage;
 
   @override
   void dispose() {
@@ -87,6 +89,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
         _error = 'Không thể kết nối để đăng ký. Bạn kiểm tra mạng rồi thử lại.';
       });
     }
+  }
+
+  Future<void> _resendConfirmation() async {
+    setState(() {
+      _isResending = true;
+      _resendMessage = null;
+    });
+    final error = await AuthService.resendVerificationEmail(
+      _emailController.text.trim(),
+    );
+    if (!mounted) return;
+    setState(() {
+      _isResending = false;
+      _resendMessage = error ?? 'Đã gửi lại email xác minh.';
+    });
   }
 
   @override
@@ -192,7 +209,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
               ),
               if (_error != null) ...[
                 const SizedBox(height: AppSpacing.sm),
-                AuthNotice.error(_error!),
+                AppStatusBanner.error(message: _error!),
               ],
               const SizedBox(height: AppSpacing.lg),
               FilledButton.icon(
@@ -234,9 +251,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
           color: AppColors.forest,
         ),
         const SizedBox(height: AppSpacing.md),
-        AuthNotice.success(
-          'AgriMind đã gửi liên kết xác minh đến ${_emailController.text.trim()}. '
-          'Hãy mở email, xác nhận tài khoản rồi quay lại đăng nhập.',
+        AppStatusBanner.success(
+          message:
+              'AgriMind đã gửi liên kết xác minh đến ${_emailController.text.trim()}. '
+              'Hãy mở email, xác nhận tài khoản rồi quay lại đăng nhập.',
+        ),
+        if (_resendMessage != null) ...[
+          const SizedBox(height: AppSpacing.sm),
+          AppStatusBanner(
+            kind: _resendMessage!.startsWith('Đã')
+                ? AppStatusKind.success
+                : AppStatusKind.error,
+            message: _resendMessage!,
+          ),
+        ],
+        const SizedBox(height: AppSpacing.sm),
+        OutlinedButton.icon(
+          key: const Key('resend-verification-button'),
+          onPressed: _isResending ? null : _resendConfirmation,
+          icon: const Icon(Icons.refresh_rounded),
+          label: Text(
+            _isResending ? 'Đang gửi lại…' : 'Gửi lại email xác minh',
+          ),
         ),
         const SizedBox(height: AppSpacing.lg),
         FilledButton.icon(

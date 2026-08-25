@@ -7,6 +7,7 @@ import 'package:frontend_flutter/data/services/auth_service.dart';
 import 'package:frontend_flutter/data/services/push_notification_service.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
 import 'package:frontend_flutter/features/admin/presentation/admin_screen.dart';
+import 'package:frontend_flutter/features/admin/presentation/operations_screen.dart';
 import 'package:frontend_flutter/features/auth/presentation/login_screen.dart';
 import 'package:frontend_flutter/features/farm/presentation/farm_profile_screen.dart';
 import 'package:frontend_flutter/features/notifications/presentation/notifications_screen.dart';
@@ -15,17 +16,32 @@ import 'package:frontend_flutter/features/tasks/presentation/tasks_screen.dart';
 import 'widgets/chat_input.dart';
 import 'widgets/message_bubble.dart';
 
+typedef ChatStreamSender =
+    Stream<Map<String, dynamic>> Function(
+      String question,
+      String? conversationId,
+      bool deepResearch,
+      List<ChatImageAttachment> images,
+    );
+
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
     super.key,
+    this.canManageDocuments = false,
+    this.canViewOperations = false,
     this.onTaskChanged,
     this.hasUnreadNotifications = false,
     this.onNotificationsTap,
+    this.sendMessageStream,
   });
+
+  final bool canManageDocuments;
+  final bool canViewOperations;
 
   final VoidCallback? onTaskChanged;
   final bool hasUnreadNotifications;
   final VoidCallback? onNotificationsTap;
+  final ChatStreamSender? sendMessageStream;
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -121,12 +137,14 @@ class _ChatScreenState extends State<ChatScreen> {
     try {
       Map<String, dynamic>? meta;
       var accumulatedText = '';
-      await for (final event in ApiService.sendMessageStream(
-        question,
-        conversationId,
-        deepResearch,
-        images,
-      )) {
+      var streamCompleted = false;
+      await for (final event
+          in (widget.sendMessageStream ?? ApiService.sendMessageStream)(
+            question,
+            conversationId,
+            deepResearch,
+            images,
+          )) {
         if (event['type'] == 'meta') {
           meta = event['payload'];
         } else if (event['type'] == 'chunk') {
@@ -136,6 +154,7 @@ class _ChatScreenState extends State<ChatScreen> {
             _scrollToLatest();
           }
         } else if (event['type'] == 'done') {
+          streamCompleted = true;
           final response = ChatResponse.fromJson({
             ...?meta,
             'answer': accumulatedText,
@@ -148,11 +167,22 @@ class _ChatScreenState extends State<ChatScreen> {
             });
             _scrollToLatest();
           }
+          break;
         }
+      }
+      if (!streamCompleted) {
+        throw const ApiException(
+          'Kết nối phản hồi đã đóng trước khi hoàn tất.',
+        );
       }
     } catch (error) {
       final message = error.toString();
-      if (message.contains('401')) {
+      if (error is ApiException && error.isUnauthorized) {
+        try {
+          await PushNotificationService.unregisterCurrentDevice();
+        } catch (_) {
+          // The session is already invalid; still stop token refresh locally.
+        }
         await AuthService.logout();
         if (mounted) {
           Navigator.pushReplacement(
@@ -192,11 +222,27 @@ class _ChatScreenState extends State<ChatScreen> {
         MaterialPageRoute(builder: (_) => const FarmProfileScreen()),
       );
     } else if (value == 'documents') {
+      if (!widget.canManageDocuments) return;
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => const AdminScreen()),
+        MaterialPageRoute(
+          builder: (_) => const AdminScreen(canManageDocuments: true),
+        ),
+      );
+    } else if (value == 'operations') {
+      if (!widget.canViewOperations) return;
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const OperationsScreen(canViewOperations: true),
+        ),
       );
     } else if (value == 'logout') {
+      try {
+        await PushNotificationService.unregisterCurrentDevice();
+      } catch (_) {
+        // Logout must still complete if FCM or the API is temporarily down.
+      }
       await AuthService.logout();
       if (mounted) {
         Navigator.pushReplacement(
@@ -283,30 +329,39 @@ class _ChatScreenState extends State<ChatScreen> {
               tooltip: 'Menu',
               icon: const Icon(Icons.more_horiz_rounded),
               onSelected: _onMenu,
-              itemBuilder: (context) => const [
-                PopupMenuItem(
+              itemBuilder: (context) => [
+                const PopupMenuItem(
                   value: 'farm',
                   child: ListTile(
                     leading: Icon(Icons.agriculture_outlined),
                     title: Text('Nông trại của tôi'),
                   ),
                 ),
-                PopupMenuItem(
+                const PopupMenuItem(
                   value: 'tasks',
                   child: ListTile(
                     leading: Icon(Icons.checklist_rounded),
                     title: Text('Công việc'),
                   ),
                 ),
-                PopupMenuItem(
-                  value: 'documents',
-                  child: ListTile(
-                    leading: Icon(Icons.folder_outlined),
-                    title: Text('Tài liệu'),
+                if (widget.canManageDocuments)
+                  const PopupMenuItem(
+                    value: 'documents',
+                    child: ListTile(
+                      leading: Icon(Icons.folder_outlined),
+                      title: Text('Tài liệu'),
+                    ),
                   ),
-                ),
-                PopupMenuDivider(),
-                PopupMenuItem(
+                if (widget.canViewOperations)
+                  const PopupMenuItem(
+                    value: 'operations',
+                    child: ListTile(
+                      leading: Icon(Icons.monitor_heart_outlined),
+                      title: Text('Vận hành hệ thống'),
+                    ),
+                  ),
+                const PopupMenuDivider(),
+                const PopupMenuItem(
                   value: 'logout',
                   child: ListTile(
                     leading: Icon(Icons.logout_rounded),
@@ -359,10 +414,22 @@ class _WelcomePanel extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const prompts = [
-      ('☀️', 'Thời tiết hôm nay', 'Xem dự báo cho nông trại của tôi'),
-      ('🌱', 'Tư vấn cây trồng', 'Cây đang vàng lá thì nên kiểm tra gì?'),
-      ('⏰', 'Tạo nhắc việc', 'Nhắc tôi kiểm tra ruộng ngày mai lúc 7 giờ'),
+    const prompts = <(IconData, String, String)>[
+      (
+        Icons.wb_sunny_outlined,
+        'Thời tiết hôm nay',
+        'Xem dự báo cho nông trại của tôi',
+      ),
+      (
+        Icons.eco_outlined,
+        'Tư vấn cây trồng',
+        'Cây đang vàng lá thì nên kiểm tra gì?',
+      ),
+      (
+        Icons.alarm_add_outlined,
+        'Tạo nhắc việc',
+        'Nhắc tôi kiểm tra ruộng ngày mai lúc 7 giờ',
+      ),
     ];
     return SingleChildScrollView(
       padding: const EdgeInsets.fromLTRB(20, 22, 20, 30),
@@ -382,7 +449,7 @@ class _WelcomePanel extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Chào bạn 👋',
+                  'Chào bạn',
                   style: TextStyle(
                     color: AppColors.onPrimary,
                     fontSize: 24,
@@ -421,7 +488,7 @@ class _WelcomePanel extends StatelessWidget {
                     padding: const EdgeInsets.all(AppSpacing.md),
                     child: Row(
                       children: [
-                        Text(prompt.$1, style: const TextStyle(fontSize: 24)),
+                        Icon(prompt.$1, size: 25, color: AppColors.forest),
                         const SizedBox(width: 13),
                         Expanded(
                           child: Column(

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import 'api_service.dart';
@@ -48,12 +49,21 @@ class PushNotificationService {
   }
 
   static Future<void> registerCurrentDevice() async {
+    if (kIsWeb) return;
     final token = await FirebaseMessaging.instance.getToken();
     if (token != null) await ApiService.registerDeviceToken(token);
     _tokenRefreshSubscription ??= FirebaseMessaging.instance.onTokenRefresh
         .listen((newToken) {
           ApiService.registerDeviceToken(newToken).catchError((_) {});
         });
+  }
+
+  static Future<void> unregisterCurrentDevice() async {
+    if (kIsWeb) return;
+    await _tokenRefreshSubscription?.cancel();
+    _tokenRefreshSubscription = null;
+    final token = await FirebaseMessaging.instance.getToken();
+    if (token != null) await ApiService.revokeDeviceToken(token);
   }
 
   static Future<void> _showForegroundNotification(RemoteMessage message) async {

@@ -10,7 +10,14 @@ import 'package:frontend_flutter/features/notifications/presentation/notificatio
 import 'package:frontend_flutter/features/tasks/presentation/tasks_screen.dart';
 
 class HomeShell extends StatefulWidget {
-  const HomeShell({super.key});
+  const HomeShell({
+    super.key,
+    this.canManageDocuments = false,
+    this.canViewOperations = false,
+  });
+
+  final bool canManageDocuments;
+  final bool canViewOperations;
 
   @override
   State<HomeShell> createState() => _HomeShellState();
@@ -138,6 +145,8 @@ class _HomeShellState extends State<HomeShell> with WidgetsBindingObserver {
       index: _selectedIndex,
       children: [
         ChatScreen(
+          canManageDocuments: widget.canManageDocuments,
+          canViewOperations: widget.canViewOperations,
           onTaskChanged: _markTasksChanged,
           hasUnreadNotifications: _hasUnreadNotifications,
           onNotificationsTap: () => _selectDestination(2),

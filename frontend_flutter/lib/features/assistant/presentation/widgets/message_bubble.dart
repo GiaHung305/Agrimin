@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
 
 import 'package:frontend_flutter/data/models/chat_response.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
@@ -184,12 +185,25 @@ class _ResponseContent extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          response.answer,
-          style: const TextStyle(
-            color: AppColors.ink,
-            height: 1.52,
-            fontSize: 15,
+        MarkdownBody(
+          data: response.answer,
+          softLineBreak: true,
+          styleSheet: MarkdownStyleSheet(
+            p: const TextStyle(
+              color: AppColors.ink,
+              height: 1.52,
+              fontSize: 15,
+            ),
+            strong: const TextStyle(
+              color: AppColors.ink,
+              fontWeight: FontWeight.w800,
+            ),
+            listBullet: const TextStyle(
+              color: AppColors.forest,
+              height: 1.52,
+              fontSize: 15,
+            ),
+            blockSpacing: AppSpacing.sm,
           ),
         ),
         if (response.citations.isNotEmpty) ...[

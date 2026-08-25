@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import re
 import unicodedata
 
@@ -10,6 +11,7 @@ from app.retrieval.fusion import reciprocal_rank_fusion
 from app.services.farm_monitoring import POLICIES, VEGETABLE_POLICY_SPECS
 from app.services.reranker_client import rerank
 
+logger = logging.getLogger(__name__)
 
 MAX_RERANK_CANDIDATES = 4
 MAX_RERANK_CHARACTERS = 800
@@ -269,10 +271,29 @@ def _select_rerank_candidates(
 
 
 async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
-    dense_results, bm25_results = await asyncio.gather(
+    dense_result, bm25_result = await asyncio.gather(
         dense_search(query, top_k=10),
         bm25_search(query, top_k=MAX_BM25_CANDIDATES),
+        return_exceptions=True,
     )
+    if isinstance(dense_result, Exception):
+        logger.warning(
+            "Dense retrieval unavailable; continuing with sparse retrieval "
+            "dependency_error=%s",
+            type(dense_result).__name__,
+        )
+        dense_results = []
+    else:
+        dense_results = dense_result
+    if isinstance(bm25_result, Exception):
+        logger.warning(
+            "Sparse retrieval unavailable; continuing with dense retrieval "
+            "dependency_error=%s",
+            type(bm25_result).__name__,
+        )
+        bm25_results = []
+    else:
+        bm25_results = bm25_result
 
     fused = reciprocal_rank_fusion(
         dense_results,
@@ -293,7 +314,15 @@ async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
     # chunk in ``candidates`` for generation and citation traceability.
     documents_text = [c["content"][:MAX_RERANK_CHARACTERS] for c in candidates]
 
-    scores = await rerank(query, documents_text)
+    reranker_unavailable = False
+    try:
+        scores = await rerank(query, documents_text)
+    except Exception:
+        reranker_unavailable = True
+        logger.warning(
+            "Reranker unavailable; preserving fused retrieval order",
+        )
+        scores = [0.0] * len(candidates)
     scored = list(zip(candidates, scores))
     if scores and max(scores) >= settings.rerank_min_confidence:
         ranked = sorted(scored, key=lambda item: item[1], reverse=True)
@@ -303,7 +332,11 @@ async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
         # override dense+sparse consensus. Preserve RRF order while retaining
         # raw reranker scores for guardrail/confidence decisions.
         ranked = scored
-        strategy = "fusion_low_rerank_confidence"
+        strategy = (
+            "fusion_rerank_unavailable"
+            if reranker_unavailable
+            else "fusion_low_rerank_confidence"
+        )
 
     ranked, crop_intent_applied = _apply_explicit_crop_intent(query, ranked)
     if crop_intent_applied:

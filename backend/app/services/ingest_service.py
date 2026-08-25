@@ -45,7 +45,7 @@ async def _lock_document_title(db: AsyncSession, title: str) -> None:
 
 async def _active_documents(db: AsyncSession, title: str) -> list[Document]:
     result = await db.execute(
-        select(Document).where(Document.title == title, Document.is_active == True)
+        select(Document).where(Document.title == title, Document.is_active.is_(True))
     )
     return list(result.scalars().all())
 

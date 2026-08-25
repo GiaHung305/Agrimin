@@ -8,7 +8,22 @@ import '../models/farm_task.dart';
 import '../models/app_notification.dart';
 import '../models/farm_monitoring_schedule.dart';
 import '../models/farm_plot.dart';
+import '../models/user_session.dart';
+import '../models/worker_dashboard.dart';
 import 'auth_service.dart';
+import 'sse_frame_decoder.dart';
+
+class ApiException implements Exception {
+  const ApiException(this.message, {this.statusCode});
+
+  final String message;
+  final int? statusCode;
+
+  bool get isUnauthorized => statusCode == 401;
+
+  @override
+  String toString() => message;
+}
 
 class ApiService {
   static String get baseUrl {
@@ -22,28 +37,102 @@ class ApiService {
     return "http://localhost:8000/api/v1";
   }
 
+  static Future<UserSession> getCurrentSession() async {
+    Future<http.Response> load(String token) => http.get(
+      Uri.parse('$baseUrl/auth/session'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+
+    var token = await AuthService.getToken();
+    if (token == null) {
+      throw const ApiException('Bạn cần đăng nhập lại.', statusCode: 401);
+    }
+    var response = await load(token);
+    if (response.statusCode == 401) {
+      token = await AuthService.refreshAccessToken();
+      if (token == null) {
+        throw const ApiException(
+          'Phiên đăng nhập đã hết hạn.',
+          statusCode: 401,
+        );
+      }
+      response = await load(token);
+    }
+    if (response.statusCode != 200) {
+      throw ApiException(
+        'Không thể xác thực phiên đăng nhập.',
+        statusCode: response.statusCode,
+      );
+    }
+    return UserSession.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
+  static Future<WorkerDashboard> getWorkerDashboard() async {
+    final token = await AuthService.getToken();
+    if (token == null) {
+      throw const ApiException('Bạn cần đăng nhập lại.', statusCode: 401);
+    }
+    final response = await http.get(
+      Uri.parse('$baseUrl/operations/worker-dashboard'),
+      headers: {'Authorization': 'Bearer $token'},
+    );
+    if (response.statusCode != 200) {
+      throw ApiException(
+        'Không thể tải trạng thái worker.',
+        statusCode: response.statusCode,
+      );
+    }
+    return WorkerDashboard.fromJson(
+      jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>,
+    );
+  }
+
   static Stream<Map<String, dynamic>> sendMessageStream(
     String question,
     String? conversationId,
     bool deepResearch,
     List<ChatImageAttachment> images,
   ) async* {
-    final token = await AuthService.getToken();
-    final request = http.Request("POST", Uri.parse("$baseUrl/chat/stream"));
-    request.headers["Authorization"] = "Bearer $token";
-    request.headers["Content-Type"] = "application/json";
-    request.body = jsonEncode({
+    final payload = jsonEncode({
       "question": question,
       "conversation_id": conversationId,
       "deep_research": deepResearch,
       "images": images.map((image) => image.toJson()).toList(),
     });
 
-    final streamedResponse = await request.send();
+    Future<http.StreamedResponse> send(String token) {
+      final request = http.Request("POST", Uri.parse("$baseUrl/chat/stream"));
+      request.headers["Authorization"] = "Bearer $token";
+      request.headers["Content-Type"] = "application/json";
+      request.body = payload;
+      return request.send();
+    }
+
+    var token = await AuthService.getToken();
+    if (token == null) {
+      throw const ApiException('Bạn cần đăng nhập lại.', statusCode: 401);
+    }
+    var streamedResponse = await send(token);
+    if (streamedResponse.statusCode == 401) {
+      await streamedResponse.stream.drain<void>();
+      token = await AuthService.refreshAccessToken();
+      if (token == null) {
+        throw const ApiException(
+          'Phiên đăng nhập đã hết hạn.',
+          statusCode: 401,
+        );
+      }
+      streamedResponse = await send(token);
+    }
     if (streamedResponse.statusCode != 200) {
       final body = await utf8.decoder.bind(streamedResponse.stream).join();
       if (streamedResponse.statusCode == 401) {
-        throw Exception("Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại");
+        throw const ApiException(
+          'Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.',
+          statusCode: 401,
+        );
       }
       try {
         final payload = jsonDecode(body) as Map<String, dynamic>;
@@ -55,26 +144,16 @@ class ApiService {
       throw Exception("Lỗi server: ${streamedResponse.statusCode}");
     }
 
-    // A network chunk is not necessarily one SSE event. Buffer until the SSE
-    // frame delimiter so partial JSON never reaches jsonDecode.
-    String buffer = "";
+    // A network chunk is not necessarily one SSE event. Decode only complete
+    // frames and accept LF, CRLF, or CR delimiters used by SSE transports.
+    final decoder = SseFrameDecoder();
     await for (final chunk in streamedResponse.stream.transform(utf8.decoder)) {
-      buffer += chunk;
-      while (true) {
-        final separatorIndex = buffer.indexOf("\n\n");
-        if (separatorIndex < 0) break;
-
-        final frame = buffer.substring(0, separatorIndex);
-        buffer = buffer.substring(separatorIndex + 2);
-        final data = frame
-            .split("\n")
-            .where((line) => line.startsWith("data: "))
-            .map((line) => line.substring(6))
-            .join("\n");
-        if (data.isNotEmpty) {
-          yield jsonDecode(data) as Map<String, dynamic>;
-        }
+      for (final event in decoder.add(chunk)) {
+        yield event;
       }
+    }
+    for (final event in decoder.close()) {
+      yield event;
     }
   }
 
@@ -120,6 +199,23 @@ class ApiService {
     );
     if (response.statusCode != 200) {
       throw Exception("Không thể đăng ký thiết bị nhận thông báo");
+    }
+  }
+
+  static Future<void> revokeDeviceToken(String token) async {
+    final accessToken = await AuthService.getToken();
+    if (accessToken == null) return;
+    final response = await http.delete(
+      Uri.parse(
+        '$baseUrl/assistant/device-tokens/${Uri.encodeComponent(token)}',
+      ),
+      headers: {'Authorization': 'Bearer $accessToken'},
+    );
+    if (response.statusCode != 200 && response.statusCode != 404) {
+      throw ApiException(
+        'Không thể thu hồi thiết bị nhận thông báo.',
+        statusCode: response.statusCode,
+      );
     }
   }
 

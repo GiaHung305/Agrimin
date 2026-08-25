@@ -1,8 +1,10 @@
 ﻿backend/.env
 backend/venv/
-backend/__pycache__/
-backend/**/__pycache__/
+**/__pycache__/
+**/.pytest_cache/
 *.pyc
+.coverage
+htmlcov/
 embedding-service/venv312/
 frontend_flutter/.dart_tool/
 frontend_flutter/build/
@@ -13,5 +15,6 @@ vision_training/data/raw/
 vision_training/data/processed/
 vision_training/artifacts/
 vision_training/.venv/
-backend/eval/agriculture_benchmark_*_20??-??-??.json
-backend/eval/golden_eval_*_20??-??-??.json
+backend/eval/agriculture_benchmark_*_20??-??-??*.json
+backend/eval/golden_eval_*_20??-??-??*.json
+backend/eval/*.json.tmp

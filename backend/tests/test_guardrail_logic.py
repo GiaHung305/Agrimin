@@ -280,6 +280,31 @@ def test_confidence_uses_grounded_research_sources_when_rag_is_empty():
     assert confidence >= 0.70
 
 
+def test_confidence_uses_trusted_farm_context_for_direct_saved_facts():
+    confidence = compute_confidence(
+        rerank_scores=[],
+        reflection_notes="sufficient",
+        trusted_context_count=1,
+    )
+
+    assert confidence == pytest.approx(0.90)
+
+
+@pytest.mark.asyncio
+async def test_guardrail_rewards_farm_context_only_when_planner_used_it():
+    state = make_fake_state(require_citation=False, rerank_scores=[])
+    state["retrieved_docs"] = []
+    state["context"]["rerank_scores"] = []
+    state["context"]["farm_profile"] = {"province": "Lâm Đồng"}
+    state["context"]["plot_seasons"] = [{"crop": "Cà chua"}]
+    state["plan"]["uses_farm_context"] = True
+
+    result = await post_guardrail_node(state)
+
+    assert result["confidence"] == pytest.approx(0.90)
+    assert "khuyến nông" not in result["draft_answer"]
+
+
 def test_confidence_uses_visual_signal_without_treating_it_as_diagnosis():
     confidence = compute_confidence(
         rerank_scores=[],

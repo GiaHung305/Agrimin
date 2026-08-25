@@ -106,15 +106,17 @@ Benchmark ảnh thật cần tài khoản eval đã xác thực, email đó nằ
 `VISION_TEST_USER_EMAILS`, và xác nhận rõ việc dùng quota:
 
 ```powershell
-docker compose -f docker-compose.yml -f docker-compose.eval.yml run --rm backend `
+docker compose -f compose.yaml -f compose.eval.yaml run --rm backend `
   python -m eval.run_vision_eval `
   --output /vision_training/artifacts/gemini_vision_v1/field_safety_v2.json `
   --allow-provider-calls
 ```
 
-Overlay `docker-compose.eval.yml` chỉ gắn read-only thư mục ảnh thô vào container
+Overlay `compose.eval.yaml` chỉ gắn read-only thư mục ảnh thô vào container
 benchmark và cho phép ghi report vào `vision_training/artifacts`; nó không đưa dữ
-liệu đánh giá vào Docker image hoặc luồng production thông thường.
+liệu đánh giá vào Docker image hoặc luồng production thông thường. Overlay cũng
+đặt `EVAL_API_URL=http://backend:8000/api/v1/chat/stream`; không đổi thành
+`localhost`, vì evaluator chạy trong một one-shot container riêng.
 
 Runner chấm 24 ảnh: 6 cây khỏe, 10 ca dễ nhầm, 4 ảnh chất lượng kém và 4 OOD.
 Mặc định runner ghép tối đa hai ảnh cây cùng nhóm bằng `--batch-size 2`, nhưng gửi
@@ -138,7 +140,7 @@ và chọn mẫu held-out hợp lệ kế tiếp trong cùng lớp.
 Ví dụ tiếp tục đúng report sau khi dừng:
 
 ```powershell
-docker compose -f docker-compose.yml -f docker-compose.eval.yml run --rm backend `
+docker compose -f compose.yaml -f compose.eval.yaml run --rm backend `
   python -m eval.run_vision_eval `
   --output /vision_training/artifacts/gemini_vision_v1/field_safety_v5.json `
   --resume-from /vision_training/artifacts/gemini_vision_v1/field_safety_v5.json `
@@ -164,10 +166,10 @@ generation:
 ```powershell
 $env:VISION_CHALLENGER_MODEL = "gemini-3.1-flash-lite"
 $env:GENERATION_CHALLENGER_MODEL = "gemini-3.1-flash-lite"
-docker compose -f docker-compose.yml -f docker-compose.eval.yml `
+docker compose -f compose.yaml -f compose.eval.yaml `
   --profile vision-challenger up -d vision-challenger
 
-docker compose -f docker-compose.yml -f docker-compose.eval.yml run --rm `
+docker compose -f compose.yaml -f compose.eval.yaml run --rm `
   -e MODEL_VISION=$env:VISION_CHALLENGER_MODEL `
   -e MODEL_GENERATION=$env:GENERATION_CHALLENGER_MODEL `
   -e EVAL_API_URL=http://vision-challenger:8000/api/v1/chat/stream `
@@ -189,7 +191,7 @@ của hai model hay hai phiên bản policy/prompt. Sau khi
 đánh giá xong, dừng service tạm bằng:
 
 ```powershell
-docker compose -f docker-compose.yml -f docker-compose.eval.yml `
+docker compose -f compose.yaml -f compose.eval.yaml `
   --profile vision-challenger stop vision-challenger
 ```
 

@@ -739,8 +739,13 @@ async def chat_stream(
                         for node_name in payload:
                             node_timings_ms[str(node_name)] = round(duration_ms, 1)
                         previous_node_at = completed_at
-        except (ServerError, ModelProviderUnavailable, httpx.RequestError):
-            logger.warning("AI dependency temporarily unavailable during chat")
+        except (ServerError, ModelProviderUnavailable, httpx.RequestError) as exc:
+            logger.warning(
+                "AI dependency temporarily unavailable during chat "
+                "error_type=%s reason_code=%s",
+                type(exc).__name__,
+                getattr(exc, "reason_code", "dependency_unavailable"),
+            )
             response_data = _provider_unavailable_response(prepared.conversation_id)
             response_data["trace"]["vision"] = _build_trace(
                 prepared.initial_state

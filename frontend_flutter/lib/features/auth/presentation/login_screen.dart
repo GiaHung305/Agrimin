@@ -4,6 +4,7 @@ import 'package:frontend_flutter/app/app_gate.dart';
 import 'package:frontend_flutter/data/services/auth_service.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
 import 'package:frontend_flutter/features/auth/presentation/register_screen.dart';
+import 'package:frontend_flutter/features/auth/presentation/forgot_password_screen.dart';
 import 'package:frontend_flutter/features/auth/presentation/widgets/auth_scaffold.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -123,9 +124,23 @@ class _LoginScreenState extends State<LoginScreen> {
               validator: (value) =>
                   (value?.isEmpty ?? true) ? 'Vui lòng nhập mật khẩu.' : null,
             ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                key: const Key('forgot-password-button'),
+                onPressed: _isLoading
+                    ? null
+                    : () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const ForgotPasswordScreen(),
+                        ),
+                      ),
+                child: const Text('Quên mật khẩu?'),
+              ),
+            ),
             if (_error != null) ...[
               const SizedBox(height: AppSpacing.sm),
-              AuthNotice.error(_error!),
+              AppStatusBanner.error(message: _error!),
             ],
             const SizedBox(height: AppSpacing.lg),
             FilledButton.icon(

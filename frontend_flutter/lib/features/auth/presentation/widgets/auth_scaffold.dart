@@ -36,7 +36,7 @@ class AuthScaffold extends StatelessWidget {
                 ),
                 child: ConstrainedBox(
                   constraints: BoxConstraints(
-                    maxWidth: 480,
+                    maxWidth: AppBreakpoints.formMax,
                     minHeight: size.height - 96,
                   ),
                   child: Column(
@@ -148,48 +148,6 @@ class AuthBrandMark extends StatelessWidget {
       ),
     ],
   );
-}
-
-class AuthNotice extends StatelessWidget {
-  const AuthNotice.error(this.message, {super.key}) : success = false;
-  const AuthNotice.success(this.message, {super.key}) : success = true;
-
-  final String message;
-  final bool success;
-
-  @override
-  Widget build(BuildContext context) {
-    final foreground = success ? AppColors.forest : AppColors.dangerDark;
-    return Semantics(
-      liveRegion: true,
-      child: Container(
-        padding: const EdgeInsets.all(AppSpacing.sm),
-        decoration: BoxDecoration(
-          color: success ? AppColors.successSurface : AppColors.dangerSurface,
-          borderRadius: BorderRadius.circular(AppRadius.control),
-        ),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(
-              success
-                  ? Icons.mark_email_read_outlined
-                  : Icons.info_outline_rounded,
-              color: foreground,
-              size: 20,
-            ),
-            const SizedBox(width: AppSpacing.xs),
-            Expanded(
-              child: Text(
-                message,
-                style: TextStyle(color: foreground, fontSize: 13, height: 1.4),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 }
 
 class _AuthBackdrop extends StatelessWidget {

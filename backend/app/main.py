@@ -6,7 +6,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
-from app.api.routes import assistant, chat, documents, health
+from app.api.routes import assistant, auth, chat, documents, health, operations
 from app.core.ai_service_client import close_ai_service_client
 from app.core.checkpointer import close_checkpointer, init_checkpointer
 from app.core.config import settings
@@ -26,9 +26,11 @@ app.add_middleware(
 )
 
 app.include_router(health.router, prefix="/api/v1")
+app.include_router(auth.router, prefix="/api/v1")
 app.include_router(chat.router, prefix="/api/v1")
 app.include_router(documents.router, prefix="/api/v1")
 app.include_router(assistant.router, prefix="/api/v1")
+app.include_router(operations.router, prefix="/api/v1")
 
 limiter = Limiter(key_func=get_remote_address)
 app.state.limiter = limiter

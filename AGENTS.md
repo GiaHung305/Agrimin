@@ -13,7 +13,7 @@ source, Docker image hay artefact phát hành của AgriMind.
 
 - `backend/`: FastAPI, LangGraph, PostgreSQL, Redis, Qdrant, guardrail và worker.
 - `embedding-service/`: dịch vụ embedding/reranking độc lập; có thể chạy GPU qua
-  `docker-compose.gpu.yml`.
+  `compose.gpu.yaml`.
 - `backend/mcp_servers/`: MCP server thời tiết.
 - `frontend_flutter/`: ứng dụng giao diện chính cho người dùng khi triển khai.
 - `docs/`: tài liệu kiến trúc và vận hành.
@@ -62,10 +62,10 @@ nhau. Script chẩn đoán chỉ được gọi lại chính API/workflow produc
 - Trong container, gọi dịch vụ khác bằng tên Compose, không dùng `localhost`.
   Ví dụ: `embedding-service:8001`, `postgres:5432`, `redis:6379`,
   `qdrant:6333`, `mcp-weather-server:8002`.
-- `docker-compose.yml` phải chạy được theo cấu hình nền. GPU được bật bằng overlay:
+- `compose.yaml` phải chạy được theo cấu hình nền. GPU được bật bằng overlay:
 
   ```powershell
-  docker compose -f docker-compose.yml -f docker-compose.gpu.yml up -d
+  docker compose -f compose.yaml -f compose.gpu.yaml up -d
   ```
 
 - RTX 3050 4 GB chỉ nên dành GPU cho embedding theo cấu hình đã kiểm chứng; không
@@ -78,7 +78,7 @@ nhau. Script chẩn đoán chỉ được gọi lại chính API/workflow produc
 - Flutter là giao diện production; không thêm luồng gọi chat bằng câu lệnh.
 - Dùng `ApiService` làm điểm gọi backend thống nhất. Android emulator truy cập
   máy host qua `10.0.2.2`, không qua `localhost`.
-- Giữ Material 3 và token màu trong `lib/theme/app_theme.dart`; tránh hardcode
+- Giữ Material 3 và token màu trong `lib/design_system/theme/app_theme.dart`; tránh hardcode
   một hệ màu mới riêng lẻ ở từng màn hình.
 - Điều hướng chính nằm trong `HomeShell`: Trợ lý, Công việc, Thông báo và Nông
   trại. Tránh tạo menu hoặc màn hình trùng chức năng nếu không có lý do UX rõ.
@@ -107,7 +107,7 @@ Chạy kiểm tra phù hợp với phần đã sửa. Trước khi commit thay �
 thống, tối thiểu chạy:
 
 ```powershell
-docker compose -f docker-compose.yml -f docker-compose.gpu.yml exec backend pytest -q
+docker compose -f compose.yaml -f compose.gpu.yaml exec backend pytest -q
 cd frontend_flutter
 flutter analyze lib
 flutter build apk --debug

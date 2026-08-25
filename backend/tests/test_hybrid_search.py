@@ -41,6 +41,59 @@ async def test_hybrid_search_runs_dense_and_bm25_concurrently(monkeypatch):
 
 
 @pytest.mark.asyncio
+async def test_hybrid_search_degrades_to_sparse_when_dense_is_unavailable(
+    monkeypatch,
+):
+    async def unavailable_dense(*args, **kwargs):
+        raise ConnectionError("temporary qdrant read failure")
+
+    sparse = [{"document_id": "sparse", "chunk_id": "1", "content": "safe"}]
+    monkeypatch.setattr(hybrid_module, "dense_search", unavailable_dense)
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=sparse),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "rerank",
+        lambda *args: asyncio.sleep(0, result=[0.9]),
+    )
+
+    result = await hybrid_module.hybrid_search("query")
+
+    assert result[0]["document_id"] == "sparse"
+
+
+@pytest.mark.asyncio
+async def test_hybrid_search_preserves_fusion_when_reranker_is_unavailable(
+    monkeypatch,
+):
+    evidence = [{"document_id": "doc", "chunk_id": "1", "content": "safe"}]
+    monkeypatch.setattr(
+        hybrid_module,
+        "dense_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=evidence),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=[]),
+    )
+
+    async def unavailable_reranker(*args, **kwargs):
+        raise TimeoutError("temporary reranker timeout")
+
+    monkeypatch.setattr(hybrid_module, "rerank", unavailable_reranker)
+
+    result = await hybrid_module.hybrid_search("query")
+
+    assert result[0]["document_id"] == "doc"
+    assert result[0]["rerank_score"] == 0.0
+    assert result[0]["ranking_strategy"] == "fusion_rerank_unavailable"
+
+
+@pytest.mark.asyncio
 async def test_low_confidence_reranker_does_not_override_fusion(monkeypatch):
     monkeypatch.setattr(
         hybrid_module,

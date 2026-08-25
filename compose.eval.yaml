@@ -1,12 +1,18 @@
 services:
   backend:
+    environment:
+      # `docker compose run backend ...` creates a one-shot evaluator
+      # container. Its localhost is not the production API container, so route
+      # every benchmark through the existing backend service on the Compose
+      # network.
+      EVAL_API_URL: http://backend:8000/api/v1/chat/stream
     volumes:
       - ./vision_training/data/raw:/vision_training/data/raw:ro
       - ./vision_training/artifacts:/vision_training/artifacts
 
   vision-challenger:
     profiles: ["vision-challenger"]
-    image: agrimind-backend
+    image: agrimind-backend:local
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -33,7 +39,7 @@ services:
 
   chat-challenger:
     profiles: ["chat-challenger"]
-    image: agrimind-backend
+    image: agrimind-backend:local
     build:
       context: ./backend
       dockerfile: Dockerfile

@@ -202,7 +202,9 @@ agrimind/
 │       └── features/         # feature-owned presentation
 ├── vision_training/          # offline ML workspace
 ├── docs/                     # architecture/design/quality/reviews
-└── docker-compose*.yml
+├── compose.yaml
+├── compose.gpu.yaml
+└── compose.eval.yaml
 ```
 
 ## 10. Quy tắc mở rộng

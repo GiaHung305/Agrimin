@@ -19,6 +19,7 @@ from app.persistence.models import (
     FarmWeatherObservation,
     Notification,
     NotificationDelivery,
+    NotificationDeliveryAttempt,
     PendingAction,
 )
 from app.services.farm_monitoring import (
@@ -1016,6 +1017,7 @@ async def test_notify_reuses_existing_dedupe_record(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_notify_persists_push_outbox_without_sending_before_commit(monkeypatch):
+    now = datetime(2026, 8, 12, 1, 0)
     device = SimpleNamespace(id=uuid.uuid4(), token="device-token")
     added = []
 
@@ -1035,6 +1037,7 @@ async def test_notify_persists_push_outbox_without_sending_before_commit(monkeyp
         flush=AsyncMock(side_effect=flush),
     )
     send_push = AsyncMock()
+    monkeypatch.setattr(worker, "utc_now_naive", lambda: now)
     monkeypatch.setattr(worker, "send_push", send_push)
 
     notice, created = await worker._notify(
@@ -1052,6 +1055,8 @@ async def test_notify_persists_push_outbox_without_sending_before_commit(monkeyp
     assert delivery.notification_id == notice.id
     assert delivery.device_token_id == device.id
     assert delivery.status == "pending"
+    assert notice.delivered_at == now
+    assert delivery.next_attempt_at == now
     send_push.assert_not_awaited()
 
 
@@ -1092,9 +1097,10 @@ async def test_push_delivery_retries_then_marks_delivered(monkeypatch):
                 ScalarResult(device),
             ]
         ),
+        add=Mock(),
         commit=AsyncMock(),
     )
-    monkeypatch.setattr(worker, "local_now_naive", lambda: now)
+    monkeypatch.setattr(worker, "utc_now_naive", lambda: now)
     monkeypatch.setattr(
         worker, "AsyncSessionLocal", lambda: AsyncSessionContext(session)
     )
@@ -1105,6 +1111,9 @@ async def test_push_delivery_retries_then_marks_delivered(monkeypatch):
     assert delivery.status == "retry"
     assert delivery.attempt_count == 1
     assert delivery.next_attempt_at > now
+    first_attempt = session.add.call_args.args[0]
+    assert isinstance(first_attempt, NotificationDeliveryAttempt)
+    assert first_attempt.status == "retry"
     session.commit.assert_awaited_once()
 
     delivery.next_attempt_at = now
@@ -1148,9 +1157,10 @@ async def test_push_delivery_cancels_when_owned_target_is_missing(monkeypatch):
                 ScalarResult(None),
             ]
         ),
+        add=Mock(),
         commit=AsyncMock(),
     )
-    monkeypatch.setattr(worker, "local_now_naive", lambda: now)
+    monkeypatch.setattr(worker, "utc_now_naive", lambda: now)
     monkeypatch.setattr(
         worker, "AsyncSessionLocal", lambda: AsyncSessionContext(session)
     )

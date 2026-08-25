@@ -1,0 +1,5 @@
+[allowlist]
+description = "Firebase Android client configuration is public by design"
+paths = [
+  '''frontend_flutter/android/app/google-services\.json''',
+]

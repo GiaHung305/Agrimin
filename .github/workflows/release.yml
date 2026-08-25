@@ -1,0 +1,174 @@
+name: Release artifacts
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  quality:
+    uses: ./.github/workflows/quality-gates.yml
+    permissions:
+      contents: read
+
+  containers:
+    name: Publish container images
+    needs: quality
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Resolve image prefix
+        id: image
+        shell: bash
+        run: echo "prefix=ghcr.io/${GITHUB_REPOSITORY,,}" >> "$GITHUB_OUTPUT"
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/metadata-action@v5
+        id: backend_meta
+        with:
+          images: ${{ steps.image.outputs.prefix }}/backend
+          tags: |
+            type=ref,event=tag
+            type=sha
+      - uses: docker/build-push-action@v6
+        with:
+          context: backend
+          file: backend/Dockerfile
+          push: true
+          tags: ${{ steps.backend_meta.outputs.tags }}
+          labels: ${{ steps.backend_meta.outputs.labels }}
+          cache-from: type=gha,scope=backend
+          cache-to: type=gha,mode=max,scope=backend
+      - uses: docker/metadata-action@v5
+        id: embedding_meta
+        with:
+          images: ${{ steps.image.outputs.prefix }}/embedding
+          tags: |
+            type=ref,event=tag
+            type=sha
+      - uses: docker/build-push-action@v6
+        with:
+          context: embedding-service
+          file: embedding-service/Dockerfile
+          push: true
+          tags: ${{ steps.embedding_meta.outputs.tags }}
+          labels: ${{ steps.embedding_meta.outputs.labels }}
+          cache-from: type=gha,scope=embedding
+          cache-to: type=gha,mode=max,scope=embedding
+
+  flutter-artifacts:
+    name: Build production Flutter artifacts
+    needs: quality
+    runs-on: ubuntu-latest
+    environment: production
+    env:
+      API_BASE_URL: ${{ vars.API_BASE_URL }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+      SUPABASE_PUBLISHABLE_KEY: ${{ vars.SUPABASE_PUBLISHABLE_KEY }}
+      AUTH_REDIRECT_URL: ${{ vars.AUTH_REDIRECT_URL }}
+      ANDROID_APPLICATION_ID: ${{ vars.ANDROID_APPLICATION_ID }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install dependencies
+        working-directory: frontend_flutter
+        run: flutter pub get --enforce-lockfile
+      - name: Validate production client configuration
+        shell: bash
+        run: |
+          missing=0
+          for name in API_BASE_URL SUPABASE_URL SUPABASE_PUBLISHABLE_KEY AUTH_REDIRECT_URL ANDROID_APPLICATION_ID; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing production environment variable: ${name}"
+              missing=1
+            fi
+          done
+          [[ "$API_BASE_URL" == https://*/api/v1 ]] || {
+            echo "::error::API_BASE_URL must be HTTPS and end with /api/v1"
+            missing=1
+          }
+          [[ "$SUPABASE_URL" == https://* ]] || {
+            echo "::error::SUPABASE_URL must use HTTPS"
+            missing=1
+          }
+          [[ "$AUTH_REDIRECT_URL" == https://* ]] || {
+            echo "::error::AUTH_REDIRECT_URL must use HTTPS"
+            missing=1
+          }
+          exit "$missing"
+      - name: Prepare protected Android release configuration
+        working-directory: frontend_flutter
+        shell: bash
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_GOOGLE_SERVICES_JSON_BASE64: ${{ secrets.ANDROID_GOOGLE_SERVICES_JSON_BASE64 }}
+        run: |
+          missing=0
+          for name in ANDROID_KEYSTORE_BASE64 ANDROID_KEYSTORE_PASSWORD ANDROID_KEY_PASSWORD ANDROID_KEY_ALIAS ANDROID_GOOGLE_SERVICES_JSON_BASE64; do
+            if [[ -z "${!name}" ]]; then
+              echo "::error::Missing protected Android release secret: ${name}"
+              missing=1
+            fi
+          done
+          if [[ "$missing" -ne 0 ]]; then
+            exit 1
+          fi
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/release.keystore
+          printf '%s' "$ANDROID_GOOGLE_SERVICES_JSON_BASE64" | base64 --decode > android/app/google-services.json
+          {
+            printf 'storePassword=%s\n' "$ANDROID_KEYSTORE_PASSWORD"
+            printf 'keyPassword=%s\n' "$ANDROID_KEY_PASSWORD"
+            printf 'keyAlias=%s\n' "$ANDROID_KEY_ALIAS"
+            printf 'storeFile=release.keystore\n'
+          } > android/key.properties
+      - name: Build web release
+        working-directory: frontend_flutter
+        shell: bash
+        run: |
+          flutter build web --release \
+            "--dart-define=API_BASE_URL=${API_BASE_URL}" \
+            "--dart-define=SUPABASE_URL=${SUPABASE_URL}" \
+            "--dart-define=SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}" \
+            "--dart-define=AUTH_REDIRECT_URL=${AUTH_REDIRECT_URL}"
+      - name: Build signed Android release APK
+        working-directory: frontend_flutter
+        shell: bash
+        env:
+          ORG_GRADLE_PROJECT_AGRIMIND_APPLICATION_ID: ${{ env.ANDROID_APPLICATION_ID }}
+        run: |
+          flutter build apk --release \
+            "--dart-define=API_BASE_URL=${API_BASE_URL}" \
+            "--dart-define=SUPABASE_URL=${SUPABASE_URL}" \
+            "--dart-define=SUPABASE_PUBLISHABLE_KEY=${SUPABASE_PUBLISHABLE_KEY}" \
+            "--dart-define=AUTH_REDIRECT_URL=${AUTH_REDIRECT_URL}"
+      - name: Remove temporary Android release configuration
+        if: always()
+        working-directory: frontend_flutter
+        shell: bash
+        run: rm -f android/key.properties android/app/release.keystore android/app/google-services.json
+      - uses: actions/upload-artifact@v4
+        with:
+          name: agrimind-flutter-${{ github.run_number }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            frontend_flutter/build/web
+            frontend_flutter/build/app/outputs/flutter-apk/app-release.apk

@@ -45,7 +45,10 @@ def _bounded_missing_evidence(state: AgentState, values: list[str]) -> list[str]
 
 
 async def reflection_node(state: AgentState) -> AgentState:
-    if state.get("context", {}).get("deterministic_action_response"):
+    if (
+        state.get("context", {}).get("deterministic_action_response")
+        or state.get("plan", {}).get("direct_saved_farm_fact", False)
+    ):
         state["reflection_notes"] = "sufficient"
         return state
 

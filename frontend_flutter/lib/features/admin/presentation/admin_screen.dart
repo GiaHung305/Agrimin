@@ -6,7 +6,9 @@ import 'package:frontend_flutter/data/services/api_service.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
 
 class AdminScreen extends StatefulWidget {
-  const AdminScreen({super.key});
+  const AdminScreen({super.key, required this.canManageDocuments});
+
+  final bool canManageDocuments;
 
   @override
   State<AdminScreen> createState() => _AdminScreenState();
@@ -21,7 +23,7 @@ class _AdminScreenState extends State<AdminScreen> {
   @override
   void initState() {
     super.initState();
-    _loadDocuments();
+    if (widget.canManageDocuments) _loadDocuments();
   }
 
   Future<void> _loadDocuments() async {
@@ -46,22 +48,20 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Future<void> _handleUpload() async {
-    final result = await FilePicker.platform.pickFiles(
+    final file = await FilePicker.pickFile(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
-      withData: true,
     );
-    if (!mounted || result == null || result.files.single.bytes == null) {
-      return;
-    }
-    final file = result.files.single;
+    if (!mounted || file == null) return;
+    final fileBytes = await file.readAsBytes();
+    if (!mounted) return;
     final metadata = await _requestMetadata(file.name);
     if (!mounted || metadata == null) return;
 
     setState(() => _isUploading = true);
     try {
       await ApiService.uploadDocument(
-        fileBytes: file.bytes!,
+        fileBytes: fileBytes,
         fileName: file.name,
         title: metadata.title,
         source: metadata.source.isEmpty ? null : metadata.source,
@@ -162,26 +162,16 @@ class _AdminScreenState extends State<AdminScreen> {
   }
 
   Future<void> _handleDeactivate(DocumentItem document) async {
-    final accepted = await showDialog<bool>(
+    final accepted = await showAppConfirmDialog(
       context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Ngừng dùng tài liệu?'),
-        content: Text(
+      title: 'Ngừng dùng tài liệu?',
+      message:
           '“${document.title}” sẽ không còn được dùng để trả lời các câu hỏi mới.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext, false),
-            child: const Text('Giữ lại'),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.pop(dialogContext, true),
-            child: const Text('Ngừng dùng'),
-          ),
-        ],
-      ),
+      cancelLabel: 'Giữ lại',
+      confirmLabel: 'Ngừng dùng',
+      destructive: true,
     );
-    if (accepted != true) {
+    if (!accepted) {
       return;
     }
     try {
@@ -248,6 +238,15 @@ class _AdminScreenState extends State<AdminScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (!widget.canManageDocuments) {
+      return Scaffold(
+        appBar: AppBar(title: const Text('Kho kiến thức')),
+        body: const AppStateView.error(
+          title: 'Bạn không có quyền truy cập',
+          message: 'Kho kiến thức chỉ dành cho quản trị viên AgriMind.',
+        ),
+      );
+    }
     final activeCount = _documents
         .where((document) => document.isActive)
         .length;
@@ -286,35 +285,47 @@ class _AdminScreenState extends State<AdminScreen> {
           : RefreshIndicator(
               onRefresh: _loadDocuments,
               child: ListView(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 100),
+                padding: const EdgeInsets.only(top: 12, bottom: 100),
                 children: [
-                  _KnowledgeHero(total: _documents.length, active: activeCount),
-                  const SizedBox(height: AppSpacing.xl),
-                  Text(
-                    'Tài liệu đã nạp',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  const SizedBox(height: 5),
-                  const Text(
-                    'Tài liệu đang bật sẽ được trợ lý ưu tiên tham khảo.',
-                    style: TextStyle(color: AppColors.muted, fontSize: 13),
-                  ),
-                  const SizedBox(height: 14),
-                  if (_documents.isEmpty)
-                    const _EmptyDocuments()
-                  else
-                    ..._documents.map(
-                      (document) => Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: _DocumentCard(
-                          document: document,
-                          onClassify: () => _handleSourceType(document),
-                          onDeactivate: () => _handleDeactivate(document),
+                  AppResponsiveContent(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        _KnowledgeHero(
+                          total: _documents.length,
+                          active: activeCount,
                         ),
-                      ),
+                        const SizedBox(height: AppSpacing.xl),
+                        Text(
+                          'Tài liệu đã nạp',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w800),
+                        ),
+                        const SizedBox(height: 5),
+                        const Text(
+                          'Tài liệu đang bật sẽ được trợ lý ưu tiên tham khảo.',
+                          style: TextStyle(
+                            color: AppColors.muted,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                        if (_documents.isEmpty)
+                          const _EmptyDocuments()
+                        else
+                          ..._documents.map(
+                            (document) => Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: _DocumentCard(
+                                document: document,
+                                onClassify: () => _handleSourceType(document),
+                                onDeactivate: () => _handleDeactivate(document),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
+                  ),
                 ],
               ),
             ),

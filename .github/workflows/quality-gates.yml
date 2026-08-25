@@ -1,0 +1,129 @@
+name: Quality gates
+
+on:
+  workflow_call:
+  push:
+    branches: [main, "codex/**"]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.lock
+      - name: Install backend dependencies
+        working-directory: backend
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.lock
+      - name: Compile backend modules
+        run: python -m compileall -q backend/app
+      - name: Run backend tests
+        working-directory: backend
+        run: python -m pytest tests -q
+
+  migrations:
+    name: Migration integrity
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: agrimind
+          POSTGRES_PASSWORD: ci_password
+          POSTGRES_DB: agrimind
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U agrimind -d agrimind"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      DATABASE_URL: postgresql+asyncpg://agrimind:ci_password@localhost:5432/agrimind
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.lock
+      - name: Install backend dependencies
+        working-directory: backend
+        run: pip install -r requirements.lock
+      - name: Upgrade a clean database
+        working-directory: backend
+        run: alembic upgrade head
+      - name: Check ORM and migration drift
+        working-directory: backend
+        run: alembic check
+
+  secrets:
+    name: Secret scanning
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Scan Git history for secrets
+        uses: gitleaks/gitleaks-action@v2
+
+  flutter:
+    name: Flutter analyze, test and build
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Install Flutter dependencies
+        working-directory: frontend_flutter
+        run: flutter pub get --enforce-lockfile
+      - name: Verify formatting
+        working-directory: frontend_flutter
+        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Analyze Flutter source
+        working-directory: frontend_flutter
+        run: flutter analyze lib test
+      - name: Run Flutter tests
+        working-directory: frontend_flutter
+        run: flutter test
+      - name: Verify Flutter Web build
+        working-directory: frontend_flutter
+        run: flutter build web --release
+      - name: Verify Android APK build
+        working-directory: frontend_flutter
+        run: flutter build apk --debug
+
+  containers:
+    name: Container configuration
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Prepare non-secret Compose configuration
+        shell: bash
+        run: cp backend/.env.example backend/.env
+      - name: Validate Compose files
+        run: docker compose -f compose.yaml -f compose.gpu.yaml config --quiet
+      - name: Build backend image
+        run: docker build --file backend/Dockerfile backend

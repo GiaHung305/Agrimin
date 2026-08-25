@@ -1,3 +1,5 @@
+name: agrimind
+
 services:
   postgres:
     image: postgres:16-alpine
@@ -32,7 +34,7 @@ services:
       retries: 5
 
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.18.3
     container_name: agrimind_qdrant
     restart: unless-stopped
     ports:
@@ -41,7 +43,25 @@ services:
     volumes:
       - qdrant_data:/qdrant/storage
 
+  migrate:
+    image: agrimind-backend:local
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    restart: "no"
+    env_file:
+      - ./backend/.env
+    environment:
+      DATABASE_URL: postgresql+asyncpg://agrimind:agrimind_dev_password@postgres:5432/agrimind
+    depends_on:
+      postgres:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+    command: alembic upgrade head
+
   backend:
+    image: agrimind-backend:local
     build:
       context: ./backend
       dockerfile: Dockerfile
@@ -60,8 +80,8 @@ services:
       EMBEDDING_SERVICE_URL: http://embedding-service:8001
       MCP_WEATHER_URL: http://mcp-weather-server:8002/mcp
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
       qdrant:
@@ -73,9 +93,7 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000
 
   assistant-worker:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
+    image: agrimind-backend:local
     restart: unless-stopped
     env_file:
       - ./backend/.env
@@ -84,14 +102,20 @@ services:
       REDIS_URL: redis://redis:6379/0
       MCP_WEATHER_URL: http://mcp-weather-server:8002/mcp
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
       redis:
         condition: service_healthy
     volumes:
       - ./backend:/app
       - ./backend/secrets:/firebase:ro
     command: python -m app.workers.assistant_worker
+    healthcheck:
+      test: ["CMD", "python", "-m", "app.workers.healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 45s
 
   embedding-service:
     build:
@@ -114,9 +138,7 @@ services:
       start_period: 600s
   
   mcp-weather-server:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.mcp
+    image: agrimind-backend:local
     container_name: agrimind_mcp_weather
     restart: unless-stopped
     ports:
@@ -128,6 +150,7 @@ services:
     depends_on:
       redis:
         condition: service_healthy
+    command: python mcp_servers/weather_server.py
 
 volumes:
   postgres_data:
