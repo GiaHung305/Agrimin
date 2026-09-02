@@ -1,0 +1,65 @@
+{
+  "version": "crop-data-expansion-batch-21-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn",
+    "www.fao.org"
+  ],
+  "documents": [
+    {
+      "title": "Khuyến nông Việt Nam - lịch và lượng bón cho xoài Thái Lan Đài Loan miền núi phía Bắc",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "format": "pdf",
+      "page_start": 25,
+      "page_end": 25,
+      "start_marker": "đ. Bón phân",
+      "end_marker": "e. Kỹ thuật tạo tán, tỉa cành",
+      "content_prefix": "Phạm vi bắt buộc: xoài/mango, Mangifera indica, giống xoài Thái Lan và Đài Loan theo hướng VietGAP tại trung du và miền núi phía Bắc. Đây là bằng chứng định lượng phân bón có rủi ro cao: chỉ trích dẫn khi câu trả lời giữ đúng tuổi cây, loại phân, đơn vị trên cây, số lần bón và mùa nêu trong nguồn; không chuyển sang giống, vùng, mật độ hay tình trạng đất khác. Cần ưu tiên phân tích đất và khuyến cáo địa phương hiện hành trước khi áp dụng.",
+      "crop_keys": ["mango"],
+      "required_terms": [
+        "đ. Bón phân",
+        "Giai đoạn cây con",
+        "Giai đoạn cây lớn",
+        "Năm đầu",
+        "Từ năm thứ 2 trở đi",
+        "đầu và cuối mùa mưa"
+      ],
+      "forbidden_terms": [
+        "Paclobutrazol",
+        "DAP + KCl",
+        "MKP 0 - 52 - 34",
+        "KNO3"
+      ],
+      "min_chars": 1100
+    },
+    {
+      "title": "FAO - nguyên tắc quản lý phân hữu cơ cho dứa Sugarloaf",
+      "source": "https://www.fao.org/fileadmin/templates/organicexports/docs/Organic_sugarloaf_pineapple_manual.pdf",
+      "source_type": "international_organization",
+      "author": "Agro Eco West Africa; FAO project GCP/RAF/404/GER",
+      "format": "pdf",
+      "page_start": 12,
+      "page_end": 13,
+      "start_marker": "ORGANIC FERTILIZATION MANAGEMENT",
+      "end_marker": "COMPOST PREPARATION",
+      "content_prefix": "Phạm vi cây và hệ thống: dứa Sugarloaf/pineapple, Ananas comosus, sản xuất hữu cơ quy mô nông hộ tại Ghana. Lát FAO này chỉ bổ sung nguyên tắc dùng phân xanh, tàn dư dứa, compost, phân chuồng và vật liệu phủ; không áp lịch Ghana, lượng compost hoặc điều kiện đất nguyên xi cho Việt Nam. Cần kết hợp phân tích đất, giống dứa địa phương và hướng dẫn của cơ quan chuyên môn Việt Nam.",
+      "crop_keys": ["pineapple"],
+      "required_terms": [
+        "ORGANIC FERTILIZATION MANAGEMENT",
+        "green manure",
+        "pineapples production",
+        "compost",
+        "soil organic matter content",
+        "pH in acid soils"
+      ],
+      "forbidden_terms": [
+        "pesticide",
+        "herbicide",
+        "ethephon",
+        "calcium carbide"
+      ],
+      "min_chars": 1200
+    }
+  ]
+}

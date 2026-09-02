@@ -1,10 +1,12 @@
 import json
 import logging
+from datetime import datetime
 
 import httpx
 
 from app.core.config import settings
 from app.core.redis_client import redis_client
+from app.tools.weather_contract import LOCAL_WEATHER_TZ
 
 
 CACHE_TTL_SECONDS = 900
@@ -46,7 +48,20 @@ def summarize_forecast(entries: list[dict], max_days: int = 3) -> list[dict]:
     """Aggregate OpenWeather's 3-hour intervals into deterministic daily data."""
     grouped: dict[str, list[dict]] = {}
     for entry in entries:
-        date_text = str(entry.get("dt_txt", "")).split(" ")[0]
+        timestamp = entry.get("dt")
+        date_text = ""
+        if timestamp is not None and not isinstance(timestamp, bool):
+            try:
+                date_text = datetime.fromtimestamp(
+                    float(timestamp),
+                    LOCAL_WEATHER_TZ,
+                ).date().isoformat()
+            except (OSError, OverflowError, TypeError, ValueError):
+                date_text = ""
+        if not date_text:
+            # Legacy fixtures and defensive provider fallback. Production
+            # OpenWeather rows include ``dt`` and therefore use Vietnam time.
+            date_text = str(entry.get("dt_txt", "")).split(" ")[0]
         if not date_text:
             continue
         if date_text not in grouped and len(grouped) >= max_days:

@@ -23,6 +23,7 @@ from eval.run_eval import (
     citation_matches,
     evaluation_question_id,
     get_supabase_token,
+    is_provider_unavailable_response,
     invoke_production_chat,
 )
 from app.core.model_registry import runtime_fingerprint, runtime_versions
@@ -104,6 +105,7 @@ def claim_citation_coverage(answer: str, groups: list[list[str]]) -> float:
 
 def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]:
     answer = str(response.get("answer") or "")
+    provider_unavailable = is_provider_unavailable_response(response)
     safety_behavior = case.get("expected_safety_behavior")
     if safety_behavior == "block_or_refuse":
         status = response.get("guardrail_status")
@@ -161,6 +163,8 @@ def score_case(case: dict[str, Any], response: dict[str, Any]) -> dict[str, Any]
         )
     )
     return {
+        "provider_unavailable": provider_unavailable,
+        "failure_reason": "provider_unavailable" if provider_unavailable else None,
         "guardrail_ok": guardrail_ok,
         "answer_ok": answer_ok,
         "citation_ok": citation_ok,
@@ -220,6 +224,13 @@ def case_needs_rerun(result: dict[str, Any] | None) -> bool:
     return provider.get("status") == "temporarily_unavailable"
 
 
+def _is_provider_unavailable_result(result: dict[str, Any]) -> bool:
+    if result.get("provider_unavailable") is True:
+        return True
+    provider = (result.get("trace") or {}).get("provider") or {}
+    return provider.get("status") == "temporarily_unavailable"
+
+
 def percentile(values: list[float], quantile: float) -> float:
     if not values:
         return 0.0
@@ -265,6 +276,8 @@ async def run_case(
             "category": case["category"],
             "latency_seconds": round(time.perf_counter() - queued_at, 2),
             "error": f"{type(exc).__name__}: {str(exc)[:300]}",
+            "provider_unavailable": False,
+            "failure_reason": "request_error",
             "guardrail_ok": False,
             "answer_ok": False,
             "citation_ok": False,
@@ -293,6 +306,15 @@ def summarize(
 ) -> dict[str, Any]:
     thresholds = thresholds or {}
     total = len(results)
+    provider_unavailable_count = sum(
+        _is_provider_unavailable_result(item) for item in results
+    )
+    infrastructure_error_count = sum(bool(item.get("error")) for item in results)
+    quality_evaluable = [
+        item
+        for item in results
+        if not _is_provider_unavailable_result(item) and not item.get("error")
+    ]
     latencies = [float(item["latency_seconds"]) for item in results]
     confidence_values = [
         float(item["confidence"])
@@ -343,6 +365,10 @@ def summarize(
     p95_latency = percentile(latencies, 0.95)
     checks = {
         "sample_complete": expected_sample_size is None or total == expected_sample_size,
+        "provider_availability": (
+            provider_unavailable_count == 0
+            and infrastructure_error_count == 0
+        ),
         "pass_rate": pass_rate >= float(thresholds.get("minimum_pass_rate", 0.0)),
         "citation_match_rate": citation_match_rate
         >= float(thresholds.get("minimum_citation_match_rate", 0.0)),
@@ -362,6 +388,14 @@ def summarize(
         "total": total,
         "passed": sum(bool(item["passed"]) for item in results),
         "pass_rate": round(pass_rate, 4),
+        "provider_unavailable_count": provider_unavailable_count,
+        "infrastructure_error_count": infrastructure_error_count,
+        "quality_evaluable_count": len(quality_evaluable),
+        "quality_pass_rate": round(
+            sum(bool(item["passed"]) for item in quality_evaluable)
+            / len(quality_evaluable),
+            4,
+        ) if quality_evaluable else 0.0,
         "citation_match_rate": round(citation_match_rate, 4),
         "traceable_citation_rate": round(traceable_citation_rate, 4),
         "claim_citation_rate": round(claim_citation_rate, 4),
@@ -392,7 +426,8 @@ def summarize(
             {
                 key: item.get(key)
                 for key in (
-                    "id", "category", "error", "guardrail_status", "guardrail_ok",
+                    "id", "category", "error", "failure_reason",
+                    "provider_unavailable", "guardrail_status", "guardrail_ok",
                     "citation_ok", "traceable_citation_ok", "claim_citation_coverage",
                     "research_ok", "research_freshness_ok", "term_coverage",
                     "latency_seconds", "citation_titles",

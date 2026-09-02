@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 import 'package:frontend_flutter/data/models/chat_image.dart';
@@ -23,6 +25,33 @@ typedef ChatStreamSender =
       bool deepResearch,
       List<ChatImageAttachment> images,
     );
+
+class _ChatRequestControl {
+  bool cancelled = false;
+  StreamIterator<Map<String, dynamic>>? iterator;
+}
+
+bool isRetryableChatResponse(ChatResponse? response) => const {
+  'service_status',
+  'weather_unavailable',
+}.contains(response?.trace?.guardrail['response_kind']);
+
+String friendlyChatError(Object error) {
+  final message = error.toString().replaceFirst('Exception: ', '').trim();
+  if (message.contains('Ảnh') || message.contains('ảnh')) return message;
+  if (error is ApiException) {
+    if (error.statusCode == 429) {
+      return 'Hệ thống đang xử lý nhiều yêu cầu. Bạn chờ một chút rồi thử lại nhé.';
+    }
+    if ({502, 503, 504}.contains(error.statusCode)) {
+      return 'Dịch vụ trả lời đang tạm bận. Câu hỏi chưa hoàn tất, bạn có thể thử lại.';
+    }
+    if (message.contains('đóng trước khi hoàn tất')) {
+      return 'Phản hồi bị gián đoạn trước khi hoàn tất. Bạn có thể thử lại ngay.';
+    }
+  }
+  return 'Chưa thể kết nối với AgriMind. Bạn kiểm tra mạng rồi thử lại nhé.';
+}
 
 class ChatScreen extends StatefulWidget {
   const ChatScreen({
@@ -51,6 +80,8 @@ class _ChatScreenState extends State<ChatScreen> {
   final List<Map<String, dynamic>> _messages = [];
   final ScrollController _scrollController = ScrollController();
   bool _isLoading = false;
+  int? _loadingMessageIndex;
+  _ChatRequestControl? _activeRequest;
   String? conversationId;
 
   @override
@@ -61,6 +92,12 @@ class _ChatScreenState extends State<ChatScreen> {
 
   @override
   void dispose() {
+    final activeRequest = _activeRequest;
+    if (activeRequest != null) {
+      activeRequest.cancelled = true;
+      final iterator = activeRequest.iterator;
+      if (iterator != null) unawaited(iterator.cancel());
+    }
     _scrollController.dispose();
     super.dispose();
   }
@@ -124,33 +161,88 @@ class _ChatScreenState extends State<ChatScreen> {
     bool deepResearch,
     List<ChatImageAttachment> images,
   ) async {
+    if (_isLoading) return;
+    final messageIndex = _messages.length;
     setState(() {
       _messages.add({
         'question': question,
         'response': null,
         'partialText': '',
+        'progressText': 'Đang hiểu câu hỏi…',
+        'errorText': null,
         'imageCount': images.length,
+        'imageNames': images.map((image) => image.name).toList(),
+        'deepResearch': deepResearch,
       });
       _isLoading = true;
+      _loadingMessageIndex = messageIndex;
     });
     _scrollToLatest();
+    await _streamMessage(messageIndex, question, deepResearch, images);
+  }
+
+  Future<void> _retryMessage(int messageIndex) async {
+    if (_isLoading || messageIndex >= _messages.length) return;
+    final message = _messages[messageIndex];
+    if ((message['imageCount'] as int? ?? 0) > 0) return;
+    setState(() {
+      message['response'] = null;
+      message['partialText'] = '';
+      message['progressText'] = 'Đang hiểu câu hỏi…';
+      message['errorText'] = null;
+      _isLoading = true;
+      _loadingMessageIndex = messageIndex;
+    });
+    await _streamMessage(
+      messageIndex,
+      message['question'] as String,
+      message['deepResearch'] as bool? ?? false,
+      const [],
+    );
+  }
+
+  Future<void> _streamMessage(
+    int messageIndex,
+    String question,
+    bool deepResearch,
+    List<ChatImageAttachment> images,
+  ) async {
+    final requestControl = _ChatRequestControl();
+    _activeRequest = requestControl;
     try {
       Map<String, dynamic>? meta;
       var accumulatedText = '';
       var streamCompleted = false;
-      await for (final event
-          in (widget.sendMessageStream ?? ApiService.sendMessageStream)(
-            question,
-            conversationId,
-            deepResearch,
-            images,
-          )) {
+      final iterator = StreamIterator(
+        (widget.sendMessageStream ?? ApiService.sendMessageStream)(
+          question,
+          conversationId,
+          deepResearch,
+          images,
+        ),
+      );
+      requestControl.iterator = iterator;
+      while (await iterator.moveNext()) {
+        if (requestControl.cancelled) return;
+        final event = iterator.current;
         if (event['type'] == 'meta') {
           meta = event['payload'];
+          final streamedConversationId = meta?['conversation_id']?.toString();
+          if (streamedConversationId != null &&
+              streamedConversationId.isNotEmpty) {
+            conversationId = streamedConversationId;
+          }
+        } else if (event['type'] == 'progress') {
+          final progress = event['payload']?.toString().trim();
+          if (progress != null && progress.isNotEmpty && mounted) {
+            setState(() => _messages[messageIndex]['progressText'] = progress);
+          }
         } else if (event['type'] == 'chunk') {
           accumulatedText += event['payload'];
           if (mounted) {
-            setState(() => _messages.last['partialText'] = accumulatedText);
+            setState(
+              () => _messages[messageIndex]['partialText'] = accumulatedText,
+            );
             _scrollToLatest();
           }
         } else if (event['type'] == 'done') {
@@ -162,21 +254,23 @@ class _ChatScreenState extends State<ChatScreen> {
           conversationId = response.conversationId ?? conversationId;
           if (mounted) {
             setState(() {
-              _messages.last['response'] = response;
+              _messages[messageIndex]['response'] = response;
               _isLoading = false;
+              _loadingMessageIndex = null;
             });
             _scrollToLatest();
           }
           break;
         }
       }
+      if (requestControl.cancelled) return;
       if (!streamCompleted) {
         throw const ApiException(
           'Kết nối phản hồi đã đóng trước khi hoàn tất.',
         );
       }
     } catch (error) {
-      final message = error.toString();
+      if (requestControl.cancelled) return;
       if (error is ApiException && error.isUnauthorized) {
         try {
           await PushNotificationService.unregisterCurrentDevice();
@@ -194,19 +288,52 @@ class _ChatScreenState extends State<ChatScreen> {
       }
       if (mounted) {
         setState(() {
-          final isImageError =
-              message.contains('Ảnh') || message.contains('ảnh');
-          _messages.last['response'] = ChatResponse(
-            answer: isImageError
-                ? message.replaceFirst('Exception: ', '')
-                : 'Mình chưa thể kết nối lúc này. Bạn thử lại sau ít phút nhé.',
-            citations: const [],
-            confidence: 0,
-            riskLevel: 'low',
-          );
+          _messages[messageIndex]['response'] = null;
+          _messages[messageIndex]['partialText'] = '';
+          _messages[messageIndex]['errorText'] = friendlyChatError(error);
           _isLoading = false;
+          _loadingMessageIndex = null;
         });
       }
+    } finally {
+      final iterator = requestControl.iterator;
+      if (iterator != null && !requestControl.cancelled) {
+        await iterator.cancel();
+      }
+      if (identical(_activeRequest, requestControl)) {
+        _activeRequest = null;
+      }
+    }
+  }
+
+  void _cancelCurrentResponse() {
+    final requestControl = _activeRequest;
+    final messageIndex = _loadingMessageIndex;
+    if (!_isLoading || requestControl == null || messageIndex == null) return;
+
+    requestControl.cancelled = true;
+    final hasImages = (_messages[messageIndex]['imageCount'] as int? ?? 0) > 0;
+    setState(() {
+      _messages[messageIndex]['response'] = null;
+      _messages[messageIndex]['partialText'] = '';
+      _messages[messageIndex]['errorText'] = hasImages
+          ? 'Bạn đã dừng câu trả lời. Hãy gửi lại ảnh khi muốn thử lại.'
+          : 'Bạn đã dừng câu trả lời. Bạn có thể thử lại khi sẵn sàng.';
+      _isLoading = false;
+      _loadingMessageIndex = null;
+      if (identical(_activeRequest, requestControl)) {
+        _activeRequest = null;
+      }
+    });
+    _scrollToLatest();
+
+    final iterator = requestControl.iterator;
+    if (iterator != null) {
+      unawaited(
+        iterator.cancel().catchError((_) {
+          // Transport teardown cannot change the already restored composer.
+        }),
+      );
     }
   }
 
@@ -386,21 +513,36 @@ class _ChatScreenState extends State<ChatScreen> {
                     itemCount: _messages.length,
                     itemBuilder: (context, index) {
                       final message = _messages[index];
+                      final response = message['response'] as ChatResponse?;
+                      final canRetry =
+                          index == _messages.length - 1 &&
+                          (message['imageCount'] as int? ?? 0) == 0 &&
+                          (message['errorText'] != null ||
+                              isRetryableChatResponse(response));
                       return MessageBubble(
                         question: message['question'],
                         imageCount: message['imageCount'] ?? 0,
-                        response: message['response'],
+                        imageNames: List<String>.from(
+                          message['imageNames'] ?? const <String>[],
+                        ),
+                        response: response,
                         isLoading:
-                            index == _messages.length - 1 &&
-                            _isLoading &&
+                            _loadingMessageIndex == index &&
                             message['response'] == null,
                         partialText: message['partialText'],
+                        progressText: message['progressText'],
+                        errorText: message['errorText'],
+                        onRetry: canRetry ? () => _retryMessage(index) : null,
                         onResolveAction: _resolveAction,
                       );
                     },
                   ),
           ),
-          ChatInput(onSend: _handleSend, isLoading: _isLoading),
+          ChatInput(
+            onSend: _handleSend,
+            onCancel: _cancelCurrentResponse,
+            isLoading: _isLoading,
+          ),
         ],
       ),
     );

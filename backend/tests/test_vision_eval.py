@@ -208,11 +208,55 @@ def test_benchmark_selection_can_skip_quality_ineligible_members():
     }
 
 
+def test_benchmark_selection_replaces_versioned_excluded_members():
+    excluded = "root/test/Tomato leaf/mislabeled.jpg"
+    names = [
+        excluded,
+        "root/test/Tomato leaf/usable-a.jpg",
+        "root/test/Tomato leaf/usable-b.jpg",
+    ]
+    manifest = {
+        "plantdoc": {
+            "split": "test",
+            "excluded_members": {excluded: "confirmed label mismatch"},
+            "healthy": {"classes": ["Tomato leaf"], "samples_per_class": 2},
+            "look_alike": {"groups": []},
+        }
+    }
+
+    cases = plantdoc_benchmark_cases(names, manifest)
+
+    assert {case["member"] for case in cases} == {
+        "root/test/Tomato leaf/usable-a.jpg",
+        "root/test/Tomato leaf/usable-b.jpg",
+    }
+
+
+def test_benchmark_selection_rejects_stale_exclusion_members():
+    manifest = {
+        "plantdoc": {
+            "split": "test",
+            "excluded_members": {
+                "root/test/Tomato leaf/missing.jpg": "confirmed label mismatch"
+            },
+            "healthy": {"classes": ["Tomato leaf"], "samples_per_class": 1},
+            "look_alike": {"groups": []},
+        }
+    }
+
+    with pytest.raises(ValueError, match="missing from the archive"):
+        plantdoc_benchmark_cases(
+            ["root/test/Tomato leaf/usable.jpg"],
+            manifest,
+        )
+
+
 def test_versioned_manifest_has_six_healthy_images_and_observability_gates():
     manifest_path = Path(__file__).resolve().parents[1] / "eval/vision_benchmark_v2.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
-    assert manifest["version"] == "agrimind-vision-field-safety-v3"
+    assert manifest["version"] == "agrimind-vision-field-safety-v5"
+    assert len(manifest["plantdoc"]["excluded_members"]) == 4
     assert manifest["plantdoc"]["healthy"]["samples_per_class"] == 6
     assert manifest["thresholds"]["grounded_plant_answer_rate"] == 0.9
     assert manifest["maximums"]["timeout_rate"] == 0.0
@@ -455,20 +499,66 @@ def test_ood_requires_typed_out_of_domain_and_graph_rejection():
 def test_look_alike_scores_observation_not_disease_name():
     result = score_case(
         {"case_id": "lookalike-1", "category": "look_alike"},
-        {"trace": {"vision": {
-            "mode": "typed_observations",
-            "error": None,
-            "visual_observations": [{
-                "relevance": "agriculture_plant",
-                "crop_candidate": "cà chua",
-                "visible_symptoms": [{"description": "đốm nâu rải rác"}],
-                "confidence": 0.8,
+        {
+            "answer": "Có thể có nhiều nguyên nhân; cần đối chiếu thêm [E1].",
+            "guardrail_status": "pass",
+            "citations": [{
+                "title": "Khuyến nông",
+                "document_id": "doc-1",
+                "chunk_id": "chunk-1",
+                "is_active": True,
             }],
-        }}},
+            "trace": {
+                "guardrail": {"require_citation": True},
+                "vision": {
+                    "mode": "typed_observations",
+                    "error": None,
+                    "visual_observations": [{
+                        "relevance": "agriculture_plant",
+                        "crop_candidate": "cà chua",
+                        "visible_symptoms": [{
+                            "description": "đốm nâu rải rác"
+                        }],
+                        "confidence": 0.8,
+                    }],
+                },
+            },
+        },
     )
 
     assert result["passed"]
     assert "diagnosis" not in result
+
+
+def test_look_alike_cannot_pass_when_guardrail_blocks_answer():
+    result = score_case(
+        {"case_id": "lookalike-blocked", "category": "look_alike"},
+        {
+            "answer": "",
+            "guardrail_status": "block",
+            "citations": [],
+            "trace": {
+                "guardrail": {
+                    "require_citation": True,
+                    "reason": "invalid_claim_citation",
+                },
+                "vision": {
+                    "mode": "typed_observations",
+                    "error": None,
+                    "visual_observations": [{
+                        "relevance": "agriculture_plant",
+                        "crop_candidate": "cà chua",
+                        "visible_symptoms": [{"description": "đốm lá"}],
+                    }],
+                },
+            },
+        },
+    )
+
+    assert result["crop_scope_correct"]
+    assert result["symptom_count"] == 1
+    assert not result["grounded_answer"]
+    assert not result["passed"]
 
 
 def test_benchmark_batches_never_mix_categories_and_cap_at_two():
@@ -492,29 +582,36 @@ def test_benchmark_batches_never_mix_categories_and_cap_at_two():
 
 
 def test_score_case_selects_its_own_observation_from_a_two_image_batch():
-    response = {"trace": {"vision": {
-        "mode": "typed_observations",
-        "error": None,
-        "observations": [
-            {"image_id": "first", "quality_issues": []},
-            {"image_id": "second", "quality_issues": []},
-        ],
-        "visual_observations": [
-            {
-                "image_id": "first",
-                "relevance": "agriculture_plant",
-                "crop_candidate": "ớt",
-                "visible_symptoms": [],
+    response = {
+        "answer": "Lá cây nhìn chung xanh.",
+        "guardrail_status": "pass",
+        "trace": {
+            "guardrail": {"require_citation": False},
+            "vision": {
+                "mode": "typed_observations",
+                "error": None,
+                "observations": [
+                    {"image_id": "first", "quality_issues": []},
+                    {"image_id": "second", "quality_issues": []},
+                ],
+                "visual_observations": [
+                    {
+                        "image_id": "first",
+                        "relevance": "agriculture_plant",
+                        "crop_candidate": "ớt",
+                        "visible_symptoms": [],
+                    },
+                    {
+                        "image_id": "second",
+                        "relevance": "agriculture_plant",
+                        "crop_candidate": "cà chua",
+                        "visible_symptoms": [],
+                        "confidence": 0.9,
+                    },
+                ],
             },
-            {
-                "image_id": "second",
-                "relevance": "agriculture_plant",
-                "crop_candidate": "cà chua",
-                "visible_symptoms": [],
-                "confidence": 0.9,
-            },
-        ],
-    }}}
+        },
+    }
 
     result = score_case(
         {"case_id": "healthy-2", "category": "healthy", "image_id": "second"},
@@ -553,6 +650,25 @@ def test_resume_reruns_grounding_failures_even_when_vision_passed():
     })
 
 
+def test_report_normalizes_stale_look_alike_pass_verdict():
+    report = build_report(
+        {"version": "test-v1", "thresholds": {}, "maximums": {}},
+        [{
+            "case_id": "look-stale",
+            "category": "look_alike",
+            "crop_scope_correct": True,
+            "symptom_count": 1,
+            "grounded_answer": False,
+            "answer_quality_pass": False,
+            "passed": True,
+        }],
+        expected_size=1,
+    )
+
+    assert not report["cases"][0]["passed"]
+    assert report["metrics"]["look_alike_observation_rate"] == 0.0
+
+
 def test_checkpoint_report_is_atomic_resumable_and_marks_partial_sample(tmp_path):
     output = tmp_path / "vision-report.json"
     report = checkpoint_report(
@@ -563,6 +679,7 @@ def test_checkpoint_report_is_atomic_resumable_and_marks_partial_sample(tmp_path
             "case_id": "healthy-1",
             "category": "healthy",
             "passed": True,
+            "crop_scope_correct": True,
             "grounded_answer": True,
         }],
         [{
@@ -584,7 +701,10 @@ def test_checkpoint_report_is_atomic_resumable_and_marks_partial_sample(tmp_path
     assert "benchmark_sample_incomplete" in persisted["promotion_blockers"]
     assert not output.with_name(f"{output.name}.tmp").exists()
     assert not case_needs_rerun({
-        "category": "healthy", "passed": True, "grounded_answer": True
+        "category": "healthy",
+        "passed": True,
+        "crop_scope_correct": True,
+        "grounded_answer": True,
     })
     assert not case_needs_rerun({"category": "ood", "passed": True})
     assert case_needs_rerun({
@@ -653,6 +773,51 @@ def test_report_tracks_timeout_crop_confusion_latency_and_citation_gap():
         "missing_claim_citation": 1
     }
     assert "metric_above_maximum:timeout_rate" in report["promotion_blockers"]
+    assert (
+        "benchmark_case_failed:healthy-pepper"
+        in report["promotion_blockers"]
+    )
+
+
+def test_semantic_rates_are_case_based_and_failed_cases_block_promotion():
+    report = build_report(
+        {"version": "test-v1", "thresholds": {}, "maximums": {}},
+        [
+            {
+                "case_id": "look-pass",
+                "category": "look_alike",
+                "request_id": "shared-request",
+                "successful_analysis": True,
+                "crop_scope_correct": True,
+                "symptom_count": 1,
+                "grounded_answer": True,
+                "traceable_citation_count": 1,
+                "citation_required": True,
+                "guardrail_status": "pass",
+                "answer_quality_pass": True,
+                "passed": True,
+            },
+            {
+                "case_id": "look-fail",
+                "category": "look_alike",
+                "request_id": "shared-request",
+                "successful_analysis": True,
+                "crop_scope_correct": True,
+                "symptom_count": 1,
+                "grounded_answer": False,
+                "traceable_citation_count": 0,
+                "citation_required": True,
+                "guardrail_status": "block",
+                "answer_quality_pass": False,
+                "passed": True,
+            },
+        ],
+        expected_size=2,
+    )
+
+    assert report["metrics"]["grounded_plant_answer_rate"] == 0.5
+    assert report["metrics"]["look_alike_safe_answer_rate"] == 0.5
+    assert "benchmark_case_failed:look-fail" in report["promotion_blockers"]
 
 
 def test_report_blocks_mixed_or_unexpected_models():

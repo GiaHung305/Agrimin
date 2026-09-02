@@ -3,7 +3,7 @@
 import json
 import re
 import unicodedata
-from datetime import datetime
+from datetime import date, datetime, timedelta
 
 from langgraph.config import get_stream_writer
 
@@ -13,12 +13,27 @@ from app.retrieval.evidence import is_traceable_active_evidence
 from app.retrieval.hybrid_search import filter_conflicting_crop_evidence
 from app.retrieval.source_authority import supports_high_risk
 from app.services.model_gateway import stream_content
+from app.tools.weather_contract import (
+    WeatherContractError,
+    local_weather_date,
+    normalize_weather_result,
+)
+from app.workflow.citation_integrity import (
+    prune_uncited_technical_claims,
+    referenced_evidence_indexes,
+    uncited_technical_claims,
+)
 from app.workflow.confidence import RELEVANT_DOCUMENT_THRESHOLD
+from app.workflow.context_scope import scoped_owned_context
 from app.workflow.nodes.research_analysis import supports_research_coverage
+from app.workflow.question_freshness import (
+    casual_message_kind,
+    has_weather_intent,
+    is_realtime_sensitive_question,
+)
 from app.workflow.state import AgentState
 
 
-_CITATION_MARKER_PATTERN = re.compile(r"\[E(\d+)\]", re.IGNORECASE)
 _COMBINED_CITATION_MARKER_PATTERN = re.compile(
     r"\[\s*E\d+(?:\s*,\s*E?\d+)+\s*\]", re.IGNORECASE
 )
@@ -28,13 +43,6 @@ _QUESTION_COVERAGE_STOPWORDS = {
     "nhu", "nhung", "phai", "quan", "quyet", "sau", "theo", "thuc",
     "trong", "tren", "truoc", "va",
 }
-
-
-def _referenced_evidence_indexes(answer: str | None) -> list[int]:
-    """Return unique, one-based evidence indexes in first-claim order."""
-    return list(dict.fromkeys(
-        int(value) for value in _CITATION_MARKER_PATTERN.findall(answer or "")
-    ))
 
 
 def normalize_citation_markers(answer: str | None) -> str:
@@ -88,7 +96,7 @@ def missing_research_question_coverage(
 def _citations_for_answer(answer: str | None, documents: list[dict]) -> list[dict]:
     """Serialize only evidence explicitly referenced by an answer claim."""
     citations: list[dict] = []
-    for index in _referenced_evidence_indexes(answer):
+    for index in referenced_evidence_indexes(answer):
         if not 1 <= index <= len(documents):
             continue
         citation = citation_from_evidence(documents[index - 1])
@@ -159,7 +167,229 @@ def _action_response(action: dict) -> str | None:
     return None
 
 
+def _casual_response(state: AgentState) -> str | None:
+    kind = state.get("context", {}).get("casual_response_kind")
+    if kind is None:
+        kind = casual_message_kind(state.get("question", ""))
+    if kind == "greeting":
+        return (
+            "Chào bạn! Bạn đang cần xem thời tiết, tình trạng cây hay công việc "
+            "nông trại?"
+        )
+    if kind == "thanks":
+        return "Không có gì nhé."
+    if kind == "acknowledgement":
+        return "Được nhé."
+    return None
+
+
+def _weather_status_response(state: AgentState) -> tuple[str, str] | None:
+    """Return user-facing text together with its recoverable status kind."""
+    plan = state.get("plan") or {}
+    if not plan.get("need_weather", False) or "weather" in state.get(
+        "tool_results", {}
+    ):
+        return None
+    context = state.get("context", {})
+    if context.get("weather_location_candidates"):
+        return (
+            (
+                "Mình thấy bạn đang nhắc đến nhiều địa điểm. Bạn muốn xem dự "
+                "báo cho tỉnh hoặc thành phố nào trước?"
+            ),
+            "weather_clarification",
+        )
+    if not context.get("weather_location"):
+        return (
+            (
+                "Bạn muốn xem thời tiết ở tỉnh hoặc thành phố nào? "
+                "Bạn chỉ cần gửi tên địa điểm nhé."
+            ),
+            "weather_clarification",
+        )
+    if not plan.get("need_rag", True):
+        return (
+            (
+                "Mình chưa lấy được dự báo thời tiết cho địa điểm này lúc này. "
+                "Bạn thử lại sau ít phút nhé."
+            ),
+            "weather_unavailable",
+        )
+    return None
+
+
+def _format_weather_number(value: float | int) -> str:
+    rounded = round(float(value), 1)
+    rendered = str(int(rounded)) if rounded.is_integer() else f"{rounded:.1f}"
+    return rendered.replace(".", ",")
+
+
+def _weather_request_text(state: AgentState) -> str:
+    """Recover the weather wording that preceded a location-only reply."""
+    if state.get("context", {}).get("weather_location_follow_up"):
+        current_question = state.get("question", "")
+        if is_realtime_sensitive_question(current_question):
+            return current_question
+        history = state.get("context", {}).get("conversation_history", [])
+        for item in reversed(history):
+            if (
+                isinstance(item, dict)
+                and item.get("role") == "user"
+                and has_weather_intent(str(item.get("content") or ""))
+            ):
+                return str(item["content"])
+    return state.get("question", "")
+
+
+def _weather_day_label(value: date, today: date) -> str:
+    if value == today:
+        return "Hôm nay"
+    if value == today + timedelta(days=1):
+        return "Ngày mai"
+    return f"Ngày {value.day:02d}/{value.month:02d}"
+
+
+def _safe_weather_location_label(state: AgentState) -> str:
+    raw = str(
+        state.get("context", {}).get("weather_location_used")
+        or state.get("context", {}).get("weather_location")
+        or ""
+    )
+    label = "".join(
+        character
+        for character in " ".join(raw.split())[:80]
+        if character.isalnum() or character in {" ", ".", "-"}
+    ).strip()
+    return label or "địa điểm đã chọn"
+
+
+def _pure_weather_response(state: AgentState) -> str | None:
+    """Render validated weather numbers without asking a model to restate them."""
+    plan = state.get("plan") or {}
+    weather = state.get("tool_results", {}).get("weather")
+    if plan.get("need_rag", True) or not plan.get("need_weather") or not weather:
+        return None
+
+    forecast = weather["forecast"]
+    today = local_weather_date()
+    request = " ".join(
+        unicodedata.normalize("NFKD", _weather_request_text(state).casefold())
+        .encode("ascii", "ignore")
+        .decode()
+        .split()
+    ).replace("đ", "d")
+    target_date: date | None = None
+    if "ngay mai" in request:
+        target_date = today + timedelta(days=1)
+    elif any(
+        phrase in request
+        for phrase in (
+            "hom nay",
+            "hien tai",
+            "bay gio",
+            "sang nay",
+            "chieu nay",
+            "toi nay",
+        )
+    ):
+        target_date = today
+
+    selected = [
+        item
+        for item in forecast
+        if target_date is None or date.fromisoformat(item["date"]) == target_date
+    ]
+    missing_target = target_date is not None and not selected
+    if missing_target:
+        selected = forecast[:1]
+
+    lines: list[str] = []
+    for item in selected:
+        forecast_date = date.fromisoformat(item["date"])
+        details: list[str] = []
+        if item.get("temp_min") is not None and item.get("temp_max") is not None:
+            details.append(
+                "nhiệt độ "
+                f"{_format_weather_number(item['temp_min'])}–"
+                f"{_format_weather_number(item['temp_max'])}°C"
+            )
+        elif item.get("temp") is not None:
+            details.append(
+                f"nhiệt độ khoảng {_format_weather_number(item['temp'])}°C"
+            )
+        if item.get("description"):
+            details.append(str(item["description"]))
+        details.append(
+            "khả năng mưa cao nhất "
+            f"{round(float(item['rain_probability']) * 100)}%"
+        )
+        details.append(
+            f"lượng mưa dự báo {_format_weather_number(item['rain_mm'])} mm"
+        )
+        humidity = item.get("humidity_max")
+        if humidity is not None:
+            details.append(
+                f"độ ẩm cao nhất {_format_weather_number(humidity)}%"
+            )
+        lines.append(
+            f"- {_weather_day_label(forecast_date, today)} "
+            f"({forecast_date.day:02d}/{forecast_date.month:02d}): "
+            + "; ".join(details)
+            + "."
+        )
+
+    notes: list[str] = []
+    if missing_target:
+        requested_label = _weather_day_label(target_date, today).casefold()
+        notes.append(
+            f"Mình chưa có dữ liệu cho {requested_label}; dưới đây là mốc gần nhất."
+        )
+    if any(phrase in request for phrase in ("hien tai", "bay gio")):
+        notes.append(
+            "Dữ liệu này là dự báo tổng hợp theo ngày, không phải số đo tại thời điểm hiện tại."
+        )
+    elif any(
+        phrase in request for phrase in ("sang nay", "chieu nay", "toi nay")
+    ):
+        notes.append(
+            "Dữ liệu này là dự báo tổng hợp theo ngày, chưa tách riêng từng buổi."
+        )
+
+    header = f"Dự báo cho {_safe_weather_location_label(state)}:"
+    return "\n".join([header, *notes, *lines])
+
+
+def _normalize_weather_before_generation(state: AgentState) -> None:
+    """Fail closed if a caller reaches generation without retrieval validation."""
+    tool_results = state.setdefault("tool_results", {})
+    if "weather" not in tool_results:
+        return
+    try:
+        tool_results["weather"] = normalize_weather_result(tool_results["weather"])
+    except WeatherContractError:
+        tool_results.pop("weather", None)
+        state.setdefault("context", {})["weather_validation_error"] = "invalid_data"
+
+
 async def generate_node(state: AgentState) -> AgentState:
+    context = state.setdefault("context", {})
+    entailment_repair = bool(
+        context.get("require_citation", False)
+        and context.get("claim_entailment_failed", False)
+        and not context.get("entailment_repair_attempted", False)
+    )
+    unsupported_claims = list(context.get("unsupported_claims", []))
+    if entailment_repair:
+        context["entailment_repair_attempted"] = True
+
+    casual_reply = _casual_response(state)
+    if casual_reply is not None and state.get("risk_level") == "low":
+        state["answer_evidence"] = []
+        state["draft_answer"] = casual_reply
+        state["citations"] = []
+        state["context"]["deterministic_safe_response"] = "casual"
+        return state
+
     action_reply = _action_response(
         state.get("context", {}).get("action_request") or {}
     )
@@ -170,6 +400,24 @@ async def generate_node(state: AgentState) -> AgentState:
         state["context"]["deterministic_action_response"] = True
         return state
 
+    _normalize_weather_before_generation(state)
+    weather_forecast_reply = _pure_weather_response(state)
+    if weather_forecast_reply is not None and state.get("risk_level") == "low":
+        state["answer_evidence"] = []
+        state["draft_answer"] = weather_forecast_reply
+        state["citations"] = []
+        state["context"]["deterministic_safe_response"] = "weather_forecast"
+        return state
+
+    weather_status = _weather_status_response(state)
+    if weather_status is not None and state.get("risk_level") == "low":
+        weather_reply, weather_response_kind = weather_status
+        state["answer_evidence"] = []
+        state["draft_answer"] = weather_reply
+        state["citations"] = []
+        state["context"]["deterministic_safe_response"] = weather_response_kind
+        return state
+
     documents = answer_evidence_for_state(state)
     state["answer_evidence"] = documents
     docs_text = "\n\n".join(
@@ -177,13 +425,31 @@ async def generate_node(state: AgentState) -> AgentState:
         f"{document.get('content', '')}"
         for index, document in enumerate(documents, start=1)
     ) or "Không có tài liệu liên quan."
-    known_facts = state["context"].get("known_facts", [])
+    plan = state.get("plan")
+    include_farm_context = (
+        plan is None
+        or bool((plan or {}).get("uses_farm_context", False))
+    )
+    owned_context = scoped_owned_context(
+        state["context"], include=include_farm_context
+    )
+    known_facts = owned_context["known_facts"]
     facts_text = "\n".join(str(fact) for fact in known_facts) if known_facts else "Chưa có thông tin."
     farm_profile_text = json.dumps(
-        state["context"].get("farm_profile") or {}, ensure_ascii=False
+        owned_context["farm_profile"],
+        ensure_ascii=False,
     )
     plot_seasons_text = json.dumps(
-        state["context"].get("plot_seasons") or [], ensure_ascii=False
+        owned_context["plot_seasons"],
+        ensure_ascii=False,
+    )
+    farm_context_instruction = (
+        "Chỉ nhắc dữ liệu hồ sơ hoặc mùa vụ khi nó trực tiếp làm thay đổi câu trả lời."
+        if include_farm_context
+        else (
+            "Câu hỏi này không dùng hồ sơ hoặc mùa vụ đã lưu. Không nhắc, so sánh "
+            "hay suy đoán ý định của người dùng từ các dữ liệu đó."
+        )
     )
     history = state["context"].get("conversation_history", [])[-8:]
     history_text = "\n".join(
@@ -194,6 +460,11 @@ async def generate_node(state: AgentState) -> AgentState:
     weather_text = "Không có dữ liệu thời tiết."
     if "weather" in state["tool_results"]:
         weather_text = str(state["tool_results"]["weather"]["forecast"])
+    weather_location_text = (
+        state["context"].get("weather_location_used")
+        or state["context"].get("weather_location")
+        or "Không xác định."
+    )
 
     research_summary = json.dumps(
         {
@@ -214,6 +485,20 @@ async def generate_node(state: AgentState) -> AgentState:
     research_questions_text = "\n".join(
         f"- {question}" for question in state.get("research_questions", [])
     ) or "- Không có nhóm nghiên cứu riêng."
+    entailment_repair_text = ""
+    if entailment_repair:
+        unsupported_text = "\n".join(
+            f"- {claim}" for claim in unsupported_claims
+        ) or "- Claim chuyên môn không được nguồn trích dẫn hỗ trợ."
+        entailment_repair_text = f"""
+
+Đây là lượt sửa duy nhất sau kiểm tra bằng chứng. Bản nháp trước có các claim
+không được đúng nguồn trích dẫn hỗ trợ:
+{unsupported_text}
+Hãy viết lại câu trả lời và loại bỏ hoàn toàn các claim này. Không thay chúng
+bằng chi tiết mới ngoài tài liệu, không mở rộng sang nội dung người dùng không
+hỏi, và chỉ giữ các claim được đoạn [E#] tương ứng hỗ trợ.
+"""
     prompt = f"""Bạn là AgriMind, trợ lý nông nghiệp ảo của nông hộ Việt Nam.
 Hãy nói chuyện tự nhiên, gần gũi, rõ ràng và tôn trọng như một người đồng hành am
 hiểu nông nghiệp. Xưng “mình”, gọi người dùng là “bạn”; không dùng văn phong hành
@@ -221,6 +506,10 @@ chính hoặc rập khuôn. Dùng hội thoại trước để hiểu câu hỏi
 thì trả lời thẳng trong 1-3 câu; chỉ dùng đề mục/gạch đầu dòng khi nội dung thực sự
 có nhiều bước. Không bắt đầu mọi câu bằng “Nguyên tắc ra quyết định”. Nếu thiếu
 dữ liệu quan trọng, hỏi đúng một câu làm rõ dễ trả lời.
+Không mở đầu bằng lời chào xã giao và không kết thúc bằng lời mời hỗ trợ chung
+chung. Câu trả lời kỹ thuật thông thường nên khoảng 180-300 từ; câu có nhiều
+nhánh độc lập tối đa khoảng 400 từ. Ưu tiên ý trực tiếp giúp người dùng nhận biết,
+quyết định hoặc hành động; bỏ diễn giải lặp lại.
 
 Với yêu cầu tạo việc/nhật ký, không bao giờ nói “đã tạo”, “đã lưu” hay “đã ghi
 nhận” trước khi người dùng bấm Xác nhận. Chỉ nói đã chuẩn bị đề xuất và hướng dẫn
@@ -235,7 +524,12 @@ thông; không đổi trật tự từ làm mất tên kỹ thuật. Với quy t
 nếu tài liệu có đề cập thì phải bao quát cả điều kiện đất, nguồn sâu bệnh và cây
 giống sạch bệnh. Chỉ dùng khoảng 3-8 gạch đầu dòng khi câu hỏi có nhiều bước hoặc
 nhiều nhánh; với hội thoại thông thường, trả lời bằng câu văn tự nhiên. Bỏ chi tiết
-không được hỏi hoặc không ảnh hưởng trực tiếp đến quyết định.
+không được hỏi hoặc không ảnh hưởng trực tiếp đến quyết định. Nếu người dùng chỉ
+hỏi cần quan sát hoặc kiểm tra gì trước khi xử lý, chỉ trả lời các bước kiểm tra;
+không tự nêu thuốc, hoạt chất, nồng độ, liều lượng hoặc phác đồ xử lý. Với câu hỏi
+về nguyên tắc quản lý dinh dưỡng, khi tài liệu có hỗ trợ phải ưu tiên nêu bón cân
+đối dựa trên phân tích đất và nhu cầu cây; không tự chuyển thành một lịch bón hoặc
+liều bón cụ thể khi người dùng không yêu cầu.
 Nếu trạng thái nghiên cứu còn thiếu bằng chứng hoặc có mâu thuẫn, phải nói rõ thay vì
 tự chọn một giá trị. Không suy diễn liều lượng thuốc, hóa chất hoặc phân bón.
 Metadata ảnh bên dưới chỉ chứng minh file và chất lượng kỹ thuật; không chứa quan sát
@@ -259,6 +553,7 @@ không dùng hồ sơ để suy ra cây đang trồng):
 Thửa đất và mùa vụ hiện tại (nguồn duy nhất cho cây trồng, giống, giai đoạn,
 ngày trồng và ngày dự kiến thu hoạch):
 {plot_seasons_text}
+{farm_context_instruction}
 Nếu chỉ có một mùa vụ active, dùng mùa vụ đó khi người dùng nói chung về cây của
 họ. Nếu có nhiều mùa vụ active mà câu hỏi không xác định thửa/cây, hãy hỏi một
 câu làm rõ. Không dùng mùa vụ planned như thể cây đã được trồng. Nếu một bản ghi
@@ -290,10 +585,12 @@ dùng chọn thửa/mùa vụ nếu điều đó cần cho kết luận về ng�
 Thông tin memory bổ sung đã biết về người dùng (không được ghi đè hồ sơ hoặc mùa vụ):
 {facts_text}
 
+Địa điểm dùng cho dự báo thời tiết: {weather_location_text}
 Dữ liệu thời tiết 3 ngày tới:
 {weather_text}
 
 Câu hỏi: {state['question']}
+{entailment_repair_text}
 
 Trả lời ngắn gọn, chính xác, có xét đến thông tin người dùng và thời tiết nếu liên quan."""
 
@@ -325,16 +622,34 @@ Trả lời ngắn gọn, chính xác, có xét đến thông tin người dùng
     missing_questions = missing_research_question_coverage(
         draft, state.get("research_questions", [])
     )
-    missing_markers = not _referenced_evidence_indexes(draft)
-    if documents and requires_citation and (missing_markers or missing_questions):
+    missing_markers = not referenced_evidence_indexes(draft)
+    uncited_claims = uncited_technical_claims(draft)
+    if documents and requires_citation and (
+        missing_markers or missing_questions or uncited_claims
+    ):
         state["context"]["citation_repair_attempted"] = missing_markers
         state["context"]["coverage_repair_attempted"] = bool(missing_questions)
-        repair_reason = (
-            "Bản nháp trước chưa có marker nguồn dù câu hỏi yêu cầu đối chiếu tài liệu."
-            if missing_markers
-            else "Bản nháp trước đã bỏ sót các nhóm bằng chứng sau:\n- "
-            + "\n- ".join(missing_questions)
+        state["context"]["claim_citation_repair_attempted"] = bool(
+            uncited_claims
         )
+        repair_reasons = []
+        if missing_markers:
+            repair_reasons.append(
+                "Bản nháp trước chưa có marker nguồn dù câu hỏi yêu cầu "
+                "đối chiếu tài liệu."
+            )
+        if missing_questions:
+            repair_reasons.append(
+                "Bản nháp trước đã bỏ sót các nhóm bằng chứng sau:\n- "
+                + "\n- ".join(missing_questions)
+            )
+        if uncited_claims:
+            repair_reasons.append(
+                "Bản nháp trước có câu chuyên môn chưa gắn nguồn ngay tại "
+                "claim. Hãy bỏ claim nếu tài liệu không hỗ trợ hoặc gắn đúng "
+                "[E#] nếu có bằng chứng."
+            )
+        repair_reason = "\n\n".join(repair_reasons)
         repair_prompt = f"""{prompt}
 
 {repair_reason}
@@ -349,6 +664,10 @@ thuốc hay liều lượng."""
         draft = normalize_citation_markers(
             await collect(repair_prompt, emit=False)
         )
+        remaining_uncited_claims = uncited_technical_claims(draft)
+        if remaining_uncited_claims:
+            draft, pruned_claims = prune_uncited_technical_claims(draft)
+            state["context"]["uncited_claim_prune_count"] = len(pruned_claims)
 
     state["draft_answer"] = draft
     state["citations"] = _citations_for_answer(state["draft_answer"], documents)

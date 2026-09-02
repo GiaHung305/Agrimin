@@ -6,7 +6,7 @@ import hashlib
 import json
 import os
 import sys
-from typing import Any
+from typing import Any, Literal
 from pathlib import Path
 
 import httpx
@@ -25,6 +25,7 @@ from app.services.model_gateway import ModelProviderUnavailable, generate_conten
 
 
 MINIMUM_JUDGE_ITEM_SCORE = 0.70
+JUDGE_CONTRACT_VERSION = "answer-judge-v2"
 
 
 def evaluation_question_id(question: str) -> str:
@@ -36,6 +37,14 @@ class JudgeScore(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     score: float = Field(ge=0.0, le=1.0)
+    reason_code: Literal[
+        "complete",
+        "missing_core_facts",
+        "contradiction",
+        "no_answer",
+    ] = "complete"
+    matched_facts: list[str] = Field(default_factory=list, max_length=6)
+    missing_facts: list[str] = Field(default_factory=list, max_length=6)
 
 
 def evaluation_gate(
@@ -115,11 +124,22 @@ async def invoke_production_chat(
     return parse_sse_response(response.text)
 
 
-async def llm_judge(expected: str, actual: str) -> float:
-    prompt = f"""Expected answer: {expected}
-Actual answer: {actual}
+async def llm_judge(expected: str, actual: str) -> JudgeScore:
+    prompt = f"""Bạn đang chấm độ đúng factual của câu trả lời nông nghiệp.
+Chỉ đối chiếu các fact cốt lõi trong đáp án kỳ vọng với câu trả lời thực tế;
+không thưởng hoặc phạt do văn phong, độ dài, lời chào hay cách diễn đạt khác.
 
-Score whether the actual answer contains the expected core facts."""
+Quy tắc điểm:
+- 1.0: đủ mọi fact cốt lõi, không có mâu thuẫn.
+- 0.7-0.9: đúng phần lớn fact, chỉ thiếu chi tiết phụ.
+- 0.3-0.6: đúng một phần nhưng thiếu ít nhất một fact cốt lõi.
+- 0.0-0.2: không trả lời, gần như thiếu toàn bộ, hoặc mâu thuẫn fact cốt lõi.
+
+Liệt kê ngắn các fact đã khớp và còn thiếu. reason_code=contradiction chỉ khi
+câu trả lời thực tế phủ định hoặc thay thế một fact cốt lõi bằng fact xung đột.
+
+Đáp án kỳ vọng: {expected}
+Câu trả lời thực tế: {actual}"""
     response = await generate_content(
         ModelRole.JUDGE,
         contents=prompt,
@@ -128,7 +148,7 @@ Score whether the actual answer contains the expected core facts."""
             response_json_schema=JudgeScore.model_json_schema(),
         ),
     )
-    return JudgeScore.model_validate_json(response.text or "").score
+    return JudgeScore.model_validate_json(response.text or "")
 
 
 def citation_matches(
@@ -186,6 +206,36 @@ def is_provider_unavailable_response(data: dict[str, Any]) -> bool:
     """Do not score a safe provider fallback as a model-quality regression."""
     provider = (data.get("trace") or {}).get("provider") or {}
     return provider.get("status") == "temporarily_unavailable"
+
+
+def checkpoint_response_payload(
+    question: str, data: dict[str, Any]
+) -> dict[str, Any]:
+    """Keep enough production evidence to diagnose and reuse an eval response."""
+    citations = data.get("citations")
+    trace = data.get("trace")
+    normalized_trace = trace if isinstance(trace, dict) else {}
+    guardrail_trace = normalized_trace.get("guardrail")
+    if not isinstance(guardrail_trace, dict):
+        guardrail_trace = {}
+
+    def metadata_value(name: str) -> Any:
+        return data[name] if name in data else guardrail_trace.get(name)
+
+    return {
+        "question_id": evaluation_question_id(question),
+        "question": question,
+        "answer": str(data.get("answer") or ""),
+        "citations": citations if isinstance(citations, list) else [],
+        "guardrail_status": data.get("guardrail_status"),
+        "confidence": data.get("confidence"),
+        "response_kind": metadata_value("response_kind"),
+        "require_citation": metadata_value("require_citation"),
+        "citation_repair_attempted": metadata_value(
+            "citation_repair_attempted"
+        ),
+        "trace": normalized_trace,
+    }
 
 
 def summarize_eval_results(
@@ -249,6 +299,7 @@ def build_eval_report(
         "runtime_fingerprint": runtime_fingerprint(),
         "generation_model": model_name(ModelRole.GENERATION),
         "judge_model": model_name(ModelRole.JUDGE),
+        "judge_contract_version": JUDGE_CONTRACT_VERSION,
         "response_source_dataset": response_source_dataset,
         "summary": summarize_eval_results(questions, results),
         "results": results,
@@ -293,13 +344,33 @@ def reusable_response_map(
             "response report does not contain reusable answer/citation payloads"
         )
     return {
-        question_id: {
-            "answer": available[question_id].get("answer") or "",
-            "citations": available[question_id].get("citations") or [],
-            "guardrail_status": available[question_id].get("guardrail_status"),
-        }
+        question_id: checkpoint_response_payload(
+            str(required[question_id].question), available[question_id]
+        )
         for question_id in required
     }
+
+
+def validate_resume_report(
+    report: dict[str, Any],
+    *,
+    response_source_dataset: str | None,
+    responses_supplied: bool,
+) -> None:
+    """Prevent one checkpoint from mixing incompatible scoring contracts."""
+    if report.get("dataset_version") != settings.eval_dataset_version:
+        raise ValueError("resume report dataset version does not match")
+    if report.get("runtime_fingerprint") != runtime_fingerprint():
+        raise ValueError("resume report runtime fingerprint does not match")
+    if report.get("judge_contract_version") != JUDGE_CONTRACT_VERSION:
+        raise ValueError("resume report judge contract version does not match")
+    previous_source = report.get("response_source_dataset")
+    if previous_source and not responses_supplied:
+        raise ValueError(
+            "resuming a reused-response eval requires --responses-from"
+        )
+    if previous_source != response_source_dataset:
+        raise ValueError("resume report response source does not match")
 
 
 async def run_eval(
@@ -340,17 +411,11 @@ async def run_eval(
     previous_results: list[dict[str, Any]] = []
     if resume_from:
         previous_report = json.loads(resume_from.read_text(encoding="utf-8"))
-        if previous_report.get("dataset_version") != settings.eval_dataset_version:
-            raise ValueError("resume report dataset version does not match")
-        if previous_report.get("runtime_fingerprint") != runtime_fingerprint():
-            raise ValueError("resume report runtime fingerprint does not match")
-        previous_source = previous_report.get("response_source_dataset")
-        if previous_source and not responses_from:
-            raise ValueError(
-                "resuming a reused-response eval requires --responses-from"
-            )
-        if previous_source != response_source_dataset:
-            raise ValueError("resume report response source does not match")
+        validate_resume_report(
+            previous_report,
+            response_source_dataset=response_source_dataset,
+            responses_supplied=responses_from is not None,
+        )
         previous_results = previous_report.get("results") or []
     previous_by_id = {
         result["item_id"]: result for result in previous_results
@@ -371,17 +436,22 @@ async def run_eval(
         for index, item in enumerate(pending):
             item_result: dict[str, Any] = {
                 "item_id": str(item.id),
+                "question_id": evaluation_question_id(item.question),
+                "question": item.question,
                 "category": item.category,
                 "guardrail_test": item.expected_answer.startswith("BLOCKED"),
             }
             try:
-                question_id = evaluation_question_id(item.question)
+                question_id = item_result["question_id"]
                 if reused_responses:
                     data = reused_responses[question_id]
                 else:
                     data = await invoke_production_chat(
                         client_http, str(token), item.question
                     )
+                item_result.update(
+                    checkpoint_response_payload(item.question, data)
+                )
                 if is_provider_unavailable_response(data):
                     raise ModelProviderUnavailable(
                         "production chat returned the provider-unavailable fallback"
@@ -391,9 +461,13 @@ async def run_eval(
                         data.get("guardrail_status") == "block"
                     )
                 else:
-                    item_result["judge_score"] = await llm_judge(
+                    judgement = await llm_judge(
                         item.expected_answer, data.get("answer", "")
                     )
+                    item_result["judge_score"] = judgement.score
+                    item_result["judge_reason_code"] = judgement.reason_code
+                    item_result["judge_matched_facts"] = judgement.matched_facts
+                    item_result["judge_missing_facts"] = judgement.missing_facts
                     item_result["citation_ok"] = (
                         not item.expected_citation
                         or citation_matches(

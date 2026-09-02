@@ -1,9 +1,15 @@
 {
-  "version": "agrimind-vision-field-safety-v3",
-  "description": "Real-image benchmark covering healthy tomato, confusing visible symptoms, deterministic poor-quality variants, non-agricultural OOD images, latency, crop confusion and citation traceability.",
+  "version": "agrimind-vision-field-safety-v5",
+  "description": "Curated real-image benchmark covering healthy tomato, confusing visible symptoms, deterministic poor-quality variants, non-agricultural OOD images, latency, crop confusion and citation traceability.",
   "plantdoc": {
     "source_id": "plantdoc_field_eval",
     "split": "test",
+    "excluded_members": {
+      "PlantDoc-Dataset-5467f6012d78d1c446145d5f582da6096f852ae8/test/Tomato leaf/DSCN1015.JPG.jpg": "label mismatch: the image does not provide defensible tomato morphology",
+      "PlantDoc-Dataset-5467f6012d78d1c446145d5f582da6096f852ae8/test/Tomato leaf bacterial spot/%2320+Bacterial+Spot+and+Speck.jpg": "infographic with embedded diagnosis text, not a field image",
+      "PlantDoc-Dataset-5467f6012d78d1c446145d5f582da6096f852ae8/test/Tomato leaf bacterial spot/bact-spot-fig-1.jpg": "label mismatch: simple entire leaf morphology is not defensibly tomato",
+      "PlantDoc-Dataset-5467f6012d78d1c446145d5f582da6096f852ae8/test/Tomato leaf bacterial spot/Tomato%2BBacterial%2BSpot%2Bon%2BLeaves.jpg": "label mismatch: isolated simple leaf morphology is not defensibly tomato"
+    },
     "healthy": {
       "classes": ["Tomato leaf"],
       "samples_per_class": 6

@@ -2,7 +2,7 @@ from datetime import date, datetime, timezone
 from typing import Literal
 
 from fastapi import APIRouter, Depends, HTTPException, status
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, ValidationInfo, field_validator
 from sqlalchemy import func, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -41,10 +41,20 @@ def _utc_timestamp(value: datetime | None) -> datetime | None:
 
 
 class FarmProfileRequest(BaseModel):
-    name: str = Field(default="Nông trại của tôi", max_length=255)
+    name: str = Field(default="Nông trại của tôi", min_length=1, max_length=255)
     province: str | None = Field(default=None, max_length=100)
-    area_ha: float | None = Field(default=None, ge=0)
+    area_ha: float | None = Field(default=None, gt=0)
     farming_style: str | None = Field(default=None, max_length=255)
+
+    @field_validator("name", "province", "farming_style", mode="before")
+    @classmethod
+    def normalize_text(cls, value: object, info: ValidationInfo) -> object:
+        if value is None or not isinstance(value, str):
+            return value
+        normalized = " ".join(value.split())
+        if info.field_name == "name" and not normalized:
+            raise ValueError("Farm name must not be blank")
+        return normalized or None
 
 
 class DeviceTokenRequest(BaseModel):

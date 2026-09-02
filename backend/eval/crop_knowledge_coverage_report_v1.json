@@ -28,8 +28,8 @@
     ]
   },
   "inventory": {
-    "active_sources": 125,
-    "classified_active_sources": 125,
+    "active_sources": 132,
+    "classified_active_sources": 132,
     "unclassified_active_sources": [],
     "registered_sources_not_active": [],
     "source_type_mismatches": []
@@ -37,9 +37,9 @@
   "summary": {
     "crops": 91,
     "cells": {
-      "gap": 3642,
-      "covered": 844,
-      "baseline_only": 13350,
+      "gap": 3597,
+      "covered": 1029,
+      "baseline_only": 13210,
       "total": 17836
     },
     "priorities": {
@@ -183,8 +183,8 @@
       "label": "chuối",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 7,
-      "crop_specific_sources": 2,
+      "evidence_sources": 8,
+      "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
         "cultivation",
@@ -195,27 +195,28 @@
         "soil_water"
       ],
       "topic_gaps": [],
-      "stage_specific_covered": [],
-      "stage_specific_gaps": [
-        "initial",
+      "stage_specific_covered": [
         "development",
-        "mid_season",
-        "late_season"
+        "initial",
+        "late_season",
+        "mid_season"
       ],
+      "stage_specific_gaps": [],
       "region_specific_covered": [
+        "central_highlands",
+        "northern_mountains",
         "red_river_delta",
         "southeast"
       ],
       "region_specific_gaps": [
-        "northern_mountains",
         "north_central_coast",
         "south_central_coast",
-        "central_highlands",
         "mekong_delta"
       ],
       "cells": {
-        "gap": 44,
-        "baseline_only": 152,
+        "covered": 50,
+        "gap": 39,
+        "baseline_only": 107,
         "total": 196
       },
       "priority": "P2"
@@ -671,25 +672,27 @@
         "soil_water"
       ],
       "topic_gaps": [],
-      "stage_specific_covered": [],
-      "stage_specific_gaps": [
-        "initial",
+      "stage_specific_covered": [
         "development",
-        "mid_season",
-        "late_season"
+        "initial",
+        "late_season",
+        "mid_season"
       ],
-      "region_specific_covered": [],
-      "region_specific_gaps": [
-        "northern_mountains",
-        "red_river_delta",
-        "north_central_coast",
-        "south_central_coast",
+      "stage_specific_gaps": [],
+      "region_specific_covered": [
         "central_highlands",
-        "southeast",
+        "north_central_coast",
+        "northern_mountains",
+        "south_central_coast",
+        "southeast"
+      ],
+      "region_specific_gaps": [
+        "red_river_delta",
         "mekong_delta"
       ],
       "cells": {
-        "baseline_only": 196,
+        "covered": 60,
+        "baseline_only": 136,
         "total": 196
       },
       "priority": "P2"
@@ -1088,27 +1091,25 @@
       "label": "cây có múi",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 8,
-      "crop_specific_sources": 3,
+      "evidence_sources": 9,
+      "crop_specific_sources": 4,
       "topics_covered": [
         "climate_resilience",
+        "cultivation",
         "food_safety",
         "harvest_postharvest",
+        "nutrition",
         "pest_disease_ipm",
         "soil_water"
       ],
-      "topic_gaps": [
-        "cultivation",
-        "nutrition"
-      ],
+      "topic_gaps": [],
       "stage_specific_covered": [
         "development",
+        "initial",
         "late_season",
         "mid_season"
       ],
-      "stage_specific_gaps": [
-        "initial"
-      ],
+      "stage_specific_gaps": [],
       "region_specific_covered": [
         "mekong_delta"
       ],
@@ -1121,8 +1122,8 @@
         "southeast"
       ],
       "cells": {
-        "gap": 56,
-        "baseline_only": 134,
+        "baseline_only": 162,
+        "gap": 28,
         "covered": 6,
         "total": 196
       },
@@ -1351,8 +1352,8 @@
       "label": "thanh long",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 7,
-      "crop_specific_sources": 2,
+      "evidence_sources": 8,
+      "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
         "cultivation",
@@ -1363,14 +1364,15 @@
         "soil_water"
       ],
       "topic_gaps": [],
-      "stage_specific_covered": [],
-      "stage_specific_gaps": [
-        "initial",
+      "stage_specific_covered": [
         "development",
-        "mid_season",
-        "late_season"
+        "initial",
+        "late_season",
+        "mid_season"
       ],
+      "stage_specific_gaps": [],
       "region_specific_covered": [
+        "mekong_delta",
         "south_central_coast",
         "southeast"
       ],
@@ -1378,12 +1380,12 @@
         "northern_mountains",
         "red_river_delta",
         "north_central_coast",
-        "central_highlands",
-        "mekong_delta"
+        "central_highlands"
       ],
       "cells": {
-        "gap": 40,
-        "baseline_only": 156,
+        "gap": 36,
+        "covered": 60,
+        "baseline_only": 100,
         "total": 196
       },
       "priority": "P2"
@@ -2215,32 +2217,31 @@
       "label": "xoài",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 7,
-      "crop_specific_sources": 2,
+      "evidence_sources": 8,
+      "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
+        "cultivation",
         "food_safety",
         "harvest_postharvest",
+        "nutrition",
         "pest_disease_ipm",
         "soil_water"
       ],
-      "topic_gaps": [
-        "cultivation",
-        "nutrition"
-      ],
+      "topic_gaps": [],
       "stage_specific_covered": [
         "development",
+        "initial",
         "mid_season"
       ],
       "stage_specific_gaps": [
-        "initial",
         "late_season"
       ],
       "region_specific_covered": [
+        "northern_mountains",
         "southeast"
       ],
       "region_specific_gaps": [
-        "northern_mountains",
         "red_river_delta",
         "north_central_coast",
         "south_central_coast",
@@ -2248,9 +2249,9 @@
         "mekong_delta"
       ],
       "cells": {
-        "gap": 56,
-        "baseline_only": 138,
-        "covered": 2,
+        "covered": 5,
+        "gap": 54,
+        "baseline_only": 137,
         "total": 196
       },
       "priority": "P2"
@@ -2736,40 +2737,40 @@
       "label": "hồ tiêu",
       "mode": "moisture",
       "is_vegetable": false,
-      "evidence_sources": 7,
-      "crop_specific_sources": 2,
+      "evidence_sources": 8,
+      "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
         "cultivation",
         "food_safety",
         "harvest_postharvest",
+        "nutrition",
         "pest_disease_ipm",
         "soil_water"
       ],
-      "topic_gaps": [
-        "nutrition"
-      ],
+      "topic_gaps": [],
       "stage_specific_covered": [
         "development",
-        "initial"
+        "initial",
+        "late_season",
+        "mid_season"
       ],
-      "stage_specific_gaps": [
-        "mid_season",
-        "late_season"
+      "stage_specific_gaps": [],
+      "region_specific_covered": [
+        "central_highlands",
+        "southeast"
       ],
-      "region_specific_covered": [],
       "region_specific_gaps": [
         "northern_mountains",
         "red_river_delta",
         "north_central_coast",
         "south_central_coast",
-        "central_highlands",
-        "southeast",
         "mekong_delta"
       ],
       "cells": {
-        "gap": 56,
+        "gap": 50,
         "baseline_only": 140,
+        "covered": 6,
         "total": 196
       },
       "priority": "P2"
@@ -2822,25 +2823,24 @@
       "label": "dứa",
       "mode": "weather",
       "is_vegetable": false,
-      "evidence_sources": 7,
-      "crop_specific_sources": 2,
+      "evidence_sources": 8,
+      "crop_specific_sources": 3,
       "topics_covered": [
         "climate_resilience",
         "cultivation",
         "food_safety",
         "harvest_postharvest",
+        "nutrition",
         "pest_disease_ipm",
         "soil_water"
       ],
-      "topic_gaps": [
-        "nutrition"
-      ],
+      "topic_gaps": [],
       "stage_specific_covered": [
         "development",
-        "initial"
+        "initial",
+        "mid_season"
       ],
       "stage_specific_gaps": [
-        "mid_season",
         "late_season"
       ],
       "region_specific_covered": [],
@@ -3425,8 +3425,8 @@
       "label": "cà chua",
       "mode": "fruiting_vegetable",
       "is_vegetable": true,
-      "evidence_sources": 8,
-      "crop_specific_sources": 3,
+      "evidence_sources": 9,
+      "crop_specific_sources": 4,
       "topics_covered": [
         "climate_resilience",
         "cultivation",
@@ -3439,26 +3439,25 @@
       "topic_gaps": [],
       "stage_specific_covered": [
         "development",
+        "initial",
         "late_season",
         "mid_season"
       ],
-      "stage_specific_gaps": [
-        "initial"
-      ],
+      "stage_specific_gaps": [],
       "region_specific_covered": [
+        "north_central_coast",
         "northern_mountains",
         "red_river_delta"
       ],
       "region_specific_gaps": [
-        "north_central_coast",
         "south_central_coast",
         "central_highlands",
         "southeast",
         "mekong_delta"
       ],
       "cells": {
-        "baseline_only": 188,
-        "covered": 8,
+        "covered": 14,
+        "baseline_only": 182,
         "total": 196
       },
       "priority": "P2"
@@ -4048,19 +4047,12 @@
       "priority": "P2",
       "crop_key": "banana",
       "crop_label": "chuối",
-      "crop_specific_sources": 2,
+      "crop_specific_sources": 3,
       "topic_gaps": [],
-      "stage_gaps": [
-        "initial",
-        "development",
-        "mid_season",
-        "late_season"
-      ],
+      "stage_gaps": [],
       "region_gaps": [
-        "northern_mountains",
         "north_central_coast",
         "south_central_coast",
-        "central_highlands",
         "mekong_delta"
       ],
       "recommended_source_classes": [
@@ -4284,19 +4276,9 @@
       "crop_label": "sắn",
       "crop_specific_sources": 2,
       "topic_gaps": [],
-      "stage_gaps": [
-        "initial",
-        "development",
-        "mid_season",
-        "late_season"
-      ],
+      "stage_gaps": [],
       "region_gaps": [
-        "northern_mountains",
         "red_river_delta",
-        "north_central_coast",
-        "south_central_coast",
-        "central_highlands",
-        "southeast",
         "mekong_delta"
       ],
       "recommended_source_classes": [
@@ -4493,14 +4475,9 @@
       "priority": "P2",
       "crop_key": "citrus",
       "crop_label": "cây có múi",
-      "crop_specific_sources": 3,
-      "topic_gaps": [
-        "cultivation",
-        "nutrition"
-      ],
-      "stage_gaps": [
-        "initial"
-      ],
+      "crop_specific_sources": 4,
+      "topic_gaps": [],
+      "stage_gaps": [],
       "region_gaps": [
         "northern_mountains",
         "red_river_delta",
@@ -4624,20 +4601,14 @@
       "priority": "P2",
       "crop_key": "dragon_fruit",
       "crop_label": "thanh long",
-      "crop_specific_sources": 2,
+      "crop_specific_sources": 3,
       "topic_gaps": [],
-      "stage_gaps": [
-        "initial",
-        "development",
-        "mid_season",
-        "late_season"
-      ],
+      "stage_gaps": [],
       "region_gaps": [
         "northern_mountains",
         "red_river_delta",
         "north_central_coast",
-        "central_highlands",
-        "mekong_delta"
+        "central_highlands"
       ],
       "recommended_source_classes": [
         "Vietnamese government/extension crop protocol",
@@ -5038,17 +5009,12 @@
       "priority": "P2",
       "crop_key": "mango",
       "crop_label": "xoài",
-      "crop_specific_sources": 2,
-      "topic_gaps": [
-        "cultivation",
-        "nutrition"
-      ],
+      "crop_specific_sources": 3,
+      "topic_gaps": [],
       "stage_gaps": [
-        "initial",
         "late_season"
       ],
       "region_gaps": [
-        "northern_mountains",
         "red_river_delta",
         "north_central_coast",
         "south_central_coast",
@@ -5290,21 +5256,14 @@
       "priority": "P2",
       "crop_key": "pepper",
       "crop_label": "hồ tiêu",
-      "crop_specific_sources": 2,
-      "topic_gaps": [
-        "nutrition"
-      ],
-      "stage_gaps": [
-        "mid_season",
-        "late_season"
-      ],
+      "crop_specific_sources": 3,
+      "topic_gaps": [],
+      "stage_gaps": [],
       "region_gaps": [
         "northern_mountains",
         "red_river_delta",
         "north_central_coast",
         "south_central_coast",
-        "central_highlands",
-        "southeast",
         "mekong_delta"
       ],
       "recommended_source_classes": [
@@ -5336,12 +5295,9 @@
       "priority": "P2",
       "crop_key": "pineapple",
       "crop_label": "dứa",
-      "crop_specific_sources": 2,
-      "topic_gaps": [
-        "nutrition"
-      ],
+      "crop_specific_sources": 3,
+      "topic_gaps": [],
       "stage_gaps": [
-        "mid_season",
         "late_season"
       ],
       "region_gaps": [
@@ -5629,13 +5585,10 @@
       "priority": "P2",
       "crop_key": "tomato",
       "crop_label": "cà chua",
-      "crop_specific_sources": 3,
+      "crop_specific_sources": 4,
       "topic_gaps": [],
-      "stage_gaps": [
-        "initial"
-      ],
+      "stage_gaps": [],
       "region_gaps": [
-        "north_central_coast",
         "south_central_coast",
         "central_highlands",
         "southeast",

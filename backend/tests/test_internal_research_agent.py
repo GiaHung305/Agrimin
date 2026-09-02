@@ -114,10 +114,14 @@ async def test_high_risk_planner_retains_four_research_questions(monkeypatch):
 async def test_retrieve_runs_subquestions_and_merges_duplicate_evidence(monkeypatch):
     questions = ["Nhu cầu đất?", "Nhu cầu tưới?"]
 
-    async def search(question, top_k):
-        return [_evidence("doc-1", question, "Đất thoát nước và tưới vừa đủ.")]
+    async def search_many(received_questions, top_k):
+        assert received_questions == questions
+        return [
+            [_evidence("doc-1", question, "Đất thoát nước và tưới vừa đủ.")]
+            for question in received_questions
+        ]
 
-    monkeypatch.setattr(retrieve, "hybrid_search", search)
+    monkeypatch.setattr(retrieve, "hybrid_search_many", search_many)
     state = {
         "question": "Trồng cà chua thế nào?",
         "plan": {"need_rag": True, "need_weather": False},
@@ -140,11 +144,14 @@ async def test_retrieve_runs_subquestions_and_merges_duplicate_evidence(monkeypa
 async def test_retrieve_fuses_typed_visual_terms_into_first_query(monkeypatch):
     calls = []
 
-    async def search(question, top_k):
-        calls.append(question)
-        return [_evidence("doc-vision", question, "Triệu chứng trên lá cà chua.")]
+    async def search_many(questions, top_k):
+        calls.extend(questions)
+        return [
+            [_evidence("doc-vision", question, "Triệu chứng trên lá cà chua.")]
+            for question in questions
+        ]
 
-    monkeypatch.setattr(retrieve, "hybrid_search", search)
+    monkeypatch.setattr(retrieve, "hybrid_search_many", search_many)
     base_question = "Lá này bị gì?"
     state = {
         "question": base_question,
@@ -178,11 +185,11 @@ async def test_retrieve_normalizes_english_crop_candidate_for_vietnamese_rag(
 ):
     calls = []
 
-    async def search(question, top_k):
-        calls.append(question)
-        return []
+    async def search_many(questions, top_k):
+        calls.extend(questions)
+        return [[] for _ in questions]
 
-    monkeypatch.setattr(retrieve, "hybrid_search", search)
+    monkeypatch.setattr(retrieve, "hybrid_search_many", search_many)
     state = {
         "question": "Cây trong ảnh có gì đáng chú ý?",
         "plan": {"need_rag": True, "need_weather": False},
@@ -213,8 +220,8 @@ async def test_retrieve_normalizes_english_crop_candidate_for_vietnamese_rag(
 async def test_visual_retrieval_fetches_authorized_location_weather_when_needed(
     monkeypatch,
 ):
-    async def search(question, top_k):
-        return []
+    async def search_many(questions, top_k):
+        return [[] for _ in questions]
 
     async def geocode(province):
         assert province == "Lâm Đồng"
@@ -224,7 +231,7 @@ async def test_visual_retrieval_fetches_authorized_location_weather_when_needed(
         assert (lat, lon) == (11.94, 108.44)
         return {"forecast": [{"humidity": 88, "rain_mm": 12}]}
 
-    monkeypatch.setattr(retrieve, "hybrid_search", search)
+    monkeypatch.setattr(retrieve, "hybrid_search_many", search_many)
     monkeypatch.setattr(retrieve, "geocode_province_via_mcp", geocode)
     monkeypatch.setattr(retrieve, "get_weather_via_mcp", weather)
     state = {
@@ -333,6 +340,30 @@ def test_coverage_accepts_dense_sparse_consensus_when_reranker_is_uncertain():
     assert assess_coverage(state)[0]["covered"] is True
 
 
+@pytest.mark.parametrize(
+    "strategy",
+    [
+        "fusion_rerank_unavailable",
+        "fusion_rerank_unavailable_crop_intent",
+        "fusion_low_rerank_confidence_topic_intent",
+    ],
+)
+def test_coverage_accepts_dense_sparse_consensus_for_fusion_fallbacks(strategy):
+    state = _research_state()
+    question = state["research_questions"][0]
+    document = _evidence(
+        "doc-1", question, "Đất cần thoát nước.", score=0.0
+    )
+    document.update({
+        "ranking_strategy": strategy,
+        "dense_score": 0.71,
+        "bm25_score": 4.2,
+    })
+    state["retrieved_docs"] = [document]
+
+    assert assess_coverage(state)[0]["covered"] is True
+
+
 def test_coverage_rejects_single_channel_low_confidence_candidate():
     state = _research_state()
     question = state["research_questions"][0]
@@ -421,9 +452,37 @@ def test_reflection_never_starts_a_second_streamed_generation():
     insufficient = {
         "reflection_notes": "need_more_search",
         "research_stop_reason": "answer_insufficient",
+        "context": {"require_citation": False, "claim_entailment_failed": True},
     }
 
     assert route_after_reflection(insufficient) == "post_guardrail"
+
+
+def test_reflection_repairs_one_buffered_citation_answer():
+    insufficient = {
+        "reflection_notes": "need_more_search",
+        "research_stop_reason": "answer_insufficient",
+        "context": {"require_citation": True, "claim_entailment_failed": True},
+    }
+
+    assert route_after_reflection(insufficient) == "generate"
+    insufficient["context"]["entailment_repair_attempted"] = True
+    assert route_after_reflection(insufficient) == "post_guardrail"
+
+
+def test_reflection_rechecks_once_after_exact_unsupported_claim_prune():
+    state = {
+        "reflection_notes": "need_more_search",
+        "context": {
+            "require_citation": True,
+            "claim_entailment_failed": True,
+            "entailment_repair_attempted": True,
+            "unsupported_claim_prune_attempted": True,
+            "reflection_recheck_required": True,
+        },
+    }
+
+    assert route_after_reflection(state) == "reflection"
 
 
 @pytest.mark.asyncio

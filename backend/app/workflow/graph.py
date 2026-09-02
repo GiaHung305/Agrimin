@@ -4,6 +4,11 @@ from langgraph.graph import END, START, StateGraph
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.checkpointer import get_checkpointer
+from app.core.model_registry import ModelRole
+from app.services.model_gateway import (
+    ModelProviderUnavailable,
+    provider_circuit_is_open,
+)
 from app.workflow.nodes.action_proposal import action_proposal_node
 from app.workflow.nodes.deep_research import deep_research_node
 from app.workflow.nodes.fallback import fallback_node
@@ -36,11 +41,18 @@ def route_after_research_analysis(state: AgentState) -> str:
 
 
 def route_after_pre_guardrail(state: AgentState) -> str:
-    return (
-        "fallback"
-        if state.get("context", {}).get("pre_guardrail_stop", False)
-        else "retrieve"
-    )
+    context = state.get("context", {})
+    if context.get("pre_guardrail_stop", False):
+        return "fallback"
+    if (
+        context.get("require_citation", False)
+        and provider_circuit_is_open(ModelRole.GENERATION)
+    ):
+        raise ModelProviderUnavailable(
+            "generation model circuit is temporarily open",
+            reason_code="circuit_open",
+        )
+    return "retrieve"
 
 
 def route_after_early_guardrail(state: AgentState) -> str:
@@ -60,6 +72,16 @@ def route_after_deep_research(state: AgentState) -> str:
 
 
 def route_after_reflection(state: AgentState) -> str:
+    context = state.get("context", {})
+    if context.get("reflection_recheck_required", False):
+        return "reflection"
+    if (
+        state.get("reflection_notes") == "need_more_search"
+        and context.get("require_citation", False)
+        and context.get("claim_entailment_failed", False)
+        and not context.get("entailment_repair_attempted", False)
+    ):
+        return "generate"
     return "post_guardrail"
 
 
@@ -124,7 +146,11 @@ def build_graph(db: AsyncSession):
     workflow.add_conditional_edges(
         "reflection",
         route_after_reflection,
-        {"post_guardrail": "post_guardrail"},
+        {
+            "generate": "generate",
+            "reflection": "reflection",
+            "post_guardrail": "post_guardrail",
+        },
     )
 
     workflow.add_conditional_edges(

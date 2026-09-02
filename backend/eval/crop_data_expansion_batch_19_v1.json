@@ -1,0 +1,36 @@
+{
+  "version": "crop-data-expansion-batch-19-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn"
+  ],
+  "documents": [
+    {
+      "title": "Khuyến nông Việt Nam - hướng dẫn kỹ thuật trồng cà chua vụ đông giai đoạn đầu vụ",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/10/hangweb/khuyen_nong_quoc_gia_so_4_da_nen.pdf",
+      "source_type": "extension",
+      "author": "Viện Khoa học Nông nghiệp Việt Nam; Trung tâm Khuyến nông Quốc gia",
+      "format": "pdf",
+      "page_start": 25,
+      "page_end": 25,
+      "start_marker": "1. Thời vụ trồng",
+      "end_marker": "- Bón phân:",
+      "content_prefix": "Tên cây và phạm vi: cà chua/tomato, Solanum lycopersicum; lát nguồn của Viện Khoa học Nông nghiệp Việt Nam dùng để bổ sung bằng chứng giai đoạn đầu vụ cà chua vụ đông miền Bắc, gồm thời vụ, lựa chọn giống, cây giống, giá thể, tưới ươm, tiêu chuẩn cây xuất vườn, chọn đất, lên luống, khoảng cách trồng và tưới hồi xanh. Không áp lịch, giống hoặc mật độ này nguyên xi cho vùng và vụ khác. Phần bón phân, sâu bệnh và thuốc phía sau bị loại khỏi lát bằng chứng này.",
+      "crop_keys": ["tomato"],
+      "required_terms": [
+        "1. Thời vụ trồng",
+        "Kỹ thuật sản xuất cây giống",
+        "giá thể",
+        "4 - 5 lá thật",
+        "pH 5,5 - 6",
+        "thường xuyên tưới nước đủ ẩm"
+      ],
+      "forbidden_terms": [
+        "Cyperkill",
+        "Zineb",
+        "Mancozeb",
+        "Ridomill"
+      ],
+      "min_chars": 3000
+    }
+  ]
+}

@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:frontend_flutter/data/models/chat_image.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
 
+typedef ChatImagePicker = Future<List<ChatImageAttachment>> Function();
+
 class ChatInput extends StatefulWidget {
   final void Function(
     String text,
@@ -14,8 +16,16 @@ class ChatInput extends StatefulWidget {
   )
   onSend;
   final bool isLoading;
+  final VoidCallback? onCancel;
+  final ChatImagePicker? pickImages;
 
-  const ChatInput({super.key, required this.onSend, required this.isLoading});
+  const ChatInput({
+    super.key,
+    required this.onSend,
+    required this.isLoading,
+    this.onCancel,
+    this.pickImages,
+  });
 
   @override
   State<ChatInput> createState() => _ChatInputState();
@@ -32,6 +42,11 @@ class _ChatInputState extends State<ChatInput> {
   final FocusNode _focusNode = FocusNode();
   final List<ChatImageAttachment> _images = [];
   bool _deepResearch = false;
+
+  bool get _hasDraft =>
+      _controller.text.trim().isNotEmpty || _images.isNotEmpty;
+
+  bool get _canSend => !widget.isLoading && _hasDraft;
 
   @override
   void didUpdateWidget(covariant ChatInput oldWidget) {
@@ -64,18 +79,15 @@ class _ChatInputState extends State<ChatInput> {
   }
 
   void _showImageError(String message) {
-    ScaffoldMessenger.of(
-      context,
-    ).showSnackBar(SnackBar(content: Text(message)));
+    AppSnackbar.error(context, message);
   }
 
-  Future<void> _pickImages() async {
-    if (widget.isLoading || _images.length >= _maxImages) return;
+  Future<List<ChatImageAttachment>> _readImagesFromDevice() async {
     final files = await FilePicker.pickFiles(
       type: FileType.custom,
       allowedExtensions: const ['jpg', 'jpeg', 'png', 'webp'],
     );
-    if (!mounted || files.isEmpty) return;
+    if (!mounted || files.isEmpty) return const [];
 
     final selected = <ChatImageAttachment>[];
     for (final file in files) {
@@ -88,11 +100,11 @@ class _ChatInputState extends State<ChatInput> {
       try {
         bytes = await file.readAsBytes();
       } catch (_) {
-        if (!mounted) return;
+        if (!mounted) return const [];
         _showImageError('Không đọc được ảnh ${file.name}.');
         continue;
       }
-      if (!mounted) return;
+      if (!mounted) return const [];
       if (bytes.length > _maxImageBytes) {
         _showImageError('Ảnh ${file.name} vượt quá giới hạn 4 MB.');
         continue;
@@ -101,11 +113,46 @@ class _ChatInputState extends State<ChatInput> {
         ChatImageAttachment(bytes: bytes, name: file.name, mimeType: mimeType),
       );
     }
+    return selected;
+  }
+
+  Future<void> _pickImages() async {
+    if (widget.isLoading || _images.length >= _maxImages) return;
+    final selected = widget.pickImages == null
+        ? await _readImagesFromDevice()
+        : await widget.pickImages!();
+    if (!mounted || selected.isEmpty) return;
+
     final slots = _maxImages - _images.length;
-    if (selected.length > slots) {
+    final accepted = <ChatImageAttachment>[];
+    for (final image in selected) {
+      if (!const {
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+      }.contains(image.mimeType.toLowerCase())) {
+        _showImageError('Chỉ hỗ trợ ảnh JPG, PNG hoặc WEBP.');
+        continue;
+      }
+      if (image.bytes.length > _maxImageBytes) {
+        _showImageError('Ảnh ${image.name} vượt quá giới hạn 4 MB.');
+        continue;
+      }
+      final duplicate = [..._images, ...accepted].any(
+        (current) =>
+            current.name.toLowerCase() == image.name.toLowerCase() &&
+            current.bytes.length == image.bytes.length,
+      );
+      if (duplicate) {
+        _showImageError('Ảnh ${image.name} đã được chọn rồi.');
+        continue;
+      }
+      accepted.add(image);
+    }
+    if (accepted.length > slots) {
       _showImageError('Mỗi lượt chat chỉ hỗ trợ tối đa 2 ảnh.');
     }
-    setState(() => _images.addAll(selected.take(slots)));
+    setState(() => _images.addAll(accepted.take(slots)));
   }
 
   void _handleSend() {
@@ -122,6 +169,7 @@ class _ChatInputState extends State<ChatInput> {
 
   @override
   Widget build(BuildContext context) {
+    final canCancel = widget.isLoading && widget.onCancel != null;
     return SafeArea(
       top: false,
       child: Container(
@@ -140,44 +188,75 @@ class _ChatInputState extends State<ChatInput> {
           children: [
             if (_images.isNotEmpty) ...[
               SizedBox(
-                height: 66,
+                height: 72,
                 child: ListView.separated(
                   scrollDirection: Axis.horizontal,
                   itemCount: _images.length,
                   separatorBuilder: (_, _) =>
                       const SizedBox(width: AppSpacing.xs),
-                  itemBuilder: (context, index) => Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      ClipRRect(
+                  itemBuilder: (context, index) {
+                    final image = _images[index];
+                    final sizeKb = (image.bytes.length / 1024).ceil();
+                    return Container(
+                      width: 220,
+                      padding: const EdgeInsets.all(AppSpacing.xs),
+                      decoration: BoxDecoration(
+                        color: AppColors.surface,
                         borderRadius: BorderRadius.circular(AppRadius.small),
-                        child: Image.memory(
-                          _images[index].bytes,
-                          width: 66,
-                          height: 66,
-                          fit: BoxFit.cover,
-                        ),
+                        border: Border.all(color: AppColors.line),
                       ),
-                      Positioned(
-                        right: -6,
-                        top: -6,
-                        child: InkWell(
-                          onTap: widget.isLoading
-                              ? null
-                              : () => setState(() => _images.removeAt(index)),
-                          child: const CircleAvatar(
-                            radius: 10,
-                            backgroundColor: AppColors.ink,
-                            child: Icon(
-                              Icons.close,
-                              size: 13,
-                              color: AppColors.onPrimary,
+                      child: Row(
+                        children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(
+                              AppRadius.small,
+                            ),
+                            child: Image.memory(
+                              image.bytes,
+                              width: 54,
+                              height: 54,
+                              fit: BoxFit.cover,
+                              semanticLabel: 'Ảnh đính kèm ${image.name}',
                             ),
                           ),
-                        ),
+                          const SizedBox(width: AppSpacing.xs),
+                          Expanded(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  image.name,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  '$sizeKb KB',
+                                  style: const TextStyle(
+                                    fontSize: 11,
+                                    color: AppColors.muted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            tooltip: 'Bỏ ảnh ${image.name}',
+                            onPressed: widget.isLoading
+                                ? null
+                                : () => setState(() => _images.removeAt(index)),
+                            icon: const Icon(Icons.close_rounded, size: 19),
+                            color: AppColors.danger,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
               const SizedBox(height: 9),
@@ -216,6 +295,7 @@ class _ChatInputState extends State<ChatInput> {
                     maxLines: 4,
                     textCapitalization: TextCapitalization.sentences,
                     onSubmitted: (_) => _handleSend(),
+                    onChanged: (_) => setState(() {}),
                     // Keep the field enabled on Flutter Web. Toggling
                     // TextField.enabled around an SSE request can leave the
                     // browser text input connection unusable after the first
@@ -233,22 +313,40 @@ class _ChatInputState extends State<ChatInput> {
                   ),
                 ),
                 const SizedBox(width: 10),
-                Material(
-                  color: widget.isLoading ? AppColors.line : AppColors.forest,
-                  borderRadius: BorderRadius.circular(AppRadius.input),
-                  child: InkWell(
-                    onTap: widget.isLoading ? null : _handleSend,
+                Tooltip(
+                  message: canCancel
+                      ? 'Dừng trả lời'
+                      : _canSend
+                      ? 'Gửi câu hỏi'
+                      : widget.isLoading
+                      ? 'AgriMind đang trả lời'
+                      : 'Nhập câu hỏi hoặc chọn ảnh',
+                  child: Material(
+                    color: canCancel
+                        ? AppColors.danger
+                        : _canSend
+                        ? AppColors.forest
+                        : AppColors.line,
                     borderRadius: BorderRadius.circular(AppRadius.input),
-                    child: SizedBox(
-                      width: 54,
-                      height: 54,
-                      child: Icon(
-                        widget.isLoading
-                            ? Icons.more_horiz
-                            : Icons.arrow_upward_rounded,
-                        color: widget.isLoading
-                            ? AppColors.muted
-                            : AppColors.onPrimary,
+                    child: InkWell(
+                      key: canCancel
+                          ? const Key('cancel-chat-response')
+                          : const Key('send-chat-message'),
+                      onTap: canCancel
+                          ? widget.onCancel
+                          : (_canSend ? _handleSend : null),
+                      borderRadius: BorderRadius.circular(AppRadius.input),
+                      child: SizedBox(
+                        width: 54,
+                        height: 54,
+                        child: Icon(
+                          canCancel
+                              ? Icons.stop_rounded
+                              : Icons.arrow_upward_rounded,
+                          color: canCancel || _canSend
+                              ? AppColors.onPrimary
+                              : AppColors.muted,
+                        ),
                       ),
                     ),
                   ),

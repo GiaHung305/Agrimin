@@ -1,0 +1,795 @@
+{
+  "dataset_version": "crop-production-v1",
+  "knowledge_base_version": "kb-v3",
+  "top_k": 3,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 1.0,
+    "mean_latency_ms": 4992.963125
+  },
+  "items": [
+    {
+      "id": "crop_carrot_ipm",
+      "query": "Cà rốt cần loại đất như thế nào và nên quản lý sâu bệnh theo nguyên tắc nào?",
+      "category": "crop_cultivation",
+      "relevant_sources": [
+        "Kỹ thuật trồng cà rốt an toàn"
+      ],
+      "latency_ms": 5184.97,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "3c9ced16-a0e6-4278-a77a-a041bdabbc9e",
+          "chunk_id": "6162baa1-9756-4836-a8dc-b647ca902b71",
+          "title": "Trích yếu: Kỹ thuật trồng cà rốt an toàn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-ca-rot-an-toan-6115.html",
+          "published_date": "2026-08-10T16:12:19.795853",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9527027606964111,
+          "relevant": true
+        },
+        {
+          "document_id": "052e4aad-2f0f-4150-bc0d-2463457b13e2",
+          "chunk_id": "e5cb60b4-8a97-4c05-8f71-7f738c3965bd",
+          "title": "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "published_date": "2015-07-28T17:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.48088258504867554,
+          "relevant": false
+        },
+        {
+          "document_id": "052e4aad-2f0f-4150-bc0d-2463457b13e2",
+          "chunk_id": "6971e32a-a215-4329-9360-17a3edacedb9",
+          "title": "Cà rốt đồng bằng sông Hồng - thời vụ, đất, gieo và chăm sóc",
+          "source": "https://khoahockythuat.ninhbinh.gov.vn/pho-bien-kien-thuc/cay-ca-rot-492.html",
+          "published_date": "2015-07-28T17:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.026425373134328356,
+          "rerank_score": 0.03606272116303444,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "crop_pepper_root_disease",
+      "query": "Phân biệt nguyên nhân chính của bệnh chết nhanh và chết chậm trên hồ tiêu, rồi nêu biện pháp phòng ngừa nền tảng.",
+      "category": "plant_disease",
+      "relevant_sources": [
+        "Quản lý bệnh chết nhanh",
+        "chết chậm hại hồ tiêu"
+      ],
+      "latency_ms": 5524.83,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "a2522a3c-210a-4c76-b2d1-9f773b8a8170",
+          "chunk_id": "23a93a81-0162-43fe-9822-701f86eca83b",
+          "title": "Trích yếu: Quản lý bệnh chết nhanh và chết chậm hại hồ tiêu",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/huong-dan-cac-bien-phap-ky-thuat-de-quan-ly-benh-chet-nhanh-benh-chet-cham-hai-ho-tieu-hieu-qua-va-an-toan-20827.html",
+          "published_date": "2026-08-10T16:13:09.429278",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9796419143676758,
+          "relevant": true
+        },
+        {
+          "document_id": "ddc28940-e517-4b23-9b64-eeda7e780f2d",
+          "chunk_id": "2a42edd5-d074-4f78-9b13-4c38c0aa3854",
+          "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+          "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.016129032258064516,
+          "rerank_score": 0.07252834737300873,
+          "relevant": false
+        },
+        {
+          "document_id": "ddc28940-e517-4b23-9b64-eeda7e780f2d",
+          "chunk_id": "106ffe6c-43f7-4e36-96ec-3ef1e4430760",
+          "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+          "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.027990591397849464,
+          "rerank_score": 0.03372466564178467,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "fruit_citrus_greening",
+      "query": "Bệnh Greening trên cây có múi do tác nhân nào và lây truyền qua những đường chính nào?",
+      "category": "plant_disease",
+      "relevant_sources": [
+        "Greening, vàng lá thối rễ và Tristeza"
+      ],
+      "latency_ms": 5192.63,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "a8d17ce5-2043-4e1a-9047-7829f8b48aca",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.950523853302002,
+          "relevant": true
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "df575d25-f574-4679-ac24-2b2ca82362e6",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.3222169578075409,
+          "relevant": true
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "3f1c1ce9-f924-49f1-b545-46ed420fd61d",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.0055249352008104324,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "fruit_pineapple_rot",
+      "query": "Cây dứa bị thối nõn hoặc thối rễ có dấu hiệu gì và cần ưu tiên quản lý theo hướng nào?",
+      "category": "plant_disease",
+      "relevant_sources": [
+        "thối nõn và thối rễ cây dứa"
+      ],
+      "latency_ms": 5389.72,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "f84b22ae-906f-41d9-9ec0-fcffb10d7714",
+          "chunk_id": "c31e4d23-580e-4362-b350-8d615dbae61c",
+          "title": "Quy trình tạm thời phòng chống bệnh thối nõn và thối rễ cây dứa",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+          "published_date": "2026-08-10T16:27:23.981384",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03193398316349136,
+          "rerank_score": 0.9595690369606018,
+          "relevant": true
+        },
+        {
+          "document_id": "f84b22ae-906f-41d9-9ec0-fcffb10d7714",
+          "chunk_id": "e55dfef2-fa2c-45f0-a555-d1cd4aef49b4",
+          "title": "Quy trình tạm thời phòng chống bệnh thối nõn và thối rễ cây dứa",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+          "published_date": "2026-08-10T16:27:23.981384",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03303719497749348,
+          "rerank_score": 0.8190817832946777,
+          "relevant": true
+        },
+        {
+          "document_id": "f84b22ae-906f-41d9-9ec0-fcffb10d7714",
+          "chunk_id": "5f7bd8da-c5f6-48ed-bd53-7955b450d20d",
+          "title": "Quy trình tạm thời phòng chống bệnh thối nõn và thối rễ cây dứa",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+          "published_date": "2026-08-10T16:27:23.981384",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.017234407365322113,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "fruit_durian_pests",
+      "query": "Sầu riêng héo ngọn hoặc có biểu hiện xì mủ cần kiểm tra gì trước khi quyết định xử lý?",
+      "category": "plant_disease",
+      "relevant_sources": [
+        "sinh vật gây hại chính trên cây sầu riêng"
+      ],
+      "latency_ms": 4713.46,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "fd32956d-8f74-4352-989a-c2e46d986760",
+          "chunk_id": "001e8fe8-c6da-404d-8e7f-4790931052d0",
+          "title": "Quy trình quản lý sinh vật gây hại chính trên cây sầu riêng",
+          "source": "https://www.ppd.gov.vn/FileUpload/Documents/P.%20Ke%20hoach/TBKT/21.12.25_%20Quy%20tr%C3%ACnh%20QLSB%20sau%20rieng-revised%203.pdf",
+          "published_date": "2026-08-10T16:27:29.053770",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034097782258064514,
+          "rerank_score": 0.9203130006790161,
+          "relevant": true
+        },
+        {
+          "document_id": "fd32956d-8f74-4352-989a-c2e46d986760",
+          "chunk_id": "dc7b32d6-8bb3-4350-a886-2286fafe08d1",
+          "title": "Quy trình quản lý sinh vật gây hại chính trên cây sầu riêng",
+          "source": "https://www.ppd.gov.vn/FileUpload/Documents/P.%20Ke%20hoach/TBKT/21.12.25_%20Quy%20tr%C3%ACnh%20QLSB%20sau%20rieng-revised%203.pdf",
+          "published_date": "2026-08-10T16:27:29.053770",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.5607411861419678,
+          "relevant": true
+        },
+        {
+          "document_id": "fd32956d-8f74-4352-989a-c2e46d986760",
+          "chunk_id": "8f537fdc-001d-47a5-be60-5398aa85e90d",
+          "title": "Quy trình quản lý sinh vật gây hại chính trên cây sầu riêng",
+          "source": "https://www.ppd.gov.vn/FileUpload/Documents/P.%20Ke%20hoach/TBKT/21.12.25_%20Quy%20tr%C3%ACnh%20QLSB%20sau%20rieng-revised%203.pdf",
+          "published_date": "2026-08-10T16:27:29.053770",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.0032843875233083963,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "rice_climate_awd",
+      "query": "Canh tác lúa giảm phát thải nên quản lý nước và dinh dưỡng theo nguyên tắc nào?",
+      "category": "soil_water_climate",
+      "relevant_sources": [
+        "canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu"
+      ],
+      "latency_ms": 5071.79,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ccd7fcc6-ab7d-4cc3-9fdc-216f67f1f507",
+          "chunk_id": "aaddd853-ae07-404a-8460-6665510cde08",
+          "title": "Tài liệu canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu — phần 07/15 (trang 43-49)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/02/hangweb/5-canh-tac-lua-cafe-18-3-out.pdf",
+          "published_date": "2026-08-10T16:28:26.545483",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03214686728048506,
+          "rerank_score": 0.6453937292098999,
+          "relevant": true
+        },
+        {
+          "document_id": "818fbe29-22ee-484b-bfa2-dfe7ac7e0606",
+          "chunk_id": "1809a7e9-3a23-4113-a74e-ff3c3d62763a",
+          "title": "Tài liệu canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu — phần 14/15 (trang 92-98)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/02/hangweb/5-canh-tac-lua-cafe-18-3-out.pdf",
+          "published_date": "2026-08-10T16:28:38.159920",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034477459016393444,
+          "rerank_score": 0.33126068115234375,
+          "relevant": true
+        },
+        {
+          "document_id": "e4f2eff9-3a10-4362-aa1d-0f80be5386ad",
+          "chunk_id": "6e8254b0-5db0-47fb-9c5b-cf2e56276ce1",
+          "title": "Tài liệu canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu — phần 06/15 (trang 36-42)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/02/hangweb/5-canh-tac-lua-cafe-18-3-out.pdf",
+          "published_date": "2026-08-10T16:28:24.829144",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033353365384615384,
+          "rerank_score": 0.023245200514793396,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "rice_blast",
+      "query": "Ruộng lúa xuất hiện bệnh đạo ôn lá thì cần điều chỉnh nước và phân bón thế nào trước khi hỏi cán bộ bảo vệ thực vật?",
+      "category": "plant_disease",
+      "relevant_sources": [
+        "Nhận biết và quản lý bệnh đạo ôn lúa"
+      ],
+      "latency_ms": 4594.22,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "6b5c7124-5695-4f10-af20-d983cd7fee32",
+          "chunk_id": "463796ba-9644-4c5a-9858-0b5934cabb1b",
+          "title": "Trích yếu Việt Nam: Nhận biết và quản lý bệnh đạo ôn lúa",
+          "source": "https://khuyennongvn.gov.vn/thien-tai-dich-hai/quang-tri-tap-trung-phong-tru-benh-dao-on-hai-lua-20896.html",
+          "published_date": "2026-08-10T16:29:06.766834",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9777399897575378,
+          "relevant": true
+        },
+        {
+          "document_id": "989f4111-e365-4184-a9c2-1bd4eb0db2f8",
+          "chunk_id": "05d7d67c-9f61-4286-9d44-2dfc57986035",
+          "title": "Sổ tay hướng dẫn phòng trừ rầy nâu, bệnh vàng lùn và lùn xoắn lá hại lúa",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/so_tay_ray_nau_out.pdf",
+          "published_date": "2026-08-10T15:36:52.227788",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.033699902248289344,
+          "rerank_score": 0.12504908442497253,
+          "relevant": false
+        },
+        {
+          "document_id": "ccd7fcc6-ab7d-4cc3-9fdc-216f67f1f507",
+          "chunk_id": "e50c36b1-4fb8-4b51-bdef-e10e20de1b77",
+          "title": "Tài liệu canh tác lúa và cà phê giảm nhẹ biến đổi khí hậu — phần 07/15 (trang 43-49)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/02/hangweb/5-canh-tac-lua-cafe-18-3-out.pdf",
+          "published_date": "2026-08-10T16:28:26.545483",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.030714285714285715,
+          "rerank_score": 0.1006317138671875,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "rice_yellow_stunt",
+      "query": "Vàng lụi hay vàng lá di động trên lúa có phải bệnh nấm không và cần xác nhận như thế nào?",
+      "category": "plant_disease",
+      "relevant_sources": [
+        "Bệnh vàng lá di động"
+      ],
+      "latency_ms": 5070.58,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "482e1358-865f-4fd1-b71f-9939af8d26be",
+          "chunk_id": "c7b50a4b-0157-49b3-beff-6d7bf8393e45",
+          "title": "Trích yếu Việt Nam: Bệnh vàng lá di động (vàng lụi) hại lúa",
+          "source": "https://www.ppd.gov.vn/tin-moi-nhat/tap-huan-nong-dan-nhan-biet-trieu-chung--va-bien-phap-phong-tru-benh-vang-la-di-dong-vang-lui-hai-lua-vu-he-thu-2020.html",
+          "published_date": "2026-08-10T16:29:07.319814",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9935795068740845,
+          "relevant": true
+        },
+        {
+          "document_id": "4ec6cbfe-e2d7-4f3c-b434-5af05632bf38",
+          "chunk_id": "9f53783d-6982-4099-b396-196808f4b955",
+          "title": "Trích yếu TCVN 13268-1:2021: nhận dạng mức độ bệnh vàng lùn hại lúa",
+          "source": "https://ccttbvtv.gialai.gov.vn/wp-content/uploads/2025/03/Tieu-chuan-Viet-Nam-TCVN-13268-1_2021.pdf",
+          "published_date": "2026-08-10T15:39:37.570645",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0338213399503722,
+          "rerank_score": 0.9365735054016113,
+          "relevant": false
+        },
+        {
+          "document_id": "17fc14b5-3e9f-48f5-8eb5-392d2d1894dc",
+          "chunk_id": "a7c58f07-b407-45ac-bf5a-9b4156711553",
+          "title": "Trích yếu IRRI Rice Knowledge Bank: thiếu đạm ở lúa",
+          "source": "https://www.knowledgebank.irri.org/training/fact-sheets/nutrient-management/deficiencies-and-toxicities-fact-sheet/item/nitrogen-deficiency",
+          "published_date": "2026-08-10T15:39:38.104832",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03182218309859155,
+          "rerank_score": 0.07631788402795792,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "fruit_grapefruit_salinity",
+      "query": "Bưởi da xanh vừa trải qua hạn mặn nên được phục hồi theo thứ tự nào?",
+      "category": "soil_water_climate",
+      "relevant_sources": [
+        "bưởi da xanh trong và sau hạn mặn"
+      ],
+      "latency_ms": 4574.61,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "b46b32fa-fb8b-4571-80b3-307e420ac8af",
+          "chunk_id": "78a81ff7-872f-4df4-90af-dab3f4c43d34",
+          "title": "Trích yếu Việt Nam: Chăm sóc bưởi da xanh trong và sau hạn mặn",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-luu-y-cham-soc-cay-buoi-da-xanh-trong-va-sau-han-man-19855.html",
+          "published_date": "2026-08-10T16:29:06.258632",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9143394231796265,
+          "relevant": true
+        },
+        {
+          "document_id": "f1895f93-3c49-4dd6-8c4d-373d5fc5e4e4",
+          "chunk_id": "b9beaf17-1ace-4e78-ae55-6814530226de",
+          "title": "Trích yếu: Xử lý ra hoa trái vụ cho sầu riêng Nam Bộ",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-xu-ly-ra-hoa-trai-vu-cho-cay-sau-rieng-cho-cac-tinh-nam-bo-29412.html",
+          "published_date": "2026-08-10T16:13:10.584766",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03166957279860506,
+          "rerank_score": 0.018921520560979843,
+          "relevant": false
+        },
+        {
+          "document_id": "f4a1834e-f046-49d6-9889-0102457aaa79",
+          "chunk_id": "d5d24aba-09fd-4e0d-b464-e17e114bce15",
+          "title": "Kỹ thuật trồng dưa lưới trên giá thể trong nhà màng",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-dua-luoi-tren-gia-the-trong-nha-mang-19550.html",
+          "published_date": "2019-11-21T00:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.030246178280722652,
+          "rerank_score": 0.00036892396747134626,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "postharvest_citrus",
+      "query": "Sau thu hoạch, cam và bưởi cần được phân loại, vệ sinh và đóng gói ra sao để giảm thối hỏng?",
+      "category": "postharvest",
+      "relevant_sources": [
+        "Bảo quản cam và bưởi sau thu hoạch"
+      ],
+      "latency_ms": 4888.7,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "daa367b7-0b1f-4bd2-a9d8-7120171bb1c2",
+          "chunk_id": "38af5a07-e7e0-4329-8d7e-e306b76b79eb",
+          "title": "Trích yếu Việt Nam: Bảo quản cam và bưởi sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/mot-so-tien-bo-ky-thuat-bao-quan-san-pham-cay-an-qua-co-mui-sau-thu-hoach-18085.html",
+          "published_date": "2026-08-10T16:29:05.712272",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.7858174443244934,
+          "relevant": true
+        },
+        {
+          "document_id": "7d51930f-eeee-4c30-afc0-e076c28de2b7",
+          "chunk_id": "4651e9cc-228a-427c-a9cb-ee1a62bd77c9",
+          "title": "Cục Trồng trọt - chỉ báo thu hoạch và xử lý sau thu hoạch chuối",
+          "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+          "published_date": "2021-11-22T00:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03158008658008658,
+          "rerank_score": 0.2184056043624878,
+          "relevant": false
+        },
+        {
+          "document_id": "7d51930f-eeee-4c30-afc0-e076c28de2b7",
+          "chunk_id": "bc44b6f0-b7aa-48cc-a980-c337d6a75337",
+          "title": "Cục Trồng trọt - chỉ báo thu hoạch và xử lý sau thu hoạch chuối",
+          "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+          "published_date": "2021-11-22T00:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.016129032258064516,
+          "rerank_score": 0.05537989363074303,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "coffee_replanting",
+      "query": "Vườn cà phê già cỗi muốn tái canh thì cần kiểm tra tuyến trùng, xử lý đất và luân canh như thế nào trước khi trồng lại?",
+      "category": "crop_cultivation",
+      "relevant_sources": [
+        "Sách hướng dẫn tái canh cà phê",
+        "Tài liệu tập huấn canh tác cà phê chè bền vững"
+      ],
+      "latency_ms": 4718.14,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "02f9cee1-ef32-4fb8-a896-a44a47816f80",
+          "chunk_id": "0c07ce1f-850c-4078-b7d6-83596e2486e5",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 04/10 (trang 22-28)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "published_date": "2026-08-10T16:14:39.309876",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.998613715171814,
+          "relevant": true
+        },
+        {
+          "document_id": "22bc9319-ddfa-4c27-a119-97be7ecad158",
+          "chunk_id": "e460553e-ff75-476b-a370-d37fc17b2e2a",
+          "title": "Sách hướng dẫn tái canh cà phê",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+          "published_date": "2026-08-10T16:08:47.717006",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.996370792388916,
+          "relevant": true
+        },
+        {
+          "document_id": "22bc9319-ddfa-4c27-a119-97be7ecad158",
+          "chunk_id": "08d4ec26-97a0-4013-bda3-829fec316947",
+          "title": "Sách hướng dẫn tái canh cà phê",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2018/05/quynhkn/sach_ca_phe_in.pdf",
+          "published_date": "2026-08-10T16:08:47.717006",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9502990245819092,
+          "relevant": true
+        }
+      ]
+    },
+    {
+      "id": "cabbage_ipm_safe",
+      "query": "Trồng cải bắp an toàn theo IPM cần quan sát ruộng, sâu hại và thiên địch như thế nào trước khi quyết định can thiệp?",
+      "category": "ipm",
+      "relevant_sources": [
+        "Sản xuất cải bắp an toàn theo hướng IPM",
+        "Nguyên tắc quản lý dịch hại tổng hợp IPM"
+      ],
+      "latency_ms": 4875.45,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "51c96e82-224b-4884-9b36-c3ede050a678",
+          "chunk_id": "b7c94cd9-fbc9-45ba-ad36-19ea37efceab",
+          "title": "Trích yếu: Nguyên tắc quản lý dịch hại tổng hợp IPM",
+          "source": "https://www.fao.org/farmer-field-schools/themes/integrated-pest-management/",
+          "published_date": "2026-08-10T16:13:13.991566",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9909700155258179,
+          "relevant": true
+        },
+        {
+          "document_id": "5dfc74ea-effd-4433-a29a-555bddb73b12",
+          "chunk_id": "a67d02f5-fe2b-4706-ba90-f3e4c9dc2e89",
+          "title": "Trích yếu: Sản xuất cải bắp an toàn theo hướng IPM",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-rau-bap-cai-an-toan-10543.html",
+          "published_date": "2026-08-10T16:13:08.946578",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034477459016393444,
+          "rerank_score": 0.9775332808494568,
+          "relevant": true
+        },
+        {
+          "document_id": "df001466-81c0-4c7f-b447-2f04bacf6849",
+          "chunk_id": "30e5efd2-89b8-4859-bf64-eba1b149682f",
+          "title": "Cải thảo an toàn - biện pháp IPM canh tác và vật lý",
+          "source": "https://www.quangninh.gov.vn/bannganh/lienhiephoi/Trang/ChiTietTinTuc.aspx?nid=2059",
+          "published_date": "2014-12-09T00:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.032296380090497734,
+          "rerank_score": 0.8186541199684143,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "vegetable_balanced_fertilizer",
+      "query": "Sản xuất rau an toàn nên phối hợp phân hữu cơ và phân vô cơ theo nguyên tắc nào để tránh bón mất cân đối?",
+      "category": "soil_water_climate",
+      "relevant_sources": [
+        "Phối hợp phân hữu cơ và vô cơ trong sản xuất rau an toàn phía Bắc"
+      ],
+      "latency_ms": 4942.16,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "74a8bcec-b5f4-4524-bde8-6707c80d9703",
+          "chunk_id": "3f53211e-9da3-4927-b226-b6c1ced5d418",
+          "title": "Trích yếu: Phối hợp phân hữu cơ và vô cơ trong sản xuất rau an toàn phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "published_date": "2026-08-10T16:13:08.407129",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9905028343200684,
+          "relevant": true
+        },
+        {
+          "document_id": "b33d3e09-e6b4-48cd-a620-0a7f3f3470aa",
+          "chunk_id": "f49f2463-5aff-4736-bb5b-d7b43b6673f7",
+          "title": "Rau muống an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "published_date": "2021-05-12T07:35:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9554049372673035,
+          "relevant": false
+        },
+        {
+          "document_id": "eb97fdb8-6020-4896-9674-89a314f32a41",
+          "chunk_id": "86a0300d-fb82-4528-bb8f-62194226f492",
+          "title": "Mồng tơi an toàn phía Bắc - phân hữu cơ và bón sau thu hoạch",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "published_date": "2021-05-12T07:35:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03363858363858364,
+          "rerank_score": 0.941240131855011,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "agroecology_soil_water_ipm",
+      "query": "Một thử nghiệm nông sinh thái trên cây trồng nên kết hợp quản lý đất, giữ nước và IPM theo những nhóm thực hành nào?",
+      "category": "soil_water_climate",
+      "relevant_sources": [
+        "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM"
+      ],
+      "latency_ms": 5396.51,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "8d5f0853-329d-418a-926c-09d4da7b0dc7",
+          "chunk_id": "f8e1effd-e91d-4f26-bc15-6f7fdbb5b182",
+          "title": "Trích yếu: Thử nghiệm thực hành nông sinh thái về đất, nước và IPM",
+          "source": "https://www.fao.org/agroecology/in-action/detail/protocols-for-innovative-agroecological-soil-water-and-integrated-pest-management-practices-management-techniques-trials-establishment-and-monitoring/en",
+          "published_date": "2026-08-10T16:13:14.440990",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9913660287857056,
+          "relevant": true
+        },
+        {
+          "document_id": "9646ef9c-5380-4787-91a8-fd31fb930268",
+          "chunk_id": "35eadb4d-9d53-4c59-99e9-1f9426d1a743",
+          "title": "Thử nghiệm thực hành nông sinh thái về đất, nước và IPM — quản lý dịch hại",
+          "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
+          "published_date": "2024-07-01T00:00:00",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.8638303279876709,
+          "relevant": true
+        },
+        {
+          "document_id": "51c96e82-224b-4884-9b36-c3ede050a678",
+          "chunk_id": "b7c94cd9-fbc9-45ba-ad36-19ea37efceab",
+          "title": "Trích yếu: Nguyên tắc quản lý dịch hại tổng hợp IPM",
+          "source": "https://www.fao.org/farmer-field-schools/themes/integrated-pest-management/",
+          "published_date": "2026-08-10T16:13:13.991566",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.4468538165092468,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "ipm_decision_process",
+      "query": "IPM có phải một gói thuốc cố định không? Người trồng cần quan sát gì trước khi quyết định can thiệp?",
+      "category": "ipm",
+      "relevant_sources": [
+        "Nguyên tắc quản lý dịch hại tổng hợp IPM"
+      ],
+      "latency_ms": 4698.29,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "51c96e82-224b-4884-9b36-c3ede050a678",
+          "chunk_id": "b7c94cd9-fbc9-45ba-ad36-19ea37efceab",
+          "title": "Trích yếu: Nguyên tắc quản lý dịch hại tổng hợp IPM",
+          "source": "https://www.fao.org/farmer-field-schools/themes/integrated-pest-management/",
+          "published_date": "2026-08-10T16:13:13.991566",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9994020462036133,
+          "relevant": true
+        },
+        {
+          "document_id": "5dfc74ea-effd-4433-a29a-555bddb73b12",
+          "chunk_id": "a67d02f5-fe2b-4706-ba90-f3e4c9dc2e89",
+          "title": "Trích yếu: Sản xuất cải bắp an toàn theo hướng IPM",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-san-xuat-rau-bap-cai-an-toan-10543.html",
+          "published_date": "2026-08-10T16:13:08.946578",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.0330411407199626,
+          "rerank_score": 0.4871366322040558,
+          "relevant": false
+        },
+        {
+          "document_id": "ac06dc49-0ad3-4d28-9150-a3fc099e466a",
+          "chunk_id": "59966ecf-8b07-4e11-a28d-1126c0213112",
+          "title": "Cẩm nang trồng rau muống nước an toàn",
+          "source": "https://khuyennongtphcm.vn/wp-content/uploads/2020/08/Cam-nang-trong-rau-muong-nuoc.pdf",
+          "published_date": "2026-08-12T11:41:01.853713",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03208955223880597,
+          "rerank_score": 0.40553978085517883,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "foodsafety_vietshep",
+      "query": "Theo thực hành an toàn thực phẩm trong trồng trọt, phân hữu cơ, nước tưới và hồ sơ vật tư cần được quản lý thế nào?",
+      "category": "food_safety",
+      "relevant_sources": [
+        "VietSHEP"
+      ],
+      "latency_ms": 5051.35,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ebaf18a6-93a8-4e43-9570-dd26423b859d",
+          "chunk_id": "1e9ea87a-7406-4dd2-9793-33be4cc1a816",
+          "title": "Tài liệu hướng dẫn thực hành VietSHEP về an toàn thực phẩm trong trồng trọt — phần 03/20 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/09/hangweb/4-viet-shep-attp-out.pdf",
+          "published_date": "2026-08-10T16:28:46.107492",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.8636864423751831,
+          "relevant": true
+        },
+        {
+          "document_id": "da11f7dd-39ca-4445-ab80-0f742a6d7dd8",
+          "chunk_id": "30cf0d2d-97f5-49a6-bbb2-225a58ba7f48",
+          "title": "Tài liệu hướng dẫn thực hành VietSHEP về an toàn thực phẩm trong trồng trọt — phần 05/20 (trang 29-35)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2026/04/09/hangweb/4-viet-shep-attp-out.pdf",
+          "published_date": "2026-08-10T16:28:48.367376",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03313817330210773,
+          "rerank_score": 0.6224538087844849,
+          "relevant": true
+        },
+        {
+          "document_id": "74a8bcec-b5f4-4524-bde8-6707c80d9703",
+          "chunk_id": "3f53211e-9da3-4927-b226-b6c1ced5d418",
+          "title": "Trích yếu: Phối hợp phân hữu cơ và vô cơ trong sản xuất rau an toàn phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "published_date": "2026-08-10T16:13:08.407129",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.1477632075548172,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": true,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": true
+    }
+  }
+}

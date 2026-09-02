@@ -1,0 +1,437 @@
+{
+  "dataset_version": "crop-expansion-batch-21-retrieval-v1",
+  "knowledge_base_version": "kb-v3",
+  "top_k": 5,
+  "aggregate": {
+    "recall_at_1": 1.0,
+    "recall_at_k": 1.0,
+    "mrr": 1.0,
+    "ndcg_at_k": 0.9770630826137678,
+    "mean_latency_ms": 16945.02857142857
+  },
+  "items": [
+    {
+      "id": "tomato-winter-nursery-establishment",
+      "query": "Cà chua vụ đông miền Bắc: giá thể vườn ươm, tiêu chuẩn cây con 4 đến 5 lá thật và tưới hồi xanh sau trồng như thế nào?",
+      "category": "crop_depth_establishment",
+      "relevant_sources": [
+        "Khuyến nông Việt Nam - hướng dẫn kỹ thuật trồng cà chua vụ đông giai đoạn đầu vụ"
+      ],
+      "latency_ms": 26581.83,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "d927e9f1-e211-431c-bb7a-8b0e80a93d08",
+          "chunk_id": "3426d953-28d3-4818-afa7-eb36ca61c25b",
+          "title": "Khuyến nông Việt Nam - hướng dẫn kỹ thuật trồng cà chua vụ đông giai đoạn đầu vụ",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/10/hangweb/khuyen_nong_quoc_gia_so_4_da_nen.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03464741087691907,
+          "rerank_score": 0.9923364520072937,
+          "relevant": true
+        },
+        {
+          "document_id": "ae2626e1-8423-4e7c-9a29-845fc69644f6",
+          "chunk_id": "d6b2561b-9902-450b-b5ef-f03b2833afeb",
+          "title": "Trích yếu: Kỹ thuật trồng và chăm sóc cà chua",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-va-cham-soc-cay-ca-chua-3430.html",
+          "published_date": "2026-08-10T16:13:07.830564",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.016129032258064516,
+          "rerank_score": 0.7355147004127502,
+          "relevant": false
+        },
+        {
+          "document_id": "d927e9f1-e211-431c-bb7a-8b0e80a93d08",
+          "chunk_id": "582737f1-2f44-43fb-af68-a555fc1d0716",
+          "title": "Khuyến nông Việt Nam - hướng dẫn kỹ thuật trồng cà chua vụ đông giai đoạn đầu vụ",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/10/hangweb/khuyen_nong_quoc_gia_so_4_da_nen.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.017424242424242422,
+          "rerank_score": 0.27289095520973206,
+          "relevant": true
+        },
+        {
+          "document_id": "09ed8c3e-f3a7-44a3-95f9-7b72f37c5ced",
+          "chunk_id": "a1219d71-4954-4e1f-a29f-2dcabffef9fe",
+          "title": "Tài liệu tập huấn canh tác cà phê chè bền vững — phần 03/10 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2024/02/21/hangweb/sach-tai-lieu-tot-17x24cm.pdf",
+          "published_date": "2026-08-10T16:14:36.802268",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01885245901639344,
+          "rerank_score": 0.09353124350309372,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "citrus-replant-soil-root-canopy",
+      "query": "Khi trồng lại vườn cam quýt bưởi, cần cải tạo đất, trồng nổi, quản lý rễ cọc và tạo tán cây có múi ra sao?",
+      "category": "crop_depth_establishment",
+      "relevant_sources": [
+        "Khuyến nông Việt Nam - cải tạo đất và kiến thiết vườn cây có múi"
+      ],
+      "latency_ms": 18122.11,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "4a19fb58-4b4c-44c5-94f4-930aba79edce",
+          "chunk_id": "c1c1d8db-bdf1-4d34-87cb-a1d331df018e",
+          "title": "Khuyến nông Việt Nam - cải tạo đất và kiến thiết vườn cây có múi",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9958063364028931,
+          "relevant": true
+        },
+        {
+          "document_id": "638bfd9a-ce3e-4491-9c2f-2c4a2d5a76d1",
+          "chunk_id": "bc45e596-b945-4708-9294-106606e6f2d1",
+          "title": "Khuyến nông Việt Nam - nguyên tắc quản lý cỏ và hữu cơ cho đất cây có múi",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03384176587301587,
+          "rerank_score": 0.3401186764240265,
+          "relevant": false
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "60998cd2-17d4-4db1-8af6-0b088f5a6fba",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03005695208169678,
+          "rerank_score": 0.007618430070579052,
+          "relevant": false
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "3f1c1ce9-f924-49f1-b545-46ed420fd61d",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.002077234908938408,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "citrus-organic-soil-no-herbicide",
+      "query": "Vườn cây có múi nên quản lý cỏ không dùng thuốc trừ cỏ và bổ sung hữu cơ vi sinh để cải tạo đất chua như thế nào?",
+      "category": "crop_depth_nutrition",
+      "relevant_sources": [
+        "Khuyến nông Việt Nam - nguyên tắc quản lý cỏ và hữu cơ cho đất cây có múi"
+      ],
+      "latency_ms": 17292.34,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "638bfd9a-ce3e-4491-9c2f-2c4a2d5a76d1",
+          "chunk_id": "bc45e596-b945-4708-9294-106606e6f2d1",
+          "title": "Khuyến nông Việt Nam - nguyên tắc quản lý cỏ và hữu cơ cho đất cây có múi",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9985344409942627,
+          "relevant": true
+        },
+        {
+          "document_id": "4a19fb58-4b4c-44c5-94f4-930aba79edce",
+          "chunk_id": "c1c1d8db-bdf1-4d34-87cb-a1d331df018e",
+          "title": "Khuyến nông Việt Nam - cải tạo đất và kiến thiết vườn cây có múi",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.018548387096774192,
+          "rerank_score": 0.341996967792511,
+          "relevant": false
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "df575d25-f574-4679-ac24-2b2ca82362e6",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03274672187715666,
+          "rerank_score": 0.2808869779109955,
+          "relevant": false
+        },
+        {
+          "document_id": "8b67ef1e-e564-49b6-a6d7-b5834366d7f1",
+          "chunk_id": "3f1c1ce9-f924-49f1-b545-46ed420fd61d",
+          "title": "Quy trình quản lý tổng hợp bệnh Greening, vàng lá thối rễ và Tristeza hại cây có múi",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2021.4.21%20-%20Quy%20trinh%20-%20Benh%20hai%20cay%20co%20mui%20-%20Final.pdf",
+          "published_date": "2026-08-10T16:27:10.118698",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.017424242424242422,
+          "rerank_score": 0.0004210628103464842,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mango-northern-seedling-season",
+      "query": "Xoài Thái Lan và xoài Đài Loan VietGAP ở trung du miền núi phía Bắc cần cây ghép đạt tiêu chuẩn gì và nên trồng vào thời vụ nào?",
+      "category": "crop_depth_establishment",
+      "relevant_sources": [
+        "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc"
+      ],
+      "latency_ms": 15490.85,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 0.9197207891481876,
+      "ranked_evidence": [
+        {
+          "document_id": "741fa5eb-eb24-491f-9539-6923dbd8acd4",
+          "chunk_id": "daba20c3-999d-4c2d-b1ac-d8225ca12850",
+          "title": "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9977760910987854,
+          "relevant": true
+        },
+        {
+          "document_id": "a9b88bbc-3771-4283-b5da-034ff4475291",
+          "chunk_id": "ba0f705d-37eb-46d2-8bd0-adac506424de",
+          "title": "Khuyến nông Việt Nam - lịch và lượng bón cho xoài Thái Lan Đài Loan miền núi phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034421402969790064,
+          "rerank_score": 0.8226925730705261,
+          "relevant": false
+        },
+        {
+          "document_id": "741fa5eb-eb24-491f-9539-6923dbd8acd4",
+          "chunk_id": "e700c8c5-950a-4510-9e66-ed14136dd5aa",
+          "title": "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03438300051203277,
+          "rerank_score": 0.8051849603652954,
+          "relevant": true
+        },
+        {
+          "document_id": "c058988d-29b6-4bbb-b349-10cad152188f",
+          "chunk_id": "d55df6a3-25a3-48b5-8bb0-28ec1465a1d0",
+          "title": "Trích yếu: Tưới nhỏ giọt trong canh tác xoài",
+          "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/tp-ho-chi-minh-thanh-cong-nho-ap-dung-cach-tuoi-nho-giot-trong-canh-tac-xoai-16660.html",
+          "published_date": "2026-08-10T16:13:11.151354",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.016666666666666666,
+          "rerank_score": 0.0015224209055304527,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pepper-balanced-nutrition-stages",
+      "query": "WASI khuyến nghị nguyên tắc cân đối dinh dưỡng hồ tiêu theo giai đoạn, lượng dinh dưỡng lấy đi và độ phì đất như thế nào?",
+      "category": "crop_depth_nutrition",
+      "relevant_sources": [
+        "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất"
+      ],
+      "latency_ms": 10737.74,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "ddc28940-e517-4b23-9b64-eeda7e780f2d",
+          "chunk_id": "106ffe6c-43f7-4e36-96ec-3ef1e4430760",
+          "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+          "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.9987820982933044,
+          "relevant": true
+        },
+        {
+          "document_id": "ddc28940-e517-4b23-9b64-eeda7e780f2d",
+          "chunk_id": "787ec745-3f4d-4b76-88cb-f3cdd97e3c85",
+          "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+          "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03467741935483871,
+          "rerank_score": 0.9372571706771851,
+          "relevant": true
+        },
+        {
+          "document_id": "ddc28940-e517-4b23-9b64-eeda7e780f2d",
+          "chunk_id": "2a42edd5-d074-4f78-9b13-4c38c0aa3854",
+          "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+          "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.034126984126984124,
+          "rerank_score": 0.5240544080734253,
+          "relevant": true
+        },
+        {
+          "document_id": "1dbc1f0c-13df-4088-b473-02bcc0078ead",
+          "chunk_id": "7a675385-7086-45f4-8f2b-de2e01e58e6a",
+          "title": "Bản tin Khuyến nông Việt Nam số 8 năm 2017 — phần 03/04 (trang 15-21)",
+          "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2017/12/hangweb/lvp_t102017_ruot_tap_chi_khuyen_nong_so_8_5.pdf",
+          "published_date": "2026-08-10T16:15:12.122272",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03159203980099502,
+          "rerank_score": 0.05735236406326294,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "mango-northern-age-specific-fertilizer",
+      "query": "Nguồn Khuyến nông 2023 ghi lịch và lượng bón theo tuổi cho xoài Thái Lan Đài Loan ở miền núi phía Bắc như thế nào?",
+      "category": "crop_depth_high_risk_nutrition",
+      "relevant_sources": [
+        "Khuyến nông Việt Nam - lịch và lượng bón cho xoài Thái Lan Đài Loan miền núi phía Bắc"
+      ],
+      "latency_ms": 15116.15,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "a9b88bbc-3771-4283-b5da-034ff4475291",
+          "chunk_id": "ba0f705d-37eb-46d2-8bd0-adac506424de",
+          "title": "Khuyến nông Việt Nam - lịch và lượng bón cho xoài Thái Lan Đài Loan miền núi phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03498149127445796,
+          "rerank_score": 0.9866438508033752,
+          "relevant": true
+        },
+        {
+          "document_id": "741fa5eb-eb24-491f-9539-6923dbd8acd4",
+          "chunk_id": "daba20c3-999d-4c2d-b1ac-d8225ca12850",
+          "title": "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03494182971972501,
+          "rerank_score": 0.9711655974388123,
+          "relevant": false
+        },
+        {
+          "document_id": "c058988d-29b6-4bbb-b349-10cad152188f",
+          "chunk_id": "d55df6a3-25a3-48b5-8bb0-28ec1465a1d0",
+          "title": "Trích yếu: Tưới nhỏ giọt trong canh tác xoài",
+          "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/tp-ho-chi-minh-thanh-cong-nho-ap-dung-cach-tuoi-nho-giot-trong-canh-tac-xoai-16660.html",
+          "published_date": "2026-08-10T16:13:11.151354",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.016666666666666666,
+          "rerank_score": 0.021029196679592133,
+          "relevant": false
+        },
+        {
+          "document_id": "741fa5eb-eb24-491f-9539-6923dbd8acd4",
+          "chunk_id": "e700c8c5-950a-4510-9e66-ed14136dd5aa",
+          "title": "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.01825396825396825,
+          "rerank_score": 0.0018698998028412461,
+          "relevant": false
+        }
+      ]
+    },
+    {
+      "id": "pineapple-organic-compost-principles",
+      "query": "Tài liệu FAO cho dứa Sugarloaf hữu cơ ở Ghana nêu vai trò của phân xanh, tàn dư dứa, compost và chất hữu cơ đất ra sao?",
+      "category": "crop_depth_nutrition",
+      "relevant_sources": [
+        "FAO - nguyên tắc quản lý phân hữu cơ cho dứa Sugarloaf"
+      ],
+      "latency_ms": 15274.18,
+      "recall_at_1": 1.0,
+      "recall_at_k": 1.0,
+      "mrr": 1.0,
+      "ndcg_at_k": 1.0,
+      "ranked_evidence": [
+        {
+          "document_id": "5b696d6c-86bb-43b2-a8ee-9f3a6d6b9761",
+          "chunk_id": "80056198-01a2-40eb-a02b-20a573dc503c",
+          "title": "FAO - nguyên tắc quản lý phân hữu cơ cho dứa Sugarloaf",
+          "source": "https://www.fao.org/fileadmin/templates/organicexports/docs/Organic_sugarloaf_pineapple_manual.pdf",
+          "published_date": null,
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03524590163934426,
+          "rerank_score": 0.997810423374176,
+          "relevant": true
+        },
+        {
+          "document_id": "74a8bcec-b5f4-4524-bde8-6707c80d9703",
+          "chunk_id": "3f53211e-9da3-4927-b226-b6c1ced5d418",
+          "title": "Trích yếu: Phối hợp phân hữu cơ và vô cơ trong sản xuất rau an toàn phía Bắc",
+          "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-su-dung-phan-bon-huu-co-phoi-hop-phan-vo-co-cho-san-xuat-rau-an-toan-o-cac-tinh-phia-bac-21055.html",
+          "published_date": "2026-08-10T16:13:08.407129",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.03417338709677419,
+          "rerank_score": 0.03842516243457794,
+          "relevant": false
+        },
+        {
+          "document_id": "f84b22ae-906f-41d9-9ec0-fcffb10d7714",
+          "chunk_id": "1a7efa30-5334-481c-a6e0-d2edb6425342",
+          "title": "Quy trình tạm thời phòng chống bệnh thối nõn và thối rễ cây dứa",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+          "published_date": "2026-08-10T16:27:23.981384",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.012234042553191488,
+          "rerank_score": 0.01849351078271866,
+          "relevant": false
+        },
+        {
+          "document_id": "f84b22ae-906f-41d9-9ec0-fcffb10d7714",
+          "chunk_id": "1a8f5835-7d18-46c6-8d06-fa620c287c6b",
+          "title": "Quy trình tạm thời phòng chống bệnh thối nõn và thối rễ cây dứa",
+          "source": "https://ppd.gov.vn/FileUpload/Documents/BVTV/2026.2.27%20-%20Q%C4%90%20ban%20hanh%20Quy%20trinh%20phong%20chong%20benh%20Thoi%20non%2C%20thoi%20re%20cay%20Dua_-_nqmanh_02032026102531__02032026103208_signed.pdf",
+          "published_date": "2026-08-10T16:27:23.981384",
+          "ranking_strategy": "rerank",
+          "fusion_score": 0.013218390804597701,
+          "rerank_score": 0.0023101498372852802,
+          "relevant": false
+        }
+      ]
+    }
+  ],
+  "gate": {
+    "passed": false,
+    "checks": {
+      "recall_at_1": true,
+      "recall_at_k": true,
+      "mrr": true,
+      "ndcg_at_k": true,
+      "mean_latency_ms": false
+    }
+  }
+}

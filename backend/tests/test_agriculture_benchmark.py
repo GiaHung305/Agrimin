@@ -103,6 +103,26 @@ def test_case_needs_rerun_temporary_provider_fallback():
     assert case_needs_rerun(result) is True
 
 
+def test_score_labels_provider_outage_separately_from_answer_quality():
+    case = {
+        "allowed_guardrail_statuses": ["pass"],
+        "expected_citations_any": ["Khuyến nông"],
+        "expected_terms": [["thoát nước"]],
+    }
+    response = {
+        "answer": "Dịch vụ AI đang tạm thời quá tải.",
+        "guardrail_status": "block",
+        "citations": [],
+        "trace": {"provider": {"status": "temporarily_unavailable"}},
+    }
+
+    score = score_case(case, response)
+
+    assert score["provider_unavailable"] is True
+    assert score["failure_reason"] == "provider_unavailable"
+    assert score["passed"] is False
+
+
 def test_research_score_rejects_covered_but_stale_evidence():
     case = {
         "allowed_guardrail_statuses": ["pass"],
@@ -330,3 +350,42 @@ def test_promotion_gate_requires_full_sample_and_latency_quality():
 
     assert not report["promotion_pass"]
     assert set(report["promotion_blockers"]) == {"sample_complete", "p95_latency"}
+
+
+def test_summary_separates_provider_outage_from_evaluable_quality():
+    unavailable = {
+        "id": "outage",
+        "category": "plant_disease",
+        "latency_seconds": 2.0,
+        "guardrail_ok": False,
+        "citation_ok": False,
+        "traceable_citation_ok": False,
+        "claim_citation_coverage": 0.0,
+        "research_ok": False,
+        "research_required": False,
+        "term_coverage": 0.0,
+        "passed": False,
+        "trace": {"provider": {"status": "temporarily_unavailable"}},
+    }
+    passed = {
+        "id": "quality-pass",
+        "category": "plant_disease",
+        "latency_seconds": 1.0,
+        "guardrail_ok": True,
+        "citation_ok": True,
+        "traceable_citation_ok": True,
+        "claim_citation_coverage": 1.0,
+        "research_ok": True,
+        "research_required": False,
+        "term_coverage": 1.0,
+        "passed": True,
+    }
+
+    report = summarize("v1", [unavailable, passed])
+
+    assert report["provider_unavailable_count"] == 1
+    assert report["quality_evaluable_count"] == 1
+    assert report["quality_pass_rate"] == 1.0
+    assert report["pass_rate"] == 0.5
+    assert report["promotion_checks"]["provider_availability"] is False
+    assert report["promotion_pass"] is False

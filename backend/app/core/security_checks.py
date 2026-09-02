@@ -17,6 +17,31 @@ INJECTION_PATTERNS = [
 
 _compiled_patterns = [re.compile(pattern, re.IGNORECASE) for pattern in INJECTION_PATTERNS]
 
+# Match accent-sensitive phrases before diacritic folding. In Vietnamese,
+# ``ẩn`` would otherwise collapse to ``an`` and could falsely match ordinary
+# wording such as ``hướng dẫn an toàn``.
+_ACCENT_SENSITIVE_INJECTION_PATTERNS = [
+    re.compile(
+        r"\b(?:làm theo|tuân theo|ưu tiên|thực hiện)\b.{0,80}"
+        r"\b(?:hướng dẫn|chỉ dẫn|mệnh lệnh)\s+(?:ẩn|bí mật|nội bộ)\b",
+        re.IGNORECASE,
+    ),
+    re.compile(
+        r"\b(?:follow|obey|prioritize)\b.{0,80}"
+        r"\b(?:hidden|secret|internal)\s+(?:instructions?|rules?|prompt)\b",
+        re.IGNORECASE,
+    ),
+]
+_HIDDEN_INSTRUCTION_OVERRIDE_PATTERN = re.compile(
+    r"\b(?:bỏ qua|thay cho|ghi đè|vô hiệu hóa|tiết lộ|hiển thị|"
+    r"ignore|replace|override|disable|reveal|show)\b.{0,100}"
+    r"\b(?:quy tắc|an toàn|prompt|hệ thống|instructions?|rules?|safety|system)\b"
+    r"|\b(?:quy tắc|an toàn|prompt|hệ thống|instructions?|rules?|safety|system)\b"
+    r".{0,100}\b(?:bỏ qua|thay cho|ghi đè|vô hiệu hóa|tiết lộ|hiển thị|"
+    r"ignore|replace|override|disable|reveal|show)\b",
+    re.IGNORECASE,
+)
+
 
 def _normalise_for_security_check(text: str) -> str:
     text = unicodedata.normalize("NFKC", text)
@@ -28,5 +53,17 @@ def _normalise_for_security_check(text: str) -> str:
 
 def contains_prompt_injection(text: str) -> bool:
     """Return whether text matches a common prompt-injection pattern."""
+    visible_text = unicodedata.normalize("NFKC", text)
+    visible_text = "".join(
+        char for char in visible_text if unicodedata.category(char) != "Cf"
+    )
+    has_hidden_instruction = any(
+        pattern.search(visible_text)
+        for pattern in _ACCENT_SENSITIVE_INJECTION_PATTERNS
+    )
+    if has_hidden_instruction and _HIDDEN_INSTRUCTION_OVERRIDE_PATTERN.search(
+        visible_text
+    ):
+        return True
     normalised_text = _normalise_for_security_check(text)
     return any(pattern.search(normalised_text) for pattern in _compiled_patterns)

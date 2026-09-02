@@ -121,6 +121,7 @@ async def test_low_quality_guard_stops_before_model_call():
 
     assert result["guardrail_status"] == "block"
     assert result["context"]["vision_stop"] == "image_quality_insufficient"
+    assert result["context"]["user_response_kind"] == "image_status"
     assert route_after_image_quality(result) == "stop"
 
 
@@ -135,6 +136,7 @@ async def test_valid_image_dependent_question_stops_without_vision_model():
 
     assert result["guardrail_status"] == "block"
     assert result["context"]["vision_stop"] == "vision_model_not_enabled"
+    assert result["context"]["user_response_kind"] == "image_status"
     assert "không đoán bệnh" in result["final_answer"]
 
 
@@ -202,6 +204,7 @@ async def test_out_of_domain_typed_observation_stops_before_planner():
     result = await image_quality_guard_node(state)
     assert route_after_image_quality(result) == "stop"
     assert result["context"]["vision_stop"] == "image_irrelevant"
+    assert result["context"]["user_response_kind"] == "image_status"
 
 
 @pytest.mark.asyncio
@@ -214,6 +217,7 @@ async def test_unavailable_analyzer_stops_image_dependent_question():
     }
     result = await image_quality_guard_node(state)
     assert result["context"]["vision_stop"] == "vision_analyzer_unavailable"
+    assert result["context"]["user_response_kind"] == "image_status"
 
 
 @pytest.mark.asyncio

@@ -43,6 +43,10 @@ BATCH_14_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_14_v1.json"
 BATCH_15_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_15_v1.json"
 BATCH_16_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_16_v1.json"
 BATCH_17_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_17_v1.json"
+BATCH_19_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_19_v1.json"
+BATCH_20_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_20_v1.json"
+BATCH_21_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_21_v1.json"
+BATCH_22_PATH = BACKEND_ROOT / "eval" / "crop_data_expansion_batch_22_v1.json"
 
 
 def test_batch_manifest_covers_eleven_policy_crops() -> None:
@@ -391,6 +395,63 @@ def test_seventeenth_batch_deepens_agroecology_soil_water_and_ipm() -> None:
     assert all(document["format"] == "text_markers" for document in manifest["documents"])
     assert all(document["source_type"] == "international_organization" for document in manifest["documents"])
     assert all(document["crop_keys"] == [] for document in manifest["documents"])
+
+
+def test_nineteenth_batch_deepens_tomato_early_season_guidance_safely() -> None:
+    manifest = load_manifest(BATCH_19_PATH)
+
+    assert manifest["version"] == "crop-data-expansion-batch-19-v1"
+    assert len(manifest["documents"]) == 1
+    document = manifest["documents"][0]
+    assert document["crop_keys"] == ["tomato"]
+    assert document["format"] == "pdf"
+    assert document["page_start"] == document["page_end"] == 25
+    assert document["forbidden_terms"]
+
+
+def test_twentieth_batch_closes_three_vietnamese_topic_gaps_without_dose_tables() -> None:
+    manifest = load_manifest(BATCH_20_PATH)
+    crop_keys = {
+        crop_key
+        for document in manifest["documents"]
+        for crop_key in document["crop_keys"]
+    }
+
+    assert manifest["version"] == "crop-data-expansion-batch-20-v1"
+    assert len(manifest["documents"]) == 4
+    assert crop_keys == {"citrus", "mango", "pepper"}
+    assert sum(document["format"] == "pdf" for document in manifest["documents"]) == 1
+    assert all(document.get("forbidden_terms") for document in manifest["documents"])
+
+
+def test_twenty_first_batch_closes_mango_and_pineapple_nutrition_gaps() -> None:
+    manifest = load_manifest(BATCH_21_PATH)
+    crop_keys = {
+        crop_key
+        for document in manifest["documents"]
+        for crop_key in document["crop_keys"]
+    }
+
+    assert manifest["version"] == "crop-data-expansion-batch-21-v1"
+    assert len(manifest["documents"]) == 2
+    assert crop_keys == {"mango", "pineapple"}
+    assert all(document["format"] == "pdf" for document in manifest["documents"])
+    assert all(document.get("forbidden_terms") for document in manifest["documents"])
+
+
+def test_twenty_second_batch_deepens_banana_and_dragon_fruit_stages() -> None:
+    manifest = load_manifest(BATCH_22_PATH)
+    crop_keys = {
+        crop_key
+        for document in manifest["documents"]
+        for crop_key in document["crop_keys"]
+    }
+
+    assert manifest["version"] == "crop-data-expansion-batch-22-v1"
+    assert len(manifest["documents"]) == 5
+    assert crop_keys == {"banana", "dragon_fruit"}
+    assert all(document["format"] == "pdf" for document in manifest["documents"])
+    assert all(document.get("forbidden_terms") for document in manifest["documents"])
 
 
 def test_html_extractor_reads_only_selected_element() -> None:

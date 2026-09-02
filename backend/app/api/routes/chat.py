@@ -1,6 +1,7 @@
 import asyncio
 import json
 import logging
+import math
 import time
 import uuid
 from dataclasses import dataclass
@@ -22,7 +23,13 @@ from app.workflow.graph import build_graph
 from app.workflow.nodes.pre_guardrail import (
     explicit_underspecified_dosage_request,
 )
+from app.workflow.nodes.planner import (
+    has_deterministic_high_risk_request,
+    is_context_dependent_follow_up,
+)
 from app.workflow.nodes.action_proposal import detect_action_intent
+from app.workflow.confidence import TRUSTED_ANSWER_CONFIDENCE_THRESHOLD
+from app.workflow.citation_integrity import referenced_evidence_indexes
 from app.persistence.models import (
     Conversation,
     CropSeason,
@@ -60,6 +67,12 @@ from app.multimodal.vision_analyzer import (
 router = APIRouter(tags=["chat"])
 limiter = Limiter(key_func=get_remote_address)
 logger = logging.getLogger(__name__)
+_STRUCTURED_MEMORY_FIELDS = {
+    "province",
+    "crop",
+    "area_ha",
+    "farming_style",
+}
 
 
 class ChatImageInput(BaseModel):
@@ -131,27 +144,41 @@ async def ensure_user_and_conversation(db: AsyncSession, user_id: str, email: st
 
 async def _load_known_facts(db: AsyncSession, user_id: str):
     facts_result = await db.execute(
-        select(MemoryFact.fact_text).where(MemoryFact.user_id == user_id)
+        select(MemoryFact.fact_text)
+        .where(MemoryFact.user_id == user_id)
+        .order_by(MemoryFact.created_at.asc(), MemoryFact.id.asc())
     )
     known_facts_raw = [row[0] for row in facts_result.all()]
 
-    known_province = None
-    known_crop = None
-    known_facts_display = []
+    # Memory is append-only. Merge oldest to newest so the latest explicit,
+    # non-empty value wins without sending conflicting historical values to AI.
+    current_facts = {}
     for raw in known_facts_raw:
         try:
             parsed = json.loads(raw)
             if not isinstance(parsed, dict):
                 continue
-            known_facts_display.append(parsed)
-            if parsed.get("province"):
-                known_province = parsed["province"]
-            if parsed.get("crop"):
-                known_crop = parsed["crop"]
+            clear_fields = parsed.get("clear_fields", [])
+            if isinstance(clear_fields, list):
+                for field in clear_fields:
+                    if field in _STRUCTURED_MEMORY_FIELDS:
+                        current_facts.pop(field, None)
+            for key, value in parsed.items():
+                if (
+                    key in {"has_personal_info", "clear_fields"}
+                    or value in (None, "")
+                ):
+                    continue
+                current_facts[key] = value
         except (json.JSONDecodeError, TypeError):
             continue
 
-    return known_facts_display, known_province, known_crop
+    known_facts = [current_facts] if current_facts else []
+    return (
+        known_facts,
+        current_facts.get("province"),
+        current_facts.get("crop"),
+    )
 
 
 async def _load_farm_profile(db: AsyncSession, user_id: str) -> dict | None:
@@ -328,9 +355,77 @@ def _should_bypass_cache(req: ChatRequest, conversation_history: list[dict]) -> 
         bool(conversation_history)
         or req.deep_research
         or bool(req.images)
+        or is_context_dependent_follow_up(req.question)
         or is_realtime_sensitive_question(req.question)
+        or has_deterministic_high_risk_request(req.question)
         or explicit_underspecified_dosage_request(req.question)
         or detect_action_intent(req.question) != "none"
+    )
+
+
+def _has_trusted_cache_confidence(response_data: dict) -> bool:
+    """Fail closed for missing, malformed or out-of-range confidence values."""
+    value = response_data.get("confidence")
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        return False
+    confidence = float(value)
+    return (
+        math.isfinite(confidence)
+        and TRUSTED_ANSWER_CONFIDENCE_THRESHOLD <= confidence <= 1.0
+    )
+
+
+def _cache_citations_match_answer(answer: str, citations: list) -> bool:
+    """Require cached citation metadata to match every answer marker exactly."""
+    expected_ids = [
+        f"E{index}" for index in referenced_evidence_indexes(answer)
+    ]
+    if len(citations) != len(expected_ids):
+        return False
+    observed_ids = []
+    for citation in citations:
+        if not isinstance(citation, dict):
+            return False
+        citation_id = str(citation.get("citation_id") or "").upper()
+        title = citation.get("title")
+        if (
+            not citation_id
+            or not isinstance(title, str)
+            or not title.strip()
+            or not citation.get("document_id")
+            or not citation.get("chunk_id")
+            or citation.get("is_active") is not True
+        ):
+            return False
+        observed_ids.append(citation_id)
+    return observed_ids == expected_ids and len(observed_ids) == len(set(observed_ids))
+
+
+def _is_reusable_cache_response(response_data: dict) -> bool:
+    """Validate the complete cache-to-SSE contract before reuse or storage."""
+    if not isinstance(response_data, dict):
+        return False
+    answer = response_data.get("answer")
+    citations = response_data.get("citations")
+    plan = response_data.get("plan")
+    trace = response_data.get("trace")
+    if not isinstance(answer, str) or not answer.strip():
+        return False
+    if not isinstance(citations, list):
+        return False
+    if not _cache_citations_match_answer(answer, citations):
+        return False
+    if plan is not None and not isinstance(plan, dict):
+        return False
+    if trace is not None and not isinstance(trace, dict):
+        return False
+    return bool(
+        _has_trusted_cache_confidence(response_data)
+        and response_data.get("guardrail_status") == "pass"
+        and response_data.get("risk_level") in {"low", "medium"}
+        and response_data.get("pending_action") is None
+        and not (plan or {}).get("need_deep_research", False)
+        and not (plan or {}).get("need_weather", False)
     )
 
 
@@ -364,8 +459,15 @@ async def _prepare_chat(
         "plot_seasons": plot_seasons,
     }
     cached_response = None if bypass_cache else await get_cached_answer(
-        user_id, req.question, known_province, known_crop, farm_context
+        user_id,
+        req.question,
+        known_province,
+        known_crop,
+        farm_profile=farm_context,
+        known_facts=known_facts,
     )
+    if cached_response and not _is_reusable_cache_response(cached_response):
+        cached_response = None
     if cached_response:
         cached_response["conversation_id"] = conversation_id
 
@@ -398,6 +500,11 @@ def _build_trace(result: dict) -> dict:
     context = result.get("context", {})
     plan = result.get("plan") or {}
     retrieved_docs = result.get("retrieved_docs", [])
+    response_kind = context.get("user_response_kind") or context.get(
+        "deterministic_safe_response"
+    )
+    if response_kind is None and context.get("deterministic_action_response"):
+        response_kind = "action_status"
     return {
         "planner": {
             "risk_level": result.get("risk_level"),
@@ -413,7 +520,11 @@ def _build_trace(result: dict) -> dict:
         },
         "weather": {
             "used": "weather" in result.get("tool_results", {}),
-            "province": context.get("province"),
+            "province": (
+                context.get("weather_location_used")
+                or context.get("weather_location")
+                or context.get("province")
+            ),
         },
         "reflection": {
             "notes": result.get("reflection_notes"),
@@ -423,9 +534,32 @@ def _build_trace(result: dict) -> dict:
             "status": result.get("guardrail_status"),
             "confidence": result.get("confidence"),
             "reason": context.get("guardrail_reason"),
+            "response_kind": response_kind,
             "require_citation": context.get("require_citation", False),
             "citation_repair_attempted": context.get(
                 "citation_repair_attempted", False
+            ),
+            "claim_citation_repair_attempted": context.get(
+                "claim_citation_repair_attempted", False
+            ),
+            "coverage_repair_attempted": context.get(
+                "coverage_repair_attempted", False
+            ),
+            "uncited_claim_count": context.get("uncited_claim_count", 0),
+            "uncited_claim_prune_count": context.get(
+                "uncited_claim_prune_count", 0
+            ),
+            "entailment_repair_attempted": context.get(
+                "entailment_repair_attempted", False
+            ),
+            "unsupported_claim_count": context.get(
+                "unsupported_claim_count", 0
+            ),
+            "unsupported_claim_prune_count": context.get(
+                "unsupported_claim_prune_count", 0
+            ),
+            "unsupported_claim_recheck_attempted": context.get(
+                "unsupported_claim_recheck_attempted", False
             ),
         },
         "research": {
@@ -470,21 +604,18 @@ def _response_from_result(result: dict, conversation_id: str) -> dict:
 
 
 async def _cache_response_if_safe(req: ChatRequest, prepared: PreparedChat, response_data: dict):
-    if (
-        not req.images
-        and not (response_data.get("plan") or {}).get("need_deep_research", False)
-        and not (response_data.get("plan") or {}).get("need_weather", False)
-        and response_data["risk_level"] != "high"
-        and response_data.get("guardrail_status") == "pass"
-        and not response_data.get("pending_action")
-    ):
+    # Use the same eligibility gate for reads and writes. In particular, never
+    # let an answer grounded in prior turns poison a future empty conversation.
+    if _should_bypass_cache(req, prepared.conversation_history):
+        return
+    if _is_reusable_cache_response(response_data):
         await store_answer(
             prepared.user_id,
             req.question,
             prepared.known_province,
             prepared.known_crop,
             response_data,
-            {
+            farm_profile={
                 "farm_profile": prepared.initial_state.get("context", {}).get(
                     "farm_profile"
                 ),
@@ -492,6 +623,7 @@ async def _cache_response_if_safe(req: ChatRequest, prepared: PreparedChat, resp
                     "plot_seasons", []
                 ),
             },
+            known_facts=prepared.known_facts,
         )
 
 
@@ -515,6 +647,37 @@ def _sse_event(event_type: str, payload: dict | str | None = None, **extra) -> s
     return f"data: {json.dumps(event, ensure_ascii=False)}\n\n"
 
 
+def _progress_after_nodes(node_names) -> str | None:
+    """Translate internal graph progress into non-technical user language."""
+    completed = {str(name) for name in node_names}
+    stages = (
+        (
+            {"post_guardrail", "fallback", "memory_write", "action_proposal", "memory_extract"},
+            "Đang hoàn tất câu trả lời…",
+        ),
+        (
+            {"generate", "reflection"},
+            "Đang kiểm tra câu trả lời…",
+        ),
+        (
+            {"research_analysis", "deep_research"},
+            "Đang soạn câu trả lời…",
+        ),
+        (
+            {"retrieve"},
+            "Đang đối chiếu nguồn đáng tin cậy…",
+        ),
+        (
+            {"planner", "pre_guardrail"},
+            "Đang tìm thông tin phù hợp…",
+        ),
+    )
+    return next(
+        (message for nodes, message in stages if completed.intersection(nodes)),
+        None,
+    )
+
+
 def _approved_answer_chunks(final_answer: str, generated_chunks: list[str]) -> list[str]:
     """Return only chunks that reproduce the post-guardrail answer exactly.
 
@@ -531,12 +694,21 @@ def _approved_answer_chunks(final_answer: str, generated_chunks: list[str]) -> l
 
 def _blocked_response(conversation_id: str | None) -> dict:
     return {
-        "answer": "Câu hỏi của bạn chứa nội dung không hợp lệ, vui lòng đặt câu hỏi khác về nông nghiệp.",
+        "answer": (
+            "Tôi không thể hỗ trợ yêu cầu này. Bạn hãy hỏi trực tiếp vấn đề "
+            "nông nghiệp cần tư vấn."
+        ),
         "citations": [],
         "confidence": 0.0,
         "risk_level": "low",
         "guardrail_status": "block",
         "plan": None,
+        "trace": {
+            "guardrail": {
+                "status": "block",
+                "response_kind": "refusal",
+            }
+        },
         "conversation_id": conversation_id,
     }
 
@@ -549,7 +721,13 @@ def _provider_unavailable_response(conversation_id: str) -> dict:
         "risk_level": "low",
         "guardrail_status": "block",
         "plan": None,
-        "trace": {"provider": {"status": "temporarily_unavailable"}},
+        "trace": {
+            "guardrail": {
+                "status": "block",
+                "response_kind": "service_status",
+            },
+            "provider": {"status": "temporarily_unavailable"},
+        },
         "conversation_id": conversation_id,
         "pending_action": None,
     }
@@ -716,6 +894,8 @@ async def chat_stream(
         workflow_started_at = time.perf_counter()
         previous_node_at = workflow_started_at
         node_timings_ms: dict[str, float] = {}
+        last_progress = "Đang hiểu câu hỏi…"
+        yield _sse_event("progress", last_progress)
 
         try:
             with propagate_attributes(
@@ -739,6 +919,10 @@ async def chat_stream(
                         for node_name in payload:
                             node_timings_ms[str(node_name)] = round(duration_ms, 1)
                         previous_node_at = completed_at
+                        progress = _progress_after_nodes(payload)
+                        if progress is not None and progress != last_progress:
+                            last_progress = progress
+                            yield _sse_event("progress", progress)
         except (ServerError, ModelProviderUnavailable, httpx.RequestError) as exc:
             logger.warning(
                 "AI dependency temporarily unavailable during chat "

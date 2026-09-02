@@ -1,0 +1,24 @@
+{
+  "version": "crop-data-expansion-batch-19-v1",
+  "documents": 1,
+  "sources": 1,
+  "ready": 1,
+  "already_active": 0,
+  "replace_ready": 0,
+  "ingested": 1,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Khuyến nông Việt Nam - hướng dẫn kỹ thuật trồng cà chua vụ đông giai đoạn đầu vụ",
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/10/hangweb/khuyen_nong_quoc_gia_so_4_da_nen.pdf",
+      "crop_keys": [
+        "tomato"
+      ],
+      "characters": 3217,
+      "content_sha256": "b54e835cd73d7005b9b70e883849badef3bde7eb67357ade1f21dd187936c206",
+      "source_sha256": "06f4bae4b035f2b7864ab96ed5a248658c5c06d3e60098c3b8b0a715dd6a9072",
+      "status": "ingested",
+      "document_id": "d927e9f1-e211-431c-bb7a-8b0e80a93d08"
+    }
+  ]
+}

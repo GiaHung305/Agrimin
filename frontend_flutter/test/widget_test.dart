@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:frontend_flutter/app/agrimind_app.dart';
 import 'package:frontend_flutter/data/models/chat_response.dart';
 import 'package:frontend_flutter/data/models/registration_result.dart';
+import 'package:frontend_flutter/data/services/api_service.dart';
 import 'package:frontend_flutter/design_system/design_system.dart';
 import 'package:frontend_flutter/features/auth/presentation/login_screen.dart';
 import 'package:frontend_flutter/features/auth/presentation/register_screen.dart';
@@ -41,12 +44,38 @@ void main() {
   testWidgets('truncated chat stream releases the composer for another send', (
     tester,
   ) async {
+    var calls = 0;
+    final receivedConversationIds = <String?>[];
+    Stream<Map<String, dynamic>> send(_, String? sentConversationId, _, _) {
+      calls++;
+      receivedConversationIds.add(sentConversationId);
+      if (calls == 1) {
+        return Stream.fromIterable(const [
+          {
+            'type': 'meta',
+            'payload': {'conversation_id': 'conversation-1'},
+          },
+        ]);
+      }
+      return Stream.fromIterable(const [
+        {
+          'type': 'meta',
+          'payload': {
+            'conversation_id': 'conversation-1',
+            'confidence': 0.8,
+            'risk_level': 'low',
+            'guardrail_status': 'pass',
+          },
+        },
+        {'type': 'chunk', 'payload': 'Đã kết nối lại.'},
+        {'type': 'done'},
+      ]);
+    }
+
     await tester.pumpWidget(
       MaterialApp(
         theme: buildAppTheme(),
-        home: ChatScreen(
-          sendMessageStream: (_, _, _, _) => const Stream.empty(),
-        ),
+        home: ChatScreen(sendMessageStream: send),
       ),
     );
 
@@ -55,10 +84,162 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(
-      find.text('Mình chưa thể kết nối lúc này. Bạn thử lại sau ít phút nhé.'),
+      find.text(
+        'Phản hồi bị gián đoạn trước khi hoàn tất. Bạn có thể thử lại ngay.',
+      ),
       findsOneWidget,
     );
     expect(find.byIcon(Icons.arrow_upward_rounded), findsOneWidget);
+    expect(find.byKey(const Key('retry-chat-message')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('retry-chat-message')));
+    await tester.pumpAndSettle();
+
+    expect(calls, 2);
+    expect(receivedConversationIds, [null, 'conversation-1']);
+    expect(find.text('Đã kết nối lại.'), findsOneWidget);
+    expect(find.byKey(const Key('chat-error-card')), findsNothing);
+  });
+
+  testWidgets('temporary service response retries in place', (tester) async {
+    var calls = 0;
+    Stream<Map<String, dynamic>> send(_, _, _, _) {
+      calls++;
+      if (calls == 1) {
+        return Stream.fromIterable(const [
+          {'type': 'chunk', 'payload': 'Dịch vụ đang tạm bận.'},
+          {
+            'type': 'meta',
+            'payload': {
+              'confidence': 0,
+              'risk_level': 'low',
+              'guardrail_status': 'block',
+              'trace': {
+                'guardrail': {'response_kind': 'service_status'},
+              },
+            },
+          },
+          {'type': 'done'},
+        ]);
+      }
+      return Stream.fromIterable(const [
+        {'type': 'chunk', 'payload': 'Đã kết nối lại.'},
+        {
+          'type': 'meta',
+          'payload': {
+            'confidence': 0.8,
+            'risk_level': 'low',
+            'guardrail_status': 'pass',
+          },
+        },
+        {'type': 'done'},
+      ]);
+    }
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: ChatScreen(sendMessageStream: send),
+      ),
+    );
+
+    await tester.enterText(find.byType(TextField), 'Cách tưới cà chua?');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dịch vụ đang tạm bận.'), findsOneWidget);
+    expect(find.byKey(const Key('retry-chat-response')), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('retry-chat-response')));
+    await tester.pumpAndSettle();
+
+    expect(calls, 2);
+    expect(find.text('Cách tưới cà chua?'), findsOneWidget);
+    expect(find.text('Đã kết nối lại.'), findsOneWidget);
+    expect(find.text('Dịch vụ đang tạm bận.'), findsNothing);
+  });
+
+  testWidgets('chat shows friendly progress stages while waiting', (
+    tester,
+  ) async {
+    final controller = StreamController<Map<String, dynamic>>();
+    Stream<Map<String, dynamic>> send(_, _, _, _) => controller.stream;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: ChatScreen(sendMessageStream: send),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), 'Cách chăm cà chua?');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+
+    expect(find.text('Đang hiểu câu hỏi…'), findsOneWidget);
+
+    controller.add(const {
+      'type': 'progress',
+      'payload': 'Đang đối chiếu nguồn đáng tin cậy…',
+    });
+    await tester.pump();
+
+    expect(find.text('Đang đối chiếu nguồn đáng tin cậy…'), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('cancel-chat-response')));
+    await tester.pumpAndSettle();
+  });
+
+  testWidgets('user can cancel an unfinished stream and retry in place', (
+    tester,
+  ) async {
+    var cancelled = false;
+    late final StreamController<Map<String, dynamic>> controller;
+    controller = StreamController<Map<String, dynamic>>(
+      onCancel: () {
+        cancelled = true;
+      },
+    );
+
+    Stream<Map<String, dynamic>> send(_, _, _, _) => controller.stream;
+
+    await tester.pumpWidget(
+      MaterialApp(
+        theme: buildAppTheme(),
+        home: ChatScreen(sendMessageStream: send),
+      ),
+    );
+    await tester.enterText(find.byType(TextField), 'Cách chăm cà chua?');
+    await tester.testTextInput.receiveAction(TextInputAction.done);
+    await tester.pump();
+    controller.add(const {'type': 'chunk', 'payload': 'Nội dung chưa xong'});
+    await tester.pump();
+
+    expect(find.byKey(const Key('cancel-chat-response')), findsOneWidget);
+    expect(find.text('Nội dung chưa xong'), findsOneWidget);
+
+    await tester.tap(find.byKey(const Key('cancel-chat-response')));
+    await tester.pumpAndSettle();
+
+    expect(cancelled, isTrue);
+    expect(find.text('Nội dung chưa xong'), findsNothing);
+    expect(
+      find.text('Bạn đã dừng câu trả lời. Bạn có thể thử lại khi sẵn sàng.'),
+      findsOneWidget,
+    );
+    expect(find.byKey(const Key('retry-chat-message')), findsOneWidget);
+    expect(find.byKey(const Key('send-chat-message')), findsOneWidget);
+  });
+
+  test('chat errors map status codes to friendly recovery guidance', () {
+    expect(
+      friendlyChatError(const ApiException('quota', statusCode: 429)),
+      contains('chờ một chút'),
+    );
+    expect(
+      friendlyChatError(const ApiException('unavailable', statusCode: 503)),
+      contains('tạm bận'),
+    );
   });
 
   testWidgets('notification icon shows a small unread badge', (tester) async {

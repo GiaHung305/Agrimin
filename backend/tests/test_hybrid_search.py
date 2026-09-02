@@ -168,6 +168,82 @@ async def test_hybrid_search_bounds_cpu_reranker_candidates(monkeypatch):
     assert captured["max_characters"] == hybrid_module.MAX_RERANK_CHARACTERS
 
 
+@pytest.mark.asyncio
+async def test_hybrid_search_many_batches_ml_calls_and_keeps_query_results(
+    monkeypatch,
+):
+    queries = ["Chuối Tây Nguyên ra hoa", "Dứa bị thối nõn"]
+    dense_groups = [
+        [{
+            "document_id": "banana",
+            "chunk_id": "1",
+            "content": "chuối ra hoa",
+            "crop_keys": ["banana"],
+        }],
+        [{
+            "document_id": "pineapple",
+            "chunk_id": "2",
+            "content": "dứa thối nõn",
+            "crop_keys": ["pineapple"],
+        }],
+    ]
+    calls = {"dense": 0, "sparse": 0, "rerank": 0}
+
+    async def dense_many(received, top_k):
+        calls["dense"] += 1
+        assert received == queries
+        return dense_groups
+
+    async def sparse_many(received, top_k):
+        calls["sparse"] += 1
+        assert received == queries
+        return [[], []]
+
+    async def batch_rerank(items):
+        calls["rerank"] += 1
+        assert [query for query, _ in items] == queries
+        return [[0.91], [0.92]]
+
+    monkeypatch.setattr(hybrid_module, "dense_search_many", dense_many)
+    monkeypatch.setattr(hybrid_module, "bm25_search_many", sparse_many)
+    monkeypatch.setattr(hybrid_module, "rerank_many", batch_rerank)
+
+    results = await hybrid_module.hybrid_search_many(queries)
+
+    assert calls == {"dense": 1, "sparse": 1, "rerank": 1}
+    assert results[0][0]["document_id"] == "banana"
+    assert results[0][0]["rerank_score"] == pytest.approx(0.91)
+    assert results[1][0]["document_id"] == "pineapple"
+    assert results[1][0]["rerank_score"] == pytest.approx(0.92)
+
+
+@pytest.mark.asyncio
+async def test_hybrid_search_many_degrades_when_batch_reranker_is_unavailable(
+    monkeypatch,
+):
+    evidence = [{"document_id": "doc", "chunk_id": "1", "content": "safe"}]
+    monkeypatch.setattr(
+        hybrid_module,
+        "dense_search_many",
+        lambda *args, **kwargs: asyncio.sleep(0, result=[evidence]),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search_many",
+        lambda *args, **kwargs: asyncio.sleep(0, result=[[]]),
+    )
+
+    async def unavailable(*args, **kwargs):
+        raise TimeoutError("reranker unavailable")
+
+    monkeypatch.setattr(hybrid_module, "rerank_many", unavailable)
+
+    result = await hybrid_module.hybrid_search_many(["query"])
+
+    assert result[0][0]["document_id"] == "doc"
+    assert result[0][0]["ranking_strategy"] == "fusion_rerank_unavailable"
+
+
 def test_rerank_candidates_include_dense_and_sparse_leaders():
     fused = [
         {"document_id": "fusion", "chunk_id": "1", "content": "fusion"},
@@ -183,11 +259,12 @@ def test_rerank_candidates_include_dense_and_sparse_leaders():
     selected = hybrid_module._select_rerank_candidates(fused, dense, sparse)
 
     assert [item["document_id"] for item in selected] == [
-        "fusion", "dense", "sparse", "other",
+        "fusion", "dense", "sparse",
     ]
+    assert len(selected) == hybrid_module.MAX_RERANK_CANDIDATES
 
 
-def test_rerank_candidates_reserve_room_for_explicit_crop_title():
+def test_rerank_candidates_prioritize_explicit_crop_scope_within_budget():
     fusion = {"document_id": "fusion", "chunk_id": "1", "content": "generic"}
     old_crop = {
         "document_id": "old-crop", "chunk_id": "2",
@@ -208,8 +285,9 @@ def test_rerank_candidates_reserve_room_for_explicit_crop_title():
     )
 
     assert [item["document_id"] for item in selected] == [
-        "fusion", "old-crop", "harvest", "dense",
+        "fusion", "old-crop", "harvest",
     ]
+    assert len(selected) == hybrid_module.MAX_RERANK_CANDIDATES
 
 
 def test_crop_intent_distinguishes_positive_crop_from_negated_crop():
@@ -240,6 +318,112 @@ def test_visual_crop_filter_removes_documents_for_other_named_crops():
 
 def test_longer_crop_name_does_not_also_match_shorter_crop_name():
     assert hybrid_module.crop_keys_for_text("xà lách xoong") == {"watercress"}
+
+
+def test_common_production_phrase_is_not_misread_as_cassava():
+    assert hybrid_module.crop_keys_for_text(
+        "Sản xuất rau an toàn và bón phân cân đối"
+    ) == set()
+
+
+@pytest.mark.parametrize(
+    ("question", "unexpected_crop"),
+    [
+        ("Tôi muốn hỏi cách tưới", "garlic"),
+        ("Hãy đưa ra phương án phù hợp", "pineapple"),
+        ("Hệ thống tưới đang hoạt động", "chives"),
+        ("Tôi muốn nghe tư vấn", "turmeric"),
+        ("Giải pháp riêng cho vườn", "galangal"),
+    ],
+)
+def test_common_accented_words_are_not_misread_as_crop_names(
+    question,
+    unexpected_crop,
+):
+    assert unexpected_crop not in hybrid_module.crop_keys_for_text(question)
+
+
+@pytest.mark.parametrize(
+    ("question", "expected_crop"),
+    [
+        ("Tỏi bị vàng lá", "garlic"),
+        ("Dứa bị thối nõn", "pineapple"),
+        ("Hẹ cần bón gì", "chives"),
+        ("Nghệ bị thối củ", "turmeric"),
+        ("Riềng nên thu hoạch lúc nào", "galangal"),
+        ("Sắn cần đất thế nào", "cassava"),
+    ],
+)
+def test_ambiguous_crop_names_still_match_when_accents_are_explicit(
+    question,
+    expected_crop,
+):
+    assert expected_crop in hybrid_module.crop_keys_for_text(question)
+
+
+def test_reviewed_crop_scope_overrides_ambiguous_generic_title():
+    documents = [
+        {
+            "document_id": "wrong",
+            "title": "Hướng dẫn tưới và dinh dưỡng",
+            "crop_keys": ["mango"],
+        },
+        {
+            "document_id": "right",
+            "title": "Hướng dẫn tưới và dinh dưỡng",
+            "crop_keys": ["banana"],
+        },
+        {
+            "document_id": "generic",
+            "title": "Nguyên tắc tưới cây ăn quả",
+            "crop_keys": [],
+        },
+    ]
+
+    filtered = hybrid_module.filter_conflicting_crop_evidence(
+        "Tưới chuối thế nào?",
+        documents,
+    )
+
+    assert [item["document_id"] for item in filtered] == ["right", "generic"]
+
+
+@pytest.mark.asyncio
+async def test_explicit_crop_query_removes_disjoint_reviewed_scope(monkeypatch):
+    wrong = {
+        "document_id": "mango",
+        "chunk_id": "1",
+        "title": "Hướng dẫn tưới cây ăn quả",
+        "crop_keys": ["mango"],
+        "content": "tưới nhỏ giọt",
+    }
+    right = {
+        "document_id": "banana",
+        "chunk_id": "2",
+        "title": "Hướng dẫn tưới cây ăn quả",
+        "crop_keys": ["banana"],
+        "content": "tưới nhỏ giọt",
+    }
+    results = [wrong, right]
+    monkeypatch.setattr(
+        hybrid_module,
+        "dense_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=results),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "bm25_search",
+        lambda *args, **kwargs: asyncio.sleep(0, result=results),
+    )
+    monkeypatch.setattr(
+        hybrid_module,
+        "rerank",
+        lambda *args: asyncio.sleep(0, result=[0.99, 0.90]),
+    )
+
+    ranked = await hybrid_module.hybrid_search("Vườn chuối nên tưới thế nào?")
+
+    assert [item["document_id"] for item in ranked] == ["banana"]
 
 
 @pytest.mark.asyncio
@@ -310,6 +494,62 @@ def test_topic_intent_does_not_override_much_stronger_semantic_match():
 
     assert applied is False
     assert result[0][1] == pytest.approx(0.96)
+
+
+def test_stage_region_intent_prefers_matching_reviewed_scope():
+    ranked = [
+        ({
+            "title": "Chuối tưới giai đoạn cây con",
+            "stages": ["initial"],
+            "regions": ["northern_mountains"],
+        }, 0.97),
+        ({
+            "title": "Chuối tưới giai đoạn ra hoa",
+            "stages": ["mid_season"],
+            "regions": ["central_highlands"],
+        }, 0.94),
+        ({
+            "title": "Nguyên tắc tưới chuối toàn quốc",
+            "stages": ["all"],
+            "regions": ["national"],
+        }, 0.93),
+    ]
+
+    result, applied = hybrid_module._apply_stage_region_intent(
+        "Chuối ở Tây Nguyên đang ra hoa thì tưới thế nào?",
+        ranked,
+    )
+
+    assert applied is True
+    assert result[0][0]["regions"] == ["central_highlands"]
+    assert result[1][0]["regions"] == ["national"]
+
+
+def test_stage_region_intent_does_not_override_much_stronger_semantic_match():
+    ranked = [
+        ({"title": "Tưới chuối", "regions": ["national"]}, 0.98),
+        ({"title": "Bệnh cây khác", "regions": ["central_highlands"]}, 0.40),
+    ]
+
+    result, applied = hybrid_module._apply_stage_region_intent(
+        "Chuối ở Tây Nguyên nên tưới thế nào?",
+        ranked,
+    )
+
+    assert applied is False
+    assert result[0][1] == pytest.approx(0.98)
+
+
+def test_scope_intent_recognizes_only_explicit_stage_and_macro_region():
+    assert hybrid_module._scope_intent(
+        "Cà phê Tây Nguyên đang ra hoa"
+    ) == ({"mid_season"}, {"central_highlands"})
+    assert hybrid_module._scope_intent(
+        "Cây đang phát triển tốt ở Lâm Đồng"
+    ) == (set(), set())
+    assert hybrid_module._scope_intent(
+        "Lúa đang làm đòng ở đồng bằng sông Hồng"
+    ) == ({"mid_season"}, {"red_river_delta"})
 
 
 def test_crop_intent_does_not_override_much_stronger_semantic_match():

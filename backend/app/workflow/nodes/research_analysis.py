@@ -114,13 +114,24 @@ def supports_research_coverage(document: dict[str, Any]) -> bool:
     retrievers found the same traceable chunk. This rule is only for research
     coverage; post_guardrail keeps its stricter high-risk threshold.
     """
+    if document.get("ranking_strategy") == "provider_grounding":
+        return bool(
+            document.get("document_id")
+            and document.get("chunk_id")
+            and document.get("is_active") is True
+            and str(document.get("content") or "").strip()
+        )
+
     rerank_score = float(document.get("rerank_score") or 0.0)
     if rerank_score >= RELEVANT_DOCUMENT_THRESHOLD:
         return True
     strategy = document.get("ranking_strategy")
     if strategy == "rerank":
         return rerank_score >= settings.rerank_min_confidence
-    if strategy == "fusion_low_rerank_confidence":
+    if isinstance(strategy, str) and strategy.startswith((
+        "fusion_low_rerank_confidence",
+        "fusion_rerank_unavailable",
+    )):
         return (
             float(document.get("dense_score") or 0.0) > 0.0
             and float(document.get("bm25_score") or 0.0) > 0.0

@@ -1,0 +1,36 @@
+{
+  "version": "crop-data-expansion-batch-21-v1",
+  "documents": 2,
+  "sources": 2,
+  "ready": 2,
+  "already_active": 0,
+  "replace_ready": 0,
+  "ingested": 2,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Khuyến nông Việt Nam - lịch và lượng bón cho xoài Thái Lan Đài Loan miền núi phía Bắc",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+      "crop_keys": [
+        "mango"
+      ],
+      "characters": 1282,
+      "content_sha256": "65b8c54a85901371b6ee17bf11428a7b4ee849bc67cc9acc8b93d712b2e9c89f",
+      "source_sha256": "4b4fa7e1e461e9a225e64e4a5b1700abf12a13f2b30bd080edf614433103583d",
+      "status": "ingested",
+      "document_id": "a9b88bbc-3771-4283-b5da-034ff4475291"
+    },
+    {
+      "title": "FAO - nguyên tắc quản lý phân hữu cơ cho dứa Sugarloaf",
+      "source": "https://www.fao.org/fileadmin/templates/organicexports/docs/Organic_sugarloaf_pineapple_manual.pdf",
+      "crop_keys": [
+        "pineapple"
+      ],
+      "characters": 1489,
+      "content_sha256": "1f869bc5f8c025cef69496ac8214d135fe19e7b2bb0aae5de2e82abc639b30e4",
+      "source_sha256": "c6d7d6b591fa02a4b71f57bfa892272ac1ee2d95ad02a7291a8505c44bfb7e46",
+      "status": "ingested",
+      "document_id": "5b696d6c-86bb-43b2-a8ee-9f3a6d6b9761"
+    }
+  ]
+}

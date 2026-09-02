@@ -87,6 +87,46 @@ def test_semantic_cache_key_changes_when_farm_profile_changes():
     assert first != updated
 
 
+def test_semantic_cache_key_changes_when_known_facts_change():
+    first = _context_key(
+        "user-1",
+        "Lâm Đồng",
+        "Bắp Cải",
+        time_window="2026082010",
+        known_facts=[{"soil": "đất thịt"}],
+    )
+    updated = _context_key(
+        "user-1",
+        "Lâm Đồng",
+        "Bắp Cải",
+        time_window="2026082010",
+        known_facts=[{"soil": "đất cát"}],
+    )
+
+    assert first != updated
+    assert "đất thịt" not in first
+    assert "đất cát" not in updated
+
+
+def test_semantic_cache_key_is_stable_when_fact_order_changes():
+    first = _context_key(
+        "user-1",
+        "Lâm Đồng",
+        "Bắp Cải",
+        time_window="2026082010",
+        known_facts=[{"soil": "đất thịt"}, {"preference": "ngắn gọn"}],
+    )
+    reordered = _context_key(
+        "user-1",
+        "Lâm Đồng",
+        "Bắp Cải",
+        time_window="2026082010",
+        known_facts=[{"preference": "ngắn gọn"}, {"soil": "đất thịt"}],
+    )
+
+    assert first == reordered
+
+
 @pytest.mark.asyncio
 async def test_chat_loads_only_owned_active_plot_season_context():
     plot = SimpleNamespace(

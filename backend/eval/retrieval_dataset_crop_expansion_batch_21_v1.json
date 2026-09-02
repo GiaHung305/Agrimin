@@ -1,0 +1,47 @@
+{
+  "version": "crop-expansion-batch-21-retrieval-v1",
+  "items": [
+    {
+      "id": "tomato-winter-nursery-establishment",
+      "category": "crop_depth_establishment",
+      "query": "Cà chua vụ đông miền Bắc: giá thể vườn ươm, tiêu chuẩn cây con 4 đến 5 lá thật và tưới hồi xanh sau trồng như thế nào?",
+      "relevant_sources": ["Khuyến nông Việt Nam - hướng dẫn kỹ thuật trồng cà chua vụ đông giai đoạn đầu vụ"]
+    },
+    {
+      "id": "citrus-replant-soil-root-canopy",
+      "category": "crop_depth_establishment",
+      "query": "Khi trồng lại vườn cam quýt bưởi, cần cải tạo đất, trồng nổi, quản lý rễ cọc và tạo tán cây có múi ra sao?",
+      "relevant_sources": ["Khuyến nông Việt Nam - cải tạo đất và kiến thiết vườn cây có múi"]
+    },
+    {
+      "id": "citrus-organic-soil-no-herbicide",
+      "category": "crop_depth_nutrition",
+      "query": "Vườn cây có múi nên quản lý cỏ không dùng thuốc trừ cỏ và bổ sung hữu cơ vi sinh để cải tạo đất chua như thế nào?",
+      "relevant_sources": ["Khuyến nông Việt Nam - nguyên tắc quản lý cỏ và hữu cơ cho đất cây có múi"]
+    },
+    {
+      "id": "mango-northern-seedling-season",
+      "category": "crop_depth_establishment",
+      "query": "Xoài Thái Lan và xoài Đài Loan VietGAP ở trung du miền núi phía Bắc cần cây ghép đạt tiêu chuẩn gì và nên trồng vào thời vụ nào?",
+      "relevant_sources": ["Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc"]
+    },
+    {
+      "id": "pepper-balanced-nutrition-stages",
+      "category": "crop_depth_nutrition",
+      "query": "WASI khuyến nghị nguyên tắc cân đối dinh dưỡng hồ tiêu theo giai đoạn, lượng dinh dưỡng lấy đi và độ phì đất như thế nào?",
+      "relevant_sources": ["WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất"]
+    },
+    {
+      "id": "mango-northern-age-specific-fertilizer",
+      "category": "crop_depth_high_risk_nutrition",
+      "query": "Nguồn Khuyến nông 2023 ghi lịch và lượng bón theo tuổi cho xoài Thái Lan Đài Loan ở miền núi phía Bắc như thế nào?",
+      "relevant_sources": ["Khuyến nông Việt Nam - lịch và lượng bón cho xoài Thái Lan Đài Loan miền núi phía Bắc"]
+    },
+    {
+      "id": "pineapple-organic-compost-principles",
+      "category": "crop_depth_nutrition",
+      "query": "Tài liệu FAO cho dứa Sugarloaf hữu cơ ở Ghana nêu vai trò của phân xanh, tàn dư dứa, compost và chất hữu cơ đất ra sao?",
+      "relevant_sources": ["FAO - nguyên tắc quản lý phân hữu cơ cho dứa Sugarloaf"]
+    }
+  ]
+}

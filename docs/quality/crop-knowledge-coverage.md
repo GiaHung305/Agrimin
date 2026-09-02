@@ -7,13 +7,15 @@ việc có đủ bằng chứng chuyên biệt để tư vấn từng cây.
 ## Ảnh chụp hiện tại
 
 - 91 cây có chính sách theo dõi, gồm cây trồng chính và danh mục rau mở rộng.
-- 123/123 nguồn đang hoạt động đã được phân loại; không có nguồn chưa kiểm duyệt,
+- 130/130 nguồn đang hoạt động đã được phân loại; không có nguồn chưa kiểm duyệt,
   thiếu trong kho hoặc sai `source_type`.
-- 17.836 ô cần phủ: 844 ô có nguồn đúng cả giai đoạn và vùng, 13.350 ô chỉ có
-  tài liệu nền toàn quốc/toàn vụ, và 3.642 ô chưa có bằng chứng phù hợp.
+- 17.836 ô cần phủ: 859 ô có nguồn đúng cả giai đoạn và vùng, 13.371 ô chỉ có
+  tài liệu nền toàn quốc/toàn vụ, và 3.606 ô chưa có bằng chứng phù hợp.
 - Backlog hiện không còn P0 hoặc P1; 91/91 cây ở P2 theo công thức kiểm toán hiện
   tại. P2 nghĩa là cây đã có ít nhất hai nguồn chuyên biệt và không còn từ ba
   chủ đề trở lên hoàn toàn trống; không có nghĩa là đã hoàn chỉnh mọi vùng/vụ.
+- Không còn cây nào có `topic_gaps`; backlog còn lại là chiều sâu theo giai đoạn
+  và vùng sinh thái.
 
 ## Lô mở rộng rau số 1
 
@@ -542,6 +544,68 @@ truy vết thay vì bị guardrail chặn do thiếu bằng chứng.
 
 Registry hiện có 125 URL nguồn duy nhất đã phân loại; nguồn CGIAR không nhận nhãn
 vùng giả và nguồn cà chua dùng taxonomy stage/region hiện hữu.
+
+## Lô cà chua đầu vụ số 19
+
+Lô `crop-data-expansion-batch-19-v1` bổ sung một lát 3.217 ký tự từ Bản tin
+Khuyến nông Việt Nam cho cà chua vụ đông miền Bắc: thời vụ, lựa chọn giống,
+ươm cây, tiêu chuẩn cây xuất vườn, làm đất, mật độ và tưới hồi xanh. Số trang
+PDF được kiểm tra bằng chính `pypdf`; lát dừng trước mục bón phân nên không lấy
+liều phân hoặc thuốc BVTV. Đối soát ghi nhận 1 tài liệu active, 2 chunk ở cả
+PostgreSQL và Qdrant.
+
+## Lô đóng gap cây lâu năm số 20
+
+Lô `crop-data-expansion-batch-20-v1` bổ sung bốn lát từ ba nguồn Việt Nam:
+cải tạo đất/kiến thiết và quản lý hữu cơ cho cây có múi, cây giống/thời vụ xoài
+VietGAP miền núi phía Bắc, và nguyên tắc dinh dưỡng hồ tiêu theo giai đoạn của
+WASI. PDF hồ tiêu 25 MB ban đầu vượt trần ingest 15 MB nên bị loại; pipeline
+không được nới giới hạn và dùng bài WASI 83 KB thay thế. Các lát dừng trước bảng
+liều hoặc sản phẩm hóa học. Đối soát ghi nhận 4 tài liệu active, 7 chunk ở cả
+PostgreSQL và Qdrant.
+
+## Lô đóng topic gap cuối số 21
+
+Lô `crop-data-expansion-batch-21-v1` bổ sung lát định lượng phân bón xoài năm
+2023 của Trung tâm Khuyến nông Quốc gia và nguyên tắc phân hữu cơ cho dứa
+Sugarloaf từ tài liệu do FAO đặt hàng. Liều xoài được đánh dấu phạm vi hẹp theo
+giống, tuổi cây, đơn vị trên cây và vùng miền núi phía Bắc; phần Paclobutrazol,
+KNO3 và thuốc BVTV không được ingest. Nguồn dứa chỉ dùng nguyên tắc hữu cơ ở
+Ghana và không được gán vùng Việt Nam. Đối soát ghi nhận 2 tài liệu active, 2
+chunk ở cả PostgreSQL và Qdrant.
+
+Sau ba lô 19–21, ma trận strict đạt 130/130 nguồn active đã phân loại, không có
+blocker và không còn `topic_gaps` trên 91 cây. Benchmark bảy truy vấn đạt
+recall@1 = recall@5 = MRR = 100%, nDCG@5 = 97,71%. Hai lượt đều trượt riêng
+gate hiệu năng: cold 15,51 giây và lượt đo lại 16,95 giây so với ngưỡng 10
+giây; nguyên nhân cần tiếp tục theo dõi ở reranker CPU, không hạ ngưỡng để hợp
+thức hóa kết quả.
+
+## Lô tăng chiều sâu chuối, sắn và thanh long số 22
+
+Lô `crop-data-expansion-batch-22-v1` bổ sung năm lát, tổng cộng 18.384 ký tự,
+từ hai tài liệu do Cục Trồng trọt chủ trì: sổ tay chuối thích ứng biến đổi khí
+hậu xuất bản năm 2021 và Quy trình thanh long bền vững, phát thải thấp ban hành
+theo Quyết định 94/QĐ-TT-CCN ngày 24/02/2025. Các lát chỉ giữ thiết kế tưới,
+chuẩn bị vườn theo địa hình, thu hoạch/sau thu hoạch chuối, cùng tưới, tỉa cành
+quả và thu hoạch/vận chuyển thanh long. Phụ lục thuốc BVTV và bảng bón phân
+không được ingest.
+
+Đối soát ghi nhận 5 tài liệu active và 12 chunk tương ứng trong cả PostgreSQL
+và Qdrant; chạy lại cho `already_active = 5`, không tạo trùng. Audit lại nguồn
+sẵn có cũng chuyển nhãn giai đoạn từ `all` sang các giai đoạn được văn bản nêu
+rõ cho chuối Ninh Bình, quy trình sắn bền vững và quản lý khảm lá sắn. Ma trận
+strict đạt 132/132 nguồn active đã phân loại; số ô `covered` tăng từ 859 lên
+1.029, `gap` giảm từ 3.606 xuống 3.597 và cả chuối, sắn, thanh long đều không
+còn `stage_specific_gaps`. Các vùng không có bằng chứng địa phương vẫn giữ là
+gap, không suy diễn nhãn `national` thành coverage vùng.
+
+Benchmark warm chín truy vấn theo giai đoạn/vùng đạt recall@1 = recall@5 = MRR
+= 100% và nDCG@5 = 99,64%. Gate chỉ trượt latency: trung bình 25,21 giây so với
+ngưỡng 10 giây. Lượt cold trước đó đạt recall@1 88,89%, recall@5 100%, MRR
+94,44%, nDCG@5 96,23% và latency 18,58 giây; kết quả top-1 bị xem là sai thực
+ra là sổ tay thanh long cũ có đúng nội dung tỉa theo giai đoạn, đã được đọc trực
+tiếp từ payload Qdrant và bổ sung vào nhãn relevance trước lượt warm.
 
 ## Quy tắc bổ sung có kiểm soát
 

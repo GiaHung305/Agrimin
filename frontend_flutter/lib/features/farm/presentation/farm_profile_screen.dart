@@ -8,16 +8,29 @@ import 'package:frontend_flutter/design_system/design_system.dart';
 import 'monitoring_schedule_screen.dart';
 import 'farm_plots_screen.dart';
 
+typedef FarmProfileLoader = Future<FarmProfile?> Function();
+typedef FarmProfileSaver =
+    Future<FarmProfile> Function({
+      required String name,
+      String? province,
+      double? areaHa,
+      String? farmingStyle,
+    });
+
 class FarmProfileScreen extends StatefulWidget {
   const FarmProfileScreen({
     super.key,
     this.onboarding = false,
     this.canManageDocuments = false,
     this.canViewOperations = false,
+    this.loadProfile,
+    this.saveProfile,
   });
   final bool onboarding;
   final bool canManageDocuments;
   final bool canViewOperations;
+  final FarmProfileLoader? loadProfile;
+  final FarmProfileSaver? saveProfile;
 
   @override
   State<FarmProfileScreen> createState() => _FarmProfileScreenState();
@@ -54,7 +67,7 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
       _loadError = null;
     });
     try {
-      final profile = await ApiService.getFarmProfile();
+      final profile = await (widget.loadProfile ?? ApiService.getFarmProfile)();
       if (!mounted) return;
       if (profile != null) _fill(profile);
       setState(() => _loading = false);
@@ -92,7 +105,7 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
     }
     setState(() => _saving = true);
     try {
-      await ApiService.saveFarmProfile(
+      await (widget.saveProfile ?? ApiService.saveFarmProfile)(
         name: _name.text.trim(),
         province: _optional(_province),
         areaHa: area,
@@ -143,157 +156,180 @@ class _FarmProfileScreenState extends State<FarmProfileScreen> {
               top: false,
               child: Form(
                 key: _formKey,
-                child: ListView(
+                child: SingleChildScrollView(
                   padding: const EdgeInsets.fromLTRB(20, 14, 20, 32),
-                  children: [
-                    const _FarmHero(),
-                    const SizedBox(height: 25),
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.headlineSmall
-                          ?.copyWith(fontWeight: FontWeight.w800),
-                    ),
-                    const SizedBox(height: 7),
-                    const Text(
-                      'Thông tin này giúp trợ lý tư vấn, cảnh báo thời tiết và nhắc việc sát với nông trại hơn.',
-                      style: TextStyle(color: AppColors.muted, height: 1.45),
-                    ),
-                    if (_loadError != null) ...[
-                      const SizedBox(height: 15),
-                      _Notice(message: _loadError!),
-                    ],
-                    const SizedBox(height: AppSpacing.xl),
-                    const _SectionLabel('Thông tin cơ bản'),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _name,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Tên nông trại *',
-                        prefixIcon: Icon(Icons.agriculture_outlined),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      const _FarmHero(),
+                      const SizedBox(height: 25),
+                      Text(
+                        title,
+                        style: Theme.of(context).textTheme.headlineSmall
+                            ?.copyWith(fontWeight: FontWeight.w800),
                       ),
-                      validator: (value) =>
-                          value == null || value.trim().isEmpty
-                          ? 'Hãy đặt tên cho nông trại.'
-                          : null,
-                    ),
-                    const SizedBox(height: 13),
-                    TextFormField(
-                      controller: _province,
-                      textCapitalization: TextCapitalization.words,
-                      decoration: const InputDecoration(
-                        labelText: 'Tỉnh / thành phố',
-                        prefixIcon: Icon(Icons.location_on_outlined),
-                      ),
-                    ),
-                    const SizedBox(height: AppSpacing.xl),
-                    const _SectionLabel('Canh tác'),
-                    const SizedBox(height: 10),
-                    TextFormField(
-                      controller: _area,
-                      keyboardType: const TextInputType.numberWithOptions(
-                        decimal: true,
-                      ),
-                      decoration: const InputDecoration(
-                        labelText: 'Tổng diện tích nông trại (ha)',
-                        hintText: 'Ví dụ: 2.5',
-                        prefixIcon: Icon(Icons.square_foot_outlined),
-                      ),
-                    ),
-                    const SizedBox(height: 13),
-                    TextFormField(
-                      controller: _style,
-                      textCapitalization: TextCapitalization.sentences,
-                      decoration: const InputDecoration(
-                        labelText: 'Phương thức canh tác',
-                        hintText: 'Ví dụ: Hữu cơ, VietGAP',
-                        prefixIcon: Icon(Icons.spa_outlined),
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    FilledButton.icon(
-                      onPressed: _saving ? null : _save,
-                      icon: _saving
-                          ? const SizedBox(
-                              width: 18,
-                              height: 18,
-                              child: CircularProgressIndicator(
-                                color: AppColors.onPrimary,
-                                strokeWidth: 2,
-                              ),
-                            )
-                          : const Icon(Icons.check_circle_outline_rounded),
-                      label: Text(
-                        widget.onboarding
-                            ? 'Hoàn tất và vào trợ lý'
-                            : 'Lưu thay đổi',
-                      ),
-                    ),
-                    if (!widget.onboarding) ...[
-                      const SizedBox(height: 18),
-                      Card(
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 8,
-                          ),
-                          leading: const Icon(
-                            Icons.landscape_outlined,
-                            color: AppColors.forest,
-                          ),
-                          title: const Text(
-                            'Thửa đất và mùa vụ',
-                            style: TextStyle(fontWeight: FontWeight.w800),
-                          ),
-                          subtitle: const Text(
-                            'Quản lý cây trồng theo từng thửa và từng vụ.',
-                          ),
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const FarmPlotsScreen(),
-                            ),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: AppSpacing.sm),
-                      Card(
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 18,
-                            vertical: 8,
-                          ),
-                          leading: const Icon(
-                            Icons.sensors_rounded,
-                            color: AppColors.forest,
-                          ),
-                          title: const Text(
-                            'Theo dõi cây trồng',
-                            style: TextStyle(fontWeight: FontWeight.w800),
-                          ),
-                          subtitle: const Text(
-                            'Xem, tạm dừng hoặc xóa lịch cảnh báo nguy cơ.',
-                          ),
-                          trailing: const Icon(Icons.chevron_right_rounded),
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const MonitoringScheduleScreen(),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if (widget.onboarding) ...[
-                      const SizedBox(height: AppSpacing.sm),
+                      const SizedBox(height: 7),
                       const Text(
-                        'Bạn có thể bổ sung hoặc chỉnh sửa thông tin này bất cứ lúc nào.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(color: AppColors.muted, fontSize: 12),
+                        'Thông tin này giúp trợ lý tư vấn, cảnh báo thời tiết và nhắc việc sát với nông trại hơn.',
+                        style: TextStyle(color: AppColors.muted, height: 1.45),
                       ),
+                      if (_loadError != null) ...[
+                        const SizedBox(height: 15),
+                        _Notice(message: _loadError!),
+                      ],
+                      const SizedBox(height: AppSpacing.xl),
+                      const _SectionLabel('Thông tin cơ bản'),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        key: const Key('farm-profile-name'),
+                        controller: _name,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: const InputDecoration(
+                          labelText: 'Tên nông trại *',
+                          prefixIcon: Icon(Icons.agriculture_outlined),
+                        ),
+                        validator: (value) =>
+                            value == null || value.trim().isEmpty
+                            ? 'Hãy đặt tên cho nông trại.'
+                            : null,
+                      ),
+                      const SizedBox(height: 13),
+                      TextFormField(
+                        key: const Key('farm-profile-province'),
+                        controller: _province,
+                        textCapitalization: TextCapitalization.words,
+                        decoration: const InputDecoration(
+                          labelText: 'Tỉnh / thành phố',
+                          prefixIcon: Icon(Icons.location_on_outlined),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.xl),
+                      const _SectionLabel('Canh tác'),
+                      const SizedBox(height: 10),
+                      TextFormField(
+                        key: const Key('farm-profile-area'),
+                        controller: _area,
+                        keyboardType: const TextInputType.numberWithOptions(
+                          decimal: true,
+                        ),
+                        decoration: const InputDecoration(
+                          labelText: 'Tổng diện tích nông trại (ha)',
+                          hintText: 'Ví dụ: 2.5',
+                          prefixIcon: Icon(Icons.square_foot_outlined),
+                        ),
+                        validator: (value) {
+                          final text = value?.trim().replaceAll(',', '.') ?? '';
+                          if (text.isEmpty) return null;
+                          final area = double.tryParse(text);
+                          if (area == null) {
+                            return 'Diện tích cần là một con số hợp lệ.';
+                          }
+                          if (area <= 0) {
+                            return 'Diện tích cần lớn hơn 0 ha.';
+                          }
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 13),
+                      TextFormField(
+                        key: const Key('farm-profile-style'),
+                        controller: _style,
+                        textCapitalization: TextCapitalization.sentences,
+                        decoration: const InputDecoration(
+                          labelText: 'Phương thức canh tác',
+                          hintText: 'Ví dụ: Hữu cơ, VietGAP',
+                          prefixIcon: Icon(Icons.spa_outlined),
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      FilledButton.icon(
+                        onPressed: _saving ? null : _save,
+                        icon: _saving
+                            ? const SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: CircularProgressIndicator(
+                                  color: AppColors.onPrimary,
+                                  strokeWidth: 2,
+                                ),
+                              )
+                            : const Icon(Icons.check_circle_outline_rounded),
+                        label: Text(
+                          widget.onboarding
+                              ? 'Hoàn tất và vào trợ lý'
+                              : 'Lưu thay đổi',
+                        ),
+                      ),
+                      if (!widget.onboarding) ...[
+                        const SizedBox(height: 18),
+                        Card(
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 8,
+                            ),
+                            leading: const Icon(
+                              Icons.landscape_outlined,
+                              color: AppColors.forest,
+                            ),
+                            title: const Text(
+                              'Thửa đất và mùa vụ',
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                            subtitle: const Text(
+                              'Quản lý cây trồng theo từng thửa và từng vụ.',
+                            ),
+                            trailing: const Icon(Icons.chevron_right_rounded),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const FarmPlotsScreen(),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.sm),
+                        Card(
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 18,
+                              vertical: 8,
+                            ),
+                            leading: const Icon(
+                              Icons.sensors_rounded,
+                              color: AppColors.forest,
+                            ),
+                            title: const Text(
+                              'Theo dõi cây trồng',
+                              style: TextStyle(fontWeight: FontWeight.w800),
+                            ),
+                            subtitle: const Text(
+                              'Xem, tạm dừng hoặc xóa lịch cảnh báo nguy cơ.',
+                            ),
+                            trailing: const Icon(Icons.chevron_right_rounded),
+                            onTap: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const MonitoringScheduleScreen(),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                      if (widget.onboarding) ...[
+                        const SizedBox(height: AppSpacing.sm),
+                        const Text(
+                          'Bạn có thể bổ sung hoặc chỉnh sửa thông tin này bất cứ lúc nào.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: AppColors.muted,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
                     ],
-                  ],
+                  ),
                 ),
               ),
             ),

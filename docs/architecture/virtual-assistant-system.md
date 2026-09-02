@@ -69,6 +69,12 @@ expiry.
    giống, giai đoạn và mốc thời gian lấy từ mùa vụ, không lưu cây trồng trùng ở
    hồ sơ. Draft token được giữ trong server đến khi post-guardrail hoàn tất,
    sau đó câu trả lời đã duyệt mới được phát thành các event SSE.
+   Các lượt xã giao khớp toàn bộ mẫu hẹp như chào, cảm ơn hoặc xác nhận ngắn được
+   trả bằng nội dung xác định, không gọi model/RAG và không hiện thẻ kiểm chứng kỹ
+   thuật trong Flutter. Câu có thêm yêu cầu thật không được xếp vào nhóm này.
+   Với câu có tên cây hoặc cụm kỹ thuật nông nghiệp rõ ràng, grounding gate cục
+   bộ buộc `need_rag=true` dù planner model trả false. Weather thuần túy, action
+   thuần, câu hỏi hồ sơ có cấu trúc và xã giao vẫn giữ đường tắt đã kiểm chứng.
 3. Ý định tạo việc/nhật ký được nhận diện theo nghĩa tự nhiên, gồm các cách nói như
    “nhắc/báo mình”, “đặt/lên/tạo lịch”, “hẹn giờ”, “đừng quên” hoặc “ghi/lưu nhật
    ký”, không phụ thuộc một câu mẫu cố định. Bộ phân tích deterministic chuẩn hóa
@@ -249,6 +255,19 @@ with `--dart-define=ENABLE_DEEP_RESEARCH=true`. When explicitly enabled by an
 operator, the response is not semantic-cached and high-risk output remains
 buffered until the existing guardrail has validated its evidence.
 
+External grounding is accepted only when Gemini returns `grounding_supports`
+that map an exact response segment to a prompt-safe HTTP(S) source. The backend
+adds `[E#]` markers from those mappings, keeps only sources actually referenced
+by a claim, and de-duplicates repeated URLs before confidence is calculated.
+If any technical claim remains without a local marker, or grounding metadata is
+missing/unsafe, Deep Research is discarded and the graph degrades to the normal
+internal-RAG generation path. Provider-grounded sources with unknown authority
+may support low-risk claims but never satisfy high-risk dosage authority rules.
+Confidence counts independent organization domains rather than pages or
+subdomains. Web grounding alone is capped below the trusted-answer threshold,
+so it receives an uncertainty notice unless internal RAG or another trusted
+signal independently corroborates it.
+
 Internal evidence uses one traceable record from retrieval through the API:
 `document_id`, `chunk_id`, `chunk_index`, source/locator, version, active state,
 fusion score, and rerank score. High-risk numeric dosage is released only when
@@ -339,6 +358,29 @@ nguồn production đang hoạt động.
 ## Bảo mật và vận hành
 
 Tất cả dữ liệu assistant gắn `user_id`; action, plot, season, monitoring schedule và push delivery đều kiểm tra ownership. Action còn phải đúng pending status và thời hạn. Prompt injection bị chặn trước DB/model. Firebase credentials chỉ đọc từ biến môi trường/volume, không commit. Backend và worker gọi MCP thời tiết qua `mcp-weather-server:8002`, có timeout và adapter tương thích cả `structuredContent` lẫn SDK cũ. Logger `httpx` của weather/geocoding bị giới hạn ở WARNING để query string chứa `appid` không vào log. Weather là nguồn phụ: lỗi của một lần tra cứu không làm hỏng chat hoặc rollback toàn bộ chu kỳ reminder. Worker chạy tách backend qua Docker Compose và retry lịch lỗi sau 15 phút.
+
+Kết quả weather chỉ được đưa vào prompt/policy sau khi qua contract dùng chung:
+tọa độ tỉnh phải nằm trong biên rộng của Việt Nam; nhiệt độ, độ ẩm, mưa và mô tả
+phải hợp lệ; ngày dự báo phải bắt đầu từ hôm nay/ngày mai, liên tiếp và nằm trong
+cửa sổ ba ngày. Mốc Unix của OpenWeather được nhóm theo
+`Asia/Ho_Chi_Minh`, không theo ngày UTC. Dữ liệu stale, sai vùng hoặc sai thứ tự
+được coi là weather unavailable để chat giảm confidence và worker retry an toàn.
+Với chat, tỉnh/thành phố được nêu trực tiếp trong câu hỏi được ưu tiên hơn địa
+điểm hồ sơ nhưng không được ghi ngược thành thông tin nông trại. Nếu không có địa
+điểm, hệ thống hỏi đúng một câu làm rõ; nếu có nhiều địa điểm, hệ thống không tự
+chọn một nơi. Một câu trả lời chỉ có địa điểm như “Đà Lạt” chỉ được kế thừa ý định
+weather khi ngay trước đó hệ thống đã hỏi tỉnh/thành phố và lịch sử đã sàng lọc có
+yêu cầu weather. Tên tỉnh cũ vẫn geocode về thành phố đại diện tại chính địa phương
+đó, không chuyển sang điểm đại diện xa của đơn vị hành chính sau sáp nhập. Câu hỏi
+thuần thời tiết dùng logic xác định để hiển thị trực tiếp số liệu đã qua contract,
+giữ đúng phạm vi hôm nay/ngày mai từ lượt hỏi trước và không gọi model để diễn đạt
+lại con số. Câu hỏi kết hợp weather với quyết định canh tác vẫn đi qua RAG/model;
+nếu tool lỗi, hệ thống trả trạng thái thân thiện thay vì bịa dự báo.
+Confidence của câu dự báo được tính tập trung theo độ đầy đủ trường dữ liệu, số
+ngày và trạng thái cache, có trần dưới 1.0; đây là độ tin cậy khi tái hiện payload,
+không phải xác suất thời tiết sẽ xảy ra. Flutter không hiện phần trăm kỹ thuật và
+chỉ gắn nhãn đã kiểm tra khi guardrail pass, confidence đạt ngưỡng và mọi marker
+nguồn trong câu trả lời đều được giải quyết.
 
 ## Rollout và kiểm thử
 

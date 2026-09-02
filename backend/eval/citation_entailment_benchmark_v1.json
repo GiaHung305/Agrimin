@@ -1,0 +1,133 @@
+{
+  "version": "citation-entailment-v1",
+  "description": "Balanced Vietnamese benchmark for the production reflection contract: every agricultural claim must be entailed by its exact cited chunk.",
+  "expected_sample_size": 8,
+  "thresholds": {
+    "minimum_accuracy": 0.875,
+    "minimum_supported_acceptance_rate": 0.75,
+    "minimum_unsupported_recall": 1.0,
+    "minimum_unsupported_claim_detection_rate": 0.75
+  },
+  "cases": [
+    {
+      "id": "supported_exact_pineapple_symptom",
+      "category": "supported_exact",
+      "question": "Dứa bị thối nõn có dấu hiệu gì?",
+      "answer": "Lá non ở giữa nõn có thể mềm, đổi màu và dễ rút khỏi nõn [E1].",
+      "evidence": [
+        {
+          "source": "Tài liệu kỹ thuật thối nõn dứa",
+          "content": "Khi bệnh thối nõn tiến triển, các lá non ở trung tâm mềm, đổi màu và có thể rút ra dễ dàng."
+        }
+      ],
+      "expected_status": "sufficient",
+      "expect_unsupported_claims": false
+    },
+    {
+      "id": "supported_paraphrase_drainage",
+      "category": "supported_paraphrase",
+      "question": "Cần ưu tiên gì để hạn chế thối rễ khi ruộng bị úng?",
+      "answer": "Ưu tiên khơi thông rãnh để nước không đọng kéo dài quanh vùng rễ [E1].",
+      "evidence": [
+        {
+          "source": "Hướng dẫn quản lý nước",
+          "content": "Cần cải thiện thoát nước, tránh để đất úng lâu tại vùng rễ và duy trì rãnh tiêu thông suốt."
+        }
+      ],
+      "expected_status": "sufficient",
+      "expect_unsupported_claims": false
+    },
+    {
+      "id": "supported_multi_source_local_citations",
+      "category": "supported_multi_source",
+      "question": "Trước khi trồng lại cần xử lý đất và cây giống thế nào?",
+      "answer": "Loại bỏ tàn dư bệnh và vệ sinh khu vực trồng [E1]. Chỉ sử dụng cây giống khỏe, có nguồn gốc rõ ràng [E2].",
+      "evidence": [
+        {
+          "source": "Quản lý vệ sinh đồng ruộng",
+          "content": "Thu gom tàn dư mang mầm bệnh và vệ sinh khu vực trước khi trồng lại."
+        },
+        {
+          "source": "Tiêu chuẩn cây giống",
+          "content": "Chọn cây giống khỏe mạnh, sạch bệnh và có nguồn gốc rõ ràng."
+        }
+      ],
+      "expected_status": "sufficient",
+      "expect_unsupported_claims": false
+    },
+    {
+      "id": "supported_conditional_wording",
+      "category": "supported_scope",
+      "question": "Độ ẩm cao có làm bệnh dễ phát triển hơn không?",
+      "answer": "Ẩm độ cao và vườn kém thông thoáng có thể tạo điều kiện thuận lợi cho bệnh phát triển [E1].",
+      "evidence": [
+        {
+          "source": "Điều kiện phát sinh bệnh",
+          "content": "Bệnh thường phát triển thuận lợi trong điều kiện ẩm độ cao, vườn rậm và kém thông thoáng."
+        }
+      ],
+      "expected_status": "sufficient",
+      "expect_unsupported_claims": false
+    },
+    {
+      "id": "unsupported_invented_nitrogen_recovery",
+      "category": "unsupported_recommendation",
+      "question": "Dứa bị thối nõn cần làm gì?",
+      "answer": "Bón thêm nhiều đạm sẽ giúp cây phục hồi nhanh sau khi bị thối nõn [E1].",
+      "evidence": [
+        {
+          "source": "Tài liệu kỹ thuật thối nõn dứa",
+          "content": "Cần tiêu thoát nước, loại bỏ cây bệnh nặng và vệ sinh dụng cụ; tài liệu không đưa khuyến cáo tăng đạm."
+        }
+      ],
+      "expected_status": "need_more_search",
+      "expect_unsupported_claims": true
+    },
+    {
+      "id": "unsupported_wrong_local_citation",
+      "category": "wrong_citation",
+      "question": "Trước khi trồng lại cần làm gì?",
+      "answer": "Chỉ sử dụng cây giống sạch bệnh và có nguồn gốc rõ ràng [E1].",
+      "evidence": [
+        {
+          "source": "Quản lý nước",
+          "content": "Khơi thông rãnh và tránh để nước đọng kéo dài quanh vùng rễ."
+        },
+        {
+          "source": "Tiêu chuẩn cây giống",
+          "content": "Chọn cây giống khỏe mạnh, sạch bệnh và có nguồn gốc rõ ràng."
+        }
+      ],
+      "expected_status": "need_more_search",
+      "expect_unsupported_claims": true
+    },
+    {
+      "id": "unsupported_overstated_causality",
+      "category": "overstatement",
+      "question": "Lá vàng có chắc chắn do nấm không?",
+      "answer": "Lá vàng chắc chắn do nấm gây ra [E1].",
+      "evidence": [
+        {
+          "source": "Hướng dẫn chẩn đoán triệu chứng",
+          "content": "Lá vàng có thể liên quan úng rễ, thiếu dinh dưỡng hoặc một số tác nhân gây bệnh; cần kiểm tra thêm trước khi kết luận."
+        }
+      ],
+      "expected_status": "need_more_search",
+      "expect_unsupported_claims": true
+    },
+    {
+      "id": "unsupported_cross_crop_transfer",
+      "category": "scope_mismatch",
+      "question": "Cà chua bị héo có nên áp dụng hướng dẫn này không?",
+      "answer": "Với cà chua bị héo, cần rút lá non ở giữa nõn để xác nhận bệnh [E1].",
+      "evidence": [
+        {
+          "source": "Nhận biết thối nõn trên dứa",
+          "content": "Trên cây dứa, lá non ở giữa nõn có thể rút ra dễ dàng khi mô nõn bị thối."
+        }
+      ],
+      "expected_status": "need_more_search",
+      "expect_unsupported_claims": true
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "version": "crop-data-expansion-batch-20-v1",
+  "allowed_domains": [
+    "khuyennongvn.gov.vn",
+    "wasi.org.vn"
+  ],
+  "documents": [
+    {
+      "title": "Khuyến nông Việt Nam - cải tạo đất và kiến thiết vườn cây có múi",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+      "source_type": "extension",
+      "author": "Trung tâm Nghiên cứu và Phát triển Cây có múi; Trung tâm Khuyến nông Quốc gia",
+      "format": "html_markers",
+      "start_marker": "Cây ăn quả có múi là một trong những nhóm cây ăn quả chủ lực",
+      "end_marker": "- Làm cỏ, bón phân:",
+      "content_prefix": "Phạm vi cây: nhóm cây có múi/citrus gồm cam, quýt, bưởi và cây cùng nhóm; lát nguồn chính thống này bổ sung bằng chứng về cải tạo đất trước khi trồng lại, trồng nổi, quản lý rễ và tạo tán trong điều kiện sản xuất Việt Nam. Không đồng nhất mọi giống cây có múi hoặc mọi chân đất; cần đối chiếu giống, tuổi vườn, mực nước ngầm và khuyến cáo địa phương.",
+      "crop_keys": ["citrus"],
+      "required_terms": [
+        "cây ăn quả có múi",
+        "cải tạo đất trước khi trồng",
+        "Kỹ thuật trồng nổi",
+        "rễ cọc",
+        "Cắt tỉa tạo tán"
+      ],
+      "forbidden_terms": [
+        "Growth 15WP",
+        "Flower 94",
+        "Breed-DT02",
+        "thuốc BVTV"
+      ],
+      "min_chars": 1400
+    },
+    {
+      "title": "Khuyến nông Việt Nam - nguyên tắc quản lý cỏ và hữu cơ cho đất cây có múi",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+      "source_type": "extension",
+      "author": "Trung tâm Nghiên cứu và Phát triển Cây có múi; Trung tâm Khuyến nông Quốc gia",
+      "format": "html_markers",
+      "start_marker": "- Làm cỏ, bón phân:",
+      "end_marker": "Ví dụ:",
+      "content_prefix": "Phạm vi cây: nhóm cây có múi/citrus. Lát nguồn chỉ giữ nguyên tắc quản lý cỏ không dùng thuốc trừ cỏ, cải tạo đất thường xuyên và bổ sung hữu cơ, vi sinh, vôi, lân theo tình trạng đất. Lát dừng trước ví dụ định lượng; không tự suy ra liều, tỷ lệ hoặc lịch bón cho một vườn cụ thể khi chưa có tuổi cây, phân tích đất, năng suất và khuyến cáo địa phương.",
+      "crop_keys": ["citrus"],
+      "required_terms": [
+        "Không sử dụng thuốc trừ cỏ",
+        "phân hữu cơ vi sinh",
+        "cải tạo đất",
+        "pH > 5,5"
+      ],
+      "forbidden_terms": [
+        "50 - 70 kg",
+        "Growth 15WP",
+        "Flower 94",
+        "Breed-DT02"
+      ],
+      "min_chars": 650
+    },
+    {
+      "title": "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+      "source_type": "extension",
+      "author": "Trung tâm Khuyến nông Quốc gia",
+      "format": "pdf",
+      "page_start": 24,
+      "page_end": 24,
+      "start_marker": "KỸ THUẬT TRỒNG XOÀI THÁI LAN, XOÀI ĐÀI LOAN",
+      "end_marker": "c. Chuẩn bị hố và cách trồng",
+      "content_prefix": "Phạm vi cây và vùng: xoài/mango, Mangifera indica, giống xoài Thái Lan và Đài Loan theo hướng VietGAP tại trung du và miền núi phía Bắc. Lát nguồn bổ sung đặc điểm thích nghi, tiêu chuẩn cây ghép và thời vụ trồng; không áp đặc tính giống hoặc lịch mùa mưa này cho giống và vùng khác nếu chưa đối chiếu địa phương. Phần chuẩn bị hố có định lượng phân bón và các phần sau bị loại.",
+      "crop_keys": ["mango"],
+      "required_terms": [
+        "XOÀI THÁI LAN, XOÀI ĐÀI LOAN",
+        "Chuẩn bị cây giống",
+        "Gốc ghép và bộ rễ",
+        "Thời vụ trồng",
+        "đầu mùa mưa"
+      ],
+      "forbidden_terms": [
+        "Paclobutrazol",
+        "DAP + KCl",
+        "MKP 0 - 52 - 34",
+        "thuốc BVTV"
+      ],
+      "min_chars": 2200
+    },
+    {
+      "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+      "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+      "source_type": "government",
+      "author": "TS. Phạm Công Trí; Viện Khoa học Kỹ thuật Nông Lâm nghiệp Tây Nguyên",
+      "format": "html_markers",
+      "start_marker": "TS. Phạm Công Trí",
+      "end_marker": "Khuyến cáo thực hành bón cân đối phân khoáng cho hồ tiêu",
+      "content_prefix": "Phạm vi cây và vùng: hồ tiêu đen/black pepper, Piper nigrum trong điều kiện sản xuất Việt Nam, đặc biệt phù hợp để đối chiếu Tây Nguyên và Đông Nam Bộ; không phải ớt Capsicum. Lát WASI giữ nguyên tắc cân đối đa-trung-vi lượng, tránh bón thừa, xét nhu cầu theo giai đoạn, lượng dinh dưỡng lấy đi và độ phì đất. Phần sơ đồ khuyến cáo thực hành phía sau bị loại; không tự suy ra liều cho một vườn khi chưa phân tích đất, tuổi cây, hiện trạng và năng suất.",
+      "crop_keys": ["pepper"],
+      "required_terms": [
+        "Bón cân đối phân khoáng",
+        "nhu cầu dinh dưỡng từng giai đoạn",
+        "không bón quá nhiều",
+        "Nhu cầu dinh dưỡng theo phân kỳ thực hành sản xuất",
+        "độ phì và sức khỏe đất"
+      ],
+      "forbidden_terms": [
+        "Borat/trụ/năm",
+        "Manganese sulphate",
+        "thuốc BVTV",
+        "Paclobutrazol"
+      ],
+      "min_chars": 3200
+    }
+  ]
+}

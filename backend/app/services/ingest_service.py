@@ -17,6 +17,7 @@ from app.core.qdrant_client import qdrant_client
 from app.retrieval.qdrant_setup import COLLECTION_NAME
 from app.retrieval.bm25_search import invalidate_bm25_index
 from app.retrieval.chunking import chunk_text
+from app.retrieval.evidence import evidence_contains_prompt_injection
 from app.services.embedding_client import embed_batch
 from app.services.semantic_cache import bump_semantic_cache_corpus_version
 from app.persistence.models import Document, DocumentChunk
@@ -123,11 +124,43 @@ async def ingest_document(
     version: str = None,
     file_key: str = None,
     published_date: datetime | None = None,
+    crop_keys: list[str] | None = None,
+    stages: list[str] | None = None,
+    regions: list[str] | None = None,
 ):
     normalized_source_type = normalize_source_type(source_type)
+    normalized_crop_keys = sorted({
+        str(crop_key).strip()
+        for crop_key in (crop_keys or [])
+        if str(crop_key).strip()
+    })
+    normalized_stages = sorted({
+        str(stage).strip()
+        for stage in (stages or [])
+        if str(stage).strip()
+    })
+    normalized_regions = sorted({
+        str(region).strip()
+        for region in (regions or [])
+        if str(region).strip()
+    })
     chunks = chunk_text(content)
     if not chunks:
         raise ValueError("document produced no chunks")
+    if any(
+        evidence_contains_prompt_injection({
+            "title": title,
+            "source": source,
+            "locator": source,
+            "content": chunk,
+        })
+        for chunk in chunks
+    ):
+        logger.warning(
+            "Document rejected by prompt-injection screening",
+            extra={"source_type": normalized_source_type.value},
+        )
+        raise ValueError("document failed prompt-injection screening")
     embeddings = await embed_batch(chunks)
     if len(embeddings) != len(chunks):
         raise RuntimeError("embedding service returned an incomplete batch")
@@ -169,6 +202,9 @@ async def ingest_document(
                     "published_date": (
                         published_date.isoformat() if published_date else None
                     ),
+                    "crop_keys": normalized_crop_keys,
+                    "stages": normalized_stages,
+                    "regions": normalized_regions,
                     "is_active": False,
                     "locator": source,
                 },

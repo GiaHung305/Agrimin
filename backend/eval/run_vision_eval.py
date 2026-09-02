@@ -185,6 +185,19 @@ def plantdoc_benchmark_cases(
     """Select a deterministic held-out healthy and look-alike PlantDoc set."""
     config = manifest["plantdoc"]
     split = config["split"]
+    excluded_members = set(config.get("excluded_members") or {})
+    unknown_exclusions = excluded_members.difference(names)
+    if unknown_exclusions:
+        raise ValueError(
+            "PlantDoc exclusions are missing from the archive: "
+            + ", ".join(sorted(unknown_exclusions))
+        )
+
+    def benchmark_member_is_eligible(member: str) -> bool:
+        if member in excluded_members:
+            return False
+        return member_is_eligible is None or member_is_eligible(member)
+
     cases: list[dict[str, Any]] = []
     for source_class in config["healthy"]["classes"]:
         for member in _stable_members(
@@ -192,7 +205,7 @@ def plantdoc_benchmark_cases(
             split=split,
             source_class=source_class,
             count=int(config["healthy"]["samples_per_class"]),
-            member_is_eligible=member_is_eligible,
+            member_is_eligible=benchmark_member_is_eligible,
         ):
             cases.append({
                 "case_id": f"healthy-{hashlib.sha256(member.encode()).hexdigest()[:12]}",
@@ -208,7 +221,7 @@ def plantdoc_benchmark_cases(
                 split=split,
                 source_class=source_class,
                 count=int(group["samples_per_class"]),
-                member_is_eligible=member_is_eligible,
+                member_is_eligible=benchmark_member_is_eligible,
             ):
                 cases.append({
                     "case_id": f"lookalike-{hashlib.sha256(member.encode()).hexdigest()[:12]}",
@@ -480,11 +493,13 @@ def score_case(
     timed_out = vision.get("error") == "timeout"
 
     if category == "healthy":
-        passed = bool(crop_scope_correct)
+        passed = bool(crop_scope_correct) and bool(grounded_answer)
     elif category == "look_alike":
         passed = (
             bool(crop_scope_correct)
             and symptom_count > 0
+            and bool(grounded_answer)
+            and bool(answer_quality_pass)
         )
     elif category == "quality":
         passed = (
@@ -556,9 +571,38 @@ def _rate(results: list[dict[str, Any]], category: str) -> float:
     )
 
 
+def case_passes_current_policy(result: dict[str, Any]) -> bool:
+    """Apply current plant-answer gates to fresh and resumed case results."""
+    category = result.get("category")
+    if category == "healthy":
+        return (
+            result.get("crop_scope_correct") is True
+            and result.get("grounded_answer") is True
+        )
+    if category == "look_alike":
+        return (
+            result.get("crop_scope_correct") is True
+            and int(result.get("symptom_count") or 0) > 0
+            and result.get("grounded_answer") is True
+            and result.get("answer_quality_pass") is True
+        )
+    return bool(result.get("passed"))
+
+
+def normalize_case_results(
+    results: list[dict[str, Any]],
+) -> list[dict[str, Any]]:
+    """Re-evaluate persisted verdicts without repeating provider calls."""
+    return [
+        {**result, "passed": case_passes_current_policy(result)}
+        for result in results
+    ]
+
+
 def build_report(
     manifest: dict[str, Any], results: list[dict[str, Any]], expected_size: int
 ) -> dict[str, Any]:
+    results = normalize_case_results(results)
     provider_cases = [
         result for result in results if result["category"] != "quality"
     ]
@@ -610,18 +654,11 @@ def build_report(
         for request in request_rows
         if request.get("latency_seconds") is not None
     ]
-    plant_requests = [
-        request
-        for request in request_rows
-        if request.get("grounded_plant_answer") is not None
+    citation_required_cases = [
+        result for result in plant_cases if result.get("citation_required")
     ]
-    citation_required_requests = [
-        request for request in plant_requests if request.get("citation_required")
-    ]
-    look_alike_requests = [
-        request
-        for request in plant_requests
-        if request.get("look_alike_answer_quality") is not None
+    look_alike_cases = [
+        result for result in results if result["category"] == "look_alike"
     ]
     timeout_rate = sum(request["timed_out"] for request in request_rows) / max(
         len(request_rows), 1
@@ -635,21 +672,19 @@ def build_report(
         "quality_rejection_rate": _rate(results, "quality"),
         "ood_rejection_rate": _rate(results, "ood"),
         "grounded_plant_answer_rate": sum(
-            bool(request["grounded_plant_answer"])
-            for request in plant_requests
-        ) / max(len(plant_requests), 1),
+            bool(result.get("grounded_answer")) for result in plant_cases
+        ) / max(len(plant_cases), 1),
         "traceable_citation_rate": sum(
-            bool(request["traceable_citation"])
-            for request in citation_required_requests
-        ) / max(len(citation_required_requests), 1),
+            bool(result.get("traceable_citation_count"))
+            for result in citation_required_cases
+        ) / max(len(citation_required_cases), 1),
         "plant_guardrail_pass_rate": sum(
-            bool(request["guardrail_pass"])
-            for request in plant_requests
-        ) / max(len(plant_requests), 1),
+            result.get("guardrail_status") == "pass" for result in plant_cases
+        ) / max(len(plant_cases), 1),
         "look_alike_safe_answer_rate": sum(
-            bool(request["look_alike_answer_quality"])
-            for request in look_alike_requests
-        ) / max(len(look_alike_requests), 1),
+            bool(result.get("answer_quality_pass"))
+            for result in look_alike_cases
+        ) / max(len(look_alike_cases), 1),
         "timeout_rate": timeout_rate,
         "p95_request_latency_seconds": _percentile(latencies, 0.95),
     }
@@ -670,6 +705,11 @@ def build_report(
     )
     if len(results) != expected_size:
         blockers.append("benchmark_sample_incomplete")
+    blockers.extend(
+        f"benchmark_case_failed:{result['case_id']}"
+        for result in results
+        if not result.get("passed")
+    )
     observed_vision_models = sorted({
         str(result["observed_vision_model"])
         for result in results
@@ -777,17 +817,7 @@ def merge_case_results(
 
 def case_needs_rerun(result: dict[str, Any] | None) -> bool:
     """Rerun failures from both visual scoring and answer-grounding gates."""
-    if not result or not result.get("passed"):
-        return True
-    if (
-        result.get("category") in {"healthy", "look_alike"}
-        and result.get("grounded_answer") is not True
-    ):
-        return True
-    return (
-        result.get("category") == "look_alike"
-        and result.get("answer_quality_pass") is not True
-    )
+    return not result or not case_passes_current_policy(result)
 
 
 def write_report_atomic(output: Path, report: dict[str, Any]) -> None:

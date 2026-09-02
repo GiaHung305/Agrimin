@@ -1,0 +1,60 @@
+{
+  "version": "crop-data-expansion-batch-20-v1",
+  "documents": 4,
+  "sources": 3,
+  "ready": 4,
+  "already_active": 0,
+  "replace_ready": 0,
+  "ingested": 4,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Khuyến nông Việt Nam - cải tạo đất và kiến thiết vườn cây có múi",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+      "crop_keys": [
+        "citrus"
+      ],
+      "characters": 1861,
+      "content_sha256": "e32aed4dfbbe66f8527d7ed6ebd6db891700ab2a28b1628a61cba9140ef0aeb0",
+      "source_sha256": "6a81744e80dd33d0bc72ccf984c2b4915578ca3c8a858d6cc2939d8ea7ab471a",
+      "status": "ingested",
+      "document_id": "4a19fb58-4b4c-44c5-94f4-930aba79edce"
+    },
+    {
+      "title": "Khuyến nông Việt Nam - nguyên tắc quản lý cỏ và hữu cơ cho đất cây có múi",
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+      "crop_keys": [
+        "citrus"
+      ],
+      "characters": 789,
+      "content_sha256": "4b166d39be59d343bdb2eb97fe5319d1f7d228e5d4172be67b5d7d82cbf52b50",
+      "source_sha256": "6a81744e80dd33d0bc72ccf984c2b4915578ca3c8a858d6cc2939d8ea7ab471a",
+      "status": "ingested",
+      "document_id": "638bfd9a-ce3e-4491-9c2f-2c4a2d5a76d1"
+    },
+    {
+      "title": "Khuyến nông Việt Nam - cây giống và thời vụ trồng xoài VietGAP miền núi phía Bắc",
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+      "crop_keys": [
+        "mango"
+      ],
+      "characters": 2794,
+      "content_sha256": "b73129572881552c5ac4a83fd19c3844e781559cab09f24a1c7571a881c7c159",
+      "source_sha256": "4b4fa7e1e461e9a225e64e4a5b1700abf12a13f2b30bd080edf614433103583d",
+      "status": "ingested",
+      "document_id": "741fa5eb-eb24-491f-9539-6923dbd8acd4"
+    },
+    {
+      "title": "WASI - quản lý dinh dưỡng cân đối cho hồ tiêu theo giai đoạn và đất",
+      "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+      "crop_keys": [
+        "pepper"
+      ],
+      "characters": 4606,
+      "content_sha256": "2ba12a6c41290a4f078c7f5aeac14714da1f9de8c7c35f7d6dcbf592a1b6d4c4",
+      "source_sha256": "46c0fcb36976ea7d546eb7879420f5c4cff4d8dfd14f849fe01885f4f5e44326",
+      "status": "ingested",
+      "document_id": "ddc28940-e517-4b23-9b64-eeda7e780f2d"
+    }
+  ]
+}

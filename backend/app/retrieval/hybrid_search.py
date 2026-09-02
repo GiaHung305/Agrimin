@@ -4,16 +4,16 @@ import re
 import unicodedata
 
 from app.core.config import settings
-from app.retrieval.dense_search import dense_search
-from app.retrieval.bm25_search import bm25_search
+from app.retrieval.dense_search import dense_search, dense_search_many
+from app.retrieval.bm25_search import bm25_search, bm25_search_many
 from app.retrieval.evidence import evidence_identity
 from app.retrieval.fusion import reciprocal_rank_fusion
 from app.services.farm_monitoring import POLICIES, VEGETABLE_POLICY_SPECS
-from app.services.reranker_client import rerank
+from app.services.reranker_client import rerank, rerank_many
 
 logger = logging.getLogger(__name__)
 
-MAX_RERANK_CANDIDATES = 4
+MAX_RERANK_CANDIDATES = settings.rerank_max_candidates
 MAX_RERANK_CHARACTERS = 800
 MAX_BM25_CANDIDATES = 50
 NEGATED_CROP_WINDOW_TOKENS = 4
@@ -61,6 +61,62 @@ _TOPIC_ALIASES = {
     },
 }
 
+_STAGE_ALIASES = {
+    "initial": {
+        "cay con", "moi trong", "moi gieo", "gieo hat", "xuong giong",
+        "nay mam", "uom cay",
+    },
+    "development": {
+        "sinh truong", "phat trien than la", "hoi xanh",
+        "kien thiet co ban",
+    },
+    "mid_season": {
+        "ra hoa", "dau qua", "dau trai", "nuoi qua", "nuoi trai",
+        "tro bong",
+    },
+    "late_season": {
+        "chin", "thu hoach", "sau thu hoach", "cuoi vu",
+    },
+}
+
+_REGION_ALIASES = {
+    "northern_mountains": {
+        "trung du mien nui phia bac", "mien nui phia bac", "vung dong bac",
+        "vung tay bac",
+    },
+    "red_river_delta": {
+        "dong bang song hong", "dong bang bac bo",
+    },
+    "north_central_coast": {
+        "bac trung bo", "bac trung bo va duyen hai mien trung",
+    },
+    "south_central_coast": {
+        "nam trung bo", "duyen hai nam trung bo",
+    },
+    "central_highlands": {"tay nguyen"},
+    "southeast": {"dong nam bo"},
+    "mekong_delta": {
+        "dong bang song cuu long", "dbscl", "mien tay nam bo",
+        "mien tay",
+    },
+}
+
+_GENERAL_SCOPE_VALUES = {"all", "national"}
+
+# These Vietnamese crop names collide with very common words after accent
+# folding. Require the original accented token before using them as a hard
+# evidence-scope boundary. Unaccented ambiguous input remains searchable, but
+# does not filter out otherwise relevant evidence.
+_ACCENT_REQUIRED_SINGLE_CROP_FORMS = {
+    ("cassava", "san"): {"sắn"},
+    ("pineapple", "dua"): {"dứa"},
+    ("garlic", "toi"): {"tỏi"},
+    ("chives", "he"): {"hẹ"},
+    ("lemongrass", "sa"): {"sả"},
+    ("turmeric", "nghe"): {"nghệ"},
+    ("galangal", "rieng"): {"riềng"},
+}
+
 
 def _phrase_positions(tokens: list[str], phrase: str) -> list[int]:
     phrase_tokens = phrase.split()
@@ -95,7 +151,7 @@ def _maximal_crop_phrase_matches(
         for alias in aliases
         for position in _phrase_positions(tokens, alias)
     ]
-    return [
+    maximal = [
         match
         for match in matches
         if not any(
@@ -106,13 +162,50 @@ def _maximal_crop_phrase_matches(
             for other_key, other_start, other_width in matches
         )
     ]
+    # Accent folding makes the crop ``sắn`` and the common word ``sản``
+    # identical. Do not treat phrases such as ``sản xuất`` as cassava intent.
+    return [
+        match
+        for match in maximal
+        if not (
+            match[0] == "cassava"
+            and match[2] == 1
+            and tokens[match[1] : match[1] + 2] == ["san", "xuat"]
+        )
+    ]
+
+
+def _crop_phrase_matches(value: str) -> list[tuple[str, int, int]]:
+    normalized_tokens = _normalize_crop_text(value).split()
+    original_tokens = re.findall(
+        r"[^\W_]+|\d+",
+        unicodedata.normalize("NFC", value.casefold()),
+        flags=re.UNICODE,
+    )
+    matches = _maximal_crop_phrase_matches(normalized_tokens)
+    return [
+        match
+        for match in matches
+        if (
+            match[2] != 1
+            or (match[0], normalized_tokens[match[1]])
+            not in _ACCENT_REQUIRED_SINGLE_CROP_FORMS
+            or (
+                match[1] < len(original_tokens)
+                and original_tokens[match[1]]
+                in _ACCENT_REQUIRED_SINGLE_CROP_FORMS[
+                    (match[0], normalized_tokens[match[1]])
+                ]
+            )
+        )
+    ]
 
 
 def _query_crop_intent(query: str) -> tuple[set[str], set[str]]:
     tokens = _normalize_crop_text(query).split()
     positive: set[str] = set()
     negative: set[str] = set()
-    matches = _maximal_crop_phrase_matches(tokens)
+    matches = _crop_phrase_matches(query)
     for crop_key in _CROP_ALIASES:
         positions = {position for key, position, _ in matches if key == crop_key}
         if not positions:
@@ -125,8 +218,17 @@ def _query_crop_intent(query: str) -> tuple[set[str], set[str]]:
 
 
 def _title_crop_keys(title: str) -> set[str]:
-    tokens = _normalize_crop_text(title).split()
-    return {crop_key for crop_key, _, _ in _maximal_crop_phrase_matches(tokens)}
+    return {crop_key for crop_key, _, _ in _crop_phrase_matches(title)}
+
+
+def _document_crop_keys(document: dict) -> set[str]:
+    """Prefer reviewed scope metadata while retaining a legacy title fallback."""
+    structured = {
+        str(crop_key).strip()
+        for crop_key in (document.get("crop_keys") or [])
+        if str(crop_key).strip()
+    }
+    return structured or _title_crop_keys(str(document.get("title") or ""))
 
 
 def crop_keys_for_text(value: str) -> set[str]:
@@ -150,8 +252,8 @@ def filter_conflicting_crop_evidence(
     filtered = []
     for item in documents:
         document = item[0] if isinstance(item, tuple) else item
-        title_crops = _title_crop_keys(str(document.get("title") or ""))
-        if not title_crops or title_crops & query_crops:
+        document_crops = _document_crop_keys(document)
+        if not document_crops or document_crops & query_crops:
             filtered.append(item)
     return filtered
 
@@ -163,6 +265,69 @@ def _topic_keys(value: str) -> set[str]:
         for topic, aliases in _TOPIC_ALIASES.items()
         if any(f" {alias} " in padded for alias in aliases)
     }
+
+
+def _alias_keys(value: str, aliases_by_key: dict[str, set[str]]) -> set[str]:
+    padded = f" {_normalize_crop_text(value)} "
+    return {
+        key
+        for key, aliases in aliases_by_key.items()
+        if any(f" {alias} " in padded for alias in aliases)
+    }
+
+
+def _scope_intent(query: str) -> tuple[set[str], set[str]]:
+    stages = _alias_keys(query, _STAGE_ALIASES)
+    # Accent folding makes the rice stage ``làm đòng`` collide with the
+    # province ``Lâm Đồng``. Only accept the original agricultural phrase.
+    if re.search(r"\blàm\s+đòng\b", unicodedata.normalize("NFC", query.casefold())):
+        stages.add("mid_season")
+    return stages, _alias_keys(query, _REGION_ALIASES)
+
+
+def _scope_match_score(document: dict, query: str) -> int:
+    requested_stages, requested_regions = _scope_intent(query)
+    score = 0
+    for field, requested in (
+        ("stages", requested_stages),
+        ("regions", requested_regions),
+    ):
+        if not requested:
+            continue
+        document_scope = {
+            str(value).strip()
+            for value in (document.get(field) or [])
+            if str(value).strip()
+        }
+        specific_scope = document_scope - _GENERAL_SCOPE_VALUES
+        if not specific_scope:
+            continue
+        score += 1 if specific_scope & requested else -1
+    return score
+
+
+def _apply_stage_region_intent(
+    query: str,
+    ranked: list[tuple[dict, float]],
+) -> tuple[list[tuple[dict, float]], bool]:
+    """Prefer reviewed stage/region scope without creating a hard filter."""
+    if not any(_scope_intent(query)):
+        return ranked, False
+    best_score = max((float(score) for _, score in ranked), default=0.0)
+
+    def ranking_score(item: tuple[dict, float]) -> int:
+        if float(item[1]) < best_score - MAX_INTENT_RERANK_SCORE_GAP:
+            return -100
+        return _scope_match_score(item[0], query)
+
+    if not any(ranking_score(item) > 0 for item in ranked):
+        return ranked, False
+    reordered = sorted(
+        enumerate(ranked),
+        key=lambda indexed: (-ranking_score(indexed[1]), indexed[0]),
+    )
+    result = [item for _, item in reordered]
+    return result, result != ranked
 
 
 def _apply_explicit_crop_intent(
@@ -185,7 +350,7 @@ def _apply_explicit_crop_intent(
     def intent_tier(item: tuple[dict, float]) -> int:
         if float(item[1]) < best_score - MAX_INTENT_RERANK_SCORE_GAP:
             return -1
-        title_keys = _title_crop_keys(str(item[0].get("title") or ""))
+        title_keys = _document_crop_keys(item[0])
         if title_keys & positive:
             return 2
         if title_keys & negative:
@@ -222,7 +387,7 @@ def _apply_title_topic_intent(
         if float(item[1]) < best_score - MAX_INTENT_RERANK_SCORE_GAP:
             return -1
         title = str(item[0].get("title") or "")
-        if not (_title_crop_keys(title) & positive_crops):
+        if not (_document_crop_keys(item[0]) & positive_crops):
             return 0
         return len(_topic_keys(title) & query_topics)
 
@@ -248,10 +413,20 @@ def _select_rerank_candidates(
     crop_title_candidates = [
         item
         for item in fused
-        if _title_crop_keys(str(item.get("title") or "")) & positive_crops
+        if _document_crop_keys(item) & positive_crops
+    ]
+    scoped_crop_candidates = [
+        item
+        for item in fused
+        if _scope_match_score(item, query) > 0
+        and (
+            not positive_crops
+            or _document_crop_keys(item) & positive_crops
+        )
     ]
     leaders = [
         *(fused[:1]),
+        *scoped_crop_candidates,
         *crop_title_candidates,
         *(dense_results[:1]),
         *(bm25_results[:1]),
@@ -270,31 +445,23 @@ def _select_rerank_candidates(
     return selected
 
 
-async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
-    dense_result, bm25_result = await asyncio.gather(
-        dense_search(query, top_k=10),
-        bm25_search(query, top_k=MAX_BM25_CANDIDATES),
-        return_exceptions=True,
-    )
-    if isinstance(dense_result, Exception):
+def _retrieval_or_empty(result: object, *, kind: str) -> list[dict]:
+    if isinstance(result, Exception):
         logger.warning(
-            "Dense retrieval unavailable; continuing with sparse retrieval "
+            "%s retrieval unavailable; continuing with the other retriever "
             "dependency_error=%s",
-            type(dense_result).__name__,
+            kind,
+            type(result).__name__,
         )
-        dense_results = []
-    else:
-        dense_results = dense_result
-    if isinstance(bm25_result, Exception):
-        logger.warning(
-            "Sparse retrieval unavailable; continuing with dense retrieval "
-            "dependency_error=%s",
-            type(bm25_result).__name__,
-        )
-        bm25_results = []
-    else:
-        bm25_results = bm25_result
+        return []
+    return list(result)  # type: ignore[arg-type]
 
+
+def _prepare_rerank_candidates(
+    query: str,
+    dense_results: list[dict],
+    bm25_results: list[dict],
+) -> list[dict]:
     fused = reciprocal_rank_fusion(
         dense_results,
         bm25_results,
@@ -303,26 +470,22 @@ async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
     )
     if not fused:
         return []
-
-    # The cross-encoder intentionally runs on CPU on the target 4 GB RTX 3050
-    # setup. Bound each parallel research query so cold-start batches do not
-    # queue beyond the backend's AI-service timeout.
-    candidates = _select_rerank_candidates(
+    return _select_rerank_candidates(
         fused, dense_results, bm25_results, query=query
     )
-    # The cross-encoder only needs a bounded relevance preview. Keep the full
-    # chunk in ``candidates`` for generation and citation traceability.
-    documents_text = [c["content"][:MAX_RERANK_CHARACTERS] for c in candidates]
 
-    reranker_unavailable = False
-    try:
-        scores = await rerank(query, documents_text)
-    except Exception:
-        reranker_unavailable = True
-        logger.warning(
-            "Reranker unavailable; preserving fused retrieval order",
-        )
-        scores = [0.0] * len(candidates)
+
+def _finalize_ranking(
+    query: str,
+    candidates: list[dict],
+    scores: list[float],
+    *,
+    reranker_unavailable: bool,
+    top_k: int,
+) -> list[dict]:
+    if not candidates:
+        return []
+
     scored = list(zip(candidates, scores))
     if scores and max(scores) >= settings.rerank_min_confidence:
         ranked = sorted(scored, key=lambda item: item[1], reverse=True)
@@ -344,11 +507,139 @@ async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
     ranked, topic_intent_applied = _apply_title_topic_intent(query, ranked)
     if topic_intent_applied:
         strategy = f"{strategy}_topic_intent"
+    ranked, scope_intent_applied = _apply_stage_region_intent(query, ranked)
+    if scope_intent_applied:
+        strategy = f"{strategy}_scope_intent"
 
-    if "quan sat thi giac" in _normalize_crop_text(query):
-        ranked = filter_conflicting_crop_evidence(query, ranked)
+    # An explicit crop name is a hard scope boundary. Keep generic multi-crop
+    # guidance, but never return evidence reviewed for a disjoint crop.
+    ranked = filter_conflicting_crop_evidence(query, ranked)
 
     return [
         {**doc, "rerank_score": float(score), "ranking_strategy": strategy}
         for doc, score in ranked[:top_k]
+    ]
+
+
+async def hybrid_search(query: str, top_k: int = 5) -> list[dict]:
+    dense_result, bm25_result = await asyncio.gather(
+        dense_search(query, top_k=10),
+        bm25_search(query, top_k=MAX_BM25_CANDIDATES),
+        return_exceptions=True,
+    )
+    dense_results = _retrieval_or_empty(dense_result, kind="Dense")
+    bm25_results = _retrieval_or_empty(bm25_result, kind="Sparse")
+    candidates = _prepare_rerank_candidates(
+        query, dense_results, bm25_results
+    )
+    if not candidates:
+        return []
+    documents_text = [
+        candidate["content"][:MAX_RERANK_CHARACTERS]
+        for candidate in candidates
+    ]
+    reranker_unavailable = False
+    try:
+        scores = await rerank(query, documents_text)
+        if len(scores) != len(candidates):
+            raise RuntimeError("reranker returned an incomplete result")
+    except Exception:
+        reranker_unavailable = True
+        logger.warning("Reranker unavailable; preserving fused retrieval order")
+        scores = [0.0] * len(candidates)
+    return _finalize_ranking(
+        query,
+        candidates,
+        scores,
+        reranker_unavailable=reranker_unavailable,
+        top_k=top_k,
+    )
+
+
+async def hybrid_search_many(
+    queries: list[str], top_k: int = 5
+) -> list[list[dict]]:
+    """Run independent hybrid searches with batched ML service calls."""
+    if not queries:
+        return []
+    dense_batch, bm25_batch = await asyncio.gather(
+        dense_search_many(queries, top_k=10),
+        bm25_search_many(queries, top_k=MAX_BM25_CANDIDATES),
+        return_exceptions=True,
+    )
+    if isinstance(dense_batch, Exception):
+        logger.warning(
+            "Dense batch unavailable; continuing with sparse retrieval "
+            "dependency_error=%s",
+            type(dense_batch).__name__,
+        )
+        dense_groups = [[] for _ in queries]
+    else:
+        dense_groups = dense_batch
+    if isinstance(bm25_batch, Exception):
+        logger.warning(
+            "Sparse batch unavailable; continuing with dense retrieval "
+            "dependency_error=%s",
+            type(bm25_batch).__name__,
+        )
+        bm25_groups = [[] for _ in queries]
+    else:
+        bm25_groups = bm25_batch
+    if len(dense_groups) != len(queries) or len(bm25_groups) != len(queries):
+        raise RuntimeError("retrieval returned an incomplete research batch")
+
+    candidates_by_query = [
+        _prepare_rerank_candidates(query, dense_results, bm25_results)
+        for query, dense_results, bm25_results in zip(
+            queries, dense_groups, bm25_groups
+        )
+    ]
+    nonempty_indexes = [
+        index
+        for index, candidates in enumerate(candidates_by_query)
+        if candidates
+    ]
+    scores_by_query: list[list[float]] = [
+        [] for _ in queries
+    ]
+    reranker_unavailable = False
+    if nonempty_indexes:
+        try:
+            grouped_scores = await rerank_many([
+                (
+                    queries[index],
+                    [
+                        candidate["content"][:MAX_RERANK_CHARACTERS]
+                        for candidate in candidates_by_query[index]
+                    ],
+                )
+                for index in nonempty_indexes
+            ])
+            if len(grouped_scores) != len(nonempty_indexes):
+                raise RuntimeError("reranker returned an incomplete batch")
+            for index, scores in zip(nonempty_indexes, grouped_scores):
+                if len(scores) != len(candidates_by_query[index]):
+                    raise RuntimeError("reranker returned incomplete item scores")
+                scores_by_query[index] = scores
+        except Exception:
+            reranker_unavailable = True
+            logger.warning(
+                "Batch reranker unavailable; preserving fused retrieval order"
+            )
+            for index in nonempty_indexes:
+                scores_by_query[index] = [
+                    0.0 for _ in candidates_by_query[index]
+                ]
+
+    return [
+        _finalize_ranking(
+            query,
+            candidates,
+            scores,
+            reranker_unavailable=reranker_unavailable,
+            top_k=top_k,
+        )
+        for query, candidates, scores in zip(
+            queries, candidates_by_query, scores_by_query
+        )
     ]

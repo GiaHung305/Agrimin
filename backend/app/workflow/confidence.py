@@ -1,7 +1,9 @@
-from collections.abc import Sequence
+from collections.abc import Mapping, Sequence
 
 
 RELEVANT_DOCUMENT_THRESHOLD = 0.65
+TRUSTED_ANSWER_CONFIDENCE_THRESHOLD = 0.70
+GROUNDED_WEB_MAX_CONTRIBUTION = 0.30
 
 
 def compute_confidence(
@@ -13,6 +15,7 @@ def compute_confidence(
     research_source_count: int = 0,
     visual_confidences: Sequence[float] = (),
     trusted_context_count: int = 0,
+    independent_document_count: int | None = None,
 ) -> float:
     """Estimate answer confidence from observable evidence signals.
 
@@ -34,17 +37,28 @@ def compute_confidence(
         return 0.0
 
     top_relevance = max(scores, default=0.0)
-    corroborating_sources = sum(
+    relevant_chunks = sum(
         score >= RELEVANT_DOCUMENT_THRESHOLD for score in scores
     )
-    corroboration = min(corroborating_sources / 3, 1.0)
+    corroborating_documents = relevant_chunks
+    if independent_document_count is not None:
+        corroborating_documents = min(
+            relevant_chunks,
+            max(int(independent_document_count), 0),
+        )
+    corroboration = min(corroborating_documents / 3, 1.0)
 
-    # 45%: strongest retrieved evidence; 20%: independent supporting chunks.
+    # 45%: strongest evidence; 20%: independently identified documents.
     confidence = 0.45 * top_relevance + 0.20 * corroboration
 
-    # Grounded web results are independent evidence for the opt-in research
-    # path, but are capped so they cannot by themselves overstate certainty.
-    confidence += 0.45 * min(max(research_source_count, 0) / 3, 1.0)
+    # Provider grounding proves attribution, not independent entailment or
+    # source authority. Even three independent web domains plus a positive
+    # reflection therefore stay below the trusted-answer threshold unless
+    # internal evidence or another trusted signal corroborates the answer.
+    confidence += GROUNDED_WEB_MAX_CONTRIBUTION * min(
+        max(research_source_count, 0) / 3,
+        1.0,
+    )
 
     # User-owned farm/season records are authoritative for direct facts such as
     # crop, growth stage and saved dates. They support those facts only when the
@@ -90,3 +104,41 @@ def compute_weather_risk_confidence(
     if available_signals < 2:
         confidence -= 0.15
     return round(max(0.0, min(1.0, confidence)), 2)
+
+
+def compute_weather_response_confidence(
+    forecast: Sequence[Mapping[str, object]], *, from_cache: bool = False
+) -> float:
+    """Estimate fidelity of a deterministic forecast response.
+
+    This score describes how completely AgriMind can reproduce the validated
+    provider payload; it is not the probability that the forecast event will
+    occur. Temperature, humidity and description are optional in the weather
+    contract, while rain probability and amount are required. Longer horizons
+    and cached payloads receive small penalties so a forecast is never presented
+    as absolute certainty.
+    """
+    days = [item for item in forecast if isinstance(item, Mapping)]
+    if not days:
+        return 0.0
+
+    available_signals = 0
+    total_signals = 5 * len(days)
+    for item in days:
+        available_signals += int(item.get("rain_probability") is not None)
+        available_signals += int(item.get("rain_mm") is not None)
+        available_signals += int(any(
+            item.get(field) is not None
+            for field in ("temp", "temp_min", "temp_max")
+        ))
+        available_signals += int(any(
+            item.get(field) is not None
+            for field in ("humidity", "humidity_max")
+        ))
+        available_signals += int(bool(str(item.get("description") or "").strip()))
+
+    completeness = available_signals / total_signals
+    horizon_penalty = 0.02 * min(len(days) - 1, 2)
+    cache_penalty = 0.02 if from_cache else 0.0
+    confidence = 0.70 + 0.22 * completeness - horizon_penalty - cache_penalty
+    return round(max(0.0, min(0.92, confidence)), 2)

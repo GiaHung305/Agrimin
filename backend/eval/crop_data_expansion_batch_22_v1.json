@@ -1,0 +1,124 @@
+{
+  "version": "crop-data-expansion-batch-22-v1",
+  "allowed_domains": [
+    "apictt.tuyenquang.gov.vn",
+    "hoinongdan.dongnai.gov.vn"
+  ],
+  "documents": [
+    {
+      "title": "Cục Trồng trọt - thiết kế tưới chuối thích ứng cho miền Bắc và Tây Nguyên",
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "source_type": "government",
+      "author": "Cục Trồng trọt; Ban Quản lý Trung ương các dự án Thủy lợi; Viện Nghiên cứu Rau quả",
+      "published_date": "2021-11-22",
+      "format": "pdf",
+      "page_start": 45,
+      "page_end": 49,
+      "start_marker": "1.1. Thiết kế hệ thống tưới tiêu",
+      "end_marker": "1.2. Thiết kế các nội dung nông nghiệp",
+      "content_prefix": "Phạm vi cây và vùng: chuối/banana, Musa spp.; thiết kế tưới và tiêu cho các vùng trồng chuối ở miền Bắc và Tây Nguyên trong điều kiện biến đổi khí hậu. Các thông số vòi, lưu lượng, đường ống chỉ là thông số thiết kế tham khảo; phải tính lại theo nguồn nước, địa hình, đất, mật độ và áp lực thực tế của vườn.",
+      "crop_keys": ["banana"],
+      "required_terms": [
+        "1.1. Thiết kế hệ thống tưới tiêu",
+        "miền Bắc Việt Nam",
+        "Tây Nguyên",
+        "tưới nhỏ giọt",
+        "Máy bơm"
+      ],
+      "forbidden_terms": ["Kasugamycin", "Hexaconazole", "Imidacloprid"],
+      "min_chars": 4500
+    },
+    {
+      "title": "Cục Trồng trọt - chuẩn bị đất và thiết kế vườn chuối theo địa hình",
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "source_type": "government",
+      "author": "Cục Trồng trọt; Ban Quản lý Trung ương các dự án Thủy lợi; Viện Nghiên cứu Rau quả",
+      "published_date": "2021-11-22",
+      "format": "pdf",
+      "page_start": 51,
+      "page_end": 53,
+      "start_marker": "2.2.1. Chuẩn bị đất và quản lý đất trồng",
+      "end_marker": "* Mật độ và khoảng cách:",
+      "content_prefix": "Phạm vi cây: chuối/banana, Musa spp. Lát này dùng cho khâu chuẩn bị vườn trước trồng: chọn đất và nước sạch, xử lý tàn dư, bố trí đất bằng, đất dốc hoặc đất trũng, thoát úng và chắn gió. Không áp nguyên xi lượng vôi hoặc kích thước líp nếu chưa đo pH, mực nước và độ dốc tại vườn.",
+      "crop_keys": ["banana"],
+      "required_terms": [
+        "2.2.1. Chuẩn bị đất và quản lý đất trồng",
+        "Đối với đất dốc",
+        "Đối với đất trũng",
+        "Trồng cây chắn gió",
+        "Đắp đê bao"
+      ],
+      "forbidden_terms": ["Kasugamycin", "Hexaconazole", "Imidacloprid"],
+      "min_chars": 2600
+    },
+    {
+      "title": "Cục Trồng trọt - chỉ báo thu hoạch và xử lý sau thu hoạch chuối",
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "source_type": "government",
+      "author": "Cục Trồng trọt; Ban Quản lý Trung ương các dự án Thủy lợi; Viện Nghiên cứu Rau quả",
+      "published_date": "2021-11-22",
+      "format": "pdf",
+      "page_start": 68,
+      "page_end": 70,
+      "start_marker": "2.2.9. Thu hoạch và xử lý sau thu hoạch",
+      "end_marker": "PHỤ LỤC: SÂU BỆNH CHÍNH HẠI CHUỐI",
+      "content_prefix": "Phạm vi cây: chuối/banana, Musa spp. Mức chín thu hoạch phải chọn theo giống, mục đích sử dụng và quãng đường vận chuyển; không dùng một tỷ lệ chín duy nhất cho mọi lô. Giữ thao tác khô ráo, đệm mềm, phân loại và đóng gói để hạn chế trầy xát và thối hỏng.",
+      "crop_keys": ["banana"],
+      "required_terms": [
+        "2.2.9. Thu hoạch và xử lý sau thu hoạch",
+        "Xác định độ chín và thời điểm thu hoạch",
+        "Thu hoạch và vận chuyển",
+        "Phân loại, đóng gói và bảo quản",
+        "trầy xát"
+      ],
+      "forbidden_terms": ["Kasugamycin", "Hexaconazole", "Imidacloprid"],
+      "min_chars": 1800
+    },
+    {
+      "title": "Cục Trồng trọt - tưới tiết kiệm và tỉa cành quả thanh long phía Nam",
+      "source": "https://hoinongdan.dongnai.gov.vn/Lists/VanBan/Attachments/2419/2.phu%20luc%20quy%20trinh.pdf",
+      "source_type": "government",
+      "author": "Cục Trồng trọt; Viện Cây ăn quả miền Nam",
+      "published_date": "2025-02-24",
+      "format": "pdf",
+      "page_start": 5,
+      "page_end": 6,
+      "start_marker": "3. Tưới nước",
+      "end_marker": "5. Quản lý cỏ dại, cây trồng xen",
+      "content_prefix": "Phạm vi cây và vùng: thanh long/dragon fruit, Selenicereus spp., sản xuất tại các tỉnh phía Nam và nơi có điều kiện tương tự theo Quyết định 94/QĐ-TT-CCN ngày 24/02/2025. Thông số tưới phải hiệu chỉnh theo ẩm đất, tuổi cây, hệ thống tưới và nguồn nước; các chỉ tiêu tỉa áp dụng đúng kiểu trụ hoặc giàn chữ T được nguồn nêu.",
+      "crop_keys": ["dragon_fruit"],
+      "required_terms": [
+        "3. Tưới nước",
+        "trữ nguồn nước tưới",
+        "Giai đoạn kiến thiết cơ bản",
+        "Giai đoạn kinh doanh",
+        "Tỉa nụ, tỉa quả"
+      ],
+      "forbidden_terms": ["thuốc BVTV", "hoạt chất", "phun xịt"],
+      "min_chars": 3000
+    },
+    {
+      "title": "Cục Trồng trọt - thu hoạch và vận chuyển thanh long phía Nam",
+      "source": "https://hoinongdan.dongnai.gov.vn/Lists/VanBan/Attachments/2419/2.phu%20luc%20quy%20trinh.pdf",
+      "source_type": "government",
+      "author": "Cục Trồng trọt; Viện Cây ăn quả miền Nam",
+      "published_date": "2025-02-24",
+      "format": "pdf",
+      "page_start": 7,
+      "page_end": 8,
+      "start_marker": "II. THU HOẠCH",
+      "end_marker": "TÀI LIỆU THAM KHẢO",
+      "content_prefix": "Phạm vi cây và vùng: thanh long/dragon fruit, Selenicereus spp., sản xuất tại các tỉnh phía Nam và nơi có điều kiện tương tự theo Quyết định 94/QĐ-TT-CCN ngày 24/02/2025. Thời điểm thu hoạch 28-32 ngày sau nở hoa là khoảng theo nguồn và còn phụ thuộc mùa vụ; cần đối chiếu giống, thị trường và chỉ tiêu chất lượng lô trước khi quyết định.",
+      "crop_keys": ["dragon_fruit"],
+      "required_terms": [
+        "II. THU HOẠCH",
+        "1. Thu hoạch",
+        "bóng mát",
+        "Không xếp quả quá đầy sọt",
+        "2. Vận chuyển"
+      ],
+      "forbidden_terms": ["thuốc BVTV", "hoạt chất", "phun xịt"],
+      "min_chars": 1100
+    }
+  ]
+}

@@ -39,8 +39,12 @@ from app.services.farm_monitoring import (
 )
 from app.tools.weather_tool import summarize_forecast
 from app.services.vietnam_regions import (
+    LEGACY_PROVINCE_ALIASES,
+    LEGACY_WEATHER_GEOCODE_QUERIES,
     VIETNAM_PROVINCE_GEOCODE_QUERIES,
+    is_weather_location_reply,
     province_geocode_fallback,
+    weather_locations_from_question,
 )
 from app.workers import assistant_worker as worker
 
@@ -119,7 +123,71 @@ def test_monitoring_scope_accepts_all_named_crops_and_regions():
     assert len(VIETNAM_PROVINCE_GEOCODE_QUERIES) == 34
     assert province_geocode_fallback("Tỉnh Đắk Lắk") == "Buon Ma Thuot"
     assert province_geocode_fallback("TP.HCM") == "Ho Chi Minh City"
-    assert province_geocode_fallback("Bình Thuận") == "Da Lat"
+    assert province_geocode_fallback("Bình Thuận") == "Phan Thiet"
+    assert set(LEGACY_WEATHER_GEOCODE_QUERIES) == set(LEGACY_PROVINCE_ALIASES)
+
+
+@pytest.mark.parametrize(
+    "legacy_location,expected_query",
+    [
+        ("Bình Thuận", "Phan Thiet"),
+        ("Ninh Thuận", "Phan Rang-Thap Cham"),
+        ("Phú Yên", "Tuy Hoa"),
+        ("Đắk Nông", "Gia Nghia"),
+        ("Bình Dương", "Thu Dau Mot"),
+        ("Quảng Nam", "Tam Ky"),
+        ("Sóc Trăng", "Soc Trang"),
+    ],
+)
+def test_legacy_weather_locations_keep_their_local_representative_city(
+    legacy_location, expected_query
+):
+    assert weather_locations_from_question(legacy_location) == [expected_query]
+
+
+@pytest.mark.parametrize("question,expected", [
+    ("Thời tiết ở Đà Lạt hôm nay thế nào?", ["Da Lat"]),
+    ("Dong Nai ngay mai co mua khong?", ["Bien Hoa"]),
+    ("Dự báo TP.HCM", ["Ho Chi Minh City"]),
+    ("Vĩnh Long có mưa không?", ["Vinh Long"]),
+    ("Thời tiết Hà Nội và Đà Nẵng", ["Hanoi", "Da Nang"]),
+])
+def test_weather_location_extraction_supports_city_and_province_aliases(
+    question, expected
+):
+    assert weather_locations_from_question(question) == expected
+
+
+def test_weather_location_extraction_does_not_infer_unmentioned_place():
+    assert weather_locations_from_question("Thời tiết hôm nay thế nào?") == []
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "Đà Lạt",
+        "Ở Đà Lạt nhé",
+        "Mình đang ở tỉnh Lâm Đồng",
+        "TP.HCM",
+        "Đà Lạt ngày mai",
+        "Hà Nội trước",
+    ],
+)
+def test_weather_location_reply_accepts_location_only_answers(reply):
+    assert is_weather_location_reply(reply)
+
+
+@pytest.mark.parametrize(
+    "reply",
+    [
+        "Tôi trồng cà phê ở Đà Lạt",
+        "Đà Lạt và Hà Nội",
+        "Thời tiết ở Đà Lạt",
+        "Tôi cần tưới cây ở Lâm Đồng",
+    ],
+)
+def test_weather_location_reply_rejects_new_or_ambiguous_intents(reply):
+    assert not is_weather_location_reply(reply)
 
 
 def test_policy_registry_handles_specific_and_generic_crops():
@@ -322,6 +390,31 @@ def test_weather_forecast_aggregates_all_three_hour_intervals():
     assert day["rain_probability"] == 0.9
     assert day["rain_mm"] == 18.5
     assert day["description"] == "mưa to"
+
+
+def test_weather_forecast_groups_unix_timestamps_by_vietnam_date():
+    entries = [
+        {
+            # 2026-08-12 18:00 UTC = 2026-08-13 01:00 in Vietnam.
+            "dt": int(datetime(2026, 8, 12, 18, tzinfo=timezone.utc).timestamp()),
+            "dt_txt": "2026-08-12 18:00:00",
+            "main": {"temp": 25, "humidity": 75},
+            "weather": [{"description": "ít mây"}],
+            "pop": 0.1,
+        },
+        {
+            # 2026-08-13 18:00 UTC = 2026-08-14 01:00 in Vietnam.
+            "dt": int(datetime(2026, 8, 13, 18, tzinfo=timezone.utc).timestamp()),
+            "dt_txt": "2026-08-13 18:00:00",
+            "main": {"temp": 26, "humidity": 80},
+            "weather": [{"description": "mưa nhẹ"}],
+            "pop": 0.4,
+        },
+    ]
+
+    summary = summarize_forecast(entries)
+
+    assert [day["date"] for day in summary] == ["2026-08-13", "2026-08-14"]
 
 
 @pytest.mark.asyncio

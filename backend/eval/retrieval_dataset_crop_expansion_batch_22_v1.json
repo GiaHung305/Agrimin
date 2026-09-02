@@ -1,0 +1,62 @@
+{
+  "version": "crop-expansion-batch-22-retrieval-v1",
+  "items": [
+    {
+      "id": "banana-north-highlands-irrigation-design",
+      "category": "crop_depth_climate_resilience",
+      "query": "Vườn chuối ở miền Bắc và Tây Nguyên nên thiết kế tưới phun mưa hoặc nhỏ giọt, bố trí đường ống và bảo dưỡng hệ thống thế nào?",
+      "relevant_sources": ["Cục Trồng trọt - thiết kế tưới chuối thích ứng cho miền Bắc và Tây Nguyên"]
+    },
+    {
+      "id": "banana-terrain-orchard-setup",
+      "category": "crop_depth_establishment",
+      "query": "Chuẩn bị vườn chuối trên đất bằng, đất dốc và đất trũng cần làm luống, đường đồng mức, mương líp và hàng chắn gió ra sao?",
+      "relevant_sources": ["Cục Trồng trọt - chuẩn bị đất và thiết kế vườn chuối theo địa hình"]
+    },
+    {
+      "id": "banana-harvest-maturity-market-distance",
+      "category": "crop_depth_harvest",
+      "query": "Xác định độ chín thu hoạch chuối theo tiêu thụ gần, vận chuyển xa, xuất khẩu hoặc chế biến bằng dấu hiệu nào?",
+      "relevant_sources": ["Cục Trồng trọt - chỉ báo thu hoạch và xử lý sau thu hoạch chuối"]
+    },
+    {
+      "id": "banana-postharvest-packing",
+      "category": "crop_depth_postharvest",
+      "query": "Sau khi cắt buồng chuối cần đệm, rửa, phân loại, chia chùm và đóng thùng thế nào để tránh trầy xát?",
+      "relevant_sources": ["Cục Trồng trọt - chỉ báo thu hoạch và xử lý sau thu hoạch chuối"]
+    },
+    {
+      "id": "dragon-fruit-drought-salinity-irrigation",
+      "category": "crop_depth_climate_resilience",
+      "query": "Thanh long phía Nam trong mùa khô hoặc vùng hạn mặn cần giữ ẩm, trữ nước và kiểm soát tưới theo ẩm đất như thế nào?",
+      "relevant_sources": ["Cục Trồng trọt - tưới tiết kiệm và tỉa cành quả thanh long phía Nam"]
+    },
+    {
+      "id": "dragon-fruit-pruning-by-stage",
+      "category": "crop_depth_stage_management",
+      "query": "Tỉa cành thanh long giai đoạn kiến thiết cơ bản khác giai đoạn kinh doanh thế nào đối với kiểu trụ và giàn chữ T?",
+      "relevant_sources": [
+        "Cục Trồng trọt - tưới tiết kiệm và tỉa cành quả thanh long phía Nam",
+        "Sách hướng dẫn kỹ thuật trồng thanh long — phần 02/05 (trang 8-14)"
+      ]
+    },
+    {
+      "id": "dragon-fruit-flower-fruit-thinning",
+      "category": "crop_depth_stage_management",
+      "query": "Sau khi thanh long ra nụ và nở hoa cần tỉa nụ, tỉa quả vào thời điểm nào và giữ bao nhiêu quả trên cành khỏe?",
+      "relevant_sources": ["Cục Trồng trọt - tưới tiết kiệm và tỉa cành quả thanh long phía Nam"]
+    },
+    {
+      "id": "dragon-fruit-harvest-transport",
+      "category": "crop_depth_harvest",
+      "query": "Thanh long nên thu hoạch sau nở hoa bao lâu, vào thời điểm nào trong ngày và vận chuyển ra sao để hạn chế mất nước, va chạm?",
+      "relevant_sources": ["Cục Trồng trọt - thu hoạch và vận chuyển thanh long phía Nam"]
+    },
+    {
+      "id": "cassava-regional-planting-calendar",
+      "category": "crop_depth_regional_establishment",
+      "query": "Khung thời vụ trồng sắn khác nhau thế nào giữa miền núi phía Bắc, Bắc Trung Bộ, Nam Trung Bộ, Tây Nguyên và Đông Nam Bộ?",
+      "relevant_sources": ["Quy trình sắn khoai mì bền vững - đất, thời vụ và giống"]
+    }
+  ]
+}

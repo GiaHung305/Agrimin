@@ -20,8 +20,8 @@ def test_source_registry_is_complete_and_uses_supported_dimensions() -> None:
     registry = load_registry(REGISTRY_PATH)
 
     assert registry["version"] == "crop-knowledge-source-tags-v1"
-    assert len(registry["sources"]) == 125
-    assert len({rule["source"] for rule in registry["sources"]}) == 125
+    assert len(registry["sources"]) == 132
+    assert len({rule["source"] for rule in registry["sources"]}) == 132
     assert len(registry["dimensions"]["topics"]) == 7
     assert len(registry["dimensions"]["stages"]) == 4
     assert len(registry["dimensions"]["regions"]) == 7

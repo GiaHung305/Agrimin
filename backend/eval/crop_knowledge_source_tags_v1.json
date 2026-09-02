@@ -23,6 +23,17 @@
   },
   "sources": [
     {
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "source_type": "government",
+      "crop_keys": ["banana"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "climate_resilience", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "development", "late_season"],
+      "regions": ["northern_mountains", "red_river_delta", "central_highlands"],
+      "count_for_coverage": true,
+      "note": "Bounded 2021 Crop Production Department manual slices cover irrigation design for northern and Central Highlands conditions, terrain-aware orchard setup, and harvest/packing. Chemical pest-control appendices are excluded."
+    },
+    {
       "source": "https://khuyennongvn.gov.vn/hoat-dong-khuyen-nong/chuyen-giao-tbkt/tp-ho-chi-minh-thanh-cong-nho-ap-dung-cach-tuoi-nho-giot-trong-canh-tac-xoai-16660.html",
       "source_type": "extension",
       "crop_keys": ["mango"],
@@ -81,6 +92,17 @@
       "stages": ["development", "mid_season", "late_season"],
       "regions": ["national"],
       "count_for_coverage": true
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/portals/0/tailieu/2021/10/hangweb/khuyen_nong_quoc_gia_so_4_da_nen.pdf",
+      "source_type": "extension",
+      "crop_keys": ["tomato"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water"],
+      "stages": ["initial"],
+      "regions": ["northern_mountains", "red_river_delta", "north_central_coast"],
+      "count_for_coverage": true,
+      "note": "Bounded VAAS and National Agricultural Extension Center winter-tomato slice for nursery, soil preparation, planting and establishment in northern production conditions. Fertilizer and pesticide sections are excluded."
     },
     {
       "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ky-thuat-trong-xen-cay-sau-rieng-trong-vuon-ca-phe-voi-17952.html",
@@ -303,6 +325,17 @@
       "stages": ["all"],
       "regions": ["national"],
       "count_for_coverage": true
+    },
+    {
+      "source": "https://hoinongdan.dongnai.gov.vn/Lists/VanBan/Attachments/2419/2.phu%20luc%20quy%20trinh.pdf",
+      "source_type": "government",
+      "crop_keys": ["dragon_fruit"],
+      "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "climate_resilience", "harvest_postharvest", "food_safety"],
+      "stages": ["initial", "development", "mid_season", "late_season"],
+      "regions": ["south_central_coast", "southeast", "mekong_delta"],
+      "count_for_coverage": true,
+      "note": "Decision 94/QD-TT-CCN dated 2025-02-24 applies to southern provinces. Bounded slices retain irrigation, age-specific pruning/thinning, harvest and transport; pesticide appendices and fertilizer schedules are excluded."
     },
     {
       "source": "https://cgspace.cgiar.org/server/api/core/bitstreams/4ee2ad9e-f984-4970-8ef8-d5ecc00ad822/content",
@@ -582,8 +615,10 @@
       "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-canh-tac-san-khoai-my-ben-vung-cho-cac-vung-trong-san-trong-diem-31054.html",
       "source_type": "extension", "crop_keys": ["cassava"], "crop_groups": [],
       "topics": ["cultivation", "soil_water", "nutrition", "climate_resilience"],
-      "stages": ["all"], "regions": ["national"], "count_for_coverage": true,
-      "note": "Pesticide, herbicide and livestock-feed sections are excluded."
+      "stages": ["initial", "development", "mid_season"],
+      "regions": ["northern_mountains", "north_central_coast", "south_central_coast", "central_highlands", "southeast"],
+      "count_for_coverage": true,
+      "note": "Audited slices explicitly cover regional planting calendars plus land, planting material, planting, gap filling, timed topdressing and irrigation. Pesticide, herbicide and livestock-feed sections are excluded."
     },
     {
       "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-canh-tac-giong-nghe-n8-29876.html",
@@ -617,8 +652,9 @@
       "source": "https://chicucttbvtv.ninhbinh.gov.vn/ky-thuat-trong-trot/ky-thuat-trong-va-cham-soc-cay-chuoi-105.html",
       "source_type": "government", "crop_keys": ["banana"], "crop_groups": [],
       "topics": ["cultivation", "soil_water", "nutrition"],
-      "stages": ["all"], "regions": ["red_river_delta"], "count_for_coverage": true,
-      "note": "Crop-specific cultivation article; navigation, contacts and unrelated pages are excluded by audited markers."
+      "stages": ["initial", "development", "mid_season"],
+      "regions": ["red_river_delta"], "count_for_coverage": true,
+      "note": "Audited markers retain preparation, propagation, northern planting season, planting, early care and pre-bunch/fruit-stage care. Navigation, contacts and unrelated pages are excluded."
     },
     {
       "source": "https://gntt.ninhbinh.gov.vn/khuyen-nong/ky-thuat-trong-khoai-mon-842.html",
@@ -848,7 +884,8 @@
       "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/quy-trinh-ky-thuat-quan-ly-tong-hop-benh-kham-la-san-27694.html",
       "source_type": "extension", "crop_keys": ["cassava"], "crop_groups": [],
       "topics": ["cultivation", "soil_water", "nutrition", "pest_disease_ipm", "harvest_postharvest"],
-      "stages": ["all"], "regions": ["national"], "count_for_coverage": true,
+      "stages": ["initial", "development", "mid_season", "late_season"],
+      "regions": ["national"], "count_for_coverage": true,
       "note": "Current Vietnamese replacement protocol for cassava mosaic disease, split into diagnosis/transmission, non-chemical prevention and age-based removal slices. The chemical-control section is excluded."
     },
     {
@@ -1094,6 +1131,34 @@
       "topics": ["food_safety"],
       "stages": ["late_season"], "regions": [], "count_for_coverage": true,
       "note": "Bounded Codex commodity-classification rows identify taro stems/Colocasia esculenta and zuiki/Colocasia gigantea. It is not used as cultivation or pesticide-dose guidance."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/khoa-hoc-cong-nghe/khcn-trong-nuoc/ap-dung-tien-bo-ky-thuat-trong-canh-tac-cay-an-qua-co-mui-19627.html",
+      "source_type": "extension", "crop_keys": ["citrus"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial", "development"], "regions": ["national"], "count_for_coverage": true,
+      "note": "National Citrus Research and Development Center guidance for pre-plant soil rehabilitation, raised planting, root and canopy management, non-herbicide weed control and organic soil improvement. Quantified fertilizer examples and later foliar-product advice are excluded."
+    },
+    {
+      "source": "https://khuyennongvn.gov.vn/data/documents/0/2023/07/27/hangweb/so-2.pdf",
+      "source_type": "extension", "crop_keys": ["mango"], "crop_groups": [],
+      "topics": ["cultivation", "soil_water", "nutrition"],
+      "stages": ["initial"], "regions": ["northern_mountains"], "count_for_coverage": true,
+      "note": "Bounded 2023 National Agricultural Extension Center VietGAP slices for Thai and Taiwan mango identity, grafted-seedling quality, planting season and age-specific nutrition in the northern midlands and mountains. Flower-induction chemicals and pesticide sections are excluded; fertilizer quantities retain their narrow crop, age and region scope."
+    },
+    {
+      "source": "https://wasi.org.vn/bon-can-doi-phan-khoang-cho-ho-tieu/",
+      "source_type": "government", "crop_keys": ["pepper"], "crop_groups": [],
+      "topics": ["nutrition"],
+      "stages": ["development", "mid_season", "late_season"], "regions": ["central_highlands", "southeast"], "count_for_coverage": true,
+      "note": "WASI principles for balanced black-pepper nutrition by growth stage, nutrient removal and soil fertility in Vietnamese production. The downstream practice diagram and any inferred field dose are excluded."
+    },
+    {
+      "source": "https://www.fao.org/fileadmin/templates/organicexports/docs/Organic_sugarloaf_pineapple_manual.pdf",
+      "source_type": "international_organization", "crop_keys": ["pineapple"], "crop_groups": [],
+      "topics": ["nutrition", "soil_water"],
+      "stages": ["initial", "mid_season"], "regions": [], "count_for_coverage": true,
+      "note": "FAO-commissioned Agro Eco manual slice for organic Sugarloaf pineapple in Ghana: green manure, pineapple residues, compost, organic matter and acidic-soil principles. Ghana timing and quantities are not generalized to Vietnam."
     }
   ]
 }

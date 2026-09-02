@@ -37,6 +37,7 @@ def test_evidence_and_citation_preserve_source_authority():
             "content": "label",
             "source_type": "manufacturer_label",
             "published_date": "2025-01-02T00:00:00+00:00",
+            "crop_keys": ["rice", "rice"],
         }
     )
     citation = citation_from_evidence(evidence)
@@ -44,6 +45,7 @@ def test_evidence_and_citation_preserve_source_authority():
     assert citation["source_type"] == "manufacturer_label"
     assert citation["authority_score"] == 0.9
     assert citation["published_date"] == "2025-01-02T00:00:00+00:00"
+    assert evidence["crop_keys"] == ["rice"]
 
 
 def test_qdrant_backfill_prefers_relational_document_type():

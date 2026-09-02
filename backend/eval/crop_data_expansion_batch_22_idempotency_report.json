@@ -1,0 +1,72 @@
+{
+  "version": "crop-data-expansion-batch-22-v1",
+  "documents": 5,
+  "sources": 2,
+  "ready": 0,
+  "already_active": 5,
+  "replace_ready": 0,
+  "ingested": 0,
+  "replaced": 0,
+  "items": [
+    {
+      "title": "Cục Trồng trọt - thiết kế tưới chuối thích ứng cho miền Bắc và Tây Nguyên",
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "crop_keys": [
+        "banana"
+      ],
+      "characters": 6344,
+      "content_sha256": "530f4286299de892408ceb58e5cbe20187578723978bc5952b5a261002bf65f8",
+      "source_sha256": "c321f2de40ddf860cd2d627be1dce4494cfea2c70f09e4e1d00a644cf1739e4d",
+      "status": "already_active",
+      "document_id": "5b85e68e-caf8-44b2-b90d-4611a875b288"
+    },
+    {
+      "title": "Cục Trồng trọt - chuẩn bị đất và thiết kế vườn chuối theo địa hình",
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "crop_keys": [
+        "banana"
+      ],
+      "characters": 3738,
+      "content_sha256": "c18b49a28436123fd843b7e2a610fd7e7cc04a9615df1595c892efeb9659435a",
+      "source_sha256": "c321f2de40ddf860cd2d627be1dce4494cfea2c70f09e4e1d00a644cf1739e4d",
+      "status": "already_active",
+      "document_id": "ff2665be-30e8-435d-b4d2-8e210a1e1066"
+    },
+    {
+      "title": "Cục Trồng trọt - chỉ báo thu hoạch và xử lý sau thu hoạch chuối",
+      "source": "https://apictt.tuyenquang.gov.vn/uploads/attachments/cay-chuoi1-min.pdf",
+      "crop_keys": [
+        "banana"
+      ],
+      "characters": 2776,
+      "content_sha256": "0178454b321f0d36aa8c9f47175cb195a756aee292d8a3c5d97b78790ab2bbae",
+      "source_sha256": "c321f2de40ddf860cd2d627be1dce4494cfea2c70f09e4e1d00a644cf1739e4d",
+      "status": "already_active",
+      "document_id": "7d51930f-eeee-4c30-afc0-e076c28de2b7"
+    },
+    {
+      "title": "Cục Trồng trọt - tưới tiết kiệm và tỉa cành quả thanh long phía Nam",
+      "source": "https://hoinongdan.dongnai.gov.vn/Lists/VanBan/Attachments/2419/2.phu%20luc%20quy%20trinh.pdf",
+      "crop_keys": [
+        "dragon_fruit"
+      ],
+      "characters": 4220,
+      "content_sha256": "98bb3aaf688d7aec869932fa97b2517b54a5833b0c05e2a6fe6b8a0066d19d7f",
+      "source_sha256": "df3e9c9c0d8adc4976a30dc6559b48093796363aafc6b2061626c9dadc21fe4e",
+      "status": "already_active",
+      "document_id": "c57017f2-b3a1-4dff-86c1-40282618c0e2"
+    },
+    {
+      "title": "Cục Trồng trọt - thu hoạch và vận chuyển thanh long phía Nam",
+      "source": "https://hoinongdan.dongnai.gov.vn/Lists/VanBan/Attachments/2419/2.phu%20luc%20quy%20trinh.pdf",
+      "crop_keys": [
+        "dragon_fruit"
+      ],
+      "characters": 1306,
+      "content_sha256": "ba50d130cca8da626c6f6f80d15142f805b11775374bc51512881f315011cc91",
+      "source_sha256": "df3e9c9c0d8adc4976a30dc6559b48093796363aafc6b2061626c9dadc21fe4e",
+      "status": "already_active",
+      "document_id": "eb743f33-8d44-474d-8a32-5fb26ae027f8"
+    }
+  ]
+}

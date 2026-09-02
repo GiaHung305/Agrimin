@@ -31,8 +31,8 @@ class Settings(BaseSettings):
     model_circuit_failure_threshold: int = 3
     model_circuit_cooldown_seconds: float = 60.0
     ai_service_request_timeout_seconds: float = 60.0
-    ai_policy_version: str = "safety-v8"
-    prompt_bundle_version: str = "prompts-v8"
+    ai_policy_version: str = "safety-v13"
+    prompt_bundle_version: str = "prompts-v15"
     evidence_schema_version: str = "evidence-v2"
     knowledge_base_version: str = "kb-v3"
     # Deep Research uses Gemini Google Search grounding. It is opt-in per chat
@@ -42,6 +42,9 @@ class Settings(BaseSettings):
     deep_research_max_sources: int = 6
     openweather_api_key: str = ""
     embedding_service_url: str = "http://localhost:8001"
+    # Must match the model loaded by embedding-service. It is part of the
+    # runtime fingerprint so semantic-cache entries cannot cross model changes.
+    reranker_model: str = "BAAI/bge-reranker-v2-m3"
     supabase_url: str = ""
     supabase_secret_key: str = ""
     supabase_bucket_name: str = "agrimind-documents"
@@ -73,6 +76,10 @@ class Settings(BaseSettings):
     # Rebuilding BM25 requires loading and tokenising every active chunk. Keep
     # the in-process index briefly, and invalidate it immediately on writes.
     bm25_index_ttl_seconds: int = 300
+    # CPU cross-encoder latency grows roughly with query-document pairs. Three
+    # candidates preserved recall/MRR on the accepted agriculture and latest
+    # crop-depth retrieval gates while materially reducing response latency.
+    rerank_max_candidates: int = Field(default=3, ge=2, le=4)
     rerank_min_confidence: float = 0.10
     research_freshness_max_age_days: int = 1826
     retrieval_excluded_sources: str = "test,mock_source"

@@ -90,6 +90,13 @@ async def bm25_search(query: str, top_k: int = 10) -> list[dict]:
     if bm25 is None:
         return []
 
+    return _rank_bm25(bm25, all_points, query, top_k)
+
+
+def _rank_bm25(
+    bm25: BM25Plus, all_points: list, query: str, top_k: int
+) -> list[dict]:
+
     tokenized_query = tokenize_vietnamese(query)
     scores = bm25.get_scores(tokenized_query)
 
@@ -103,6 +110,9 @@ async def bm25_search(query: str, top_k: int = 10) -> list[dict]:
             "source_type": p.payload.get("source_type"),
             "version": p.payload.get("version"),
             "published_date": p.payload.get("published_date"),
+            "crop_keys": p.payload.get("crop_keys", []),
+            "stages": p.payload.get("stages", []),
+            "regions": p.payload.get("regions", []),
             "document_id": p.payload.get("document_id"),
             "chunk_id": p.payload.get("chunk_id") or (
                 str(p.id) if getattr(p, "id", None) is not None else None
@@ -115,3 +125,15 @@ async def bm25_search(query: str, top_k: int = 10) -> list[dict]:
         for p, score in ranked
         if score > 0
     ]
+
+
+async def bm25_search_many(
+    queries: list[str], top_k: int = 10
+) -> list[list[dict]]:
+    """Reuse one in-memory index for a bounded research-question batch."""
+    if not queries:
+        return []
+    bm25, all_points = await _get_bm25_index()
+    if bm25 is None:
+        return [[] for _ in queries]
+    return [_rank_bm25(bm25, all_points, query, top_k) for query in queries]

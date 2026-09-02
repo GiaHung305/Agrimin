@@ -32,6 +32,7 @@ from app.services.ingest_service import (
     ingest_document,
     update_document_published_date,
 )
+from eval.migrate_qdrant_crop_scope import load_source_scopes
 
 
 logger = logging.getLogger(__name__)
@@ -474,6 +475,7 @@ async def ingest_batch(
 ) -> dict[str, Any]:
     manifest = load_manifest(manifest_path)
     prepared = prepare_documents(manifest, await fetch_sources(manifest))
+    source_scopes = load_source_scopes()
     summary: dict[str, Any] = {
         "version": manifest["version"],
         "documents": len(prepared),
@@ -513,6 +515,7 @@ async def ingest_batch(
 
         for entry in prepared:
             current = existing.get(entry["title"])
+            reviewed_scope = source_scopes.get(entry["source"], {})
             expected_version = entry.get("version", manifest["version"])
             published_date = (
                 parse_database_datetime(entry["published_date"])
@@ -535,6 +538,8 @@ async def ingest_batch(
                 "title": entry["title"],
                 "source": entry["source"],
                 "crop_keys": entry["crop_keys"],
+                "stages": reviewed_scope.get("stages", []),
+                "regions": reviewed_scope.get("regions", []),
                 "characters": len(entry["content"]),
                 "content_sha256": entry["content_sha256"],
                 "source_sha256": entry["source_sha256"],
@@ -550,6 +555,9 @@ async def ingest_batch(
                     author=entry["author"],
                     version=expected_version,
                     published_date=published_date,
+                    crop_keys=entry["crop_keys"],
+                    stages=reviewed_scope.get("stages", []),
+                    regions=reviewed_scope.get("regions", []),
                 )
                 item["status"] = "replaced" if replace else "ingested"
                 item["document_id"] = str(document.id)

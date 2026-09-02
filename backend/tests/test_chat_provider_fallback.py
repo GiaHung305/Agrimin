@@ -11,6 +11,7 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 from app.api.routes import chat
 from app.api.routes.chat import _provider_unavailable_response
+from app.services.model_gateway import ModelProviderUnavailable
 
 
 def test_provider_unavailable_response_is_stable_and_safe():
@@ -19,10 +20,38 @@ def test_provider_unavailable_response_is_stable_and_safe():
     assert response["confidence"] == 0.0
     assert response["citations"] == []
     assert response["conversation_id"] == "conversation-1"
+    assert response["trace"]["guardrail"]["response_kind"] == "service_status"
+
+
+@pytest.mark.parametrize(
+    ("node", "message"),
+    [
+        ("planner", "Đang tìm thông tin phù hợp…"),
+        ("retrieve", "Đang đối chiếu nguồn đáng tin cậy…"),
+        ("research_analysis", "Đang soạn câu trả lời…"),
+        ("reflection", "Đang kiểm tra câu trả lời…"),
+        ("post_guardrail", "Đang hoàn tất câu trả lời…"),
+    ],
+)
+def test_graph_nodes_map_to_non_technical_progress(node, message):
+    assert chat._progress_after_nodes({node: {}}) == message
 
 
 @pytest.mark.asyncio
-async def test_provider_503_becomes_safe_sse_instead_of_http_500(monkeypatch):
+@pytest.mark.parametrize(
+    "failure",
+    [
+        ServerError(503, {"error": {"message": "overloaded"}}),
+        ModelProviderUnavailable(
+            "generation circuit open", reason_code="circuit_open"
+        ),
+    ],
+    ids=["provider-503", "generation-circuit-open"],
+)
+async def test_provider_failure_becomes_safe_sse_instead_of_http_500(
+    monkeypatch,
+    failure,
+):
     prepared = chat.PreparedChat(
         user_id="00000000-0000-0000-0000-000000000001",
         conversation_id="conversation-1",
@@ -46,7 +75,7 @@ async def test_provider_503_becomes_safe_sse_instead_of_http_500(monkeypatch):
         async def astream(self, *_args, **_kwargs):
             if False:
                 yield None
-            raise ServerError(503, {"error": {"message": "overloaded"}})
+            raise failure
 
     @contextmanager
     def trace_context(**_kwargs):
@@ -77,8 +106,12 @@ async def test_provider_503_becomes_safe_sse_instead_of_http_500(monkeypatch):
         if item.strip().startswith("data: ")
     ]
 
-    assert events[0]["type"] == "chunk"
-    assert "tạm thời quá tải" in events[0]["payload"]
+    assert events[0] == {
+        "type": "progress",
+        "payload": "Đang hiểu câu hỏi…",
+    }
+    answer_event = next(event for event in events if event["type"] == "chunk")
+    assert "tạm thời quá tải" in answer_event["payload"]
     metadata = next(event["payload"] for event in events if event["type"] == "meta")
     assert metadata["guardrail_status"] == "block"
     assert metadata["confidence"] == 0.0

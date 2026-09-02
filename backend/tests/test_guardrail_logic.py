@@ -4,7 +4,11 @@ import os
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
 import pytest
-from app.workflow.confidence import compute_confidence
+from app.workflow.confidence import (
+    TRUSTED_ANSWER_CONFIDENCE_THRESHOLD,
+    compute_confidence,
+    compute_weather_response_confidence,
+)
 from app.workflow import graph
 from app.workflow.nodes.post_guardrail import post_guardrail_node, RELEVANCE_THRESHOLD
 from app.workflow.graph import route_after_early_guardrail, route_after_pre_guardrail
@@ -56,6 +60,62 @@ async def test_guardrail_trusts_valid_deterministic_action_reply():
     assert result["guardrail_status"] == "pass"
     assert result["confidence"] == 1.0
     assert "khuyến nông" not in result["draft_answer"]
+
+
+@pytest.mark.asyncio
+async def test_guardrail_trusts_low_risk_deterministic_weather_status():
+    state = make_fake_state(risk_level="low", require_citation=True)
+    state["context"]["deterministic_safe_response"] = "weather_status"
+    state["retrieved_docs"] = []
+    state["draft_answer"] = "Bạn muốn xem thời tiết ở tỉnh nào?"
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+    assert result["confidence"] == 1.0
+
+
+@pytest.mark.asyncio
+async def test_guardrail_weather_forecast_confidence_is_dynamic_not_absolute():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["context"]["deterministic_safe_response"] = "weather_forecast"
+    state["retrieved_docs"] = []
+    state["tool_results"] = {
+        "weather": {
+            "from_cache": True,
+            "forecast": [{
+                "date": "2026-08-31",
+                "temp_min": 22,
+                "temp_max": 30,
+                "humidity_max": 88,
+                "description": "mưa nhẹ",
+                "rain_probability": 0.6,
+                "rain_mm": 4.2,
+            }],
+        }
+    }
+    state["draft_answer"] = "Dự báo đã được định dạng từ dữ liệu hợp lệ."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+    assert TRUSTED_ANSWER_CONFIDENCE_THRESHOLD <= result["confidence"] < 1.0
+
+
+@pytest.mark.asyncio
+async def test_guardrail_blocks_weather_forecast_marker_without_weather_data():
+    state = make_fake_state(risk_level="low", require_citation=False)
+    state["context"]["deterministic_safe_response"] = "weather_forecast"
+    state["retrieved_docs"] = []
+    state["tool_results"] = {}
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["confidence"] == 0.0
+    assert result["context"]["guardrail_reason"] == (
+        "missing_deterministic_weather_data"
+    )
 
 
 @pytest.mark.asyncio
@@ -232,6 +292,95 @@ async def test_guardrail_blocks_fabricated_claim_marker():
 
 
 @pytest.mark.asyncio
+async def test_guardrail_blocks_an_uncited_technical_claim_in_grounded_answer():
+    state = make_fake_state(
+        risk_level="medium",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["draft_answer"] = (
+        "Thoát nước để hạn chế úng [E1]. "
+        "Bón thêm đạm để cây phục hồi nhanh."
+    )
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["confidence"] == 0.0
+    assert result["context"]["guardrail_reason"] == "uncited_technical_claim"
+    assert result["context"]["uncited_claim_count"] == 1
+
+
+@pytest.mark.asyncio
+async def test_guardrail_accepts_each_technical_claim_with_a_local_marker():
+    state = make_fake_state(
+        risk_level="medium",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["draft_answer"] = (
+        "Thoát nước để hạn chế úng [E1]. "
+        "Bón cân đối theo phân tích đất [E1]."
+    )
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+
+
+@pytest.mark.asyncio
+async def test_guardrail_blocks_cited_claim_rejected_by_reflection():
+    state = make_fake_state(
+        risk_level="medium",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["draft_answer"] = "Bón thêm đạm để cây phục hồi [E1]."
+    state["reflection_notes"] = "need_more_search"
+    state["context"]["claim_entailment_failed"] = True
+    state["context"]["unsupported_claim_count"] = 1
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["confidence"] == 0.0
+    assert result["context"]["guardrail_reason"] == (
+        "unsupported_claim_evidence"
+    )
+
+
+@pytest.mark.asyncio
+async def test_guardrail_blocks_citation_required_answer_when_evidence_is_insufficient():
+    state = make_fake_state(
+        risk_level="medium",
+        require_citation=True,
+        rerank_scores=[RELEVANCE_THRESHOLD + 0.1],
+    )
+    state["draft_answer"] = "Thoát nước để hạn chế úng [E1]."
+    state["reflection_notes"] = "need_more_search"
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == (
+        "insufficient_answer_evidence"
+    )
+
+
+@pytest.mark.asyncio
+async def test_non_rag_chat_keeps_stream_compatible_low_confidence_behavior():
+    state = make_fake_state(
+        risk_level="low", require_citation=False, rerank_scores=[0.8]
+    )
+    state["reflection_notes"] = "need_more_search"
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+    assert "chưa hoàn toàn chắc chắn" in result["draft_answer"]
+
+
+@pytest.mark.asyncio
 async def test_guardrail_adds_disclaimer_low_confidence():
     """Confidence thấp -> phải thêm disclaimer vào câu trả lời."""
     state = make_fake_state(rerank_scores=[0.2])
@@ -259,6 +408,85 @@ def test_confidence_rewards_grounded_and_corroborated_answer():
     assert confidence >= 0.85
 
 
+def test_weather_response_confidence_rewards_complete_fresh_short_forecast():
+    complete = compute_weather_response_confidence([{
+        "temp_min": 22,
+        "temp_max": 30,
+        "humidity_max": 88,
+        "description": "mưa nhẹ",
+        "rain_probability": 0.6,
+        "rain_mm": 4.2,
+    }])
+    sparse_cached = compute_weather_response_confidence(
+        [
+            {"rain_probability": 0.2, "rain_mm": 0.0},
+            {"rain_probability": 0.4, "rain_mm": 2.0},
+            {"rain_probability": 0.3, "rain_mm": 1.0},
+        ],
+        from_cache=True,
+    )
+
+    assert complete == pytest.approx(0.92)
+    assert sparse_cached == pytest.approx(0.73)
+    assert sparse_cached < complete < 1.0
+
+
+def test_confidence_does_not_treat_duplicate_chunks_as_independent_documents():
+    duplicate_chunks = compute_confidence(
+        rerank_scores=[0.92, 0.81, 0.72],
+        reflection_notes="sufficient",
+        independent_document_count=1,
+    )
+    independent_documents = compute_confidence(
+        rerank_scores=[0.92, 0.81, 0.72],
+        reflection_notes="sufficient",
+        independent_document_count=3,
+    )
+
+    assert duplicate_chunks < independent_documents
+    assert duplicate_chunks == pytest.approx(0.73)
+    assert independent_documents >= 0.85
+
+
+@pytest.mark.asyncio
+async def test_guardrail_corroboration_counts_unique_document_ids():
+    def state_with_documents(document_ids):
+        state = make_fake_state(
+            risk_level="low",
+            require_citation=True,
+            rerank_scores=[0.92, 0.81, 0.72],
+        )
+        state["retrieved_docs"] = [
+            {
+                "document_id": document_id,
+                "chunk_id": f"chunk-{index}",
+                "is_active": True,
+                "source_type": "government",
+                "content": f"Tài liệu hỗ trợ {index}",
+                "rerank_score": score,
+            }
+            for index, (document_id, score) in enumerate(
+                zip(document_ids, [0.92, 0.81, 0.72]),
+                start=1,
+            )
+        ]
+        state["draft_answer"] = "Các tài liệu cùng hỗ trợ kết luận [E1][E2][E3]."
+        return state
+
+    duplicate = await post_guardrail_node(
+        state_with_documents(["doc-1", "doc-1", "doc-1"])
+    )
+    independent = await post_guardrail_node(
+        state_with_documents(["doc-1", "doc-2", "doc-3"])
+    )
+
+    assert duplicate["guardrail_status"] == "pass"
+    assert independent["guardrail_status"] == "pass"
+    assert duplicate["context"]["independent_document_count"] == 1
+    assert independent["context"]["independent_document_count"] == 3
+    assert duplicate["confidence"] < independent["confidence"]
+
+
 def test_confidence_penalizes_missing_or_insufficient_evidence():
     assert compute_confidence([], "sufficient") == 0.0
     confidence = compute_confidence(
@@ -271,13 +499,62 @@ def test_confidence_penalizes_missing_or_insufficient_evidence():
     assert confidence < 0.20
 
 
-def test_confidence_uses_grounded_research_sources_when_rag_is_empty():
+def test_web_only_grounding_stays_below_trusted_threshold():
     confidence = compute_confidence(
         rerank_scores=[],
         reflection_notes="sufficient",
         research_source_count=3,
     )
-    assert confidence >= 0.70
+    assert confidence == pytest.approx(0.55)
+    assert confidence < TRUSTED_ANSWER_CONFIDENCE_THRESHOLD
+
+
+@pytest.mark.asyncio
+async def test_low_risk_provider_grounding_is_valid_claim_evidence():
+    state = make_fake_state(risk_level="low", require_citation=True)
+    state["draft_answer"] = "Đất cần thoát nước tốt.[E1]"
+    state["answer_evidence"] = [{
+        "document_id": "https://example.gov/guide",
+        "chunk_id": "grounding-1",
+        "content": "Đất cần thoát nước tốt.",
+        "source": "Nguồn web",
+        "source_type": "unknown",
+        "is_active": True,
+        "ranking_strategy": "provider_grounding",
+        "rerank_score": None,
+    }]
+    state["reflection_notes"] = "sufficient"
+    state["context"]["research_source_count"] = 1
+    state["context"]["research_independent_domain_count"] = 1
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+    assert result["confidence"] == pytest.approx(0.35)
+    assert "chưa hoàn toàn chắc chắn" in result["draft_answer"]
+
+
+@pytest.mark.asyncio
+async def test_high_risk_provider_grounding_is_not_authoritative_enough():
+    state = make_fake_state(risk_level="high", require_citation=True)
+    state["draft_answer"] = "Phun 20 ml thuốc.[E1]"
+    state["answer_evidence"] = [{
+        "document_id": "https://example.com/blog",
+        "chunk_id": "grounding-1",
+        "content": "Phun 20 ml thuốc.",
+        "source": "Blog",
+        "source_type": "unknown",
+        "is_active": True,
+        "ranking_strategy": "provider_grounding",
+        "rerank_score": None,
+    }]
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "block"
+    assert result["context"]["guardrail_reason"] == (
+        "non_authoritative_claim_citation"
+    )
 
 
 def test_confidence_uses_trusted_farm_context_for_direct_saved_facts():
@@ -415,6 +692,9 @@ async def test_early_guardrail_reaches_fallback_without_calling_planner(
     assert result["guardrail_status"] == "block"
     assert result["context"]["guardrail_reason"] == "missing_safety_context"
     assert result["final_answer"]
+    assert result["draft_answer"] is None
+    assert result["citations"] == []
+    assert result["confidence"] == 0.0
 
 
 @pytest.mark.asyncio
@@ -453,6 +733,37 @@ async def test_pre_guardrail_does_not_block_unknown_crop_identification_question
 
     assert not result["context"].get("pre_guardrail_stop", False)
     assert route_after_pre_guardrail(result) == "retrieve"
+
+
+def test_citation_request_fails_before_retrieval_when_generation_circuit_open(
+    monkeypatch,
+):
+    monkeypatch.setattr(graph, "provider_circuit_is_open", lambda _role: True)
+    state = {
+        "context": {
+            "require_citation": True,
+            "pre_guardrail_stop": False,
+        }
+    }
+
+    with pytest.raises(graph.ModelProviderUnavailable) as error:
+        route_after_pre_guardrail(state)
+
+    assert error.value.reason_code == "circuit_open"
+
+
+def test_non_citation_request_keeps_working_when_generation_circuit_open(
+    monkeypatch,
+):
+    monkeypatch.setattr(graph, "provider_circuit_is_open", lambda _role: True)
+    state = {
+        "context": {
+            "require_citation": False,
+            "pre_guardrail_stop": False,
+        }
+    }
+
+    assert route_after_pre_guardrail(state) == "retrieve"
 
 
 @pytest.mark.asyncio
@@ -497,6 +808,23 @@ async def test_visual_claim_accepts_dense_sparse_consensus():
         "bm25_score": 3.2,
     })
     state["draft_answer"] = "Quan sát này cần đối chiếu thêm [E1]."
+
+    result = await post_guardrail_node(state)
+
+    assert result["guardrail_status"] == "pass"
+
+
+@pytest.mark.asyncio
+async def test_low_risk_claim_accepts_consensus_when_reranker_is_unavailable():
+    state = make_fake_state(
+        risk_level="low", require_citation=True, rerank_scores=[0.0]
+    )
+    state["retrieved_docs"][0].update({
+        "ranking_strategy": "fusion_rerank_unavailable",
+        "dense_score": 0.7,
+        "bm25_score": 3.2,
+    })
+    state["draft_answer"] = "Khuyến nghị này dựa trên nguồn truy vết [E1]."
 
     result = await post_guardrail_node(state)
 

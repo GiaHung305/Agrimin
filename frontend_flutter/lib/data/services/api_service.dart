@@ -137,11 +137,16 @@ class ApiService {
       try {
         final payload = jsonDecode(body) as Map<String, dynamic>;
         final detail = payload['detail']?.toString();
-        if (detail != null && detail.isNotEmpty) throw Exception(detail);
+        if (detail != null && detail.isNotEmpty) {
+          throw ApiException(detail, statusCode: streamedResponse.statusCode);
+        }
       } on FormatException {
         // Fall through to the status-based error when the body is not JSON.
       }
-      throw Exception("Lỗi server: ${streamedResponse.statusCode}");
+      throw ApiException(
+        'Không thể bắt đầu phản hồi từ AgriMind.',
+        statusCode: streamedResponse.statusCode,
+      );
     }
 
     // A network chunk is not necessarily one SSE event. Decode only complete

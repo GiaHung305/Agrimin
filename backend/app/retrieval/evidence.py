@@ -7,7 +7,18 @@ from datetime import date, datetime
 from typing import Any
 
 from app.core.config import settings
+from app.core.security_checks import contains_prompt_injection
 from app.retrieval.source_authority import authority_score, normalize_source_type
+
+_UNTRUSTED_PROMPT_FIELDS = ("title", "source", "locator", "content")
+
+
+def evidence_contains_prompt_injection(record: dict[str, Any]) -> bool:
+    """Screen every untrusted evidence field before it enters an AI prompt."""
+    return any(
+        contains_prompt_injection(str(record.get(field) or ""))
+        for field in _UNTRUSTED_PROMPT_FIELDS
+    )
 
 
 def evidence_identity(record: dict[str, Any]) -> str:
@@ -44,6 +55,21 @@ def normalize_evidence(record: dict[str, Any]) -> dict[str, Any]:
         "authority_score": authority_score(record.get("source_type")),
         "version": record.get("version"),
         "published_date": _serialized_date(record.get("published_date")),
+        "crop_keys": sorted({
+            str(crop_key).strip()
+            for crop_key in (record.get("crop_keys") or [])
+            if str(crop_key).strip()
+        }),
+        "stages": sorted({
+            str(stage).strip()
+            for stage in (record.get("stages") or [])
+            if str(stage).strip()
+        }),
+        "regions": sorted({
+            str(region).strip()
+            for region in (record.get("regions") or [])
+            if str(region).strip()
+        }),
         "locator": locator,
         "is_active": record.get("is_active", True),
         "content": str(record.get("content") or ""),

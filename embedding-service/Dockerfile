@@ -18,7 +18,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 COPY requirements.txt .
-RUN python3.12 -m pip install --no-cache-dir torch --index-url https://download.pytorch.org/whl/cu126
+RUN python3.12 -m pip install --no-cache-dir torch==2.13.0 --index-url https://download.pytorch.org/whl/cu126
 RUN python3.12 -m pip install --no-cache-dir -r requirements.txt
 
 COPY . .

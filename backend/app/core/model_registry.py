@@ -43,6 +43,13 @@ def runtime_versions() -> dict:
         "prompts": settings.prompt_bundle_version,
         "evidence_schema": settings.evidence_schema_version,
         "knowledge_base": settings.knowledge_base_version,
+        "retrieval": {
+            "reranker_model": settings.reranker_model,
+            "rerank_max_candidates": settings.rerank_max_candidates,
+            "rerank_min_confidence": settings.rerank_min_confidence,
+            "rrf_dense_weight": settings.rrf_dense_weight,
+            "rrf_sparse_weight": settings.rrf_sparse_weight,
+        },
     }
 
 

@@ -78,6 +78,8 @@ services:
       # Inside Docker, localhost resolves to this backend container. Use the
       # Compose service name for the separate GPU embedding service instead.
       EMBEDDING_SERVICE_URL: http://embedding-service:8001
+      # Keep the backend runtime fingerprint aligned with embedding-service.
+      RERANKER_MODEL: ${RERANKER_MODEL:-BAAI/bge-reranker-v2-m3}
       MCP_WEATHER_URL: http://mcp-weather-server:8002/mcp
     depends_on:
       migrate:
@@ -125,6 +127,8 @@ services:
     restart: unless-stopped
     ports:
       - "8001:8001"
+    environment:
+      RERANKER_MODEL: ${RERANKER_MODEL:-BAAI/bge-reranker-v2-m3}
     volumes:
       - embedding_model_cache:/root/.cache/huggingface
     healthcheck:

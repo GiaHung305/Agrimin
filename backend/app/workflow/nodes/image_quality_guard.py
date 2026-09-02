@@ -74,6 +74,7 @@ async def image_quality_guard_node(state: AgentState) -> AgentState:
         state["guardrail_status"] = "block"
         state["confidence"] = 0.0
         context["vision_stop"] = "image_quality_insufficient"
+        context["user_response_kind"] = "image_status"
         return state
 
     if _IMAGE_DEPENDENT_PATTERN.search(state["question"]):
@@ -127,4 +128,5 @@ async def image_quality_guard_node(state: AgentState) -> AgentState:
             context["vision_stop"] = "vision_model_not_enabled"
         state["guardrail_status"] = "block"
         state["confidence"] = 0.0
+        context["user_response_kind"] = "image_status"
     return state
