@@ -1,5 +1,4 @@
 import re
-import unicodedata
 from datetime import datetime, timedelta
 from typing import Literal
 from zoneinfo import ZoneInfo
@@ -8,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.persistence.models import PendingAction
 from app.workflow.state import AgentState
+from app.workflow.text_normalization import normalize_workflow_text
 
 
 ActionIntent = Literal["none", "create_task", "create_log"]
@@ -47,18 +47,9 @@ _INFORMATION_PATTERNS = (
 )
 
 
-def _normalized(value: str) -> str:
-    normalized = "".join(
-        char
-        for char in unicodedata.normalize("NFD", value.casefold())
-        if unicodedata.category(char) != "Mn"
-    ).replace("đ", "d")
-    return " ".join(normalized.split())
-
-
 def detect_action_intent(question: str) -> ActionIntent:
     """Recognize common Vietnamese action requests without exact phrasing."""
-    normalized = _normalized(question)
+    normalized = normalize_workflow_text(question)
     if any(pattern.search(normalized) for pattern in _LOG_PATTERNS):
         return "create_log"
     if any(pattern.search(normalized) for pattern in _TASK_PATTERNS):
@@ -73,12 +64,12 @@ def _is_task_request(question: str) -> bool:
 def is_pure_action_request(question: str, intent: ActionIntent) -> bool:
     if intent == "none":
         return False
-    normalized = _normalized(question)
+    normalized = normalize_workflow_text(question)
     return not any(pattern in normalized for pattern in _INFORMATION_PATTERNS)
 
 
 def _parse_time(question: str) -> tuple[int, int] | None:
-    normalized = _normalized(question)
+    normalized = normalize_workflow_text(question)
     match = re.search(
         r"\b(\d{1,2})\s*(?::|h)\s*(\d{1,2})?\s*"
         r"(sang|trua|chieu|toi)?\b",
@@ -145,7 +136,7 @@ def _weekday_date(normalized: str, current: datetime):
 
 
 def _parse_date(question: str, current: datetime):
-    normalized = _normalized(question)
+    normalized = normalize_workflow_text(question)
     if any(value in normalized for value in ("ngay kia", "ngay mot")):
         return (current + timedelta(days=2)).date()
     if re.search(r"\b(?:ngay mai|mai)\b", normalized):

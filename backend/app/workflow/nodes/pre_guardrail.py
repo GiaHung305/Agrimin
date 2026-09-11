@@ -1,6 +1,5 @@
-import unicodedata
-
 from app.workflow.state import AgentState
+from app.workflow.text_normalization import normalize_workflow_text
 
 
 _INTERPRETIVE_IMAGE_PHRASES = (
@@ -44,28 +43,19 @@ _ACTIONABLE_DOSAGE_PHRASES = (
 )
 
 
-def _normalized_text(value: str) -> str:
-    normalized = "".join(
-        char
-        for char in unicodedata.normalize("NFD", value.casefold())
-        if unicodedata.category(char) != "Mn"
-    ).replace("đ", "d")
-    return " ".join(normalized.split())
-
-
 def visual_answer_requires_citation(state: AgentState) -> bool:
     """Require evidence for interpretation, not direct visible description."""
     observations = state.get("visual_observations", [])
     if not observations:
         return False
-    question = _normalized_text(state.get("question", ""))
+    question = normalize_workflow_text(state.get("question", ""))
     question = question.replace("khong chan doan", "")
     return any(phrase in question for phrase in _INTERPRETIVE_IMAGE_PHRASES)
 
 
 def explicit_underspecified_dosage_request(question: str) -> bool:
     """Detect explicit unsafe dosage shortcuts without a model call."""
-    normalized_question = _normalized_text(question)
+    normalized_question = normalize_workflow_text(question)
     missing_context = any(
         phrase in normalized_question
         for phrase in _MISSING_SAFETY_CONTEXT_PHRASES

@@ -33,10 +33,6 @@ def _expand_first_pass_query(question: str) -> str:
     return question
 
 
-async def _retrieve_documents(question: str, need_rag: bool, top_k: int) -> list[dict]:
-    return await hybrid_search(question, top_k=top_k) if need_rag else []
-
-
 async def _retrieve_document_queries(
     queries: list[str], need_rag: bool, top_k: int
 ) -> list[list[dict]]:
